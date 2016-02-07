@@ -61,7 +61,7 @@ if mobs.mod and mobs.mod == "redo" then
 	mobs:spawn_specific("mobs:wolf",
 		{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 		{"air"},
-		0, 20, 0, 5000, 1, -31000, 31000
+		0, 20, 0, 6000, 1, 1, 31000
 	)
 	mobs:register_egg("mobs:wolf", "Wolf", "wool_grey.png", 1)
 

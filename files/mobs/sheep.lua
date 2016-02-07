@@ -25,6 +25,7 @@ for _, col in ipairs(all_colours) do
 		sounds = {
 			random = "mobs_sheep",
 			damage = "mobs_sheep_angry",
+			death  = "mobs_sheep_angry",
 		},
 		walk_velocity = 1,
 		jump = true,

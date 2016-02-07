@@ -14,6 +14,7 @@ dofile(path.."/bunny.lua") -- ExeterDad
 dofile(path.."/bear.lua") -- KrupnoPavel
 dofile(path.."/dog.lua") -- KrupnoPavel
 dofile(path.."/pig.lua") -- KrupnoPavel
+dofile(path.."/kitten.lua") -- Jordach/BFD
 
 -- Monsters
 

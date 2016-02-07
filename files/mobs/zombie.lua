@@ -56,7 +56,6 @@ mobs:register_mob("mobs:zombie", {
 	})
 
 -- spawner block
-	if ENABLE_SPAWN_NODE then
 		minetest.register_node("mobs:zombie_spawner", {
 			description = "Zombie Spawner",
 			tiles = {"zombie_head.png"},
@@ -74,4 +73,3 @@ mobs:register_mob("mobs:zombie", {
 				minetest.add_entity(pos, "mobs:zombie")
 			end
 		})
-	end

@@ -1,9 +1,9 @@
-multicraft 0.4 mod: dye
+Minetest 0.4 mod: dye
 ======================
 
 See init.lua for documentation.
 
-License of source code:
+License of source code and media files:
 ---------------------------------------
 Copyright (C) 2012 Perttu Ahola (celeron55) <celeron55@gmail.com>
 

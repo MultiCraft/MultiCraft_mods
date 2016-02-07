@@ -164,10 +164,10 @@ minetest.register_on_joinplayer(function(player)
     set_inventory(player)
     --set hotbar size
     if player.hud_set_hotbar_itemcount then
-        minetest.after(0.5, player.hud_set_hotbar_itemcount, player, 8)
+        minetest.after(0, player.hud_set_hotbar_itemcount, player, 8)
     end
     --add hotbar images
-    minetest.after(0.5,function()
+    minetest.after(0,function()
         player:hud_set_hotbar_image("crafting_hotbar.png")
         player:hud_set_hotbar_selected_image("crafting_hotbar_selected.png")
 

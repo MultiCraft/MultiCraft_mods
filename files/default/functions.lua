@@ -333,6 +333,50 @@ minetest.register_abm({
 })
 
 
+-- 
+-- Snowballs
+--
+
+snowball_GRAVITY=9
+snowball_VELOCITY=19
+
+--Shoot snowball.
+snow_shoot_snowball=function (item, player, pointed_thing)
+	local playerpos=player:getpos()
+	local obj=minetest.add_entity({x=playerpos.x,y=playerpos.y+1.5,z=playerpos.z}, "default:snowball_entity")
+	local dir=player:get_look_dir()
+	obj:setvelocity({x=dir.x*snowball_VELOCITY, y=dir.y*snowball_VELOCITY, z=dir.z*snowball_VELOCITY})
+	obj:setacceleration({x=dir.x*-3, y=-snowball_GRAVITY, z=dir.z*-3})
+	item:take_item()
+	return item
+end
+
+--The snowball Entity
+snowball_ENTITY={
+	physical = false,
+	timer=0,
+	textures = {"default_snowball.png"},
+	lastpos={},
+	collisionbox = {0,0,0,0,0,0},
+}
+
+--Snowball_entity.on_step()--> called when snowball is moving.
+snowball_ENTITY.on_step = function(self, dtime)
+	self.timer=self.timer+dtime
+	local pos = self.object:getpos()
+	local node = minetest.get_node(pos)
+
+	--Become item when hitting a node.
+	if self.lastpos.x~=nil then --If there is no lastpos for some reason.
+		if node.name ~= "air" then
+			self.object:remove()
+		end
+	end
+	self.lastpos={x=pos.x, y=pos.y, z=pos.z} -- Set lastpos-->Node will be added at last pos outside the node
+end
+
+minetest.register_entity("default:snowball_entity", snowball_ENTITY)
+
 --
 -- Grass and dry grass removed in darkness
 --
@@ -378,7 +422,7 @@ function AddGlass(desc, recipeitem, color)
     minetest.register_node("default:glass"..color, {
         description = desc,
         drawtype = "glasslike",
-        tile_images = {"xpanes_pane_glass"..color..".png"},
+        tiles = {"xpanes_pane_glass"..color..".png"},
         inventory_image = minetest.inventorycube("xpanes_pane_glass"..color..".png"),
         paramtype = "light",
         use_texture_alpha = true,

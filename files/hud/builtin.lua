@@ -7,13 +7,13 @@ HUD_ENABLE_HUNGER = true
 HUD_SB_SIZE = {x = 24, y = 24}
 
 HUD_HEALTH_POS = {x = 0.5,y = 1}
-HUD_HEALTH_OFFSET = {x = -252, y = -93}
+HUD_HEALTH_OFFSET = {x = -248, y = -93}
 HUD_AIR_POS = {x = 0.5, y = 1}
-HUD_AIR_OFFSET = {x = 9, y = -93}
+HUD_AIR_OFFSET = {x = 6, y = -93}
 HUD_HUNGER_POS = {x = 0.5, y = 1}
-HUD_HUNGER_OFFSET = {x = 9, y = -124}
+HUD_HUNGER_OFFSET = {x = 6, y = -124}
 HUD_ARMOR_POS = {x = 0.5, y = 1}
-HUD_ARMOR_OFFSET = {x = -252, y = -124}
+HUD_ARMOR_OFFSET = {x = -248, y = -124}
 
 -- Reorder everything when using ItemWeel
 hud.item_wheel = minetest.setting_getbool("hud_item_wheel")

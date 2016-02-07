@@ -1291,36 +1291,45 @@ minetest.register_node("default:lava_flowing", {
 		not_in_creative_inventory = 1},
 })
 
+
+
 minetest.register_node("default:torch", {
-    description = "Torch",
-    drawtype = "torchlike",
-    --tiles = {"default_torch_on_floor.png", "default_torch_on_ceiling.png", "default_torch.png"},
-    tiles = {
-        {name="default_torch_on_floor_animated.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=3.0}},
-        {name="default_torch_on_ceiling_animated.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=3.0}},
-        {name="default_torch_animated.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=3.0}}
-    },
-    inventory_image = "default_torch_on_floor.png",
-    wield_image = "default_torch_on_floor.png",
-    paramtype = "light",
-    paramtype2 = "wallmounted",
-    sunlight_propagates = true,
-    walkable = false,
-    light_source = default.LIGHT_MAX-1,
-    selection_box = {
-        type = "wallmounted",
-        wall_top = {-0.1, 0.5-0.6, -0.1, 0.1, 0.5, 0.1},
-        wall_bottom = {-0.1, -0.5, -0.1, 0.1, -0.5+0.6, 0.1},
-        wall_side = {-0.5, -0.3, -0.1, -0.5+0.3, 0.3, 0.1},
-    },
-    stack_max = 64,
-    groups = {choppy=2,dig_immediate=3,flammable=1,attached_node=1, decorative = 1},
-    legacy_wallmounted = true,
-    sounds = default.node_sound_defaults(),
-    action = function(pos)
-        add_fire(pos)
-    end
+	inventory_image = "default_torch_on_floor.png",
+	wield_image = "default_torch_on_floor.png",
+	tiles = {
+		"default_torch_on_floor_top.png",
+		"default_torch_on_floor_bottom.png",
+		"default_torch_on_floor.png",
+		"default_torch_on_floor.png",
+		"default_torch_on_floor.png",
+		"default_torch_on_floor.png"
+	},
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	is_ground_content = false,
+	walkable = false,
+	light_source = default.LIGHT_MAX - 1,
+	groups = {choppy = 2, dig_immediate = 3, flammable = 1, attached_node = 1},
+	legacy_wallmounted = true,
+	sounds = default.node_sound_defaults(),
+	liquids_pointable = false,
+	drawtype = "nodebox",
+	paramtype = "light",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.0625, -0.5, -0.0625, 0.0625, 0.125, 0.0625}, -- NodeBox1
+		}
+	},
+	selection_box = {
+		type = "wallmounted",
+		wall_top = {-0.1, 0.5 - 0.6, -0.1, 0.1, 0.5, 0.1},
+		wall_bottom = {-0.1, -0.5, -0.1, 0.1, -0.5 + 0.6, 0.1},
+		wall_side = {-0.5, -0.3, -0.1, -0.5 + 0.3, 0.3, 0.1},
+	},
 })
+
 
 local function get_chest_neighborpos(pos, param2, side)
     if side == "right" then

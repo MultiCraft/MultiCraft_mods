@@ -20,6 +20,7 @@ mobs:register_mob("mobs:pig", {
 	sounds = {
 		random = "mobs_pig",
 		attack = "mobs_pig_angry",
+		death  = "mobs_pig_angry",
 	},
 	walk_velocity = 2,
 	run_velocity = 3,
@@ -27,11 +28,11 @@ mobs:register_mob("mobs:pig", {
 	follow = {"default:apple", "farming:potato"},
 	view_range = 10,
 	drops = {
-		{name = "mobs:meat_raw",
+		{name = "mobs:pork_raw",
 		chance = 1, min = 1, max = 1},
-		{name = "mobs:meat_raw",
+		{name = "mobs:pork_raw",
 		chance = 2, min = 1, max = 1},
-		{name = "mobs:meat_raw",
+		{name = "mobs:pork_raw",
 		chance = 2, min = 1, max = 1},
 	},
 	water_damage = 1,

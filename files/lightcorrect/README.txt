@@ -1,9 +1,9 @@
 Light mod
 ===========
-By MoNTE48, for ActionCraft
+By MoNTE48, for MultiCraft
 
 Source license: CC-BY-NC-SA
-Notice: Only ActionCraft and MultiCraft project is entitled to unlimited use (including commercial purposes) of the code.
+Notice: Only and MultiCraft Project is entitled to unlimited use (including commercial purposes) of the code.
 
 License
 
