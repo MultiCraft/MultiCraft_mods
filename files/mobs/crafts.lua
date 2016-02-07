@@ -13,7 +13,7 @@ minetest.register_craftitem("mobs:meat_raw", {
 
 -- cooked meat
 minetest.register_craftitem("mobs:meat", {
-	description = "Meat",
+	description = "Cooked Meat",
 	inventory_image = "mobs_meat.png",
 	on_use = minetest.item_eat(8),
 })
@@ -22,6 +22,27 @@ minetest.register_craft({
 	type = "cooking",
 	output = "mobs:meat",
 	recipe = "mobs:meat_raw",
+	cooktime = 5,
+})
+
+-- raw pork
+minetest.register_craftitem("mobs:pork_raw", {
+	description = "Raw Pork",
+	inventory_image = "mobs_pork_raw.png",
+	on_use = minetest.item_eat(3),
+})
+
+-- cooked pork
+minetest.register_craftitem("mobs:pork", {
+	description = "Cooked Pork",
+	inventory_image = "mobs_pork_cooked.png",
+	on_use = minetest.item_eat(8),
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "mobs:pork",
+	recipe = "mobs:pork_raw",
 	cooktime = 5,
 })
 

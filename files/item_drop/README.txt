@@ -1,5 +1,6 @@
-===ITEM_DROP MOD for MINETEST-C55===
-by PilzAdam
+===ITEM_DROP MOD Reloaded for MINETEST-C55===
+by PilzAdam 
+modified by Jordan4ibanez
 
 Introduction:
 This mod adds Minecraft like drop/pick up of items to Minetest.

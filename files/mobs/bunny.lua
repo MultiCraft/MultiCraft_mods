@@ -67,6 +67,11 @@ mobs:register_mob("mobs:bunny", {
 	damage = 5,
 })
 
-mobs:register_spawn("mobs:bunny", {"default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"}, 20, 10, 3000, 1, 10000)
+
+mobs:spawn_specific("mobs:bunny",
+		{"default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+		{"air"},
+		0, 20, 0, 4000, 1, 1, 31000
+	)
 
 mobs:register_egg("mobs:bunny", "Bunny", "mobs_bunny_inv.png", 0)

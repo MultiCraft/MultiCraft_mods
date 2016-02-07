@@ -1,9 +1,5 @@
-Fire Redo 0.1
-
-by TenPlus1
-
-Based on Minetest 0.4 mod: fire
-===============================
+Minetest 0.4 mod: fire
+======================
 
 License of source code:
 -----------------------

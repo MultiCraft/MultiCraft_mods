@@ -261,7 +261,7 @@ do_env_damage = function(self)
 
 		self.object:set_hp(self.object:get_hp() - self.light_damage)
 
-		effect(pos, 5, "tnt_smoke.png")
+		effect(pos, 5, "mobs_blood.png")
 	end
 
 	if self.water_damage ~= 0 or self.lava_damage ~= 0 then
@@ -279,7 +279,7 @@ do_env_damage = function(self)
 
 			self.object:set_hp(self.object:get_hp() - self.water_damage)
 
-			effect(pos, 10, "mobs_blood.png")
+			effect(pos, 10, "hud_air_fg.png")
 		end
 
 		-- lava or fire
@@ -606,7 +606,7 @@ minetest.register_entity(name, {
 	order = def.order or "",
 	on_die = def.on_die,
 	do_custom = def.do_custom,
-	jump_height = def.jump_height or 6,
+	jump_height = def.jump_height or 4,
 	jump_chance = def.jump_chance or 0,
 	drawtype = def.drawtype, -- DEPRECATED, use rotate instead
 	rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
@@ -686,7 +686,7 @@ minetest.register_entity(name, {
 				minetest.log("action",
 					"lifetimer expired, removed " .. self.name)
 
-				effect(pos, 15, "tnt_smoke.png")
+				effect(pos, 15, "mobs_blood.png")
 
 				self.object:remove()
 
@@ -738,7 +738,7 @@ minetest.register_entity(name, {
 
 						self.object:set_hp(self.object:get_hp() - math.floor(d - 5))
 
-						effect(pos, 5, "tnt_smoke.png")
+						effect(pos, 15, "mobs_blood.png")
 
 						if check_for_death(self) then
 							return
@@ -1279,7 +1279,7 @@ minetest.register_entity(name, {
 
 						self.object:remove()
 
-						effect(pos, 15, "tnt_smoke.png", 5)
+						effect(pos, 15, "hud_air_fg.png", 5)
 
 						return
 					end
@@ -1907,7 +1907,7 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 					minetest.set_node(p, {name = "air"})
 
 					if smoke > 0 then
-						effect(p, 2, "tnt_smoke.png", 5)
+						effect(p, 2, "mobs_blood.png", 5)
 					end
 				end
 			end
