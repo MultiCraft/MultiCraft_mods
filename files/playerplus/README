@@ -1,0 +1,15 @@
+PlayerPlus mod for minetest
+---------------------------
+
+This mod lets the player walk faster when walking on ice, also walking on snow slows them down and touching a cactus will hurt... enjoy
+
+https://forum.minetest.net/viewtopic.php?t=10090&p=153667
+
+0.1 - Initial release
+0.2 - 3d_armor mod compatibility
+0.3 - Optimized code
+0.3s- Included Sprint mod code
+0.4 - Added suffocation when inside nodes
+0.5 - Slow down when walking in water
+
+Released under WTFPL
