@@ -1,8 +1,8 @@
 --basic settings
 item_drop_settings                       = {} --settings table
-item_drop_settings.age                   = 1
-item_drop_settings.radius_magnet         = 2
-item_drop_settings.radius_collect        = 0.5
+item_drop_settings.age                   = 1 --how old an item has to be before collecting
+item_drop_settings.radius_magnet         = 2.5 --radius of item magnet
+item_drop_settings.radius_collect        = 0.2 --radius of collection
 item_drop_settings.player_collect_height = 1.5 --added to their pos y value
 item_drop_settings.collection_safety     = true --do this to prevent items from flying away on laggy servers
 item_drop_settings.collect_by_default    = true --make item entities automatically collect in the item entity code  
@@ -50,32 +50,19 @@ minetest.register_globalstep(function(dtime)
 										
 							--modified simplemobs api
 							
-							local s = object:getpos()
-							local p = {x=pos.x,y=pos.y + item_drop_settings.player_collect_height,z=pos.z}
+							local pos1 = pos
+							--pos1.y = pos1.y+item_drop_settings.player_collect_height
+							local pos2 = object:getpos()
+							local vec = {x=pos1.x-pos2.x, y=(pos1.y+item_drop_settings.player_collect_height)-pos2.y, z=pos1.z-pos2.z}
+							--vec.x = vec.x
+							--vec.y = vec.y
+							--vec.z = vec.z
 							
-							p.y = p.y + item_drop_settings.player_collect_height --since the absolute pos of player is the bottom of the collision
-							--box this raises it up to their center so it appears they are sucking the
-							--item into their character's body
+							vec.x = pos2.x + (vec.x/3)
+							vec.y = pos2.y + (vec.y/3)
+							vec.z = pos2.z + (vec.z/3)
+							object:moveto(vec)
 							
-							local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-							local vec  = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}	
-							local yaw  = math.atan(vec.z/vec.x)+math.pi/2
-							
-							--local pitch = math.atan(vec.y)+math.pi/2
-							--if s.y > p.y then
-							--	pitch = pitch * -1
-							--end
-							
-							if p.x > s.x then
-								yaw = yaw+math.pi
-							end
-							local x = math.sin(yaw) * -5
-							local z = math.cos(yaw) *  5
-							
-							local y = vec.y*2-2
-							
-							
-							object:setvelocity({x=x, y=y, z=z})
 							
 							
 							object:get_luaentity().physical_state = false
@@ -83,32 +70,41 @@ minetest.register_globalstep(function(dtime)
 								physical = false
 							})
 							
-							--this is a safety to prevent items flying away on laggy servers
+							--fix eternally falling items
+							minetest.after(0, function()
+								object:setacceleration({x=0, y=0, z=0})
+							end)
+							
+							
+							--this is a safety to prevent items flying away on laggy servers							
 							if item_drop_settings.collection_safety == true then
-								minetest.after(1, function(args)
-									local lua = object:get_luaentity()
-									if object == nil or lua == nil or lua.itemstring == nil then
-										return
-									end
-									if inv:room_for_item("main", ItemStack(object:get_luaentity().itemstring)) then
-										inv:add_item("main", ItemStack(object:get_luaentity().itemstring))
-										if object:get_luaentity().itemstring ~= "" then
-											minetest.sound_play("item_drop_pickup", {
-												pos = pos,
-												max_hear_distance = 100,
-												gain = 10.0,
+								if object:get_luaentity().init ~= true then
+									object:get_luaentity().init = true
+									minetest.after(1, function(args)
+										local lua = object:get_luaentity()
+										if object == nil or lua == nil or lua.itemstring == nil then
+											return
+										end
+										if inv:room_for_item("main", ItemStack(object:get_luaentity().itemstring)) then
+											inv:add_item("main", ItemStack(object:get_luaentity().itemstring))
+											if object:get_luaentity().itemstring ~= "" then
+												minetest.sound_play("item_drop_pickup", {
+													pos = pos,
+													max_hear_distance = 100,
+													gain = 10.0,
+												})
+											end
+											object:get_luaentity().itemstring = ""
+											object:remove()
+										else
+											object:setvelocity({x=0,y=0,z=0})
+											object:get_luaentity().physical_state = true
+											object:get_luaentity().object:set_properties({
+												physical = true
 											})
 										end
-										object:get_luaentity().itemstring = ""
-										object:remove()
-									else
-										object:setvelocity({x=0,y=0,z=0})
-										object:get_luaentity().physical_state = true
-										object:get_luaentity().object:set_properties({
-											physical = true
-										})
-									end
-								end, {player, object})
+									end, {player, object})
+								end
 							end
 						end
 					end
@@ -147,7 +143,7 @@ function minetest.handle_node_drops(pos, drops, digger)
 						z = -z
 					end
 					obj:setvelocity({x=1/x, y=obj:getvelocity().y, z=1/z})
-					
+					obj:get_luaentity().age = 0.6
 					-- FIXME this doesnt work for deactiveted objects
 					if minetest.setting_get("remove_items") and tonumber(minetest.setting_get("remove_items")) then
 						minetest.after(tonumber(minetest.setting_get("remove_items")), function(obj)
@@ -172,9 +168,9 @@ function minetest.item_drop(itemstack, dropper, pos)
 		local item = itemstack:take_item(cs)
 		local obj = core.add_item(p, item)
 		if obj then
-			v.x = v.x*2
-			v.y = v.y*2 + 2
-			v.z = v.z*2
+			v.x = v.x*4
+			v.y = v.y*4 + 2
+			v.z = v.z*4
 			obj:setvelocity(v)
 			obj:get_luaentity().collect = true
 			return itemstack
