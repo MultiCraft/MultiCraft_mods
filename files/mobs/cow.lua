@@ -77,7 +77,7 @@ mobs:register_mob("mobs:cow", {
 mobs:spawn_specific("mobs:cow",
 		{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 		{"air"},
-		5, 20, 0, 5000, 1, 1, 31000
+		5, 20, 0, 6000, 1, 1, 31000
 	)
 
 mobs:register_egg("mobs:cow", "Cow", "default_grass.png", 1)

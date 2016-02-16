@@ -3,12 +3,12 @@ item_drop_settings                       = {} --settings table
 item_drop_settings.age                   = 1 --how old an item has to be before collecting
 item_drop_settings.radius_magnet         = 2.5 --radius of item magnet
 item_drop_settings.radius_collect        = 0.2 --radius of collection
-item_drop_settings.player_collect_height = 1.5 --added to their pos y value
+item_drop_settings.player_collect_height = 1.0 --added to their pos y value
 item_drop_settings.collection_safety     = true --do this to prevent items from flying away on laggy servers
 item_drop_settings.collect_by_default    = true --make item entities automatically collect in the item entity code  
                                                 --versus setting it in the item drop code, setting true might interfere with
                                                 --mods that use item entities (like pipeworks)
-item_drop_settings.random_item_velocity  = true --this sets random item velocity if velocity is 0
+item_drop_settings.random_item_velocity  = false --this sets random item velocity if velocity is 0
 
 
 minetest.register_globalstep(function(dtime)
