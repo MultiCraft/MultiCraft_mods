@@ -182,7 +182,7 @@ end
 function core.item_eat(hp_change, replace_with_item)
 	return function(itemstack, user, pointed_thing)  -- closure
 		local pos = user:getpos()
-		pos.y = pos.y + item_drop_settings.player_collect_height
+		pos.y = pos.y + item_drop_settings.player_collect_height+0.5
 		local itemname = itemstack:get_name()
 		local texture  = minetest.registered_items[itemname].inventory_image
 		minetest.add_item(pos, drop)
