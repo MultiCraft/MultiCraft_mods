@@ -137,5 +137,5 @@ end
 mobs:spawn_specific("mobs:sheep_white",
 		{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 		{"air"},
-		0, 20, 0, 4000, 1, -31000, 31000
+		0, 20, 0, 5000, 1, -31000, 31000
 	)

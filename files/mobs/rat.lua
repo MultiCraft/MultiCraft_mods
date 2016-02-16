@@ -34,7 +34,7 @@ mobs:register_mob("mobs:rat", {
 mobs:spawn_specific("mobs:rat",
 		{"default:dirt", "default:sandstone", "default:sand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass"},
 		{"air"},
-		0, 20, 0, 3000, 1, -31000, 31000
+		0, 20, 0, 4000, 1, -31000, 31000
 	)
 
 mobs:register_egg("mobs:rat", "Rat", "mobs_rat_inventory.png", 0)

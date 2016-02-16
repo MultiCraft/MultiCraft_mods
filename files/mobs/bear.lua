@@ -78,6 +78,6 @@
 	mobs:spawn_specific("mobs:bear",
 		{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 		{"air"},
-		5, 20, 0, 5000, 1, 1, 31000
+		5, 20, 0, 6000, 1, 1, 31000
 	)
 	mobs:register_egg("mobs:bear", "Bear", "wool_brown.png", 1)

@@ -71,7 +71,7 @@ minetest.register_globalstep(function(dtime)
 
 		-- standing on ice? if so walk faster
 		if nod_stand == "default:ice" then
-			pp.speed = pp.speed + 0.4
+			pp.speed = pp.speed + 0.6
 		end
 
 		-- standing on snow? if so walk slower
@@ -79,7 +79,7 @@ minetest.register_globalstep(function(dtime)
 		or nod_stand == "default:snowblock"
 		-- wading in water? if so walk slower
 		or minetest.registered_nodes[nod_feet].groups.water then
-			pp.speed = pp.speed - 0.4
+			pp.speed = pp.speed - 0.1
 		end
 
 		-- set player physics

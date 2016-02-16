@@ -55,7 +55,7 @@ function default.register_ores()
 		clust_num_ores = 5,
 		clust_size     = 2,
 		y_min     = -64,
-		y_max     = -60,
+		y_max     = -63,
 	})
 
 	-- Clay

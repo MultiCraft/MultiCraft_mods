@@ -3,16 +3,23 @@
 --
 -- Node definitions
 --
+
 minetest.register_node("default:dirt_with_snow", {
 	description = "Dirt with Snow",
-	tiles = {"default_snow.png", "default_dirt.png", "default_dirt.png^default_snow_side.png"},
-	groups = {crumbly=3,soil=1},
+	stack_max = 64,
+	tiles = {"default_snow.png", "default_dirt.png",
+		{name = "default_snow_side.png",
+			tileable_vertical = false}},
+	groups = {crumbly = 3, soil = 1},
 	drop = 'default:dirt',
-	sounds = default.node_sound_dirt_defaults(),
+	sounds = default.node_sound_dirt_defaults({
+		footstep = {name = "default_snow_footstep", gain = 0.25},
+	}),
 })
 
 minetest.register_node("default:snow", {
 	description = "Snow",
+	stack_max = 64,
 	tiles = {"default_snow.png"},
 	inventory_image = "default_snowball.png",
 	wield_image = "default_snowball.png",
@@ -22,16 +29,19 @@ minetest.register_node("default:snow", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, -0.5,  0.5, -0.5+2/16, 0.5},
+			{-0.5, -0.5, -0.5, 0.5, -0.25, 0.5},
 		},
 	},
-	groups = {crumbly=3,falling_node=1},
-	sounds = default.node_sound_dirt_defaults(),
+	groups = {crumbly = 3, falling_node = 1, puts_out_fire = 1},
+	sounds = default.node_sound_dirt_defaults({
+		footstep = {name = "default_snow_footstep", gain = 0.25},
+		dug = {name = "default_snow_footstep", gain = 0.75},
+	}),
 
 	on_construct = function(pos)
 		pos.y = pos.y - 1
 		if minetest.get_node(pos).name == "default:dirt_with_grass" then
-			minetest.set_node(pos, {name="default:dirt_with_snow"})
+			minetest.set_node(pos, {name = "default:dirt_with_snow"})
 		end
 	end,
 })
@@ -40,17 +50,20 @@ minetest.register_node("default:snowblock", {
 	description = "Snow Block",
 	stack_max = 64,
 	tiles = {"default_snow.png"},
-	groups = {crumbly=3},
-	sounds = default.node_sound_dirt_defaults(),
+	groups = {crumbly = 3, puts_out_fire = 1},
+	sounds = default.node_sound_dirt_defaults({
+		footstep = {name = "default_snow_footstep", gain = 0.25},
+		dug = {name = "default_snow_footstep", gain = 0.75},
+	}),
 })
+
 
 minetest.register_node("default:ice", {
 	description = "Ice",
-	stack_max = 64,
 	tiles = {"default_ice.png"},
 	is_ground_content = false,
 	paramtype = "light",
-	groups = {cracky=3},
+	groups = {cracky = 3, puts_out_fire = 1},
 	sounds = default.node_sound_glass_defaults(),
 })
 
@@ -63,7 +76,6 @@ minetest.register_node("default:pine_tree", {
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
 	sounds = default.node_sound_wood_defaults(),
-
 	on_place = minetest.rotate_node
 })
 
@@ -887,7 +899,6 @@ minetest.register_node("default:slimeblock", {
         }
     },
     tiles = {"default_slimeblock.png"},
-    inventory_image = minetest.inventorycube("default_slimeblock.png"),
     paramtype = "light",
     use_texture_alpha = true,
     sunlight_propagates = true,
@@ -899,7 +910,6 @@ minetest.register_node("default:glass", {
     description = "Glass",
     drawtype = "glasslike",
     tiles = {"default_glass.png"},
-    inventory_image = minetest.inventorycube("default_glass.png"),
     paramtype = "light",
     sunlight_propagates = true,
     stack_max = 64,
@@ -1011,7 +1021,6 @@ minetest.register_node("default:cloud", {
 
 minetest.register_node("default:water_source", {
 	description = "Water Source",
-	inventory_image = minetest.inventorycube("default_water.png"),
 	drawtype = "liquid",
 	tiles = {
 		{
@@ -1056,7 +1065,6 @@ minetest.register_node("default:water_source", {
 
 minetest.register_node("default:water_flowing", {
 	description = "Flowing Water",
-	inventory_image = minetest.inventorycube("default_water.png"),
 	drawtype = "flowingliquid",
 	tiles = {"default_water.png"},
 	special_tiles = {
@@ -1103,7 +1111,6 @@ minetest.register_node("default:water_flowing", {
 
 minetest.register_node("default:river_water_source", {
 	description = "River Water Source",
-	inventory_image = minetest.inventorycube("default_river_water.png"),
 	drawtype = "liquid",
 	tiles = {
 		{
@@ -1149,7 +1156,6 @@ minetest.register_node("default:river_water_source", {
 
 minetest.register_node("default:river_water_flowing", {
 	description = "Flowing River Water",
-	inventory_image = minetest.inventorycube("default_river_water.png"),
 	drawtype = "flowingliquid",
 	tiles = {"default_river_water.png"},
 	special_tiles = {
@@ -1198,7 +1204,6 @@ minetest.register_node("default:river_water_flowing", {
 
 minetest.register_node("default:lava_source", {
 	description = "Lava Source",
-	inventory_image = minetest.inventorycube("default_lava.png"),
 	drawtype = "liquid",
 	tiles = {
 		{
@@ -1245,7 +1250,6 @@ minetest.register_node("default:lava_source", {
 
 minetest.register_node("default:lava_flowing", {
 	description = "Flowing Lava",
-	inventory_image = minetest.inventorycube("default_lava.png"),
 	drawtype = "flowingliquid",
 	tiles = {"default_lava.png"},
 	special_tiles = {
@@ -1715,21 +1719,21 @@ minetest.register_node("default:grass", {
     wield_image = "default_tallgrass.png",
     walkable = false,
     buildable_to = true,
-        drop = {
-        max_items = 1,
-        items = {
-            {
-                -- player will get sapling with 1/20 chance
-                items = {'farming:wheat_seed'},
-                rarity = 5,
-            },
-            {
-                -- player will get leaves only if he get no saplings,
-                -- this is because max_items is 1
-                items = {''},
-            }
-        }
-    },
+        --drop = {
+        --max_items = 1,
+        --items = {
+        --    {
+       --         -- player will get sapling with 1/20 chance
+       --         items = {'farming:wheat_seed'},
+       --         rarity = 5,
+       --     },
+       --     {
+       --         -- player will get leaves only if he get no saplings,
+       --         -- this is because max_items is 1
+      --          items = {''},
+      --      }
+       -- }
+    --},
     paramtype = "light",
     is_ground_content = true,
     groups = {snappy=3,flammable=3,attached_node=1,dig_immediate=3, decorative=1, grass=1},
@@ -1857,7 +1861,6 @@ minetest.register_node("default:sponge_wet", {
 minetest.register_node("default:ice", {
     description = "Ice",
     drawtype = "glasslike",
-    inventory_image = minetest.inventorycube("default_ice.png"),
     tiles = {"default_ice.png"},
     is_ground_content = true,
     paramtype = "light",
@@ -1870,7 +1873,6 @@ minetest.register_node("default:ice", {
 minetest.register_node("default:packedice", {
     description = "Packed Ice",
     drawtype = "glasslike",
-    inventory_image = minetest.inventorycube("default_ice_packed.png"),
     tiles = {"default_ice_packed.png"},
     is_ground_content = true,
     paramtype = "light",

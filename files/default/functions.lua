@@ -423,7 +423,6 @@ function AddGlass(desc, recipeitem, color)
         description = desc,
         drawtype = "glasslike",
         tiles = {"xpanes_pane_glass"..color..".png"},
-        inventory_image = minetest.inventorycube("xpanes_pane_glass"..color..".png"),
         paramtype = "light",
         use_texture_alpha = true,
         stack_max = 64,
