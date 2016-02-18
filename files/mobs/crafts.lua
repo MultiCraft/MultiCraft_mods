@@ -61,21 +61,6 @@ minetest.register_craft({
 	}
 })
 
--- net
-minetest.register_tool("mobs:net", {
-	description = "Net (right-click animal to put in inventory)",
-	inventory_image = "mobs_net.png",
-})
-
-minetest.register_craft({
-	output = "mobs:net",
-	recipe = {
-		{"default:stick", "", "default:stick"},
-		{"default:stick", "", "default:stick"},
-		{"farming:string", "default:stick", "farming:string"},
-	}
-})
-
 -- shears (right click to shear animal)
 minetest.register_tool("mobs:shears", {
 	description = "Steel Shears (right-click to shear)",
