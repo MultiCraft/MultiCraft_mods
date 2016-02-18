@@ -44,6 +44,6 @@ mobs:register_mob("mobs:skeleton", {
 	mobs:spawn_specific("mobs:skeleton",
 		{"default:dirt", "default:sandstone", "default:sand", "default:stone", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
 		{"air"},
-		0, 5, 0, 4000, 1, -31000, 31000
+		0, 7, 0, 4000, 1, -31000, 31000
 	)
 	--mobs:register_egg("mobs:skeleton", "Zombie", "zombie_head.png", 0)

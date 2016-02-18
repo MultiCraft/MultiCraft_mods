@@ -289,11 +289,11 @@ default.player_register_model("3d_armor_character.x", {
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     local name = player:get_player_name()
-    if inventory_plus and fields.armor then
-        local formspec = armor:get_armor_formspec(name)
-        inventory_plus.set_inventory_formspec(player, formspec)
-        return
-    end
+    --if inventory_plus and fields.armor then
+        --local formspec = armor:get_armor_formspec(name)
+        --inventory_plus.set_inventory_formspec(player, formspec)
+        --return
+    --end
     for field, _ in pairs(fields) do
         if string.find(field, "skins_set_") then
             minetest.after(0, function(player)
@@ -421,9 +421,9 @@ minetest.register_on_joinplayer(function(player)
     for i=1, ARMOR_INIT_TIMES do
         minetest.after(ARMOR_INIT_DELAY * i, function(player)
             armor:set_player_armor(player)
-            if inventory_plus == nil and unified_inventory == nil then
+            --if inventory_plus == nil and unified_inventory == nil then
                 --armor:update_inventory(player)
-            end
+            --end
         end, player)
     end
 end)

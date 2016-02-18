@@ -9,6 +9,8 @@ Version: 1.1 alpha
 A simple mod that add to dungeons chests that contain some loot.
 Configurable in many aspects, see "config.lua" for more details.
 
+In MultiCraft Project this code has been changed:
+I changed the drop in a few lines.
 
 License:
 ~~~~~~~~
