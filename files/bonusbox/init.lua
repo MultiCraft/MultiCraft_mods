@@ -1,8 +1,3 @@
---To add or delete items modify the lines below.
---Add or delete local item#
---For each local item# add or delete the minetest.spawn_item in the next section.
-
-
 local item_spawn = function(pos, node)
 	minetest.spawn_item({x=pos.x-0.4,y=pos.y+0.58,z=pos.z-0.2}, "default:steel_ingot 2")
 	minetest.spawn_item({x=pos.x,y=pos.y+0.58,z=pos.z}, "default:emerald")
@@ -33,7 +28,7 @@ minetest.register_node("bonusbox:chest", {
 			{-0.483652, 0.246909, -0.483652, 0.483652, 0.5, 0.169932}, -- NodeBox4
 		}
 	},
-	groups = {choppy = 2},
+	groups = {choppy = 2, not_in_creative_inventory=1},
 	sounds = default.node_sound_wood_defaults(),
 	on_rightclick = item_spawn,
 })

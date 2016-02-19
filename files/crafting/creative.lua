@@ -190,7 +190,7 @@ crafting.set_creative_formspec = function(player, start_i, pagenum, show, page, 
     reset_menu_item_bg()
     pagenum = math.floor(pagenum) or 1
 	local pagemax = math.floor((crafting.creative_inventory_size-1) / (9*5) + 1)
-    local slider_height = 4/pagemax
+    local slider_height = 4.15/pagemax
     local slider_pos = slider_height*(pagenum-1)+2.2
     local player_name = player:get_player_name()
     crafting.start_is[player_name] = start_i
@@ -279,7 +279,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     end
     if fields.default then
         set_inv("all")
-        page = 'nix'
+        page = nil
     end
     if fields.food then
         set_inv("#food")
