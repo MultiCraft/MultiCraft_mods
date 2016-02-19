@@ -6,13 +6,21 @@ crafting.pages = {}
 function init()
  local inv = minetest.create_detached_inventory("creative", {
         allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
+            if minetest.setting_getbool("creative_mode") then
                 return count
+            else
+                return 0
+            end
         end,
         allow_put = function(inv, listname, index, stack, player)
             return 0
         end,
         allow_take = function(inv, listname, index, stack, player)
+            if minetest.setting_getbool("creative_mode") then
                 return -1
+            else
+                return 0
+            end
         end,
         on_move = function(inv, from_list, from_index, to_list, to_index, count, player)
         end,
@@ -127,7 +135,11 @@ end
 -- Create the trash field
 local trash = minetest.create_detached_inventory("creative_trash", {
     allow_put = function(inv, listname, index, stack, player)
+        if minetest.setting_getbool("creative_mode") then
             return stack:get_count()
+        else
+            return 0
+        end
     end,
     on_put = function(inv, listname, index, stack, player)
         inv:set_stack(listname, index, "")
@@ -137,7 +149,7 @@ trash:set_size("main", 1)
 
 
 -- Create detached creative inventory after loading all mods
-minetest.after(0.5, init)
+minetest.after(0, init)
 
 local offset = {}
 local hoch = {}
@@ -189,15 +201,15 @@ end
 crafting.set_creative_formspec = function(player, start_i, pagenum, show, page, scroll)
     reset_menu_item_bg()
     pagenum = math.floor(pagenum) or 1
-	local pagemax = math.floor((crafting.creative_inventory_size-1) / (9*5) + 1)
-    local slider_height = 4.15/pagemax
+    local pagemax = math.floor((crafting.creative_inventory_size) / (9*5) + 1)
+    local slider_height = 4/pagemax
     local slider_pos = slider_height*(pagenum-1)+2.2
     local player_name = player:get_player_name()
     crafting.start_is[player_name] = start_i
     crafting.pages[player_name] = page
-	local name = "nix"
-	local formspec = ""
-	local main_list = "list[detached:creative;main;0,1.75;9,5;"..tostring(start_i).."]"
+    local formspec = ""
+    local main_list = "list[detached:creative;main;0,1.75;9,5;"..tostring(start_i).."]"
+    local name = "nix"
     if page ~= nil then name = page end
     bg[name] = "crafting_creative_bg.png"
     if name == "inv" then
@@ -226,9 +238,8 @@ crafting.set_creative_formspec = function(player, start_i, pagenum, show, page, 
         "image[0,1;5,0.75;fnt_"..name..".png]"..
         "list[current_player;main;0,7;9,1;]"..
         main_list..
-		"image_button[9.03,1.74;0.85,0.6;crafting_creative_up.png;creative_prev;]"..
-		"image[9.04," .. tostring(slider_pos) .. ";0.75,"..tostring(slider_height) .. ";crafting_slider.png]"..
-		"image_button[9.03,6.15;0.85,0.6;crafting_creative_down.png;creative_next;]"..
+        "image_button[9.03,1.74;0.85,0.6;crafting_creative_up.png;creative_prev;]"..
+        "image_button[9.03,6.15;0.85,0.6;crafting_creative_down.png;creative_next;]"..
         "image_button[-0.1,8.28;1,1;"..bg["food"].."^crafting_food.png;food;]"..    --foodstuff
         "image_button[1.15,8.28;1,1;"..bg["tools"].."^crafting_creative_tool.png;tools;]".. --tools
         "image_button[2.415,8.28;1,1;"..bg["combat"].."^crafting_creative_sword.png;combat;]".. --combat
@@ -236,23 +247,28 @@ crafting.set_creative_formspec = function(player, start_i, pagenum, show, page, 
         "image_button[4.93,8.28;1,1;"..bg["brew"].."^crafting_inventory_brew.png;brew;]".. --materials^
         "image_button[9.19,8.28;1,1;"..bg["inv"].."^crafting_creative_inv.png;inv;]"..          --inventory
         "list[detached:creative_trash;main;9,7;1,1;]"..
-        "image[9,7;1,1;crafting_creative_trash.png]"
+        "image[9,7;1,1;crafting_creative_trash.png]"..
 
-			if name == "nix" then formspec = formspec .. "field[5.3,1.3;4,0.75;suche;;]" end
-			if pagenum ~= nil then formspec = formspec .. "p"..tostring(pagenum) end
-			
-	player:set_inventory_formspec(formspec)
+        "image[9.04," .. tostring(slider_pos) .. ";0.78,"..tostring(slider_height) .. ";crafting_slider.png]"
+
+     if name == "nix" then formspec = formspec .. "field[5.3,1.3;4,0.75;suche;;]" end
+     if pagenum ~= nil then formspec = formspec .. "p"..tostring(pagenum) end
+
+    player:set_inventory_formspec(formspec)
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     local page = nil
+    if not minetest.setting_getbool("creative_mode") then
+        return
+    end
 
     if fields.bgcolor then
       --  minetest.chat_send_all("jupp")
     end
     if fields.suche ~= nil and fields.suche ~= "" then
         set_inv(string.lower(fields.suche))
-        minetest.after(0.5, function()
+        minetest.after(0, function()
             minetest.show_formspec(player:get_player_name(), "detached:creative",  player:get_inventory_formspec())
         end)
     end
@@ -279,7 +295,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     end
     if fields.default then
         set_inv("all")
-        page = nil
+        page = 'nix'
     end
     if fields.food then
         set_inv("#food")
@@ -305,36 +321,38 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
         page = "brew"
     end
 
-	-- Figure out current page from formspec
-	local current_page = 0
-	local formspec = player:get_inventory_formspec()
+    -- Figure out current page from formspec
+    local current_page = 0
+    local formspec = player:get_inventory_formspec()
 
-	local size = string.len(formspec)
-	local marker = string.sub(formspec,size-2)
-	marker = string.sub(marker,1)
+    local size = string.len(formspec)
+    local marker = string.sub(formspec,size-1)
+    marker = string.sub(marker,1,1)
+
     local player_name = player:get_player_name()
     local start_i = crafting.start_is[player_name]
     if not page then page = crafting.pages[player_name] end
     if page ~= crafting.pages[player_name] then
        start_i = 0
     end
-	start_i = tonumber(start_i) or 0
-	if fields.creative_prev then
-		start_i = start_i - 9*5
-		page = tmp_page
-	end
-	if fields.creative_next then
-		start_i = start_i + 9*5
-		page = tmp_page
-	end
-	if start_i < 0 then
-		start_i = start_i + 9*5
-	end
-	if start_i >= crafting.creative_inventory_size then
-		start_i = start_i - 9*5
-	end		
-	if start_i < 0 or start_i >= crafting.creative_inventory_size then
-		start_i = 0
-	end
-	crafting.set_creative_formspec(player, start_i, start_i / (9*5) + 1, false, page)
+    --if marker ~= nil and marker == "p" then
+       --local ppage = string.sub(formspec,size)
+      -- print('ppage ' .. (ppage or 'nope'))
+        --minetest.chat_send_all(page)
+        --start_i = ppage - 1
+    --end
+    --start_i = tonumber(start_i) or 0
+
+    if fields.creative_prev then
+        start_i = start_i - 9*5
+    end
+    if fields.creative_next
+    and start_i + 9*5 <= crafting.creative_inventory_size+1 then
+        start_i = start_i + 9*5
+    end
+    if start_i < 0 then
+        start_i = 0
+    end
+
+    crafting.set_creative_formspec(player, start_i, start_i/(9*5) +1, false, page)
 end)
