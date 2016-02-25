@@ -27,6 +27,7 @@ if mobs.mod and mobs.mod == "redo" then
 		armor = 100,
 		lava_damage = 5,
 		fall_damage = 4,
+		fear_height = 2,
 		damage = 4,
 		attack_type = "dogfight",
 		group_attack = true,

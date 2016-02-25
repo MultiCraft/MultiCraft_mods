@@ -15,15 +15,16 @@ if minetest.get_modpath("mobs") ~= nil then
 	if mobs.mod ~= nil and mobs.mod == "redo" then
 		register_food("mobs:cheese", 4)
 		register_food("mobs:meat", 8)
-		register_food("mobs:meat_raw", 4, "", 3)
+		register_food("mobs:meat_raw", 4, "", 2)
 		register_food("mobs:rat_cooked", 4)
 		register_food("mobs:rat_meat", 2)
 		register_food("mobs:honey", 2)
-		register_food("mobs:pork_raw", 3, "", 3)
+		register_food("mobs:pork_raw", 4, "", 2)
 		register_food("mobs:pork_cooked", 8)
 		register_food("mobs:chicken_cooked", 6)
-		register_food("mobs:chicken_raw", 2, "", 3)
+		register_food("mobs:chicken_raw", 2, "", 2)
 		register_food("mobs:chicken_egg_fried", 2)
+		register_food("mobs:rotten_flesh", 1, "", 5)
 		if minetest.get_modpath("bucket") then
 			register_food("mobs:bucket_milk", 3, "bucket:bucket_empty")
 		end

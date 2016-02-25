@@ -27,3 +27,6 @@ dofile(path.."/npc.lua") -- TenPlus1
 
 -- Mob Items
 dofile(path.."/crafts.lua")
+
+-- Spawner
+dofile(path.."/spawner.lua")

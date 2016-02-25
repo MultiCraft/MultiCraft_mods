@@ -38,6 +38,7 @@ for _, col in ipairs(all_colours) do
 		water_damage = 1,
 		lava_damage = 5,
 		light_damage = 0,
+		fear_height = 2,
 		animation = {
 			speed_normal = 15,
 			speed_run = 15,

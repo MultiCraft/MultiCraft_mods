@@ -1,5 +1,5 @@
 -= MOBS-MOD for MINETEST =-
-by PilzAdam, KrupnovPavel, Zeg9 and TenPlus1
+by PilzAdam, KrupnovPavel, Zeg9, TenPlus1, kaadmy and MoNTE48
 
 
 https://forum.minetest.net/viewtopic.php?f=9&t=9917
@@ -28,6 +28,16 @@ This mod contains the following additions:
 
 Changelog:
 
+1.26- Pathfinding feature added thanks to rnd, when monsters attack they become scary smart in finding you :) also, beehive produces honey now :)
+1.25- Mobs no longer spawn within 12 blocks of player or despawn within same range, spawners now have player detection, Code tidy and tweak.
+1.24- Added feature where certain animals run away when punched (runaway = true in mob definition)
+1.23- Added mob spawner block for admin to setup spawners in-game (place and right click to enter settings)
+1.22- Added ability to name tamed animals and npc using nametags, also npc will attack anyone who punches them apart from owner
+1.21- Added some more error checking to reduce serialize.h error and added height checks for falling off cliffs (thanks cmdskp)
+1.20- Error checking added to remove bad mobs, out of map limit mobs and stop serialize.h error
+1.19- Chickens now drop egg items instead of placing the egg, also throwing eggs result in 1/8 chance of spawning chick
+1.18- Added docile_by_day flag so that monsters will not attack automatically during daylight hours unless hit first
+1.17- Added 'dogshoot' attack type, shoots when out of reach, melee attack when in reach, also api tweaks and self.reach added
 1.16- Mobs follow multiple items now, Npc's can breed
 1.15- Added Feeding/Taming/Breeding function, right-click to pick up any sheep with X mark on them and replace with new one to fix compatibility.
 1.14- All .self variables saved in staticdata, Fixed self.health bug
