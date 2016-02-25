@@ -26,6 +26,7 @@ mobs:register_mob("mobs:zombie", {
 		knock_back = 1,
 		light_damage = 1,
 		lava_damage = 10,
+		fear_height = 2,
 		damage = 2,
 		reach = 2,
 		attack_type = "dogfight",

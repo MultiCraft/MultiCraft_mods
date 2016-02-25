@@ -29,6 +29,7 @@ mobs:register_mob("mobs:rat", {
 	water_damage = 0,
 	lava_damage = 4,
 	light_damage = 0,
+	fear_height = 2,
 })
 
 mobs:spawn_specific("mobs:rat",

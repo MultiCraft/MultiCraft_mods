@@ -34,6 +34,7 @@ mobs:register_mob("mobs:spider", {
 	water_damage = 5,
 	lava_damage = 5,
 	light_damage = 1,
+	fear_height = 2,
 	animation = {
 		speed_normal = 15,
 		speed_run = 15,
