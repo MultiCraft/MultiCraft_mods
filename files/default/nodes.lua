@@ -1922,25 +1922,3 @@ minetest.register_node("default:snowblock", {
     }),
     drop = "default:snow 4",
 })
-
-minetest.register_node("default:cobweb", {
-       description = "Cobweb",
-       drawtype = "plantlike",
-       visual_scale = 1.1,
-       stack_max = 64,
-       tiles = {"web.png"},
-       inventory_image = "web.png",
-       paramtype = "light",
-       sunlight_propagates = true,
-       liquid_viscosity = 14,
-       liquidtype = "source",
-       liquid_alternative_flowing = "default:cobweb",
-       liquid_alternative_source = "default:cobweb",
-       liquid_renewable = false,
-       liquid_range = 0,
-       walkable = false,
-       groups = {snappy=1,liquid=3,flammable=2, decorative = 1},
-       drop = "farming:string",
-})
-
-minetest.register_alias('mobs:cobweb','default:cobweb')

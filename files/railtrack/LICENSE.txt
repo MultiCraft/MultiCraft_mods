@@ -1,0 +1,14 @@
+Minetest Mod - Railtrack [railtrack]
+====================================
+
+License Source Code: LGPL v2.1
+
+License of media (textures, sounds and models not otherwise specified): CC-0
+
+Authors of media files:
+-----------------------
+
+rarkenin:
+
+  cart_rail_*.png
+
