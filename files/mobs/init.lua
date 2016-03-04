@@ -22,11 +22,11 @@ dofile(path.."/spider.lua") -- AspireMint
 dofile(path.."/zombie.lua") -- Blockmen
 dofile(path.."/skeleton.lua") -- Blockmen
 
--- NPC
-dofile(path.."/npc.lua") -- TenPlus1
-
 -- Mob Items
 dofile(path.."/crafts.lua")
 
 -- Spawner
 dofile(path.."/spawner.lua")
+
+-- Remove
+dofile(path.."/npc.lua")

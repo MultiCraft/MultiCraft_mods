@@ -75,7 +75,7 @@ minetest.register_node("mobs:cobweb", {
 	liquid_range = 0,
 	walkable = false,
 	groups = {snappy = 1, liquid = 3},
-	drop = "farming:cotton",
+	--drop = "farming:cotton",
 	sounds = default.node_sound_leaves_defaults(),
 })
 
