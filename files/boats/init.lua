@@ -148,10 +148,10 @@ end
 
 function boat.on_step(self, dtime)
 
-	-- after 10 seconds remove boat and drop as item if not boarded
+	-- after 30 seconds remove boat and drop as item if not boarded
 	self.count = self.count + dtime
 
-	if self.count > 10 then
+	if self.count > 30 then
 		minetest.add_item(self.object:getpos(), "boats:boat")
 		self.object:remove()
 		return

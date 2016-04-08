@@ -1,9 +1,5 @@
-Fire Redo 0.2
-
-by TenPlus1
-
-Based on Minetest 0.4 mod: fire with changes by HybridDog
-=========================================================
+Minetest Game mod: fire (redo with changes by TenPlus1)
+=======================================================
 
 License of source code:
 -----------------------
@@ -18,7 +14,7 @@ http://www.gnu.org/licenses/lgpl-2.1.html
 
 License of media (textures and sounds)
 --------------------------------------
-Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
+Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)                                 
 http://creativecommons.org/licenses/by-sa/3.0/
 
 Authors of media files
@@ -34,3 +30,7 @@ fire_large.ogg sampled from:
 
 fire_basic_flame_animated.png:
   Muadtralk
+
+fire_flint_steel.png
+  Gambit (WTFPL)
+
