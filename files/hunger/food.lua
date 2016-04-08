@@ -229,6 +229,7 @@ if minetest.get_modpath("ethereal") then
 	register_food("ethereal:seaweed", 1)
 	register_food("ethereal:yellowleaves", 1, "", nil, 1)
 	register_food("ethereal:sashimi", 4)
+	register_food("ethereal:orange", 2)
 end
 
 if minetest.get_modpath("farming") and farming.mod == "redo" then
@@ -260,6 +261,7 @@ if minetest.get_modpath("farming") and farming.mod == "redo" then
 	register_food("farming:rhubarb", 1)
 	register_food("farming:rhubarb_pie", 6)
 	register_food("farming:beans", 1)
+	register_food("farming:grapes", 1)
 end
 
 if minetest.get_modpath("kpgmobs") ~= nil then
@@ -311,4 +313,10 @@ end
 if minetest.get_modpath("pizza") ~= nil then
 	register_food("pizza:pizza", 30, "", nil, 30)
 	register_food("pizza:pizzaslice", 5, "", nil, 5)
+end
+
+if minetest.get_modpath("wine") ~= nil then
+	register_food("wine:glass_wine", 2)
+	register_food("wine:glass_beer", 2)
+	register_food("wine:glass_mead", 2)
 end

@@ -1,8 +1,8 @@
 --basic settings
 item_drop_settings                       = {} --settings table
 item_drop_settings.age                   = 1 --how old an item has to be before collecting
-item_drop_settings.radius_magnet         = 2.5 --radius of item magnet
-item_drop_settings.radius_collect        = 0.2 --radius of collection
+item_drop_settings.radius_magnet         = 2.0 --radius of item magnet
+item_drop_settings.radius_collect        = 0.3 --radius of collection
 item_drop_settings.player_collect_height = 1.0 --added to their pos y value
 item_drop_settings.collection_safety     = true --do this to prevent items from flying away on laggy servers
 
@@ -25,7 +25,7 @@ minetest.register_globalstep(function(dtime)
 								minetest.sound_play("item_drop_pickup", {
 									pos = pos,
 									max_hear_distance = 100,
-									gain = 0.5,
+									gain = 0.1,
 								})
 								object:get_luaentity().itemstring = ""
 								object:remove()
@@ -59,8 +59,6 @@ minetest.register_globalstep(function(dtime)
 							vec.z = pos2.z + (vec.z/3)
 							object:moveto(vec)
 							
-							
-							
 							object:get_luaentity().physical_state = false
 							object:get_luaentity().object:set_properties({
 								physical = false
@@ -87,7 +85,7 @@ minetest.register_globalstep(function(dtime)
 												minetest.sound_play("item_drop_pickup", {
 													pos = pos,
 													max_hear_distance = 100,
-													gain = 0.5,
+													gain = 0.1,
 												})
 											end
 											object:get_luaentity().itemstring = ""

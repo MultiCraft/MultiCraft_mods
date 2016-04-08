@@ -8,7 +8,6 @@ local item_spawn = function(pos, node)
 end
 
 minetest.register_node("bonusbox:chest", {
-	description = "Item Chest",
 	tiles = {
 		"chest_top.png",
 		"chest_bottom.png",
@@ -34,7 +33,6 @@ minetest.register_node("bonusbox:chest", {
 })
 
 minetest.register_node("bonusbox:chest_open", {
-	description = "Item Chest",
 	tiles = {
 		"chest_open_top.png",
 		"chest_open_bottom.png",
@@ -45,6 +43,7 @@ minetest.register_node("bonusbox:chest_open", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	drop = "",
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -55,12 +54,11 @@ minetest.register_node("bonusbox:chest_open", {
 			{-0.484478, 0.206242, 0.242552, 0.484478, 0.5, 0.5}, -- NodeBox5
 		}
 	},
-	groups = {oddly_breakable_by_hand=5, not_in_creative_inventory=1},
+	groups = {choppy = 2, not_in_creative_inventory=1},
 	sounds = default.node_sound_wood_defaults(),
 })
 
 minetest.register_node("bonusbox:chest_cap", {
-	description = "Chest Open",
 	tiles = {
 		"chest_open_top.png",
 		"chest_open_bottom.png",
@@ -71,6 +69,7 @@ minetest.register_node("bonusbox:chest_cap", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	drop = "",
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -78,6 +77,6 @@ minetest.register_node("bonusbox:chest_cap", {
 			{-0.485183, -0.5, 0.249501, 0.485183, -0.144871, 0.5}, -- NodeBox2
 		}
 	},
-	groups = {oddly_breakable_by_hand=5, not_in_creative_inventory=1},
+	groups = {attached_node = 1, not_in_creative_inventory=1},
 	sounds = default.node_sound_wood_defaults(),
 })

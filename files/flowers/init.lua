@@ -24,6 +24,7 @@ minetest.register_alias("flowers:flower_dandelion_yellow", "flowers:dandelion_ye
 minetest.register_alias("flowers:flower_orchid", "flowers:orchid")
 minetest.register_alias("flowers:flower_allium", "flowers:allium")
 minetest.register_alias("flowers:flower_dandelion_white", "flowers:dandelion_white")
+minetest.register_alias("flowers:dandelion_white", "flowers:oxeye_daisy")
 
 
 -- Flower registration
@@ -31,7 +32,6 @@ minetest.register_alias("flowers:flower_dandelion_white", "flowers:dandelion_whi
 local function add_simple_flower(name, desc, box, f_groups)
 	-- Common flowers' groups
 	f_groups.snappy = 3
-	f_groups.flammable = 2
 	f_groups.flower = 1
 	f_groups.flora = 1
 	f_groups.attached_node = 1
@@ -63,7 +63,7 @@ flowers.datas = {
 	{"dandelion_yellow", "Yellow Dandelion", {-0.15, -0.5, -0.15, 0.15, 0.2, 0.15}, {color_yellow = 1}},
 	{"orchid", "Blue Orchid", {-0.15, -0.5, -0.15, 0.15, 0.2, 0.15}, {color_blue = 1}},
 	{"allium", "Allium", {-0.5, -0.5, -0.5, 0.5, -0.2, 0.5}, {color_violet = 1}},
-	{"dandelion_white", "White dandelion", {-0.5, -0.5, -0.5, 0.5, -0.2, 0.5}, {color_white = 1}}
+	{"oxeye_daisy", "Oxeye Daisy", {-0.5, -0.5, -0.5, 0.5, -0.2, 0.5}, {color_white = 1}}
 }
 
 for _,item in pairs(flowers.datas) do
@@ -134,7 +134,7 @@ minetest.register_node("flowers:mushroom_red", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, flammable = 3, attached_node = 1},
+	groups = {snappy = 3, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	on_use = minetest.item_eat(-5),
 	selection_box = {
@@ -153,7 +153,7 @@ minetest.register_node("flowers:mushroom_brown", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, flammable = 3, attached_node = 1},
+	groups = {snappy = 3, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	on_use = minetest.item_eat(1),
 	selection_box = {
