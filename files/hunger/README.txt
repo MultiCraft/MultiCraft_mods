@@ -44,10 +44,27 @@ See LICENSE.txt and http://www.gnu.org/licenses/lgpl-3.0.txt
 
 
 Textures:
-hunger_statbar_poisen.png - BlockMen (CC-BY 3.0)
+MultiCraft Project
 
-Sounds:
-hunger_eat.ogg - BlockMen (CC-BY 3.0)
+Sound: WTFPL (see below)
+
+See also:
+http://minetest.net/
+
+         DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                    Version 2, December 2004
+
+ Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+
+ Everyone is permitted to copy and distribute verbatim or modified
+ copies of this license document, and changing it is allowed as long
+ as the name is changed.
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+  0. You just DO WHAT THE FUCK YOU WANT TO. 
+
 
 
 Github:

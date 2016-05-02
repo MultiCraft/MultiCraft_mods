@@ -100,11 +100,11 @@ if minetest.get_modpath("bushes_classic") then
 		"mixed_berry"}
 	for _, berry in ipairs(berries) do
 		if berry ~= "mixed_berry" then
-			register_food("bushes:"..berry, 1)
+			register_food("bushes:" .. berry, 1)
 		end
-		register_food("bushes:"..berry.."_pie_raw", 2)
-		register_food("bushes:"..berry.."_pie_cooked", 5)
-		register_food("bushes:basket_"..berry, 15)
+		register_food("bushes:" .. berry .. "_pie_raw", 2)
+		register_food("bushes:" .. berry .. "_pie_cooked", 5)
+		register_food("bushes:basket_" .. berry, 15)
 	end
 end
 
@@ -269,8 +269,8 @@ if minetest.get_modpath("kpgmobs") ~= nil then
 	register_food("kpgmobs:meat", 6)
 	register_food("kpgmobs:rat_cooked", 5)
 	register_food("kpgmobs:med_cooked", 4)
-  	if minetest.get_modpath("bucket") then
-	   register_food("kpgmobs:bucket_milk", 4, "bucket:bucket_empty")
+	if minetest.get_modpath("bucket") then
+		register_food("kpgmobs:bucket_milk", 4, "bucket:bucket_empty")
 	end
 end
 

@@ -208,8 +208,8 @@ function boat.on_step(self, dtime)
 		return
 	end
 
-	if math.abs(self.v) > 4.5 then
-		self.v = 4.5 * get_sign(self.v)
+	if math.abs(self.v) > 6.0 then
+		self.v = 6.0 * get_sign(self.v)
 	end
 
 	local p = self.object:getpos()
@@ -238,8 +238,8 @@ function boat.on_step(self, dtime)
 
 			local y = self.object:getvelocity().y
 
-			if y >= 4.5 then
-				y = 4.5
+			if y >= 6.0 then
+				y = 6.0
 			elseif y < 0 then
 				new_acce = {x = 0, y = 20, z = 0}
 			else
