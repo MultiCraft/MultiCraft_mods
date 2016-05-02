@@ -172,11 +172,11 @@ local food = hunger.food
 
 function hunger.register_food(name, hunger_change, replace_with_item, poisen, heal, sound)
 	food[name] = {}
-	food[name].saturation = hunger_change	-- hunger points added
-	food[name].replace = replace_with_item	-- what item is given back after eating
-	food[name].poisen = poisen				-- time its poisening
-	food[name].healing = heal				-- amount of HP
-	food[name].sound = sound				-- special sound that is played when eating
+	food[name].saturation = hunger_change -- hunger points added
+	food[name].replace = replace_with_item -- what item is given back after eating
+	food[name].poisen = poisen -- time its poisening
+	food[name].healing = heal -- amount of HP
+	food[name].sound = sound -- special sound that is played when eating
 end
 
 -- Poison player
@@ -224,8 +224,12 @@ function hunger.eat(hp_change, replace_with_item, itemstack, user, pointed_thing
 end
 
 function hunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound)
-    return function(itemstack, user, pointed_thing)
-	if itemstack:take_item() ~= nil and user ~= nil then
+	return function(itemstack, user, pointed_thing)
+
+		if itemstack:take_item() == nil and user == nil then
+			return itemstack
+		end
+
 		local name = user:get_player_name()
 		if not hunger.players[name] then
 			return itemstack
@@ -252,9 +256,7 @@ function hunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound)
 		end
 
 		-- eating sound
-		if not sound then
-			sound = "hunger_eat"
-		end
+		sound = sound or "hunger_eat"
 		minetest.sound_play(sound, {to_player = name, gain = 0.7})
 
 		if replace_with_item then
@@ -262,7 +264,7 @@ function hunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound)
 				itemstack:add_item(replace_with_item)
 			else
 				local inv = user:get_inventory()
-				if inv:room_for_item("main", {name=replace_with_item}) then
+				if inv:room_for_item("main", {name = replace_with_item}) then
 					inv:add_item("main", replace_with_item)
 				else
 					local pos = user:getpos()
@@ -271,8 +273,7 @@ function hunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound)
 				end
 			end
 		end
-	end
 
-	return itemstack
-    end
+		return itemstack
+	end
 end
