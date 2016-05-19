@@ -15,19 +15,6 @@ HUD_HUNGER_OFFSET = {x = 6, y = -124}
 HUD_ARMOR_POS = {x = 0.5, y = 1}
 HUD_ARMOR_OFFSET = {x = -248, y = -124}
 
--- Reorder everything when using ItemWeel
-hud.item_wheel = minetest.setting_getbool("hud_item_wheel")
-if hud.item_wheel then
-	HUD_HEALTH_POS = {x = 0.5,y = 1}
-	HUD_HEALTH_OFFSET = {x = -385, y = -77}
-	HUD_AIR_POS = {x = 0.5, y = 1}
-	HUD_AIR_OFFSET = {x = 150, y = -77}
-	HUD_HUNGER_POS = {x = 0.5, y = 1}
-	HUD_HUNGER_OFFSET = {x = 180, y = -44}
-	HUD_ARMOR_POS = {x = 0.5, y = 1}
-	HUD_ARMOR_OFFSET = {x = -415, y = -44}
-end
-
 -- read hud.conf settings
 hud.read_conf()
 
