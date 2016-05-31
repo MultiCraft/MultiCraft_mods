@@ -57,19 +57,20 @@ mobs:register_mob("mobs_animal:chicken", {
 
 	do_custom = function(self)
 
-		if not self.child
-		and math.random(1, 500) == 1 then
-
-			local pos = self.object:getpos()
-
-			minetest.add_item(pos, "mobs:egg")
-
-			minetest.sound_play("default_place_node_hard", {
-				pos = pos,
-				gain = 1.0,
-				max_hear_distance = 5,
-			})
+		if self.child
+		or math.random(1, 5000) > 1 then
+			return
 		end
+
+		local pos = self.object:getpos()
+
+		minetest.add_item(pos, "mobs:egg")
+
+		minetest.sound_play("default_place_node_hard", {
+			pos = pos,
+			gain = 1.0,
+			max_hear_distance = 5,
+		})
 	end,
 })
 

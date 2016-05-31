@@ -1,5 +1,5 @@
 
--- Mobs Api (8th May 2016)
+-- Mobs Api (23rd May 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -15,7 +15,6 @@ local remove_far = minetest.setting_getbool("remove_far_mobs")
 
 -- pathfinding settings
 local enable_pathfinding = true
-local enable_pathfind_digging = false
 local stuck_timeout = 3 -- how long before mob gets stuck in place and starts searching
 local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
@@ -812,10 +811,9 @@ function smart_mobs(self, s, p, dist, dtime)
 		if not self.path.way then
 
 			self.path.following = false
---			self.path.stuck = true
 
 			 -- lets make way by digging/building if not accessible
-			if enable_pathfind_digging then
+			if self.pathfinding == 2 then
 
 				 -- add block and remove one block above so
 				 -- there is room to jump if needed
@@ -1135,6 +1133,31 @@ local follow_flop = function(self)
 	end
 end
 
+-- dogshoot attack switch and counter function
+local dogswitch = function(self, dtime)
+
+	-- switch mode not activated
+	if not self.dogshoot_switch
+	or not dtime then
+		return 0
+	end
+
+	self.dogshoot_count = self.dogshoot_count + dtime
+
+	if self.dogshoot_count > self.dogshoot_count_max then
+
+		self.dogshoot_count = 0
+
+		if self.dogshoot_switch == 1 then
+			self.dogshoot_switch = 2
+		else
+			self.dogshoot_switch = 1
+		end
+	end
+
+	return self.dogshoot_switch
+end
+
 -- execute current state (stand, walk, run, attacks)
 local do_states = function(self, dtime)
 
@@ -1413,7 +1436,8 @@ local do_states = function(self, dtime)
 			end
 
 		elseif self.attack_type == "dogfight"
-		or (self.attack_type == "dogshoot" and dist <= self.reach) then
+		or (self.attack_type == "dogshoot" and dogswitch(self, dtime) == 2)
+		or (self.attack_type == "dogshoot" and dist <= self.reach and dogswitch(self) == 0) then
 
 			if self.fly
 			and dist > self.reach then
@@ -1561,9 +1585,9 @@ local do_states = function(self, dtime)
 
 						if self.double_melee_attack
 						and math.random(1, 2) == 1 then
-							set_animation(self, "punch")
-						else
 							set_animation(self, "punch2")
+						else
+							set_animation(self, "punch")
 						end
 
 						local p2 = p
@@ -1603,7 +1627,8 @@ local do_states = function(self, dtime)
 			end
 
 		elseif self.attack_type == "shoot"
-		or (self.attack_type == "dogshoot" and dist > self.reach) then
+		or (self.attack_type == "dogshoot" and dogswitch(self, dtime) == 1)
+		or (self.attack_type == "dogshoot" and dist > self.reach and dogswitch(self) == 0) then
 
 			p.y = p.y - .5
 			s.y = s.y + .5
@@ -1730,6 +1755,12 @@ local falling = function(self, pos)
 end
 
 local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
+
+	-- error checking when mod profiling is enabled
+	if not tool_capabilities then
+		print ("[MOBS] mod profiling enabled, damage not enabled")
+		return
+	end
 
 	-- direction error check
 	dir = dir or {x = 0, y = 0, z = 0}
@@ -2222,6 +2253,9 @@ minetest.register_entity(name, {
 	explosion_radius = def.explosion_radius,
 	custom_attack = def.custom_attack,
 	double_melee_attack = def.double_melee_attack,
+	dogshoot_switch = def.dogshoot_switch,
+	dogshoot_count = 0,
+	dogshoot_count_max = def.dogshoot_count_max or 5,
 
 	on_blast = def.on_blast or do_tnt,
 
