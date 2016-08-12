@@ -101,7 +101,8 @@ end
 
 function boat.on_activate(self, staticdata, dtime_s)
 
-	if mobs and mobs.entity and mobs.entity == false then
+	if (mobs and mobs.entity and mobs.entity == false)
+	or not self then
 		self.object:remove()
 		return
 	end

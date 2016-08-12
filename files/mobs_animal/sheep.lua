@@ -91,8 +91,8 @@ for _, col in pairs(all_colours) do
 			if itemname == "mobs:shears" then
 
 				if self.gotten ~= false
-				and self.child ~= false
-				and not minetest.get_modpath("wool") then
+				or self.child ~= false
+				or not minetest.get_modpath("wool") then
 					return
 				end
 
