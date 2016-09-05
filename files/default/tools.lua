@@ -296,30 +296,6 @@ minetest.register_tool("default:sword_diamond", {
     groups = {combat=1},
 })
 
--- Flint and Steel
-minetest.register_tool("default:flint_and_steel", {
-    description = "Flint and Steel",
-    inventory_image = "default_tool_flint_and_steel.png",
-    liquids_pointable = false,
-    stack_max = 1,
-    tool_capabilities = {
-        full_punch_interval = 1.0,
-        max_drop_level=0,
-        groupcaps={
-            flamable = {uses=65, maxlevel=1},
-        }
-    },
-    groups = {tools=1},
-    --groups = {hot=3, igniter=1, not_in_creative_inventory=1},
-    on_use = function(itemstack, user, pointed_thing)
-        if pointed_thing.type == "node" then
-                set_fire(pointed_thing)
-            itemstack:add_wear(66000/65) -- 65 uses
-            return itemstack
-        end
-    end,
-})
-
 -- Fishing Pole
 minetest.register_tool("default:pole", {
     description = "Fishing Rod",

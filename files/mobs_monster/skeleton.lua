@@ -7,14 +7,14 @@ mobs:register_mob("mobs_monster:skeleton", {
 		},
 		collisionbox = {-0.25, -1, -0.3, 0.25, 0.75, 0.3},
 		animation = {
-			speed_normal = 10, speed_run = 15,
-			stand_start = 0, stand_end = 79,
-			walk_start = 168, walk_end = 188,
-			run_start = 168, run_end = 188
+			speed_normal = 10,		speed_run = 15,
+			stand_start = 0,		stand_end = 79,
+			walk_start = 168,		walk_end = 188,
+			run_start = 168,		run_end = 188
 		},
 		makes_footstep_sound = true,
 		sounds = {
-			random = "mobs_zombie.1",
+			random = "mobs_skeleton",
 			war_cry = "mobs_zombie.3",
 			attack = "mobs_zombie.2",
 			damage = "mobs_zombie_hit",
@@ -26,7 +26,6 @@ mobs:register_mob("mobs_monster:skeleton", {
 		knock_back = 1,
 		light_damage = 1,
 		lava_damage = 10,
-		fear_height = 2,
 		damage = 1,
 		reach = 2,
 		attack_type = "dogfight",
