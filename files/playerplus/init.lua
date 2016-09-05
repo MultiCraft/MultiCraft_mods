@@ -2,10 +2,12 @@
 	walking on ice makes player walk faster,
 	stepping through snow or water slows player down,
 	touching a cactus hurts player,
-	stuck inside node suffocates player.
+	and if head stuck inside a solid node suffocates player.
 
 	PlayerPlus by TenPlus1
 ]]
+
+playerplus = {}
 
 -- get node but use fallback for nil or unknown
 local function node_ok(pos, fallback)
@@ -25,7 +27,7 @@ local function node_ok(pos, fallback)
 	return fallback
 end
 
-local pp = {}
+local armor_mod = minetest.get_modpath("3d_armor")
 local def = {}
 local time = 0
 
@@ -44,52 +46,66 @@ minetest.register_globalstep(function(dtime)
 	-- check players
 	for _,player in pairs(minetest.get_connected_players()) do
 
+		-- who am I?
+		local name = player:get_player_name()
+
 		-- where am I?
 		local pos = player:getpos()
 
 		-- what is around me?
 		pos.y = pos.y - 0.1 -- standing on
-		local nod_stand = node_ok(pos)
+		playerplus[name].nod_stand = node_ok(pos)
 
 		pos.y = pos.y + 1.5 -- head level
-		local nod_head = node_ok(pos)
+		playerplus[name].nod_head = node_ok(pos)
 	
 		pos.y = pos.y - 1.2 -- feet level
-		local nod_feet = node_ok(pos)
+		playerplus[name].nod_feet = node_ok(pos)
 
 		pos.y = pos.y - 0.2 -- reset pos
 
+		-- set defaults
+		def.speed = 1
+		def.jump = 1
+		def.gravity = 1
+
 		-- is 3d_armor mod active? if so make armor physics default
-		if minetest.get_modpath("3d_armor") then
-			def = armor.def[player:get_player_name()] or {}
+		if armor_mod and armor and armor.def then
+			-- get player physics from armor
+			def.speed = armor.def[name].speed or 1
+			def.jump = armor.def[name].jump or 1
+			def.gravity = armor.def[name].gravity or 1
 		end
 
-		-- set to armor physics or defaults
-		pp.speed = def.speed or 1
-		pp.jump = def.jump or 1
-		pp.gravity = def.gravity or 1
-
 		-- standing on ice? if so walk faster
-		if nod_stand == "default:ice" then
-			pp.speed = pp.speed + 0.6
+		if playerplus[name].nod_stand == "default:ice" then
+			def.speed = def.speed + 0.4
 		end
 
 		-- standing on snow? if so walk slower
-		if nod_stand == "default:snow"
-		or nod_stand == "default:snowblock"
+		if playerplus[name].nod_stand == "default:snow"
+		or playerplus[name].nod_stand == "default:snowblock"
 		-- wading in water? if so walk slower
-		or minetest.registered_nodes[nod_feet].groups.water then
-			pp.speed = pp.speed - 0.1
+		or minetest.registered_nodes[ playerplus[name].nod_feet ].groups.water then
+			def.speed = def.speed - 0.4
 		end
 
 		-- set player physics
-		player:set_physics_override(pp.speed, pp.jump, pp.gravity)
-		--print ("Speed:", pp.speed, "Jump:", pp.jump, "Gravity:", pp.gravity)
+		player:set_physics_override(def.speed, def.jump, def.gravity)
+		--print ("Speed:", def.speed, "Jump:", def.jump, "Gravity:", def.gravity)
 
-		-- is player suffocating inside node? (only solid "normal" type nodes)
-		if minetest.registered_nodes[nod_head].walkable
-		and minetest.registered_nodes[nod_head].drawtype == "normal"
-		and not minetest.check_player_privs(player:get_player_name(), {noclip = true}) then
+		-- Is player suffocating inside node? (Only for solid full cube type nodes
+		-- without damage and without group disable_suffocation = 1.)
+		local ndef = minetest.registered_nodes[playerplus[name].nod_head]
+
+		if (ndef.walkable == nil or ndef.walkable == true)
+		and (ndef.drowning == nil or ndef.drowning == 0)
+		and (ndef.damage_per_second == nil or ndef.damage_per_second <= 0)
+		and (ndef.collision_box == nil or ndef.collision_box.type == "regular")
+		and (ndef.node_box == nil or ndef.node_box.type == "regular")
+		and (ndef.groups.disable_suffocation ~= 1)
+		-- Check privilege, too
+		and (not minetest.check_player_privs(name, {noclip = true})) then
 
 			if player:get_hp() > 0 then
 				player:set_hp(player:get_hp() - 2)
@@ -113,4 +129,21 @@ minetest.register_globalstep(function(dtime)
 
 	end
 
+end)
+
+-- set to blank on join (for 3rd party mods)
+minetest.register_on_joinplayer(function(player)
+
+	local name = player:get_player_name()
+
+	playerplus[name] = {}
+	playerplus[name].nod_head = ""
+	playerplus[name].nod_feet = ""
+	playerplus[name].nod_stand = ""
+end)
+
+-- clear when player leaves
+minetest.register_on_leaveplayer(function(player)
+
+	playerplus[ player:get_player_name() ] = nil
 end)

@@ -277,14 +277,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-    output = 'default:flint_and_steel',
-    recipe = {
-        {'default:steel_ingot', ''},
-        {'', 'default:flint'},
-    }
-})
-
-minetest.register_craft({
     output = "default:pole",
     recipe = {
         {'','','default:stick'},

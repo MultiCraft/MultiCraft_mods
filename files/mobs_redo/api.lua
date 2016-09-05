@@ -1,11 +1,14 @@
 
--- Mobs Api (5th August 2016)
+-- Mobs Api (5th September 2016)
 
 mobs = {}
 mobs.mod = "redo"
 
--- Invisibility mod
-local invisibility = invisibility or {}
+-- Invisibility mod check
+local invis = {}
+if rawget(_G, "invisibility") then
+	invis = invisibility
+end
 
 -- Load settings
 local damage_enabled = minetest.setting_getbool("enable_damage")
@@ -27,6 +30,8 @@ local square = math.sqrt
 local sin = math.sin
 local cos = math.cos
 local abs = math.abs
+local min = math.min
+local max = math.max
 local atann = math.atan
 local random = math.random
 local floor = math.floor
@@ -48,7 +53,7 @@ do_attack = function(self, player)
 		if random(0,100) < 90
 		and self.sounds.war_cry then
 
-			minetest.sound_play(self.sounds.war_cry,{
+			minetest.sound_play(self.sounds.war_cry, {
 				object = self.object,
 				max_hear_distance = self.sounds.distance
 			})
@@ -272,7 +277,7 @@ function check_for_death(self)
 
 		if self.sounds.damage then
 
-			minetest.sound_play(self.sounds.damage,{
+			minetest.sound_play(self.sounds.damage, {
 				object = self.object,
 				gain = 0.7,
 				max_hear_distance = self.sounds.distance
@@ -324,7 +329,7 @@ function check_for_death(self)
 	-- play death sound
 	if self.sounds.death then
 
-		minetest.sound_play(self.sounds.death,{
+		minetest.sound_play(self.sounds.death, {
 			object = self.object,
 			gain = 0.7,
 			max_hear_distance = self.sounds.distance
@@ -333,15 +338,21 @@ function check_for_death(self)
 
 	-- execute custom death function
 	if self.on_die then
+
 		self.on_die(self, pos)
+
+		return true
 	end
 
+	-- default death function
 	self.object:remove()
+
+	--effect(pos, 20, "tnt_smoke.png")
 
 	return true
 end
 
--- check if within map limits (-30911 to 30927)
+-- check if within physical map limits (-30911 to 30927)
 function within_limits(pos, radius)
 
 	if  (pos.x - radius) > -30913
@@ -583,7 +594,7 @@ end
 -- should mob follow what I'm holding ?
 function follow_holding(self, clicker)
 
-	if invisibility[clicker:get_player_name()] then
+	if invis[clicker:get_player_name()] then
 		return false
 	end
 
@@ -612,7 +623,7 @@ end
 -- find two animals of same type and breed if nearby and horny
 local function breed(self)
 
-	-- child take 240 seconds before growing into adult
+	-- child takes 240 seconds before growing into adult
 	if self.child == true then
 
 		self.hornytimer = self.hornytimer + 1
@@ -705,7 +716,7 @@ local function breed(self)
 				ent.hornytimer = 41
 
 				-- spawn baby
-				minetest.after(5, function(dtime)
+				minetest.after(5, function()
 
 					local mob = minetest.add_entity(pos, self.name)
 					local ent2 = mob:get_luaentity()
@@ -818,8 +829,7 @@ function smart_mobs(self, s, p, dist, dtime)
 		s.y = floor(s.y + 0.5) - sheight
 		s.z = floor(s.z + 0.5)
 
-		local ssight, sground
-		ssight, sground = minetest.line_of_sight(s, {
+		local ssight, sground = minetest.line_of_sight(s, {
 			x = s.x, y = s.y - 4, z = s.z}, 1)
 
 		-- determine node above ground
@@ -918,6 +928,7 @@ function smart_mobs(self, s, p, dist, dtime)
 
 			-- frustration! cant find the damn path :(
 			if self.sounds.random then
+
 				minetest.sound_play(self.sounds.random, {
 					object = self.object,
 					max_hear_distance = self.sounds.distance
@@ -955,7 +966,7 @@ local monster_attack = function(self)
 
 	local s = self.object:getpos()
 	local p, sp, dist
-	local player, type, obj, min_player = nil, nil, nil, nil
+	local player, type, obj, min_player
 	local min_dist = self.view_range + 1
 	local objs = minetest.get_objects_inside_radius(s, self.view_range)
 
@@ -963,7 +974,7 @@ local monster_attack = function(self)
 
 		if objs[n]:is_player() then
 
-			if invisibility[ objs[n]:get_player_name() ] then
+			if invis[ objs[n]:get_player_name() ] then
 
 				type = ""
 			else
@@ -1064,7 +1075,7 @@ local follow_flop = function(self)
 		for n = 1, #players do
 
 			if get_distance(players[n]:getpos(), s) < self.view_range
-			and not invisibility[ players[n]:get_player_name() ] then
+			and not invis[ players[n]:get_player_name() ] then
 
 				self.following = players[n]
 
@@ -1367,7 +1378,7 @@ local do_states = function(self, dtime)
 		or not self.attack
 		or not self.attack:getpos()
 		or self.attack:get_hp() <= 0
-		or (self.attack:is_player() and invisibility[ self.attack:get_player_name() ]) then
+		or (self.attack:is_player() and invis[ self.attack:get_player_name() ]) then
 
 			--print(" ** stop attacking **", dist, self.view_range)
 			self.state = "stand"
@@ -1754,7 +1765,7 @@ local falling = function(self, pos)
 
 			self.object:setacceleration({
 				x = 0,
-				y = -self.fall_speed / (math.max(1, v.y) ^ 2),
+				y = -self.fall_speed / (max(1, v.y) ^ 2),
 				z = 0
 			})
 		end
@@ -1875,7 +1886,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		return
 	end
 
-	-- add healthy afterglow when hit
+	-- add healthy afterglow when hit (can cause hit lag with larger textures)
 	core.after(0.1, function()
 		self.object:settexturemod("^[colorize:#ff000085")
 
@@ -1890,7 +1901,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 		local pos = self.object:getpos()
 
-		pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) / 2
+		pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) * .5
 
 		effect(pos, self.blood_amount, self.blood_texture)
 	end
@@ -1900,7 +1911,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	and tflp > punch_interval then
 
 		local v = self.object:getvelocity()
-		local r = 1.4 - math.min(punch_interval, 1.4)
+		local r = 1.4 - min(punch_interval, 1.4)
 		local kb = r * 5
 		local up = 2
 
@@ -1948,7 +1959,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	and self.state ~= "flop"
 	and self.child == false
 	and hitter:get_player_name() ~= self.owner
-	and not invisibility[ hitter:get_player_name() ] then
+	and not invis[ hitter:get_player_name() ] then
 
 		-- attack whoever punched mob
 		self.state = ""
@@ -2487,6 +2498,7 @@ function mobs:spawn(def)
 	mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval,
 		chance, active_object_count, min_height, max_height, day_toggle)
 end
+
 -- set content id's
 local c_air = minetest.get_content_id("air")
 local c_ignore = minetest.get_content_id("ignore")
@@ -2587,7 +2599,7 @@ function mobs:register_arrow(name, def)
 		hit_player = def.hit_player,
 		hit_node = def.hit_node,
 		hit_mob = def.hit_mob,
-		drop = def.drop or false,
+		drop = def.drop or false, -- drops arrow as registered item when true
 		collisionbox = {0, 0, 0, 0, 0, 0}, -- remove box around arrows
 		timer = 0,
 		switch = 0,
