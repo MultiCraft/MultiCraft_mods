@@ -268,7 +268,7 @@ end]]
 
 -- Register Player Model
 
-default.player_register_model("3d_armor_character.x", {
+default.player_register_model("3d_armor_character.b3d", {
     animation_speed = 30,
     textures = {
         armor.default_skin..".png",
@@ -306,7 +306,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 end)
 
 minetest.register_on_joinplayer(function(player)
-    default.player_set_model(player, "3d_armor_character.x")
+    default.player_set_model(player, "3d_armor_character.b3d")
     local name = player:get_player_name()
     local player_inv = player:get_inventory()
     local armor_inv = minetest.create_detached_inventory(name.."_armor",{
