@@ -71,6 +71,7 @@ mobs:register_mob("mobs_animal:bunny", {
 			return
 		end
 
+		mobs:protect(self, clicker)
 		mobs:capture_mob(self, clicker, 30, 50, 80, false, nil)
 	end,
 
@@ -78,8 +79,14 @@ mobs:register_mob("mobs_animal:bunny", {
 	damage = 5,
 })
 
-mobs:register_spawn("mobs_animal:bunny",
-	{"default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"}, 20, 0, 3000, 2, 31000, true)
+mobs:spawn({
+	name = "mobs_animal:bunny",
+	nodes = {"default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	min_light = 10,
+	chance = 15000,
+	min_height = 0,
+	day_toggle = true,
+})
 
 mobs:register_egg("mobs_animal:bunny", "Bunny", "mobs_bunny_inv.png", 0)
 

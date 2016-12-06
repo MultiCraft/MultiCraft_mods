@@ -3,6 +3,7 @@
 
 mobs:register_mob("mobs_monster:spider", {
 	docile_by_day = true,
+	group_attack = true,
 	type = "monster",
 	passive = false,
 	attack_type = "dogfight",
@@ -32,7 +33,7 @@ mobs:register_mob("mobs_monster:spider", {
 --		{name = "farming:string",
 --		chance = 1, min = 1, max = 2},	},
 	water_damage = 5,
-	lava_damage = 5,	
+	lava_damage = 5,
 	light_damage = 0,
 	animation = {
 		speed_normal = 15,
@@ -48,8 +49,16 @@ mobs:register_mob("mobs_monster:spider", {
 	},
 })
 
-mobs:register_spawn("mobs_monster:spider",
-		{"default:dirt", "default:sandstone", "default:sand", "default:stone", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass", "default:cobble", "default:mossycobble"}, 13, 0, 6000, 1, 31000)
+mobs:spawn({
+	name = "mobs_monster:spider",
+	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
+	min_light = 0,
+	max_light = 12,
+	chance = 7000,
+	active_object_count = 1,
+	min_height = -50,
+	max_height = 31000,
+})
 
 mobs:register_egg("mobs_monster:spider", "Spider", "mobs_cobweb.png", 1)
 

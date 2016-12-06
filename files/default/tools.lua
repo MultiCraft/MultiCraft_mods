@@ -321,22 +321,3 @@ minetest.register_tool("default:pole", {
         return nil
     end,
 })
-
---Shears
-minetest.register_tool("default:shears", {
-    description = "Shears",
-    inventory_image = "default_tool_shears.png",
-    wield_image = "default_tool_shears.png",
-    stack_max = 1,
-    max_drop_level=3,
-    tool_capabilities = {
-            full_punch_interval = 0.5,
-            max_drop_level=1,
-            groupcaps={
-                leaves={times={[1]=0,[2]=0,[3]=0}, uses=283, maxlevel=1},
-                wool={times={[1]=0.2,[2]=0.2,[3]=0.2}, uses=283, maxlevel=1},
-                snappy={times={[1]=0.2,[2]=0.2,[3]=0.2}, uses=283, maxlevel=1},
-            }
-    },
-    groups = {tools=1},
-})

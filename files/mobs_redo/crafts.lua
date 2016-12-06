@@ -87,3 +87,18 @@ minetest.register_craft({
 		{'', 'group:stick', 'default:steel_ingot'},
 	}
 })
+
+-- protection rune
+minetest.register_craftitem("mobs:protector", {
+	description = "Mob Protection Rune",
+	inventory_image = "mobs_protector.png",
+})
+
+minetest.register_craft({
+	output = "mobs:protector",
+	recipe = {
+		{"default:stone", "default:stone", "default:stone"},
+		{"default:stone", "default:goldblock", "default:stone"},
+		{"default:stone", "default:stone", "default:stone"},
+	}
+})

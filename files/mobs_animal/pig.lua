@@ -32,7 +32,7 @@ mobs:register_mob("mobs_animal:pig", {
 			{name = "mobs:pork_raw",
 				chance = 2, min = 1, max = 1},
 			{name = "mobs:pork_raw",
-				chance = 2, min = 1, max = 1},
+				chance = 2, min = 1, max = 1}
 		},
 		water_damage = 1,
 		lava_damage = 5,
@@ -53,9 +53,15 @@ mobs:register_mob("mobs_animal:pig", {
 		end,
 	})
 
-mobs:register_spawn("mobs_animal:pig",
-	{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass"}, 20, 5, 4000, 1, 31000, true)
-
+mobs:spawn({
+	name = "mobs_animal:pig",
+	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass"},
+	min_light = 5,
+	chance = 15000,
+	min_height = 0,
+	max_height = 31000,
+	day_toggle = true,
+})
 
 mobs:register_egg("mobs_animal:pig", "Pig", "wool_pink.png", 1)
 

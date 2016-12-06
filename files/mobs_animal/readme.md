@@ -27,7 +27,7 @@ Rat
 
 Sheep
 
-- Green grass and wheat munchers that can be clipped using shears to give 1-3 wool. Feed sheep 8x wheat to regrow wool, tame and breed. Will drop 1-3 meat when killed.
+- Green grass and wheat munchers that can be clipped using shears to give 1-3 wool. Feed sheep 8x wheat to regrow wool, tame and breed.  Right-click a tamed sheep with dye to change it's colour.  Will drop 1-3 meat when killed.
 
 Warthog
 

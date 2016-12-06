@@ -36,12 +36,21 @@ mobs:register_mob("mobs_monster:skeleton", {
 		run_velocity = 0.5,
 		jump = false,
 		drops = {
-			{name = "default:bone", chance = 1, min = 0, max = 2,}
+			{name = "default:bone", chance = 2, min = 1, max = 1},
+			{name = "default:bone", chance = 2, min = 1, max = 1}
 		},
 	})
 
-mobs:register_spawn("mobs_monster:skeleton",
-	{"default:dirt", "default:sandstone", "default:sand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"}, 10, 0, 5000, 1, 31000, false)
+mobs:spawn({
+	name = "mobs_monster:skeleton",
+	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
+	min_light = 0,
+	max_light = 10,
+	chance = 7000,
+	active_object_count = 1,
+	min_height = -50,
+	max_height = 31000,
+})	
 
 -- compatibility
 mobs:alias_mob("mobs:skeleton", "mobs_monster:skeleton")

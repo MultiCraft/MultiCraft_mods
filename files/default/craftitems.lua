@@ -89,13 +89,6 @@ minetest.register_craftitem("default:clay_brick", {
     groups = {materials = 1},
 })
 
-minetest.register_craftitem("default:flint", {
-    description = "Flint",
-    inventory_image = "default_flint.png",
-    stack_max = 64,
-    groups = {materials = 1},
-})
-
 minetest.register_craftitem("default:gunpowder", {
     description = "Gunpowder",
     inventory_image = "default_gunpowder.png",
