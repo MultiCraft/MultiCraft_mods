@@ -45,8 +45,9 @@ for _, col in pairs(all_colours) do
 		runaway = true,
 		jump = true,
 		drops = {
-			{name = "mobs:meat_raw", chance = 1, min = 1, max = 2},
-			{name = "wool:"..col[1], chance = 1, min = 1, max = 1},
+			{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+			{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
+			{name = "wool:"..col[1], chance = 1, min = 1, max = 1}
 		},
 		water_damage = 1,
 		lava_damage = 5,
@@ -176,21 +177,55 @@ for _, col in pairs(all_colours) do
 
 end
 
-mobs:register_spawn("mobs_animal:sheep_white",
-	{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"}, 20, 5, 12000, 1, 31000, true)
+mobs:spawn({
+	name = "mobs_animal:sheep_white",
+	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	min_light = 5,
+	chance = 15000,
+	min_height = 0,
+	max_height = 31000,
+	day_toggle = true,
+})
 
-mobs:register_spawn("mobs_animal:sheep_grey",
-	{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"}, 20, 5, 12000, 1, 31000, true)
-
-mobs:register_spawn("mobs_animal:sheep_dark_grey",
-	{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"}, 20, 5, 12000, 1, 31000, true)
-
-mobs:register_spawn("mobs_animal:sheep_black",
-	{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"}, 20, 5, 12000, 1, 31000, true)
-
-mobs:register_spawn("mobs_animal:sheep_brown",
-	{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"}, 20, 5, 12000, 1, 31000, true)
-
+mobs:spawn({
+	name = "mobs_animal:sheep_grey",
+	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	min_light = 5,
+	chance = 15000,
+	min_height = 0,
+	max_height = 31000,
+	day_toggle = true,
+})
+	
+	mobs:spawn({
+	name = "mobs_animal:sheep_dark_grey",
+	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	min_light = 5,
+	chance = 15000,
+	min_height = 0,
+	max_height = 31000,
+	day_toggle = true,
+})
+	
+	mobs:spawn({
+	name = "mobs_animal:sheep_black",
+	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	min_light = 5,
+	chance = 15000,
+	min_height = 0,
+	max_height = 31000,
+	day_toggle = true,
+})
+	
+	mobs:spawn({
+	name = "mobs_animal:sheep_brown",
+	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	min_light = 5,
+	chance = 15000,
+	min_height = 0,
+	max_height = 31000,
+	day_toggle = true,
+})
 
 -- compatibility
 mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white")

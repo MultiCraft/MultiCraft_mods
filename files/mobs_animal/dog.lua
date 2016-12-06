@@ -40,13 +40,13 @@
 		fall_damage = 4,
 		makes_footstep_sound = true,
 		sounds = {
-			war_cry = "mobs_wolf_attack"
+			war_cry = "mobs_wolf_attack",
+			death = "mobs_wolf_attack"
 		},
-
 		on_rightclick = function(self, clicker)
 				if mobs:feed_tame(self, clicker, 2, false, true) then
 					if self.food == 0 then
-						local mob = minetest.add_entity(self.object:getpos(), "mobs_wolf:dog")
+						local mob = minetest.add_entity(self.object:getpos(), "mobs_animal:dog")
 						local ent = mob:get_luaentity()
 						ent.owner = clicker:get_player_name()
 						ent.following = clicker
@@ -59,9 +59,15 @@
 			end
 	})
 
-
-mobs:register_spawn("mobs_animal:wolf",
-	{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass"}, 20, 0, 4000, 1, 31000, true)
+mobs:spawn({
+	name = "mobs_animal:wolf",
+	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass"},
+	min_light = 0,
+	chance = 15000,
+	min_height = 0,
+	max_height = 31000,
+	day_toggle = true,
+})
 
 mobs:register_egg("mobs_animal:wolf", "Wolf", "wool_grey.png", 1)
 
@@ -106,9 +112,9 @@ mobs:register_egg("mobs_animal:wolf", "Wolf", "wool_grey.png", 1)
 		fall_damage = 5,
 		makes_footstep_sound = true,
 		sounds = {
-			war_cry = "mobs_wolf_attack"
+			war_cry = "mobs_wolf_attack",
+			death = "mobs_wolf_attack"
 		},
-
 		on_rightclick = function(self, clicker)
 				if mobs:feed_tame(self, clicker, 6, true, true) then
 					return

@@ -52,6 +52,7 @@ mobs:register_mob("mobs_animal:chicken", {
 			return
 		end
 
+		mobs:protect(self, clicker)
 		mobs:capture_mob(self, clicker, 30, 50, 80, false, nil)
 	end,
 
@@ -74,8 +75,15 @@ mobs:register_mob("mobs_animal:chicken", {
 	end,
 })
 
-mobs:register_spawn("mobs_animal:chicken",
-	{"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"}, 20, 5, 3000, 1, 31000, true)
+mobs:spawn({
+	name = "mobs_animal:chicken",
+	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	min_light = 5,
+	chance = 15000,
+	active_object_count = 2,
+	min_height = 0,
+	day_toggle = true,
+})
 
 mobs:register_egg("mobs_animal:chicken", "Chicken", "mobs_chicken_inv.png", 0)
 

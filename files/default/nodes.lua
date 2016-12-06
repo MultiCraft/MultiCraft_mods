@@ -306,25 +306,6 @@ minetest.register_node("default:dirt", {
     sounds = default.node_sound_dirt_defaults(),
 })
 
-
-minetest.register_node("default:gravel", {
-    description = "Gravel",
-    tiles = {"default_gravel.png"},
-    is_ground_content = true,
-    stack_max = 64,
-    groups = {crumbly=2, falling_node=1, building = 1},
-    drop = {
-        max_items = 1,
-        items = {
-            {items = {'default:flint'},rarity = 7},
-            {items = {'default:gravel'}}
-        }
-    },
-    sounds = default.node_sound_dirt_defaults({
-        footstep = {name="default_gravel_footstep", gain=0.45},
-    }),
-})
-
 -- sandstone --
 minetest.register_node("default:sand", {
     description = "Sand",
