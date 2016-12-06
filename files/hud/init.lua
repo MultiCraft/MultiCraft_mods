@@ -1,7 +1,8 @@
-hud = {}
-local modpath = minetest.get_modpath("hud")
 
-dofile(modpath .. "/api.lua")
-dofile(modpath .. "/functions.lua")
-dofile(modpath .. "/builtin.lua")
-dofile(modpath .. "/legacy.lua")
+hud = {}
+
+local path = minetest.get_modpath("hud")
+
+dofile(path .. "/api.lua")
+dofile(path .. "/builtin.lua")
+dofile(path .. "/legacy.lua")

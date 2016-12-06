@@ -1,17 +1,18 @@
+
 local register_food = hunger.register_food
 
 register_food("default:apple", 2)
 
-if minetest.get_modpath("farming") ~= nil then
+if minetest.get_modpath("farming") then
 	register_food("farming:bread", 4)
 end
 
-if minetest.get_modpath("flowers") ~= nil then
+if minetest.get_modpath("flowers") then
 		register_food("flowers:mushroom_brown", 1)
 		register_food("flowers:mushroom_red", 1, "", 3)
 end
 
-if minetest.get_modpath("mobs") ~= nil then
+if minetest.get_modpath("mobs") then
 	if mobs.mod ~= nil and mobs.mod == "redo" then
 		register_food("mobs:cheese", 4)
 		register_food("mobs:meat", 8)
@@ -34,7 +35,7 @@ if minetest.get_modpath("mobs") ~= nil then
 	end
 end
 
-if minetest.get_modpath("moretrees") ~= nil then
+if minetest.get_modpath("moretrees") then
 	register_food("moretrees:coconut_milk", 1)
 	register_food("moretrees:raw_coconut", 2)
 	register_food("moretrees:acorn_muffin", 3)
@@ -43,7 +44,7 @@ if minetest.get_modpath("moretrees") ~= nil then
 	register_food("moretrees:fir_nuts", 1)
 end
 
-if minetest.get_modpath("dwarves") ~= nil then
+if minetest.get_modpath("dwarves") then
 	register_food("dwarves:beer", 2)
 	register_food("dwarves:apple_cider", 1)
 	register_food("dwarves:midus", 2)
@@ -52,7 +53,7 @@ if minetest.get_modpath("dwarves") ~= nil then
 	register_food("dwarves:sake", 2)
 end
 
-if minetest.get_modpath("animalmaterials") ~= nil then
+if minetest.get_modpath("animalmaterials") then
 	register_food("animalmaterials:milk", 2)
 	register_food("animalmaterials:meat_raw", 3)
 	register_food("animalmaterials:meat_pork", 3)
@@ -67,7 +68,7 @@ if minetest.get_modpath("animalmaterials") ~= nil then
 	register_food("animalmaterials:fish_clownfish", 2)
 end
 
-if minetest.get_modpath("fishing") ~= nil then
+if minetest.get_modpath("fishing") then
 	register_food("fishing:fish_raw", 2)
 	register_food("fishing:fish_cooked", 5)
 	register_food("fishing:sushi", 6)
@@ -77,11 +78,11 @@ if minetest.get_modpath("fishing") ~= nil then
 	register_food("fishing:pike_cooked", 8)
 end
 
-if minetest.get_modpath("glooptest") ~= nil then
+if minetest.get_modpath("glooptest") then
 	register_food("glooptest:kalite_lump", 1)
 end
 
-if minetest.get_modpath("bushes") ~= nil then
+if minetest.get_modpath("bushes") then
 	register_food("bushes:sugar", 1)
 	register_food("bushes:strawberry", 2)
 	register_food("bushes:berry_pie_raw", 3)
@@ -108,7 +109,7 @@ if minetest.get_modpath("bushes_classic") then
 	end
 end
 
-if minetest.get_modpath("mushroom") ~= nil then
+if minetest.get_modpath("mushroom") then
 	register_food("mushroom:brown", 1)
 	register_food("mushroom:red", 1, "", 3)
 	-- mushroom potions: red = strong poison, brown = light restorative
@@ -118,7 +119,7 @@ if minetest.get_modpath("mushroom") ~= nil then
 	end
 end
 
-if minetest.get_modpath("docfarming") ~= nil then
+if minetest.get_modpath("docfarming") then
 	register_food("docfarming:carrot", 3)
 	register_food("docfarming:cucumber", 2)
 	register_food("docfarming:corn", 3)
@@ -127,7 +128,7 @@ if minetest.get_modpath("docfarming") ~= nil then
 	register_food("docfarming:raspberry", 3)
 end
 
-if minetest.get_modpath("farming_plus") ~= nil then
+if minetest.get_modpath("farming_plus") then
 	register_food("farming_plus:carrot_item", 3)
 	register_food("farming_plus:banana", 2)
 	register_food("farming_plus:orange_item", 2)
@@ -138,7 +139,7 @@ if minetest.get_modpath("farming_plus") ~= nil then
 	register_food("farming_plus:rhubarb_item", 2)
 end
 
-if minetest.get_modpath("mtfoods") ~= nil then
+if minetest.get_modpath("mtfoods") then
 	register_food("mtfoods:dandelion_milk", 1)
 	register_food("mtfoods:sugar", 1)
 	register_food("mtfoods:short_bread", 4)
@@ -167,18 +168,18 @@ if minetest.get_modpath("mtfoods") ~= nil then
 	register_food("mtfoods:cider_rack", 2)
 end
 
-if minetest.get_modpath("fruit") ~= nil then
+if minetest.get_modpath("fruit") then
 	register_food("fruit:apple", 2)
 	register_food("fruit:pear", 2)
 	register_food("fruit:bananna", 3)
 	register_food("fruit:orange", 2)
 end
 
-if minetest.get_modpath("mush45") ~= nil then
+if minetest.get_modpath("mush45") then
 	register_food("mush45:meal", 4)
 end
 
-if minetest.get_modpath("seaplants") ~= nil then
+if minetest.get_modpath("seaplants") then
 	register_food("seaplants:kelpgreen", 1)
 	register_food("seaplants:kelpbrown", 1)
 	register_food("seaplants:seagrassgreen", 1)
@@ -190,7 +191,7 @@ if minetest.get_modpath("seaplants") ~= nil then
 	register_food("seaplants:seagrassgreensalad", 1)
 end
 
-if minetest.get_modpath("mobfcooking") ~= nil then
+if minetest.get_modpath("mobfcooking") then
 	register_food("mobfcooking:cooked_pork", 6)
 	register_food("mobfcooking:cooked_ostrich", 6)
 	register_food("mobfcooking:cooked_beef", 6)
@@ -200,7 +201,7 @@ if minetest.get_modpath("mobfcooking") ~= nil then
 	register_food("mobfcooking:cooked_fish", 6)
 end
 
-if minetest.get_modpath("creatures") ~= nil then
+if minetest.get_modpath("creatures") then
 	register_food("creatures:meat", 6)
 	register_food("creatures:flesh", 3)
 	register_food("creatures:rotten_flesh", 3, "", 3)
@@ -264,7 +265,7 @@ if minetest.get_modpath("farming") and farming.mod == "redo" then
 	register_food("farming:grapes", 1)
 end
 
-if minetest.get_modpath("kpgmobs") ~= nil then
+if minetest.get_modpath("kpgmobs") then
 	register_food("kpgmobs:uley", 3)
 	register_food("kpgmobs:meat", 6)
 	register_food("kpgmobs:rat_cooked", 5)
@@ -274,23 +275,23 @@ if minetest.get_modpath("kpgmobs") ~= nil then
 	end
 end
 
-if minetest.get_modpath("jkfarming") ~= nil then
+if minetest.get_modpath("jkfarming") then
 	register_food("jkfarming:carrot", 3)
 	register_food("jkfarming:corn", 3)
 	register_food("jkfarming:melon_part", 2)
 	register_food("jkfarming:cake", 3)
 end
 
-if minetest.get_modpath("jkanimals") ~= nil then
+if minetest.get_modpath("jkanimals") then
 	register_food("jkanimals:meat", 6)
 end
 
-if minetest.get_modpath("jkwine") ~= nil then
+if minetest.get_modpath("jkwine") then
 	register_food("jkwine:grapes", 2)
 	register_food("jkwine:winebottle", 1)
 end
 
-if minetest.get_modpath("cooking") ~= nil then
+if minetest.get_modpath("cooking") then
 	register_food("cooking:meat_beef_cooked", 4)
 	register_food("cooking:fish_bluewhite_cooked", 3)
 	register_food("cooking:fish_clownfish_cooked", 1)
@@ -303,19 +304,19 @@ if minetest.get_modpath("cooking") ~= nil then
 end
 
 -- ferns mod of plantlife_modpack
-if minetest.get_modpath("ferns") ~= nil then
+if minetest.get_modpath("ferns") then
 	register_food("ferns:fiddlehead", 1, "", 1)
 	register_food("ferns:fiddlehead_roasted", 3)
 	register_food("ferns:ferntuber_roasted", 3)
 	register_food("ferns:horsetail_01", 1)
 end
 
-if minetest.get_modpath("pizza") ~= nil then
+if minetest.get_modpath("pizza") then
 	register_food("pizza:pizza", 30, "", nil, 30)
 	register_food("pizza:pizzaslice", 5, "", nil, 5)
 end
 
-if minetest.get_modpath("wine") ~= nil then
+if minetest.get_modpath("wine") then
 	register_food("wine:glass_wine", 2)
 	register_food("wine:glass_beer", 2)
 	register_food("wine:glass_mead", 2)

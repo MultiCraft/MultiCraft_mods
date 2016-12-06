@@ -1,11 +1,12 @@
+
 -- global values
 hud.registered_items = {}
 hud.damage_events = {}
 hud.breath_events = {}
 
 -- keep id handling internal
-local hud_id = {}	-- hud item ids
-local sb_bg = {}	-- statbar background ids
+local hud_id = {} -- hud item ids
+local sb_bg = {} -- statbar background ids
 
 -- localize often used table
 local items = hud.registered_items
@@ -62,7 +63,7 @@ function hud.register(name, def)
 		end
 	end
 	
-	-- no error so far, return sucess
+	-- no error so far, return success
 	return true
 end
 
@@ -112,7 +113,7 @@ function hud.swap_statbar(player, item1, item2)
 		player:hud_change(bg2.id, "offset", def1.offset)
 		if pos_swap == true then
 			player:hud_change(bg2.id, "position", def1.position)
-		end	
+		end
 	end
 
 	return true
@@ -236,3 +237,32 @@ minetest.register_on_joinplayer(function(player)
 	end
 
 end)
+
+function hud.player_event(player, event)
+	if not player then return end -- ADDED
+
+	--needed for first update called by on_join
+	minetest.after(0, function(player) -- ADDED (player)
+		if event == "health_changed" then
+			for _,v in pairs(hud.damage_events) do
+				if v.func then
+					v.func(player)
+				end
+			end
+		end
+
+		if event == "breath_changed" then
+			for _,v in pairs(hud.breath_events) do
+				if v.func then
+					v.func(player)
+				end
+			end
+		end
+
+		if event == "hud_changed" then--called when flags changed
+
+		end
+	end, player) -- ADDED , player)
+end
+
+core.register_playerevent(hud.player_event)
