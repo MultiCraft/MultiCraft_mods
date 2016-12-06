@@ -2,7 +2,7 @@ hunger = {}
 hunger.players = {}
 hunger.food = {}
 
-HUNGER_TICK = 800 -- time in seconds after that 1 hunger point is taken
+HUNGER_TICK = 600 -- time in seconds after that 1 hunger point is taken
 HUNGER_HEALTH_TICK = 4 -- time in seconds after player gets healed/damaged
 HUNGER_MOVE_TICK = 0.5 -- time in seconds after the movement is checked
 
@@ -22,8 +22,13 @@ HUNGER_MAX = 30 -- maximum level of saturation
 local modpath = minetest.get_modpath("hunger")
 dofile(modpath .. "/functions.lua")
 dofile(modpath .. "/food.lua")
-dofile(modpath .. "/legacy.lua")
 
+-- legacy functions
+hud.item_eat = hunger.item_eat
+hud.set_hunger = hunger.save
+hud.get_hunger = hunger.load
+hud.save_hunger = hunger.save
+hud.load_hunger = hunger.load
 
 -- Callbacks
 if minetest.setting_getbool("enable_damage") then
