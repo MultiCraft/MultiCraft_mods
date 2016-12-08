@@ -100,12 +100,19 @@ local function set_inventory(player)
             "list[detached:"..player_name.."_armor;armor_feet;0,3;1,1;3]"
         end
     end
+	local split_form = ""
+	if PLATFORM == "Android" or PLATFORM == "iOS" then
+        split_form = "box[8,3;0.8,0.845;#9990]"..
+        "list[detached:split;main;8,3;1,1;]"..
+        "label[8,2.5;Split]"
+	end
     form = form ..
     "list[current_player;main;0,4.5;9,3;9]"..
     "list[current_player;main;0,7.74;9,1;]"..
     "list[current_player;craft;4,1;2,1;1]"..
     "list[current_player;craft;4,2;2,1;4]"..
     "list[current_player;craftpreview;7,1.5;1,1;]"..
+    split_form..
     "inv"
 
     player:set_inventory_formspec(form)
@@ -116,6 +123,12 @@ local function set_workbench(player)
     player:get_inventory():set_size("craft", 9)
     player:get_inventory():set_size("main", 9*4)
 
+    local split_form = ""
+	if PLATFORM == "Android" or PLATFORM == "iOS" then
+        split_form = "box[8,3;0.8,0.845;#9990]"..
+        "list[detached:split;main;8,3;1,1;]"..
+        "label[8,2.5;Split]"
+	end
     local form = "size[9,8.75]"..
     "image_button_exit[9,0;1,1;;exit;X;true;true;]"..
     "background[-0.19,-0.25;9.41,9.49;crafting_formspec_workbench.png]"..
@@ -125,6 +138,7 @@ local function set_workbench(player)
     "list[current_player;main;0,7.74;9,1;]"..
     "list[current_player;craft;1.75,0.5;3,3;]"..
     "list[current_player;craftpreview;5.75,1.5;1,1;]"..
+    split_form..
     "wob"
 
     minetest.show_formspec(player:get_player_name(), "main", form)
@@ -196,3 +210,16 @@ minetest.register_craft({
 		{"group:wood", "group:wood"}
 	}
 })
+
+local split_inv = minetest.create_detached_inventory("split", {
+    allow_move = function(_, _, _, _, _, count, _)
+        return count
+    end,
+    allow_put = function(_, _, _, stack, _)
+        return stack:get_count() / 2
+    end,
+    allow_take = function(_, _, _, stack, _)
+        return stack:get_count()
+    end,
+})
+split_inv:set_size("main", 1)
