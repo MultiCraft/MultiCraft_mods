@@ -101,11 +101,10 @@ local function set_inventory(player)
         end
     end
 	local split_form = ""
-	if PLATFORM == "Android" or PLATFORM == "iOS" then
-        split_form = "box[8,3;0.8,0.845;#9990]"..
-        "list[detached:split;main;8,3;1,1;]"..
-        "label[8,2.5;Split]"
-	end
+--	if PLATFORM == "Android" or PLATFORM == "iOS" then
+        split_form = 
+        "list[detached:split;main;7.98,3.14;1,1;]"
+	--end
     form = form ..
     "list[current_player;main;0,4.5;9,3;9]"..
     "list[current_player;main;0,7.74;9,1;]"..
@@ -124,11 +123,10 @@ local function set_workbench(player)
     player:get_inventory():set_size("main", 9*4)
 
     local split_form = ""
-	if PLATFORM == "Android" or PLATFORM == "iOS" then
-        split_form = "box[8,3;0.8,0.845;#9990]"..
-        "list[detached:split;main;8,3;1,1;]"..
-        "label[8,2.5;Split]"
-	end
+--	if PLATFORM == "Android" or PLATFORM == "iOS" then
+        split_form = 
+        "list[detached:split;main;7.98,3.14;1,1;]"
+--	end
     local form = "size[9,8.75]"..
     "image_button_exit[9,0;1,1;;exit;X;true;true;]"..
     "background[-0.19,-0.25;9.41,9.49;crafting_formspec_workbench.png]"..
