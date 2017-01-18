@@ -66,3 +66,8 @@ minetest.register_alias("snow", "default:snow")
 -- Aliases for corrected pine node names
 minetest.register_alias("default:pinetree", "default:pine_tree")
 minetest.register_alias("default:pinewood", "default:pine_wood")
+
+-- Gold nugget
+minetest.register_alias("default:gold_nugget", "default:gold_ingot")
+-- Sandstone Carved
+minetest.register_alias("default:sandstonecarved", "default:sandstonesmooth")

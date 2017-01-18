@@ -40,13 +40,6 @@ minetest.register_craftitem("default:charcoal_lump", {
     groups = {materials = 1},
 })
 
-minetest.register_craftitem("default:gold_nugget", {
-    description = "Gold Nugget",
-    inventory_image = "default_gold_nugget.png",
-    stack_max = 64,
-    groups = {materials = 1},
-})
-
 minetest.register_craftitem("default:diamond", {
     description = "Diamond",
     inventory_image = "default_diamond.png",
