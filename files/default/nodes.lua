@@ -353,15 +353,6 @@ minetest.register_node("default:sandstonesmooth", {
     sounds = default.node_sound_stone_defaults(),
 })
 
-minetest.register_node("default:sandstonecarved", {
-    description = "Sandstone Carved",
-    tiles = {"default_sandstone_top.png", "default_sandstone_bottom.png", "default_sandstone_carved.png"},
-    is_ground_content = true,
-    stack_max = 64,
-    groups = {crumbly=2,cracky=2, building = 1},
-    sounds = default.node_sound_stone_defaults(),
-})
-
 -- red sandstone --
 
 minetest.register_node("default:redsand", {
