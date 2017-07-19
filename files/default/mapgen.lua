@@ -43,21 +43,26 @@ minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_sandstonebr
 --
 
 -- All mapgens except singlenode
--- Blob ore first to avoid other ores inside blobs
 
 function default.register_ores()
+
+	-- Bedrock
+	-- This first to avoid other ores cutting through bedrock
+	-- Needs to generate in stone, seabed sand, deep ocean water and cave air
 
 	minetest.register_ore({
 		ore_type       = "scatter",
 		ore            = "default:bedrock",
-		wherein        = {"default:stone"},
+		wherein        = {"default:stone", "default:sand",
+			"default:water_source", "air"},
 		clust_scarcity = 1 * 1 * 1,
 		clust_num_ores = 5,
 		clust_size     = 2,
-		y_min     = -64,
-		y_max     = -63,
+		y_min          = -64,
+		y_max          = -62,
 	})
 
+	-- Blob ores next to avoid other ores inside blobs
 	-- Clay
 
 	minetest.register_ore({ 
