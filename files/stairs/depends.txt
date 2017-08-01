@@ -1,1 +1,4 @@
 default
+mobs
+mobs_animal
+wool
