@@ -285,7 +285,7 @@ end
 
 --= Mobs Mod
 
-if mobs and mobs.mod and mobs.mod == "redo" then
+if minetest.get_modpath("mobs") and minetest.get_modpath("mobs_animal") then
 
 grp = {crumbly = 3, flammable = 2, not_in_craft_guide = 1}
 
@@ -293,12 +293,6 @@ stairs.register_all("cheeseblock", "mobs:cheeseblock",
 	grp,
 	{"mobs_cheeseblock.png"},
 	"Cheese Block",
-	stairs.dirt)
-
-stairs.register_all("honey_block", "mobs:honey_block",
-	grp,
-	{"mobs_honey_block.png"},
-	"Honey Block",
 	stairs.dirt)
 
 end

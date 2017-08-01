@@ -1,3 +1,4 @@
+HUD_ENABLE_HUNGER = nil -- MC add line **************************************************
 
 HUD_IW_MAX = 8
 HUD_IW_TICK = 0.4
