@@ -10,26 +10,24 @@
 playerplus = {}
 
 -- get node but use fallback for nil or unknown
-local function node_ok(pos, fallback)
+local node_ok = function(pos, fallback)
 
 	fallback = fallback or "air"
 
 	local node = minetest.get_node_or_nil(pos)
 
-	if not node then
-		return fallback
-	end
-
-	if minetest.registered_nodes[node.name] then
+	if node and minetest.registered_nodes[node.name] then
 		return node.name
 	end
 
 	return fallback
 end
 
+
 local armor_mod = minetest.get_modpath("3d_armor")
 local def = {}
 local time = 0
+
 
 minetest.register_globalstep(function(dtime)
 
@@ -43,18 +41,27 @@ minetest.register_globalstep(function(dtime)
 	-- reset time for next check
 	time = 0
 
-	-- check players
-	for _,player in pairs(minetest.get_connected_players()) do
+	-- define locals outside loop
+	local name, pos, ndef, def, nslow, nfast
+
+	-- loop through players
+	for _,player in ipairs(minetest.get_connected_players()) do
 
 		-- who am I?
-		local name = player:get_player_name()
+		name = player:get_player_name()
 
 		-- where am I?
-		local pos = player:getpos()
+		pos = player:get_pos()
 
 		-- what is around me?
 		pos.y = pos.y - 0.1 -- standing on
 		playerplus[name].nod_stand = node_ok(pos)
+
+		-- Does the node below me have an on_walk_over function set?
+		ndef = minetest.registered_nodes[playerplus[name].nod_stand]
+		if ndef and ndef.on_walk_over then
+			ndef.on_walk_over(pos, ndef, player)
+		end
 
 		pos.y = pos.y + 1.5 -- head level
 		playerplus[name].nod_head = node_ok(pos)
@@ -64,25 +71,24 @@ minetest.register_globalstep(function(dtime)
 
 		pos.y = pos.y - 0.2 -- reset pos
 
-		-- set defaults
-		def.speed = 1
-		def.jump = 1
-		def.gravity = 1
+		-- get player physics
+		def = player:get_physics_override()
 
-		-- is 3d_armor mod active? if so make armor physics default
 		if armor_mod and armor and armor.def then
 			-- get player physics from armor
-			def.speed = armor.def[name].speed or 1
-			def.jump = armor.def[name].jump or 1
-			def.gravity = armor.def[name].gravity or 1
+			def.speed = armor.def[name].speed or def.speed
+			def.jump = armor.def[name].jump or def.jump
+			def.gravity = armor.def[name].gravity or def.gravity
 		end
 
-		-- standing on ice? if so walk faster
+		-- are we standing on any nodes that speed player up?
+		--nfast = nil
 		if playerplus[name].nod_stand == "default:ice" then
 			def.speed = def.speed + 0.4
 		end
 
-		-- standing on snow? if so walk slower
+		-- are we standing on any nodes that slow player down?
+		--nslow = nil
 		if playerplus[name].nod_stand == "default:snow"
 		or playerplus[name].nod_stand == "default:snowblock"
 		-- wading in water? if so walk slower
@@ -90,22 +96,24 @@ minetest.register_globalstep(function(dtime)
 			def.speed = def.speed - 0.4
 		end
 
-		-- set player physics
-		player:set_physics_override(def.speed, def.jump, def.gravity)
-		--print ("Speed:", def.speed, "Jump:", def.jump, "Gravity:", def.gravity)
-
-		-- Is player suffocating inside node? (Only for solid full cube type nodes
-		-- without damage and without group disable_suffocation = 1.)
+	-- set player physics
+		if not monoids and not pova_mod then
+			player:set_physics_override(def.speed, def.jump, def.gravity)
+		end
+--[[
+		print ("Speed: " .. def.speed
+			.. " / Jump: " .. def.jump
+			.. " / Gravity: " .. def.gravity)
+]]
+		-- Is player suffocating inside a normal node without no_clip privs?
 		local ndef = minetest.registered_nodes[playerplus[name].nod_head]
 
-		if (ndef.walkable == nil or ndef.walkable == true)
-		and (ndef.drowning == nil or ndef.drowning == 0)
-		and (ndef.damage_per_second == nil or ndef.damage_per_second <= 0)
-		and (ndef.collision_box == nil or ndef.collision_box.type == "regular")
-		and (ndef.node_box == nil or ndef.node_box.type == "regular")
-		and (ndef.groups.disable_suffocation ~= 1)
-		-- Check privilege, too
-		and (not minetest.check_player_privs(name, {noclip = true})) then
+		if ndef.walkable == true
+		and ndef.drowning == 0
+		and ndef.damage_per_second <= 0
+		and ndef.groups.disable_suffocation ~= 1
+		and ndef.drawtype == "normal"
+		and not minetest.check_player_privs(name, {noclip = true}) then
 
 			if player:get_hp() > 0 then
 				player:set_hp(player:get_hp() - 2)
@@ -131,6 +139,7 @@ minetest.register_globalstep(function(dtime)
 
 end)
 
+
 -- set to blank on join (for 3rd party mods)
 minetest.register_on_joinplayer(function(player)
 
@@ -141,6 +150,7 @@ minetest.register_on_joinplayer(function(player)
 	playerplus[name].nod_feet = ""
 	playerplus[name].nod_stand = ""
 end)
+
 
 -- clear when player leaves
 minetest.register_on_leaveplayer(function(player)
