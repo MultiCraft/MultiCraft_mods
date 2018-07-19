@@ -263,13 +263,26 @@ minetest.register_node("default:stonebrickmossy", {
 
 minetest.register_node("default:dirt_with_grass", {
     description = "Dirt with Grass",
-    tiles = {"default_grass.png", "default_dirt.png", "default_dirt.png^default_grass_side.png"},
+    tiles = {"default_grass.png", "default_dirt.png", "default_grass_side.png"},
     is_ground_content = true,
     stack_max = 64,
     groups = {crumbly=3, soil=1, building = 1},
     drop = 'default:dirt',
     sounds = default.node_sound_dirt_defaults({
         footstep = {name="default_grass_footstep", gain=0.4},
+    }),
+})
+
+minetest.register_node("default:dirt_with_dry_grass", {
+    description = "Dirt with Dry Grass",
+    tiles = {"default_dry_grass.png", "default_dirt.png",
+		"default_dry_grass_side.png"},
+    is_ground_content = true,
+    stack_max = 64,
+    groups = {crumbly=3, soil=1, building = 1},
+    drop = "default:dirt",
+    sounds = default.node_sound_dirt_defaults({
+        footstep = {name="default_grass_footstep", gain=0.6},
     }),
 })
 
@@ -1771,6 +1784,26 @@ minetest.register_node("default:grass", {
     sounds = default.node_sound_leaves_defaults(),
     after_dig_node = function(pos, oldnode, oldmetadata, user)
     local item = user:get_wielded_item()
+        if item:get_name() == "default:shears" then
+            user:get_inventory():add_item("main", ItemStack(oldnode.name))
+        end
+    end
+})
+
+minetest.register_node("default:dry_grass", {
+    description = "Dry Grass",
+    drawtype = "plantlike",
+    tiles = {"default_dry_tallgrass.png"},
+    inventory_image = "default_dry_tallgrass.png",
+    wield_image = "default_dry_tallgrass.png",
+    walkable = false,
+    buildable_to = true,
+    paramtype = "light",
+    is_ground_content = true,
+    groups = {snappy=3,flammable=3,attached_node=1,dig_immediate=3, decorative=1, grass=1},
+    sounds = default.node_sound_leaves_defaults(),
+    after_dig_node = function(pos, oldnode, oldmetadata, user)
+        local item = user:get_wielded_item()
         if item:get_name() == "default:shears" then
             user:get_inventory():add_item("main", ItemStack(oldnode.name))
         end
