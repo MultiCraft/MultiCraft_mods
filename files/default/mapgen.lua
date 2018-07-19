@@ -17,6 +17,7 @@ minetest.register_alias("mapgen_snowblock", "default:snowblock")
 minetest.register_alias("mapgen_snow", "default:snow")
 minetest.register_alias("mapgen_ice", "default:ice")
 minetest.register_alias("mapgen_sandstone", "default:sandstone")
+minetest.register_alias("mapgen_bedrock", "default:bedrock")
 
 -- Flora
 
@@ -42,10 +43,9 @@ minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_sandstonebr
 -- Register ores
 --
 
--- All mapgens except singlenode
+-- Mgv6 only
 
-function default.register_ores()
-
+function default.register_bedrock()
 	-- Bedrock
 	-- This first to avoid other ores cutting through bedrock
 	-- Needs to generate in stone, seabed sand, deep ocean water and cave air
@@ -58,9 +58,14 @@ function default.register_ores()
 		clust_scarcity = 1 * 1 * 1,
 		clust_num_ores = 5,
 		clust_size     = 2,
-		y_min          = -64,
-		y_max          = -62,
+		y_min          = -66,
+		y_max          = -64,
 	})
+end
+
+-- All mapgens except singlenode
+
+function default.register_ores()
 
 	-- Blob ores next to avoid other ores inside blobs
 	-- Clay
@@ -1238,6 +1243,7 @@ end
 
 local mg_params = minetest.get_mapgen_params()
 if mg_params.mgname == "v6" then
+	default.register_bedrock()
 	default.register_ores()
 	default.register_mgv6_decorations()
 elseif mg_params.mgname ~= "singlenode" then
