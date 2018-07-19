@@ -10,8 +10,8 @@ minetest.register_alias("mapgen_water_source", "default:water_source")
 minetest.register_alias("mapgen_river_water_source", "default:river_water_source")
 minetest.register_alias("mapgen_lava_source", "default:lava_source")
 minetest.register_alias("mapgen_gravel", "default:gravel")
-minetest.register_alias("mapgen_desert_stone", "default:desert_stone")
-minetest.register_alias("mapgen_desert_sand", "default:desert_sand")
+minetest.register_alias("mapgen_desert_stone", "default:redsandstone")
+minetest.register_alias("mapgen_desert_sand", "default:redsand")
 minetest.register_alias("mapgen_dirt_with_snow", "default:dirt_with_snow")
 minetest.register_alias("mapgen_snowblock", "default:snowblock")
 minetest.register_alias("mapgen_snow", "default:snow")
@@ -35,8 +35,8 @@ minetest.register_alias("mapgen_pine_needles", "default:pine_needles")
 minetest.register_alias("mapgen_cobble", "default:cobble")
 minetest.register_alias("mapgen_stair_cobble", "stairs:stair_cobble")
 minetest.register_alias("mapgen_mossycobble", "default:mossycobble")
-minetest.register_alias("mapgen_sandstonebrick", "default:sandstonebrick")
-minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_sandstonebrick")
+minetest.register_alias("mapgen_sandstonebrick", "default:sandstone")
+minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_sandstone")
 
 
 --
@@ -48,13 +48,12 @@ minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_sandstonebr
 function default.register_bedrock()
 	-- Bedrock
 	-- This first to avoid other ores cutting through bedrock
-	-- Needs to generate in stone, seabed sand, deep ocean water and cave air
 
 	minetest.register_ore({
 		ore_type       = "scatter",
 		ore            = "default:bedrock",
 		wherein        = {"default:stone", "default:sand",
-			"default:water_source", "air"},
+			"default:water_source", "default:lava_source", "air"},
 		clust_scarcity = 1 * 1 * 1,
 		clust_num_ores = 5,
 		clust_size     = 2,
@@ -63,11 +62,13 @@ function default.register_bedrock()
 	})
 end
 
+
 -- All mapgens except singlenode
 
 function default.register_ores()
 
 	-- Blob ores next to avoid other ores inside blobs
+
 	-- Clay
 
 	minetest.register_ore({ 
@@ -95,7 +96,7 @@ function default.register_ores()
 		ore_type        = "blob",
 		ore             = "default:sand",
 		wherein         = {"default:stone", "default:sandstone",
-			"default:desert_stone"},
+			"default:redsandstone"},
 		clust_scarcity  = 16 * 16 * 16,
 		clust_size      = 5,
 		y_min           = -31,
@@ -152,214 +153,210 @@ function default.register_ores()
 		},
 	})
 
---
--- Coal
---
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_coal",
-    wherein        = "default:stone",
-    clust_scarcity = 500,
-    clust_num_ores = 8,
-    clust_size     = 3,
-    y_min     = -59,
-    y_max     = -12,
-})
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_coal",
-    wherein        = "default:stone",
-    clust_scarcity = 1000,
-    clust_num_ores = 6,
-    clust_size     = 3,
-    y_min     = -11,
-    y_max     = 64,
-})
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_coal",
-    wherein        = "default:stone",
-    clust_scarcity = 5000,
-    clust_num_ores = 4,
-    clust_size     = 2,
-    y_min     = 65,
-    y_max     = 67,
-})
+	-- Scatter ores
 
---
--- Iron
---
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_iron",
-    wherein        = "default:stone",
-    clust_scarcity = 830,
-    clust_num_ores = 5,
-    clust_size     = 3,
-    y_min     = -59,
-    y_max     = -10,
-})
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_iron",
-    wherein        = "default:stone",
-    clust_scarcity = 1660,
-    clust_num_ores = 3,
-    clust_size     = 2,
-    y_min     = -9,
-    y_max     = 0,
-})
+	-- Coal
 
---
--- Gold
---
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_gold",
-    wherein        = "default:stone",
-    clust_scarcity = 5000,
-    clust_num_ores = 5,
-    clust_size     = 3,
-    y_min     = -59,
-    y_max     = -35,
-})
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_gold",
-    wherein        = "default:stone",
-    clust_scarcity = 10000,
-    clust_num_ores = 3,
-    clust_size     = 2,
-    y_min     = -35,
-    y_max     = -33,
-})
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_coal",
+	    wherein        = "default:stone",
+	    clust_scarcity = 500,
+	    clust_num_ores = 8,
+	    clust_size     = 3,
+	    y_min          = -59,
+	    y_max          = -12,
+	})
 
---
--- Diamond
---
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_diamond",
-    wherein        = "default:stone",
-    clust_scarcity = 10000,
-    clust_num_ores = 4,
-    clust_size     = 3,
-    y_min     = -59,
-    y_max     = -48,
-})
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_diamond",
-    wherein        = "default:stone",
-    clust_scarcity = 5000,
-    clust_num_ores = 2,
-    clust_size     = 2,
-    y_min     = -59,
-    y_max     = -48,
-})
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_diamond",
-    wherein        = "default:stone",
-    clust_scarcity = 10000,
-    clust_num_ores = 8,
-    clust_size     = 3,
-    y_min     = -55,
-    y_max     = -52,
-})
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_coal",
+	    wherein        = "default:stone",
+	    clust_scarcity = 1000,
+	    clust_num_ores = 6,
+	    clust_size     = 3,
+	    y_min          = -11,
+	    y_max          = 64,
+	})
 
---
--- Bluestone
---
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_coal",
+	    wherein        = "default:stone",
+	    clust_scarcity = 5000,
+	    clust_num_ores = 4,
+	    clust_size     = 2,
+	    y_min          = 65,
+	    y_max          = 67,
+	})
 
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_bluestone",
-    wherein        = "default:stone",
-    clust_scarcity = 10000,
-    clust_num_ores = 5,
-    clust_size     = 3,
-    y_min     = -59,
-    y_max     = -48,
-})
+	-- Iron
 
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_bluestone",
-    wherein        = "default:stone",
-    clust_scarcity = 10000,
-    clust_num_ores = 10,
-    clust_size     = 4,
-    y_min     = -59,
-    y_max     = -48,
-})
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_iron",
+	    wherein        = "default:stone",
+	    clust_scarcity = 830,
+	    clust_num_ores = 5,
+	    clust_size     = 3,
+	    y_min          = -59,
+	    y_max          = -10,
+	})
 
---
--- Emerald
---
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_iron",
+	    wherein        = "default:stone",
+	    clust_scarcity = 1660,
+	    clust_num_ores = 3,
+	    clust_size     = 2,
+	    y_min          = -9,
+	    y_max          = 0,
+	})
 
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_emerald",
-    wherein        = "default:stone",
-    clust_scarcity = 10000,
-    clust_num_ores = 1,
-    clust_size     = 2,
-    y_min     = -59,
-    y_max     = -35,
-})
+	-- Gold
 
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_emerald",
-    wherein        = "default:stone",
-    clust_scarcity = 50000,
-    clust_num_ores = 3,
-    clust_size     = 2,
-    y_min     = -59,
-    y_max     = -35,
-})
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_gold",
+	    wherein        = "default:stone",
+	    clust_scarcity = 5000,
+	    clust_num_ores = 5,
+	    clust_size     = 3,
+	    y_min          = -59,
+	    y_max          = -35,
+	})
 
---
--- Lapis Lazuli
---
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_gold",
+	    wherein        = "default:stone",
+	    clust_scarcity = 10000,
+	    clust_num_ores = 3,
+	    clust_size     = 2,
+	    y_min          = -35,
+	    y_max          = -33,
+	})
 
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_lapis",
-    wherein        = "default:stone",
-    clust_scarcity = 10000,
-    clust_num_ores = 7,
-    clust_size     = 4,
-    y_min     = -50,
-    y_max     = -46,
-})
+	-- Diamond
 
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:stone_with_lapis",
-    wherein        = "default:stone",
-    clust_scarcity = 10000,
-    clust_num_ores = 5,
-    clust_size     = 4,
-    y_min     = -59,
-    y_max     = -50,
-})
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_diamond",
+	    wherein        = "default:stone",
+	    clust_scarcity = 10000,
+	    clust_num_ores = 4,
+	    clust_size     = 3,
+	    y_min          = -59,
+	    y_max          = -48,
+	})
 
---
--- Glowstone
---
-minetest.register_ore({
-    ore_type       = "scatter",
-    ore            = "default:glowstone",
-    wherein        = "default:stone",
-    clust_scarcity = 50000,
-    clust_num_ores = 10,
-    clust_size     = 5,
-    y_min     = -59,
-    y_max     = -0,
-})
-	
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_diamond",
+	    wherein        = "default:stone",
+	    clust_scarcity = 5000,
+	    clust_num_ores = 2,
+	    clust_size     = 2,
+	    y_min          = -59,
+	    y_max          = -48,
+	})
+
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_diamond",
+	    wherein        = "default:stone",
+	    clust_scarcity = 10000,
+	    clust_num_ores = 8,
+	    clust_size     = 3,
+	    y_min          = -55,
+	    y_max          = -52,
+	})
+
+	-- Bluestone
+
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_bluestone",
+	    wherein        = "default:stone",
+	    clust_scarcity = 10000,
+	    clust_num_ores = 5,
+	    clust_size     = 3,
+	    y_min          = -59,
+	    y_max          = -48,
+	})
+
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_bluestone",
+	    wherein        = "default:stone",
+	    clust_scarcity = 10000,
+	    clust_num_ores = 10,
+	    clust_size     = 4,
+	    y_min          = -59,
+	    y_max          = -48,
+	})
+
+	-- Emerald
+
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_emerald",
+	    wherein        = "default:stone",
+	    clust_scarcity = 10000,
+	    clust_num_ores = 1,
+	    clust_size     = 2,
+	    y_min     = -59,
+	    y_max     = -35,
+	})
+
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_emerald",
+	    wherein        = "default:stone",
+	    clust_scarcity = 50000,
+	    clust_num_ores = 3,
+	    clust_size     = 2,
+	    y_min          = -59,
+	    y_max          = -35,
+	})
+
+	-- Lapis Lazuli
+
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_lapis",
+	    wherein        = "default:stone",
+	    clust_scarcity = 10000,
+	    clust_num_ores = 7,
+	    clust_size     = 4,
+	    y_min          = -50,
+	    y_max          = -46,
+	})
+
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:stone_with_lapis",
+	    wherein        = "default:stone",
+	    clust_scarcity = 10000,
+	    clust_num_ores = 5,
+	    clust_size     = 4,
+	    y_min          = -59,
+	    y_max          = -50,
+	})
+
+	-- Glowstone
+
+	minetest.register_ore({
+	    ore_type       = "scatter",
+	    ore            = "default:glowstone",
+	    wherein        = "default:stone",
+	    clust_scarcity = 50000,
+	    clust_num_ores = 10,
+	    clust_size     = 5,
+	    y_min          = -59,
+	    y_max          = -0,
+	})
 end
 
 
@@ -729,11 +726,11 @@ function default.register_biomes()
 	minetest.register_biome({
 		name = "desert",
 		--node_dust = "",
-		node_top = "default:desert_sand",
+		node_top = "default:redsand",
 		depth_top = 1,
-		node_filler = "default:desert_sand",
+		node_filler = "default:redsand",
 		depth_filler = 1,
-		node_stone = "default:desert_stone",
+		node_stone = "default:redsandstone",
 		--node_water_top = "",
 		--depth_water_top = ,
 		--node_water = "",
@@ -751,7 +748,7 @@ function default.register_biomes()
 		depth_top = 1,
 		node_filler = "default:sand",
 		depth_filler = 3,
-		node_stone = "default:desert_stone",
+		node_stone = "default:redsandstone",
 		--node_water_top = "",
 		--depth_water_top = ,
 		--node_water = "",
@@ -903,10 +900,13 @@ end
 function default.register_mgv6_decorations()
 	minetest.clear_registered_decorations()
 
+	-- Bonusbox chest
 	
 	minetest.register_decoration({
 		deco_type = "simple",
-		place_on = {"default:dirt_with_dry_grass", "default:sand", "default:dirt_with_snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt", "default:ice", "default:stone"},
+		place_on = {"default:sand", "default:dirt_with_snow", "default:gravel",
+ 			"default:snowblock", "default:dirt_with_grass", "default:redsand",
+			"default:redsandstone"},
 		sidelen = 80,
 		fill_ratio = 0.0002,
 		y_min = 1,
@@ -941,7 +941,7 @@ function default.register_mgv6_decorations()
 
 	minetest.register_decoration({
 		deco_type = "simple",
-		place_on = {"default:desert_sand"},
+		place_on = {"default:redsand"},
 		sidelen = 16,
 		noise_params = {
 			offset = -0.012,
@@ -960,23 +960,21 @@ function default.register_mgv6_decorations()
 
 	-- Long grasses
 
-	for length = 1, 5 do
-		minetest.register_decoration({
-			deco_type = "simple",
-			place_on = {"default:dirt_with_grass"},
-			sidelen = 16,
-			fill_ratio = 0.01,
-			y_min = 1,
-			y_max = 30,
-			decoration = "default:grass",
-		})
-	end
+	minetest.register_decoration({
+		deco_type = "simple",
+		place_on = {"default:dirt_with_grass"},
+		sidelen = 16,
+		fill_ratio = 0.05,
+		y_min = 1,
+		y_max = 30,
+		decoration = "default:grass",
+	})
 
 	-- Dry shrubs
 
 	minetest.register_decoration({
 		deco_type = "simple",
-		place_on = {"default:desert_sand", "default:dirt_with_snow"},
+		place_on = {"default:redsand", "default:dirt_with_snow"},
 		sidelen = 16,
 		noise_params = {
 			offset = 0,
@@ -992,50 +990,8 @@ function default.register_mgv6_decorations()
 	})
 end
 
+
 -- All mapgens except mgv6 and singlenode
-
-local function register_grass_decoration(offset, scale, length)
-	minetest.register_decoration({
-		deco_type = "simple",
-		place_on = {"default:dirt_with_grass", "default:sand"},
-		sidelen = 16,
-		noise_params = {
-			offset = offset,
-			scale = scale,
-			spread = {x = 200, y = 200, z = 200},
-			seed = 329,
-			octaves = 3,
-			persist = 0.6
-		},
-		biomes = {"stone_grassland", "sandstone_grassland",
-			"deciduous_forest", "coniferous_forest",
-			"stone_grassland_dunes", "sandstone_grassland_dunes",
-			"coniferous_forest_dunes"},
-		y_min = 1,
-		y_max = 31000,
-		decoration = "default:grass",
-	})
-end
-
-local function register_dry_grass_decoration(offset, scale, length)
-	minetest.register_decoration({
-		deco_type = "simple",
-		place_on = {"default:dirt_with_dry_grass"},
-		sidelen = 16,
-		noise_params = {
-			offset = offset,
-			scale = scale,
-			spread = {x = 200, y = 200, z = 200},
-			seed = 329,
-			octaves = 3,
-			persist = 0.6
-		},
-		biomes = {"savanna"},
-		y_min = 1,
-		y_max = 31000,
-		decoration = "default:dry_grass_"..length,
-	})
-end
 
 function default.register_decorations()
 	minetest.clear_registered_decorations()
@@ -1123,7 +1079,7 @@ function default.register_decorations()
 
 	minetest.register_decoration({
 		deco_type = "schematic",
-		place_on = {"default:desert_sand"},
+		place_on = {"default:redsand"},
 		sidelen = 16,
 		noise_params = {
 			offset = -0.0003,
@@ -1145,7 +1101,7 @@ function default.register_decorations()
 
 	minetest.register_decoration({
 		deco_type = "simple",
-		place_on = {"default:desert_sand"},
+		place_on = {"default:redsand"},
 		sidelen = 16,
 		noise_params = {
 			offset = -0.0003,
@@ -1183,21 +1139,62 @@ function default.register_decorations()
 		schematic = minetest.get_modpath("default").."/schematics/papyrus.mts",
 	})
 
-	-- Grasses
+	-- Bonusbox chest
+	
+	minetest.register_decoration({
+		deco_type = "simple",
+		place_on = {"default:sand", "default:dirt_with_snow", "default:gravel",
+ 			"default:snowblock", "default:dirt_with_grass", "default:redsand",
+			"default:redsandstone", "default:dirt_with_dry_grass"},
+		sidelen = 80,
+		fill_ratio = 0.0002,
+		y_min = 1,
+		y_max = 31000,
+		decoration = {"bonusbox:chest"},
+	})
+	
+	-- Grass
 
-	register_grass_decoration(-0.03,  0.09,  5)
-	register_grass_decoration(-0.015, 0.075, 4)
-	register_grass_decoration(0,      0.06,  3)
-	register_grass_decoration(0.015,  0.045, 2)
-	register_grass_decoration(0.03,   0.03,  1)
+	minetest.register_decoration({
+		deco_type = "simple",
+		place_on = {"default:dirt_with_grass", "default:sand"},
+		sidelen = 16,
+		noise_params = {
+			offset = 0.15,
+			scale = 0.15,
+			spread = {x = 200, y = 200, z = 200},
+			seed = 329,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = {"stone_grassland", "sandstone_grassland",
+			"deciduous_forest", "coniferous_forest",
+			"stone_grassland_dunes", "sandstone_grassland_dunes",
+			"coniferous_forest_dunes"},
+		y_min = 1,
+		y_max = 31000,
+		decoration = "default:grass",
+	})
 
-	-- Dry grasses
+	-- Dry grass
 
-	register_dry_grass_decoration(0.01, 0.05,  5)
-	register_dry_grass_decoration(0.03, 0.03,  4)
-	register_dry_grass_decoration(0.05, 0.01,  3)
-	register_dry_grass_decoration(0.07, -0.01, 2)
-	register_dry_grass_decoration(0.09, -0.03, 1)
+	minetest.register_decoration({
+		deco_type = "simple",
+		place_on = {"default:dirt_with_dry_grass"},
+		sidelen = 16,
+		noise_params = {
+			offset = 0.15,
+			scale = 0.15,
+			spread = {x = 200, y = 200, z = 200},
+			seed = 329,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = {"savanna"},
+		y_min = 1,
+		y_max = 31000,
+		decoration = "default:dry_grass",
+	})
 
 	-- Junglegrass
 
@@ -1216,7 +1213,7 @@ function default.register_decorations()
 
 	minetest.register_decoration({
 		deco_type = "simple",
-		place_on = {"default:desert_sand", "default:dirt_with_snow"},
+		place_on = {"default:redsand", "default:dirt_with_snow"},
 		sidelen = 16,
 		noise_params = {
 			offset = 0,
