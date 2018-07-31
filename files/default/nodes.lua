@@ -1010,7 +1010,6 @@ minetest.register_node("default:ladder", {
     sounds = default.node_sound_wood_defaults(),
 })
 
-
 minetest.register_node("default:vine", {
     description = "Vine",
     drawtype = "signlike",
@@ -1030,26 +1029,24 @@ minetest.register_node("default:vine", {
     sounds = default.node_sound_leaves_defaults(),
     drop = "",
     after_dig_node = function(pos, oldnode, oldmetadata, user)
-    local item = user:get_wielded_item()
+        local item = user:get_wielded_item()
         if item:get_name() == "default:shears" then
             user:get_inventory():add_item("main", ItemStack(oldnode.name))
         end
         local next_find = true
-        local ptr = 1
+        local down = 1
         while next_find == true do
-            local pos2 = {x=pos.x, y=pos.y-ptr, z=pos.z}
-            local node = minetest.env:get_node(pos2)
-            if node.name == "default:vine" and check_attached_node(pos2, node) == false then
-                drop_attached_node(pos2)
-                nodeupdate(pos2)
-                ptr = ptr + 1
+            local pos2 = {x = pos.x, y = pos.y - down, z = pos.z}
+            local node = minetest.get_node(pos2)
+            if node.name == "default:vine" then
+                minetest.remove_node(pos2)
+                down = down + 1
             else
                 next_find = false
             end
         end
-    end
+    end,
 })
-
 
 minetest.register_node("default:cloud", {
     description = "Cloud",
