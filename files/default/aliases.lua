@@ -31,6 +31,7 @@ minetest.register_alias("lava_flowing", "default:lava_flowing")
 minetest.register_alias("lava_source", "default:lava_source")
 minetest.register_alias("torch", "default:torch")
 minetest.register_alias("sign_wall", "default:sign_wall")
+minetest.register_alias("signs:sign_wall", "signs:sign")
 minetest.register_alias("furnace", "default:furnace")
 minetest.register_alias("chest", "default:chest")
 minetest.register_alias("locked_chest", "default:chest_locked")
@@ -71,6 +72,3 @@ minetest.register_alias("default:pinewood", "default:pine_wood")
 minetest.register_alias("default:gold_nugget", "default:gold_ingot")
 -- Sandstone Carved
 minetest.register_alias("default:sandstonecarved", "default:sandstonesmooth")
-
--- Sign
-minetest.register_alias("signs:sign_wall", "default:sign_wall_wood")
