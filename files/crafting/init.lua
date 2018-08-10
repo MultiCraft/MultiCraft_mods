@@ -79,7 +79,7 @@ local function set_inventory(player)
     end
 
     local form = "size[9,8.75]"..
-    "image_button_exit[9,0;1,1;;exit;X;true;true;]"..
+    "image_button_exit[8.15,-0.15;1,1;;exit;X;true;true;]"..
     "background[-0.19,-0.25;9.41,9.49;crafting_formspec_inv.png]"..
     "bgcolor[#080808BB;true]"..
     "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
@@ -101,10 +101,8 @@ local function set_inventory(player)
         end
     end
 	local split_form = ""
---	if PLATFORM == "Android" or PLATFORM == "iOS" then
         split_form = 
         "list[detached:split;main;7.98,3.14;1,1;]"
-	--end
     form = form ..
     "list[current_player;main;0,4.5;9,3;9]"..
     "list[current_player;main;0,7.74;9,1;]"..
@@ -123,12 +121,10 @@ local function set_workbench(player)
     player:get_inventory():set_size("main", 9*4)
 
     local split_form = ""
---	if PLATFORM == "Android" or PLATFORM == "iOS" then
         split_form = 
         "list[detached:split;main;7.98,3.14;1,1;]"
---	end
     local form = "size[9,8.75]"..
-    "image_button_exit[9,0;1,1;;exit;X;true;true;]"..
+    "image_button_exit[8.15,-0.15;1,1;;exit;X;true;true;]" ..
     "background[-0.19,-0.25;9.41,9.49;crafting_formspec_workbench.png]"..
     "bgcolor[#080808BB;true]"..
     "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..

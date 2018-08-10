@@ -31,7 +31,7 @@ hud.save_hunger = hunger.save
 hud.load_hunger = hunger.load
 
 -- Callbacks
-if minetest.setting_getbool("enable_damage") then
+if minetest.settings:get_bool("enable_damage") then
 
 	minetest.register_on_joinplayer(function(player)
 		local inv = player:get_inventory()
@@ -49,6 +49,11 @@ if minetest.setting_getbool("enable_damage") then
 			hud.swap_statbar(player, "hunger", "air")
 			hud.change_item(player, "hunger", {number = lvl, max = 20})
 		end)
+	end)
+
+	minetest.register_on_leaveplayer(function(player)
+		local name = player:get_player_name()
+		hunger.players[name] = nil
 	end)
 
 	-- for exhaustion

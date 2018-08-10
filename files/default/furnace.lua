@@ -4,11 +4,9 @@
 --
 
 local function active_formspec(fuel_percent, item_percent)
-	local formspec = 
-
-		
+	local formspec =
 	"size[9,8.75]"..
-	"image_button_exit[9,0;1,1;;exit;X;true;true;]"..
+	"image_button_exit[8.15,-0.15;1,1;;exit;X;true;true;]"..
 	"background[-0.19,-0.25;9.41,9.49;crafting_formspec_furnace.png]"..
 	"bgcolor[#080808BB;true]"..
 	"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
@@ -24,7 +22,7 @@ end
 
 local inactive_formspec =
 	"size[9,8.75]"..
-    "image_button_exit[9,0;1,1;;exit;X;true;true;]"..
+    "image_button_exit[8.15,-0.15;1,1;;exit;X;true;true;]"..
 	"background[-0.19,-0.25;9.41,9.49;crafting_formspec_furnace.png]"..
 	"bgcolor[#080808BB;true]"..
 	"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..

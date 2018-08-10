@@ -40,7 +40,7 @@ function hunger.update_hunger(player, new_lvl)
 	if not name then
 		return false
 	end
-	if minetest.setting_getbool("enable_damage") == false then
+	if minetest.settings:get_bool("enable_damage") == false then
 		hunger.players[name] = 20
 		return
 	end
@@ -163,7 +163,8 @@ local function hunger_globaltimer(dtime)
 	end
 end
 
-if minetest.setting_getbool("enable_damage") then
+
+if minetest.settings:get_bool("enable_damage") then
 	minetest.register_globalstep(hunger_globaltimer)
 end
 

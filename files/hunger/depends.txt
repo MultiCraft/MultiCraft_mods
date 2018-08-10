@@ -28,3 +28,4 @@ mush45?
 mushroom?
 pizza?
 seaplants?
+3d_armor?
