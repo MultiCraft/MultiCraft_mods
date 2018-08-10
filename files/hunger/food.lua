@@ -16,7 +16,7 @@ if minetest.get_modpath("mobs") then
 	if mobs.mod ~= nil and mobs.mod == "redo" then
 		register_food("mobs:cheese", 4)
 		register_food("mobs:meat", 8)
-		register_food("mobs:meat_raw", 4, "", 3)
+		register_food("mobs:meat_raw", 4)
 		register_food("mobs:rat_cooked", 4)
 		register_food("mobs:rat_meat", 2)
 		register_food("mobs:honey", 2)
@@ -159,7 +159,6 @@ if minetest.get_modpath("mtfoods") then
 	register_food("mtfoods:mlt_burger", 5)
 	register_food("mtfoods:potato_slices", 2)
 	register_food("mtfoods:potato_chips", 3)
-	--mtfoods:medicine
 	register_food("mtfoods:casserole", 3)
 	register_food("mtfoods:glass_flute", 2)
 	register_food("mtfoods:orange_juice", 2)
@@ -320,4 +319,5 @@ if minetest.get_modpath("wine") then
 	register_food("wine:glass_wine", 2)
 	register_food("wine:glass_beer", 2)
 	register_food("wine:glass_mead", 2)
+	register_food("wine:glass_cider", 2)
 end

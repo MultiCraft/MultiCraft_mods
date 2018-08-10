@@ -16,7 +16,7 @@ local function destruct_bed(pos, n)
 	if reverse then
 		reverse = not reverse
 		minetest.remove_node(other)
-		nodeupdate(other)
+		minetest.check_for_falling(other)
 	else
 		reverse = not reverse
 	end
@@ -33,8 +33,8 @@ function beds.register_bed(name, def)
 		paramtype2 = "facedir",
 		is_ground_content = false,
 		stack_max = 1,
-		groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, bed = 1},
-		sounds = default.node_sound_wood_defaults(),
+		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, bed = 1},
+		sounds = def.sounds or default.node_sound_wood_defaults(),
 		node_box = {
 			type = "fixed",
 			fixed = def.nodebox.bottom,
@@ -46,30 +46,42 @@ function beds.register_bed(name, def)
 
 		on_place = function(itemstack, placer, pointed_thing)
 			local under = pointed_thing.under
+			local node = minetest.get_node(under)
+			local udef = minetest.registered_nodes[node.name]
+			if udef and udef.on_rightclick and
+					not (placer and placer:is_player() and
+					placer:get_player_control().sneak) then
+				return udef.on_rightclick(under, node, placer, itemstack,
+					pointed_thing) or itemstack
+			end
+
 			local pos
-			if minetest.registered_items[minetest.get_node(under).name].buildable_to then
+			if udef and udef.buildable_to then
 				pos = under
 			else
 				pos = pointed_thing.above
 			end
 
-			if minetest.is_protected(pos, placer:get_player_name()) and
-					not minetest.check_player_privs(placer, "protection_bypass") then
-				minetest.record_protection_violation(pos, placer:get_player_name())
+			local player_name = placer and placer:get_player_name() or ""
+
+			if minetest.is_protected(pos, player_name) and
+					not minetest.check_player_privs(player_name, "protection_bypass") then
+				minetest.record_protection_violation(pos, player_name)
 				return itemstack
 			end
 
-			local def = minetest.registered_nodes[minetest.get_node(pos).name]
-			if not def or not def.buildable_to then
+			local node_def = minetest.registered_nodes[minetest.get_node(pos).name]
+			if not node_def or not node_def.buildable_to then
 				return itemstack
 			end
 
-			local dir = minetest.dir_to_facedir(placer:get_look_dir())
+			local dir = placer and placer:get_look_dir() and
+				minetest.dir_to_facedir(placer:get_look_dir()) or 0
 			local botpos = vector.add(pos, minetest.facedir_to_dir(dir))
 
-			if minetest.is_protected(botpos, placer:get_player_name()) and
-					not minetest.check_player_privs(placer, "protection_bypass") then
-				minetest.record_protection_violation(botpos, placer:get_player_name())
+			if minetest.is_protected(botpos, player_name) and
+					not minetest.check_player_privs(player_name, "protection_bypass") then
+				minetest.record_protection_violation(botpos, player_name)
 				return itemstack
 			end
 
@@ -81,7 +93,8 @@ function beds.register_bed(name, def)
 			minetest.set_node(pos, {name = name .. "_bottom", param2 = dir})
 			minetest.set_node(botpos, {name = name .. "_top", param2 = dir})
 
-			if not minetest.setting_getbool("creative_mode") then
+			if not (creative and creative.is_enabled_for
+					and creative.is_enabled_for(player_name)) then
 				itemstack:take_item()
 			end
 			return itemstack
@@ -91,8 +104,9 @@ function beds.register_bed(name, def)
 			destruct_bed(pos, 1)
 		end,
 
-		on_rightclick = function(pos, node, clicker)
+		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 			beds.on_rightclick(pos, clicker)
+			return itemstack
 		end,
 
 		on_rotate = function(pos, node, user, mode, new_param2)
@@ -112,8 +126,8 @@ function beds.register_bed(name, def)
 			end
 			local newp = vector.add(pos, minetest.facedir_to_dir(new_param2))
 			local node3 = minetest.get_node_or_nil(newp)
-			local def = node3 and minetest.registered_nodes[node3.name]
-			if not def or not def.buildable_to then
+			local node_def = node3 and minetest.registered_nodes[node3.name]
+			if not node_def or not node_def.buildable_to then
 				return false
 			end
 			if minetest.is_protected(newp, user:get_player_name()) then
@@ -136,8 +150,8 @@ function beds.register_bed(name, def)
 		paramtype2 = "facedir",
 		is_ground_content = false,
 		pointable = false,
-		groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, bed = 2},
-		sounds = default.node_sound_wood_defaults(),
+		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, bed = 2},
+		sounds = def.sounds or default.node_sound_wood_defaults(),
 		drop = name .. "_bottom",
 		node_box = {
 			type = "fixed",

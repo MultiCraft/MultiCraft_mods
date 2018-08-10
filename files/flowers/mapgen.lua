@@ -70,8 +70,8 @@ function flowers.register_mgv6_decorations()
 	register_mgv6_flower("allium")
 	register_mgv6_flower("dandelion_white")
 
-	register_mgv6_mushroom("mushroom_fertile_brown")
-	register_mgv6_mushroom("mushroom_fertile_red")
+	register_mgv6_mushroom("mushroom_brown")
+	register_mgv6_mushroom("mushroom_red")
 
 	register_mgv6_waterlily()
 end
@@ -95,7 +95,7 @@ local function register_flower(seed, name)
 			persist = 0.6
 		},
 		biomes = {"stone_grassland", "sandstone_grassland",
-			"deciduous_forest", "coniferous_forest"},
+			"deciduous_forest", "coniferous_forest", "floatland_grassland", "floatland_coniferous_forest"},
 		y_min = 1,
 		y_max = 31000,
 		decoration = "flowers:"..name,
@@ -110,12 +110,13 @@ local function register_mushroom(name)
 		noise_params = {
 			offset = 0,
 			scale = 0.006,
-			spread = {x = 200, y = 200, z = 200},
+			spread = {x = 250, y = 250, z = 250},
 			seed = 2,
 			octaves = 3,
 			persist = 0.66
 		},
-		biomes = {"deciduous_forest", "coniferous_forest"},
+		biomes = {"deciduous_forest", "coniferous_forest",
+			"floatland_coniferous_forest"},
 		y_min = 1,
 		y_max = 31000,
 		decoration = "flowers:"..name,
@@ -135,7 +136,7 @@ local function register_waterlily()
 			octaves = 3,
 			persist = 0.7
 		},
-		biomes = {"rainforest_swamp", "savanna_swamp", "deciduous_forest_swamp"},
+		biomes = {"rainforest_swamp", "savanna_shore", "deciduous_forest_shore"},
 		y_min = 0,
 		y_max = 0,
 		schematic = minetest.get_modpath("flowers").."/schematics/waterlily.mts",
@@ -151,8 +152,8 @@ function flowers.register_decorations()
 	register_flower(1133,    "allium")
 	register_flower(73133,   "dandelion_white")
 
-	register_mushroom("mushroom_fertile_brown")
-	register_mushroom("mushroom_fertile_red")
+	register_mushroom("mushroom_brown")
+	register_mushroom("mushroom_red")
 
 	register_waterlily()
 end
@@ -162,12 +163,9 @@ end
 -- Detect mapgen to select functions
 --
 
--- Mods using singlenode mapgen can call these functions to enable
--- the use of minetest.generate_ores or minetest.generate_decorations
-
-local mg_params = minetest.get_mapgen_params()
-if mg_params.mgname == "v6" then
+local mg_name = minetest.get_mapgen_setting("mg_name")
+if mg_name == "v6" then
 	flowers.register_mgv6_decorations()
-elseif mg_params.mgname ~= "singlenode" then
+else
 	flowers.register_decorations()
 end

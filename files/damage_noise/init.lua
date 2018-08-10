@@ -15,7 +15,7 @@ minetest.register_globalstep(function(dtime)
 			minetest.sound_play("hurt", {
 				pos = pos,
 				max_hear_distance = 10,
-				gain = 0.5,
+				gain = 0.4,
 			})
 		end
 		damage[player:get_player_name()] = newhp

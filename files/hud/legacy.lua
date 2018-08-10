@@ -70,4 +70,4 @@ if not hud.show_hunger then
 	function hud.load_hunger(player)
 		hud.notify_hunger(1, true)
 	end
- end
+end
