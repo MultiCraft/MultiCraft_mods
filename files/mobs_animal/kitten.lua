@@ -2,6 +2,7 @@
 -- Kitten by Jordach / BFD
 
 mobs:register_mob("mobs_animal:kitten", {
+	stepheight = 0.6,
 	type = "animal",
 	passive = true,
 	hp_min = 8,
@@ -42,20 +43,21 @@ mobs:register_mob("mobs_animal:kitten", {
 	view_range = 8,
 	on_rightclick = function(self, clicker)
 
-		if mobs:feed_tame(self, clicker, 4, true, true) then
-			return
+		if mobs:feed_tame(self, clicker, 4, true, true) then return end
+		if mobs:protect(self, clicker) then return end
+		if mobs:capture_mob(self, clicker, 50, 50, 90, false, nil) then return end
 		end
-
-		mobs:protect(self, clicker)
-		mobs:capture_mob(self, clicker, 50, 50, 90, false, nil)
-	end
 })
+
+
+local spawn_on = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 
 mobs:spawn({
 	name = "mobs_animal:kitten",
-	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {spawn_on},
 	min_light = 12,
-	chance = 22000,
+	interval = 30,
+	chance = 10000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
@@ -63,5 +65,4 @@ mobs:spawn({
 
 mobs:register_egg("mobs_animal:kitten", "Kitten", "mobs_kitten_inv.png", 0)
 
--- compatibility
-mobs:alias_mob("mobs:kitten", "mobs_animal:kitten")
+mobs:alias_mob("mobs:kitten", "mobs_animal:kitten") -- compatibility

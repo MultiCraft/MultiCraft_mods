@@ -19,10 +19,23 @@ Crafts:
  - Magic Lasso is similar to nets but with a better chance of picking up larger mobs.
  - Shears are used to right-click sheep and return 1-3 wool.
  - Protection Rune lets you protect tamed mobs from harm by other players
+ - Mob Fence and Fence Top (to stop mobs escaping/glitching through fences)
 
 
 Changelog:
-
+- 1.45- Added Fence Top to add on top of any fence to stop mobs escaping, new line_of_sight tweaked by Astrobe
+- 1.44- Added ToolRanks support for swords when attacking mobs
+- 1.43- Better 0.4.16 compatibility, added general attack function and settings
+- 1.42- Added "all" option to immune_to table, tidied floating mobs to be less intensive
+- 1.41- Mob pathfinding has been updated thanks to Elkien3
+- 1.40- Updated to use newer functions, requires Minetest 0.4.16+ to work.
+- 1.39- Added 'on_breed', 'on_grown' and 'do_punch' custom functions per mob
+- 1.38- Better entity checking, nametag setting and on_spawn function added to mob registry, tweaked light damage
+- 1.37- Added support for Raymoo's CMI (common mob interface) mod: https://forum.minetest.net/viewtopic.php?f=9&t=15448
+- 1.36- Death check added, if mob dies in fire/lava/with lava pick then drops are cooked
+- 1.35- Added owner_loyal flag for owned mobs to attack player enemies, also fixed group_attack
+- 1.34- Added function to fly mob using directional movement (thanks D00Med for flying code)
+- 1.33- Added functions to mount ride mobs (mobs.attach, mobs.detach, mobs.drive) many thanks to Blert2112
 - 1.32- Added new spawn check to count specific mobs AND new minetest.conf setting to chance spawn chance and numbers, added ability to protect tamed mobs
 - 1.31- Added 'attack_animals' and 'specific_attack' flags for custom monster attacks, also 'mob_difficulty' .conf setting to make mobs harder.
 - 1.30- Added support for invisibility mod (mobs cant attack what they cant see), tweaked and tidied code

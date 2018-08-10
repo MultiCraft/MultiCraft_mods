@@ -60,10 +60,13 @@ for _, col in pairs(all_colours) do
 			walk_start = 81,
 			walk_end = 100,
 		},
-		follow = {"farming:wheat", "default:grass_5"},
+		follow = {"farming:wheat", "default:grass"},
 		view_range = 8,
 		replace_rate = 10,
-		replace_what = {"default:grass_3", "default:grass_4", "default:grass_5", "farming:wheat_8"},
+		replace_what = {
+			{"group:grass", "air", 0},	
+			{"default:dirt_with_grass", "default:dirt", -1}
+		},
 		replace_with = "air",
 		replace_offset = -1,
 		fear_height = 3,
@@ -87,12 +90,14 @@ for _, col in pairs(all_colours) do
 
 			local item = clicker:get_wielded_item()
 			local itemname = item:get_name()
+			local name = clicker:get_player_name()
 
 			--are we giving a haircut>
 			if itemname == "mobs:shears" then
 
 				if self.gotten ~= false
 				or self.child ~= false
+				or name ~= self.owner
 				or not minetest.get_modpath("wool") then
 					return
 				end
@@ -100,7 +105,7 @@ for _, col in pairs(all_colours) do
 				self.gotten = true -- shaved
 
 				local obj = minetest.add_item(
-					self.object:getpos(),
+					self.object:get_pos(),
 					ItemStack( "wool:" .. col[1] .. " " .. math.random(1, 3) )
 				)
 
@@ -125,8 +130,6 @@ for _, col in pairs(all_colours) do
 				return
 			end
 
-			local name = clicker:get_player_name()
-
 			--are we coloring?
 			if itemname:find("dye:") then
 
@@ -141,7 +144,7 @@ for _, col in pairs(all_colours) do
 
 						if c[1] == colr then
 
-							local pos = self.object:getpos()
+							local pos = self.object:get_pos()
 
 							self.object:remove()
 
@@ -152,7 +155,7 @@ for _, col in pairs(all_colours) do
 							ent.tamed = true
 
 							-- take item
-							if not minetest.setting_getbool("creative_mode") then
+							if not mobs.is_creative(clicker:get_player_name()) then
 								item:take_item()
 								clicker:set_wielded_item(item)
 							end
@@ -165,8 +168,11 @@ for _, col in pairs(all_colours) do
 				return
 			end
 
+			-- protect mod with mobs:protector item
+			if mobs:protect(self, clicker) then return end
+
 			--are we capturing?
-			mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
+			if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 		end
 	})
 
@@ -181,7 +187,8 @@ mobs:spawn({
 	name = "mobs_animal:sheep_white",
 	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
-	chance = 15000,
+	interval = 30,
+	chance = 8000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
@@ -191,41 +198,43 @@ mobs:spawn({
 	name = "mobs_animal:sheep_grey",
 	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
-	chance = 15000,
+	interval = 30,
+	chance = 8000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
 })
 	
-	mobs:spawn({
+mobs:spawn({
 	name = "mobs_animal:sheep_dark_grey",
 	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
-	min_light = 5,
-	chance = 15000,
+	interval = 30,
+	chance = 8000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
 })
 	
-	mobs:spawn({
+mobs:spawn({
 	name = "mobs_animal:sheep_black",
 	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
-	chance = 15000,
+	interval = 30,
+	chance = 8000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
 })
 	
-	mobs:spawn({
+mobs:spawn({
 	name = "mobs_animal:sheep_brown",
 	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
-	chance = 15000,
+	interval = 30,
+	chance = 8000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
 })
 
--- compatibility
-mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white")
+mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white") -- compatibility

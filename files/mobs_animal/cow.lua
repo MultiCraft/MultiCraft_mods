@@ -1,5 +1,5 @@
 
--- Cow by Krupnovpavel (additional texture by JurajVajda)
+-- Cow by Krupnovpavel
 
 mobs:register_mob("mobs_animal:cow", {
 	type = "animal",
@@ -24,6 +24,7 @@ mobs:register_mob("mobs_animal:cow", {
 	walk_velocity = 1,
 	run_velocity = 2,
 	jump = true,
+	jump_height = 6,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
@@ -47,17 +48,20 @@ mobs:register_mob("mobs_animal:cow", {
 		punch_end = 100,
 	},
 	follow = "farming:wheat",
-	view_range = 7,
+	view_range = 8,
 	replace_rate = 10,
-	replace_what = {"default:grass_3", "default:grass_4", "default:grass_5", "farming:wheat_8"},
+	replace_what = {
+		{"group:grass", "air", 0},
+		{"default:dirt_with_grass", "default:dirt", -1}
+	},
 	replace_with = "air",
 	fear_height = 2,
 	on_rightclick = function(self, clicker)
 
 		-- feed or tame
-		if mobs:feed_tame(self, clicker, 8, true, true) then
-			return
-		end
+		if mobs:feed_tame(self, clicker, 8, true, true) then return end
+		if mobs:protect(self, clicker) then return end
+		if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 
 		local tool = clicker:get_wielded_item()
 		local name = clicker:get_player_name()
@@ -83,7 +87,7 @@ mobs:register_mob("mobs_animal:cow", {
 			if inv:room_for_item("main", {name = "mobs:bucket_milk"}) then
 				clicker:get_inventory():add_item("main", "mobs:bucket_milk")
 			else
-				local pos = self.object:getpos()
+				local pos = self.object:get_pos()
 				pos.y = pos.y + 0.5
 				minetest.add_item(pos, {name = "mobs:bucket_milk"})
 			end
@@ -92,9 +96,6 @@ mobs:register_mob("mobs_animal:cow", {
 
 			return
 		end
-
-		mobs:protect(self, clicker)
-		mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
 	end,
 })
 
@@ -102,7 +103,8 @@ mobs:spawn({
 	name = "mobs_animal:cow",
 	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
-	chance = 15000,
+	interval = 30,
+	chance = 8000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
@@ -110,8 +112,8 @@ mobs:spawn({
 
 mobs:register_egg("mobs_animal:cow", "Cow", "default_grass.png", 1)
 
--- compatibility
-mobs:alias_mob("mobs:cow", "mobs_animal:cow")
+mobs:alias_mob("mobs:cow", "mobs_animal:cow") -- compatibility
+
 
 -- bucket of milk
 minetest.register_craftitem(":mobs:bucket_milk", {
@@ -119,6 +121,7 @@ minetest.register_craftitem(":mobs:bucket_milk", {
 	inventory_image = "mobs_bucket_milk.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, 'bucket:bucket_empty'),
+	groups = {food_milk = 1, flammable = 3},
 })
 
 -- cheese wedge
@@ -126,6 +129,7 @@ minetest.register_craftitem(":mobs:cheese", {
 	description = "Cheese",
 	inventory_image = "mobs_cheese.png",
 	on_use = minetest.item_eat(4),
+	groups = {food_cheese = 1, flammable = 2},
 })
 
 minetest.register_craft({

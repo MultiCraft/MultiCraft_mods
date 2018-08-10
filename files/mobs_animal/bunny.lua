@@ -2,6 +2,7 @@
 -- Bunny by ExeterDad
 
 mobs:register_mob("mobs_animal:bunny", {
+	stepheight = 0.6,
 	type = "animal",
 	passive = true,
 	reach = 1,
@@ -23,6 +24,7 @@ mobs:register_mob("mobs_animal:bunny", {
 	run_velocity = 2,
 	runaway = true,
 	jump = true,
+	jump_height = 6,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 	},
@@ -39,7 +41,7 @@ mobs:register_mob("mobs_animal:bunny", {
 		punch_start = 16,
 		punch_end = 24,
 	},
-	follow = {"farming:carrot", "farming_plus:carrot_item"},
+	follow = {"farming:carrot", "farming_plus:carrot_item", "default:grass"},
 	view_range = 8,
 	replace_rate = 10,
 	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
@@ -47,16 +49,16 @@ mobs:register_mob("mobs_animal:bunny", {
 	on_rightclick = function(self, clicker)
 
 		-- feed or tame
-		if mobs:feed_tame(self, clicker, 4, true, true) then
-			return
-		end
+		if mobs:feed_tame(self, clicker, 4, true, true) then return end
+		if mobs:protect(self, clicker) then return end
+		if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
 
 		-- Monty Python tribute
 		local item = clicker:get_wielded_item()
 
 		if item:get_name() == "mobs:lava_orb" then
 
-			if not minetest.setting_getbool("creative_mode") then
+			if not mobs.is_creative(clicker:get_player_name()) then
 				item:take_item()
 				clicker:set_wielded_item(item)
 			end
@@ -66,25 +68,50 @@ mobs:register_mob("mobs_animal:bunny", {
 			})
 
 			self.type = "monster"
-			self.object:set_hp(20)
+			self.health = 20
+			self.passive = false
 
 			return
 		end
-
-		mobs:protect(self, clicker)
-		mobs:capture_mob(self, clicker, 30, 50, 80, false, nil)
 	end,
+	on_spawn = function(self)
 
+		local pos = self.object:get_pos() ; pos.y = pos.y - 1
+
+		-- white snowy bunny
+		if minetest.find_node_near(pos, 1,
+				{"default:snow", "default:snowblock", "default:dirt_with_snow"}) then
+			self.base_texture = {"mobs_bunny_white.png"}
+			self.object:set_properties({textures = self.base_texture})
+		-- brown desert bunny
+		elseif minetest.find_node_near(pos, 1,
+				{"default:desert_sand", "default:desert_stone"}) then
+			self.base_texture = {"mobs_bunny_brown.png"}
+			self.object:set_properties({textures = self.base_texture})
+		-- grey stone bunny
+		elseif minetest.find_node_near(pos, 1,
+				{"default:stone", "default:gravel"}) then
+			self.base_texture = {"mobs_bunny_grey.png"}
+			self.object:set_properties({textures = self.base_texture})
+		end
+
+		return true -- run only once, false/nil runs every activation
+	end,
 	attack_type = "dogfight",
 	damage = 5,
 })
 
+
+local spawn_on = {"default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+
 mobs:spawn({
 	name = "mobs_animal:bunny",
-	nodes = {"default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {spawn_on},
 	min_light = 10,
-	chance = 15000,
+	interval = 30,
+	chance = 8000,
 	min_height = 0,
+	max_height = 31000,
 	day_toggle = true,
 })
 

@@ -26,7 +26,6 @@ mobs:register_mob("mobs_animal:chicken", {
 	walk_velocity = 1,
 	run_velocity = 3,
 	runaway = true,
-	jump = true,
 	drops = {
 		{name = "mobs:chicken_raw", chance = 1, min = 1, max = 1},
 	},
@@ -48,22 +47,25 @@ mobs:register_mob("mobs_animal:chicken", {
 
 	on_rightclick = function(self, clicker)
 
-		if mobs:feed_tame(self, clicker, 8, true, true) then
-			return
-		end
-
-		mobs:protect(self, clicker)
-		mobs:capture_mob(self, clicker, 30, 50, 80, false, nil)
+		if mobs:feed_tame(self, clicker, 8, true, true) then return end
+		if mobs:protect(self, clicker) then return end
+		if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
 	end,
 
-	do_custom = function(self)
+	do_custom = function(self, dtime)
+
+		self.egg_timer = (self.egg_timer or 0) + dtime
+		if self.egg_timer < 10 then
+			return
+		end
+		self.egg_timer = 0
 
 		if self.child
-		or math.random(1, 5000) > 1 then
+		or math.random(1, 100) > 1 then
 			return
 		end
 
-		local pos = self.object:getpos()
+		local pos = self.object:get_pos()
 
 		minetest.add_item(pos, "mobs:egg")
 
@@ -75,20 +77,21 @@ mobs:register_mob("mobs_animal:chicken", {
 	end,
 })
 
+local spawn_on = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+
 mobs:spawn({
 	name = "mobs_animal:chicken",
-	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {spawn_on},
 	min_light = 5,
-	chance = 15000,
-	active_object_count = 2,
+	interval = 30,
+	chance = 8000,
 	min_height = 0,
 	day_toggle = true,
 })
 
 mobs:register_egg("mobs_animal:chicken", "Chicken", "mobs_chicken_inv.png", 0)
 
--- compatibility
-mobs:alias_mob("mobs:chicken", "mobs_animal:chicken")
+mobs:alias_mob("mobs:chicken", "mobs_animal:chicken") -- compatibility
 
 -- egg entity
 
@@ -99,14 +102,14 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 	velocity = 6,
 
 	hit_player = function(self, player)
-		player:punch(self.object, 1.0, {
+		player:punch(minetest.get_player_by_name(self.playername) or self.object, 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = 1},
 		}, nil)
 	end,
 
 	hit_mob = function(self, player)
-		player:punch(self.object, 1.0, {
+		player:punch(minetest.get_player_by_name(self.playername) or self.object, 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = 1},
 		}, nil)
@@ -114,9 +117,9 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 
 	hit_node = function(self, pos, node)
 
-		local num = math.random(1, 5)
-
-		if num == 1 then
+		if math.random(1, 10) > 1 then
+			return
+		end
 
 			pos.y = pos.y + 1
 
@@ -151,8 +154,8 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 			ent2.tamed = true
 			ent2.owner = self.playername
 		end
-	end
 })
+
 
 -- egg throwing item
 
@@ -162,7 +165,7 @@ local egg_VELOCITY = 19
 -- shoot egg
 local mobs_shoot_egg = function (item, player, pointed_thing)
 
-	local playerpos = player:getpos()
+	local playerpos = player:get_pos()
 
 	minetest.sound_play("default_place_node_hard", {
 		pos = playerpos,
@@ -203,6 +206,7 @@ local mobs_shoot_egg = function (item, player, pointed_thing)
 	return item
 end
 
+
 -- egg
 minetest.register_node(":mobs:egg", {
 	description = "Chicken Egg",
@@ -219,7 +223,7 @@ minetest.register_node(":mobs:egg", {
 		type = "fixed",
 		fixed = {-0.2, -0.5, -0.2, 0.2, 0, 0.2}
 	},
-	groups = {snappy = 2, dig_immediate = 3},
+	groups = {food_egg = 1, snappy = 2, dig_immediate = 3},
 	after_place_node = function(pos, placer, itemstack)
 		if placer:is_player() then
 			minetest.set_node(pos, {name = "mobs:egg", param2 = 1})
@@ -228,11 +232,13 @@ minetest.register_node(":mobs:egg", {
 	on_use = mobs_shoot_egg
 })
 
+
 -- fried egg
 minetest.register_craftitem(":mobs:chicken_egg_fried", {
 description = "Fried Egg",
 	inventory_image = "mobs_chicken_egg_fried.png",
 	on_use = minetest.item_eat(2),
+	groups = {food_egg_fried = 1, flammable = 2},
 })
 
 minetest.register_craft({
@@ -253,6 +259,7 @@ minetest.register_craftitem(":mobs:chicken_cooked", {
 description = "Cooked Chicken",
 	inventory_image = "mobs_chicken_cooked.png",
 	on_use = minetest.item_eat(6),
+	groups = {food_meat = 1, food_chicken = 1, flammable = 2},
 })
 
 minetest.register_craft({

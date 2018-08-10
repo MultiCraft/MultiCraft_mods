@@ -16,7 +16,7 @@ if minetest.get_modpath("mobs") then
 	if mobs.mod ~= nil and mobs.mod == "redo" then
 		register_food("mobs:cheese", 4)
 		register_food("mobs:meat", 8)
-		register_food("mobs:meat_raw", 4)
+		register_food("mobs:meat_raw", 4, "", 3)
 		register_food("mobs:rat_cooked", 4)
 		register_food("mobs:rat_meat", 2)
 		register_food("mobs:honey", 2)
