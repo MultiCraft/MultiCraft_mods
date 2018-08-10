@@ -1,7 +1,7 @@
 mobs:register_mob("mobs_monster:zombie", {
 		type = "monster",
 		visual = "mesh",
-		mesh = "mobs_zombie.x",
+		mesh = "mobs_zombie.b3d",
 		textures = {
 			{"mobs_zombie.png"},
 		},
@@ -40,6 +40,16 @@ mobs:register_mob("mobs_monster:zombie", {
 			{name = "mobs_monster:rotten_flesh", chance = 2, min = 1, max = 1},
 			{name = "mobs_monster:rotten_flesh", chance = 2, min = 1, max = 1}
 		},
+		after_activate = function(self, staticdata, def, dtime)
+			-- replace zombies using the old directx model
+			if self.mesh == "mobs_zombie.x" then
+				local pos = self.object:get_pos()
+				if pos then
+					minetest.add_entity(pos, self.name)
+					self.object:remove()
+				end
+			end
+		end,
 	})
 
 mobs:spawn({
@@ -48,7 +58,6 @@ mobs:spawn({
 	min_light = 0,
 	max_light = 10,
 	chance = 7000,
-	active_object_count = 1,
 	min_height = -50,
 	max_height = 31000,
 })	
