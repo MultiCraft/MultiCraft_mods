@@ -1,4 +1,3 @@
-
 -- Bunny by ExeterDad
 
 mobs:register_mob("mobs_animal:bunny", {

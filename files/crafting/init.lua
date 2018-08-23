@@ -79,7 +79,7 @@ local function set_inventory(player)
     end
 
     local form = "size[9,8.75]"..
-    "image_button_exit[8.15,-0.15;1,1;;exit;X;true;true;]"..
+    "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
     "background[-0.19,-0.25;9.41,9.49;crafting_formspec_inv.png]"..
     "bgcolor[#080808BB;true]"..
     "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
@@ -102,41 +102,18 @@ local function set_inventory(player)
     end
 	local split_form = ""
         split_form = 
-        "list[detached:split;main;7.98,3.14;1,1;]"
+        "list[detached:split;main;7.99,3.15;1,1;]"
     form = form ..
     "list[current_player;main;0,4.5;9,3;9]"..
     "list[current_player;main;0,7.74;9,1;]"..
     "list[current_player;craft;4,1;2,1;1]"..
     "list[current_player;craft;4,2;2,1;4]"..
-    "list[current_player;craftpreview;7,1.5;1,1;]"..
+    "list[current_player;craftpreview;7.05,1.54;1,1;]"..
     split_form..
     "inv"
 
     player:set_inventory_formspec(form)
     end
-
-local function set_workbench(player)
-    player:get_inventory():set_width("craft", 3)
-    player:get_inventory():set_size("craft", 9)
-    player:get_inventory():set_size("main", 9*4)
-
-    local split_form = ""
-        split_form = 
-        "list[detached:split;main;7.98,3.14;1,1;]"
-    local form = "size[9,8.75]"..
-    "image_button_exit[8.15,-0.15;1,1;;exit;X;true;true;]" ..
-    "background[-0.19,-0.25;9.41,9.49;crafting_formspec_workbench.png]"..
-    "bgcolor[#080808BB;true]"..
-    "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
-    "list[current_player;main;0,4.5;9,3;9]"..
-    "list[current_player;main;0,7.74;9,1;]"..
-    "list[current_player;craft;1.75,0.5;3,3;]"..
-    "list[current_player;craftpreview;5.75,1.5;1,1;]"..
-    split_form..
-    "wob"
-
-    minetest.show_formspec(player:get_player_name(), "main", form)
-end
 
 --drop craf items and reset inventory on closing
 minetest.register_on_player_receive_fields(function(player, formname, fields)
@@ -184,26 +161,6 @@ minetest.register_on_joinplayer(function(player)
 		end
 	end)
 end)
-
-minetest.register_node("crafting:workbench", {
-    description = "Workbench",
-    tiles = {"crafting_workbench_top.png", "default_wood.png", "crafting_workbench_side.png",
-        "crafting_workbench_side.png", "crafting_workbench_front.png", "crafting_workbench_front.png"},
-    paramtype2 = "facedir",
-    paramtype = "light",
-    groups = {choppy=2,oddly_breakable_by_hand=2,flammable=2, decorative = 1},
-    on_rightclick = function(pos, node, clicker, itemstack)
-        set_workbench(clicker)
-    end
-})
-
-minetest.register_craft({
-	output = "crafting:workbench",
-	recipe = {
-		{"group:wood", "group:wood"},
-		{"group:wood", "group:wood"}
-	}
-})
 
 local split_inv = minetest.create_detached_inventory("split", {
     allow_move = function(_, _, _, _, _, count, _)

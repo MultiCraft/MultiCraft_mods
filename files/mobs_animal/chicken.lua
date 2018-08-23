@@ -1,4 +1,3 @@
-
 -- Chicken by JK Murray
 
 mobs:register_mob("mobs_animal:chicken", {
@@ -217,7 +216,6 @@ minetest.register_node(":mobs:egg", {
 	wield_image = "mobs_chicken_egg.png",
 	paramtype = "light",
 	walkable = false,
-	is_ground_content = true,
 	sunlight_propagates = true,
 	selection_box = {
 		type = "fixed",

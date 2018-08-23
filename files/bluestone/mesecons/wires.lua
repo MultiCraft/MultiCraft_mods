@@ -116,7 +116,6 @@ for zmy=0, 1 do
         },
         groups = groups,
         walkable = false,
-        stack_max = 64,
         drop = "mesecons:wire_00000000_off",
         mesecons = {conductor={
             state = mesecon.state.off,
@@ -145,7 +144,6 @@ for zmy=0, 1 do
         },
         groups = {dig_immediate = 3, mesecon = 2, not_in_creative_inventory = 1},
         walkable = false,
-        stack_max = 64,
         drop = "mesecons:wire_00000000_off",
         mesecons = {conductor={
             state = mesecon.state.on,
