@@ -22,7 +22,6 @@ minetest.register_node("mesecons:mesecon_on", {
     drawtype = "raillike",
     tiles = {"jeija_mesecon_on.png", "jeija_mesecon_curved_on.png", "jeija_mesecon_t_junction_on.png", "jeija_mesecon_crossing_on.png"},
     paramtype = "light",
-    is_ground_content = true,
     walkable = false,
     selection_box = {
         type = "fixed",

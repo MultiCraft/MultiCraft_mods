@@ -1,4 +1,3 @@
-
 -- Kitten by Jordach / BFD
 
 mobs:register_mob("mobs_animal:kitten", {

@@ -1,6 +1,3 @@
-
--- Cow by Krupnovpavel
-
 mobs:register_mob("mobs_animal:cow", {
 	type = "animal",
 	passive = false,
@@ -10,12 +7,13 @@ mobs:register_mob("mobs_animal:cow", {
 	hp_min = 8,
 	hp_max = 12,
 	armor = 100,
-	collisionbox = {-0.8, -0.01, -0.8, 0.8, 1.3, 0.8},
+	collisionbox = {-0.9, -0.01, -0.9, 0.9, 1.65, 0.9},
 	visual = "mesh",
-	mesh = "mobs_cow.x",
+	mesh = "mobs_cow.b3d",
 	textures = {
 		{"mobs_cow.png"},
 		{"mobs_cow2.png"},
+		{"mobs_cow3.png"},
 	},
 	makes_footstep_sound = true,
 	sounds = {
@@ -97,7 +95,17 @@ mobs:register_mob("mobs_animal:cow", {
 			return
 		end
 	end,
-})
+		after_activate = function(self, staticdata, def, dtime)
+			-- replace cow using the old directx model
+			if self.mesh == "mobs_cow.x" then
+				local pos = self.object:get_pos()
+				if pos then
+					minetest.add_entity(pos, self.name)
+					self.object:remove()
+				end
+			end
+		end,
+	})
 
 mobs:spawn({
 	name = "mobs_animal:cow",

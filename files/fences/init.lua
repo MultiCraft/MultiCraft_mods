@@ -99,9 +99,8 @@ minetest.register_node("fences:fence_wood", {
     inventory_image = "default_fence.png",
     wield_image = "default_fence.png",
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1, decorative = 1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1, decorative = 1},
     drop = 'fences:fence_wood',
-    stack_max = 64,
     sunlight_propagates = true,
     drawtype = "nodebox",
     node_box = {
@@ -130,7 +129,7 @@ minetest.register_node("fences:fence_wood", {
 minetest.register_node("fences:fence_wood_1", {
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -157,7 +156,7 @@ minetest.register_node("fences:fence_wood_1", {
 minetest.register_node("fences:fence_wood_2", {
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -184,7 +183,7 @@ minetest.register_node("fences:fence_wood_2", {
 minetest.register_node("fences:fence_wood_3", {  --left+right(3)
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -211,7 +210,7 @@ minetest.register_node("fences:fence_wood_3", {  --left+right(3)
 minetest.register_node("fences:fence_wood_11", {  --top
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -238,7 +237,7 @@ minetest.register_node("fences:fence_wood_11", {  --top
 minetest.register_node("fences:fence_wood_21", {  --bottom
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -266,7 +265,7 @@ minetest.register_node("fences:fence_wood_21", {  --bottom
 minetest.register_node("fences:fence_wood_32", {  --top+bottom(32)
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -293,7 +292,7 @@ minetest.register_node("fences:fence_wood_32", {  --top+bottom(32)
 minetest.register_node("fences:fence_wood_14", {  --left+right(3)+ top(11) =14
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -320,7 +319,7 @@ minetest.register_node("fences:fence_wood_14", {  --left+right(3)+ top(11) =14
 minetest.register_node("fences:fence_wood_24", {  --left+right(3)+ bottom(21) =24
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -347,7 +346,7 @@ minetest.register_node("fences:fence_wood_24", {  --left+right(3)+ bottom(21) =2
 minetest.register_node("fences:fence_wood_35", {  --left+right(3)+top+bottom(32) = 35
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -374,7 +373,7 @@ minetest.register_node("fences:fence_wood_35", {  --left+right(3)+top+bottom(32)
 minetest.register_node("fences:fence_wood_12", {  --left(1)+top(11)=12
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -401,7 +400,7 @@ minetest.register_node("fences:fence_wood_12", {  --left(1)+top(11)=12
 minetest.register_node("fences:fence_wood_22", {  --left(1)+bottom(21)=22
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -428,7 +427,7 @@ minetest.register_node("fences:fence_wood_22", {  --left(1)+bottom(21)=22
 minetest.register_node("fences:fence_wood_33", {  --left(1)+top+bottom(32)=33
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -455,7 +454,7 @@ minetest.register_node("fences:fence_wood_33", {  --left(1)+top+bottom(32)=33
 minetest.register_node("fences:fence_wood_34", {  --right(2)+top+bottom(32)=34
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -482,7 +481,7 @@ minetest.register_node("fences:fence_wood_34", {  --right(2)+top+bottom(32)=34
 minetest.register_node("fences:fence_wood_23", {  --right(2)+bottom(21)=23
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -509,7 +508,7 @@ minetest.register_node("fences:fence_wood_23", {  --right(2)+bottom(21)=23
 minetest.register_node("fences:fence_wood_13", {  --right(2)+top(11)=13
     tiles = {"default_wood.png"},
     paramtype = "light",
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -586,7 +585,7 @@ minetest.register_node("fences:fencegate_open", {
     paramtype2 = "facedir",
     sunlight_propagates = true,
     walkable = true,
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,fences=1,not_in_inventory=1,mesecon_effector_on=1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,fences=1,not_in_inventory=1,mesecon_effector_on=1},
     drop = 'fences:fencegate',
     drawtype = "nodebox",
     node_box = {
@@ -632,7 +631,7 @@ minetest.register_node("fences:fencegate", {
     paramtype2 = "facedir",
     sunlight_propagates = true,
     walkable = true,
-    groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=2,mesecon_effector_on=1,fences=1, mese = 1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2,mesecon_effector_on=1,fences=1, mese = 1},
     drop = 'fences:fencegate',
     drawtype = "nodebox",
     node_box = {

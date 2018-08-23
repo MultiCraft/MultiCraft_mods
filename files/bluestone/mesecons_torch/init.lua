@@ -72,7 +72,6 @@ minetest.register_node("mesecons_torch:mesecon_torch_on", {
     tiles = {"jeija_torches_on.png", "jeija_torches_on_ceiling.png", "jeija_torches_on_side.png"},
     inventory_image = "jeija_torches_on.png",
     wield_image = "jeija_torches_on.png",
-    stack_max = 64,
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
@@ -90,7 +89,6 @@ minetest.register_node("mesecons_torch:mesecon_torch_on", {
 minetest.register_node("mesecons_torch:bluestoneblock", {
     description = "Bluestone Block",
     tiles = {"default_bluestone_block.png"},
-    stack_max = 64,
     groups = {cracky=1, mese = 1},
     sounds = default.node_sound_stone_defaults(),
     mesecons = {receptor = {

@@ -6,31 +6,31 @@
 local function active_formspec(fuel_percent, item_percent)
 	local formspec =
 	"size[9,8.75]"..
-	"image_button_exit[8.15,-0.15;1,1;;exit;X;true;true;]"..
-	"background[-0.19,-0.25;9.41,9.49;crafting_formspec_furnace.png]"..
+	"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
+	"background[-0.19,-0.25;9.41,9.49;formspec_furnace.png]"..
 	"bgcolor[#080808BB;true]"..
 	"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
 	"list[current_player;main;0,4.5;9,3;9]"..
 	"list[current_player;main;0,7.74;9,1;]"..
-	"list[current_name;src;2.75,0.5;1,1;]"..
-	"list[current_name;fuel;2.75,2.5;1,1;]"..
-	"list[current_name;dst;5.75,1.5;1,1;]"..
-	"image[2.75,1.5;1,1;default_furnace_fire_bg.png^[lowpart:"..
+	"list[current_name;src;3,0.5;1,1;]"..
+	"list[current_name;fuel;3,2.5;1,1;]"..
+	"list[current_name;dst;5,1.5;1,1;]"..
+	"image[3,1.5;1,1;default_furnace_fire_bg.png^[lowpart:"..
 	(100-fuel_percent)..":default_furnace_fire_fg.png]"
 	return formspec
 end
 
 local inactive_formspec =
 	"size[9,8.75]"..
-    "image_button_exit[8.15,-0.15;1,1;;exit;X;true;true;]"..
-	"background[-0.19,-0.25;9.41,9.49;crafting_formspec_furnace.png]"..
+	"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
+	"background[-0.19,-0.25;9.41,9.49;formspec_furnace.png]"..
 	"bgcolor[#080808BB;true]"..
 	"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
 	"list[current_player;main;0,4.5;9,3;9]"..
 	"list[current_player;main;0,7.74;9,1;]"..
-	"list[current_name;src;2.75,0.5;1,1;]"..
-	"list[current_name;fuel;2.75,2.5;1,1;]"..
-	"list[current_name;dst;5.75,1.5;1,1;]"
+	"list[current_name;src;3,0.5;1,1;]"..
+	"list[current_name;fuel;3,2.5;1,1;]"..
+	"list[current_name;dst;5,1.5;1,1;]"
 
 --
 -- Node callback functions that are the same for active and inactive furnace

@@ -425,8 +425,7 @@ function AddGlass(desc, recipeitem, color)
         tiles = {"xpanes_pane_glass"..color..".png"},
         paramtype = "light",
         use_texture_alpha = true,
-        stack_max = 64,
-        groups = {cracky=3,oddly_breakable_by_hand=3, building = 1},
+        groups = {cracky=3, oddly_breakable_by_hand = 3, building = 1},
         sounds = default.node_sound_glass_defaults(),
         drop = "",
     })

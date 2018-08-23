@@ -106,7 +106,7 @@ for i = 0, 15 do
         drawtype = "nodebox",
         tiles = {"default_cobble.png"},
         paramtype = "light",
-        groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3,fences=1},
+        groups = {snappy = 2, cracky=3, oddly_breakable_by_hand = 3,fences=1},
         drop = "wallet:wall",
         node_box = {
             type = "fixed",
@@ -123,7 +123,7 @@ minetest.register_node("wallet:wall_0", {
         },
     tiles = {"default_cobble.png"},
     paramtype = "light",
-    groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3,fences=1},
+    groups = {snappy = 2, cracky=3, oddly_breakable_by_hand = 3,fences=1},
     drop = "wallet:wall",
     node_box = {
         type = "fixed",
@@ -139,7 +139,7 @@ minetest.register_node("wallet:wall_16", {
         },
     tiles = {"default_cobble.png"},
     paramtype = "light",
-    groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3,fences=1},
+    groups = {snappy = 2, cracky=3, oddly_breakable_by_hand = 3,fences=1},
     drop = "wallet:wall",
     node_box = {
         type = "fixed",
@@ -155,7 +155,7 @@ minetest.register_node("wallet:wall_21", {
         },
     tiles = {"default_cobble.png"},
     paramtype = "light",
-    groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3,fences=1},
+    groups = {snappy = 2, cracky=3, oddly_breakable_by_hand = 3,fences=1},
     drop = "wallet:wall",
     node_box = {
         type = "fixed",
@@ -165,10 +165,9 @@ minetest.register_node("wallet:wall_21", {
 
 minetest.register_node("wallet:wall", {
     description = "Cobblestone Wall",
-        paramtype = "light",
+    paramtype = "light",
     tiles = {"default_cobble.png"},
-        inventory_image = "cobblestone_wallet.png",
-    stack_max = 64,
+    inventory_image = "cobblestone_wallet.png",
     groups = {building =1},
     drawtype = "nodebox",
     node_box = {
@@ -185,11 +184,11 @@ minetest.register_node("wallet:wall", {
 
 
 minetest.register_craft({
-        output = 'wallet:wall 6',
-        recipe = {
-                {'default:cobble', 'default:cobble', 'default:cobble'},
+    output = 'wallet:wall 6',
+    recipe = {
+        {'default:cobble', 'default:cobble', 'default:cobble'},
         {'default:cobble', 'default:cobble', 'default:cobble'}
-        }
+    }
 })
 
 -- Mossy wallet
@@ -229,7 +228,7 @@ for i = 0, 15 do
         },
         tiles = {"default_mossycobble.png"},
         paramtype = "light",
-        groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3,fences=1},
+        groups = {snappy = 2, cracky=3, oddly_breakable_by_hand = 3,fences=1},
         drop = "wallet:wallmossy",
         node_box = {
             type = "fixed",
@@ -246,7 +245,7 @@ minetest.register_node("wallet:wallmossy_0", {
         },
     tiles = {"default_mossycobble.png"},
     paramtype = "light",
-    groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3,fences=1},
+    groups = {snappy = 2, cracky=3, oddly_breakable_by_hand = 3,fences=1},
     drop = "wallet:wallmossy",
     node_box = {
         type = "fixed",
@@ -262,7 +261,7 @@ minetest.register_node("wallet:wallmossy_16", {
         },
     tiles = {"default_mossycobble.png"},
     paramtype = "light",
-    groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3,fences=1},
+    groups = {snappy = 2, cracky=3, oddly_breakable_by_hand = 3,fences=1},
     drop = "wallet:wallmossy",
     node_box = {
         type = "fixed",
@@ -278,7 +277,7 @@ minetest.register_node("wallet:wallmossy_21", {
         },
     tiles = {"default_mossycobble.png"},
     paramtype = "light",
-    groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3,fences=1},
+    groups = {snappy = 2, cracky=3, oddly_breakable_by_hand = 3,fences=1},
     drop = "wallet:wallmossy",
     node_box = {
         type = "fixed",
@@ -295,7 +294,6 @@ minetest.register_node("wallet:wallmossy", {
         },
     tiles = {"default_mossycobble.png"},
         inventory_image = "cobblestonemossy_wallet.png",
-    stack_max = 64,
     groups = {building = 1},
     drawtype = "nodebox",
     node_box = {

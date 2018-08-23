@@ -214,16 +214,16 @@ crafting.set_creative_formspec = function(player, start_i, pagenum, show, page, 
     bg[name] = "crafting_creative_bg.png"
     if name == "inv" then
         main_list = "image[-0.2,1.7;11.35,2.33;crafting_creative_bg.png]"..
-            "image[-0.3,0.15;3,4;crafting_inventory_armor2.png]"..
+            "image[-0.3,0.15;3,4.3;crafting_inventory_armor2.png]"..
             "list[current_player;main;0,3.75;9,3;9]"..
 
-            "list[detached:"..player_name.."_armor;armor;0,1.55;1,1;]"..
-            "list[detached:"..player_name.."_armor;armor;0,2.55;1,1;1]"..
-            "list[detached:"..player_name.."_armor;armor;1,1.55;1,1;2]"..
-            "list[detached:"..player_name.."_armor;armor;1,2.55;1,1;3]"
+            "list[detached:"..player_name.."_armor;armor;0.02,1.7;1,1;]"..
+            "list[detached:"..player_name.."_armor;armor;0.02,2.7;1,1;1]"..
+            "list[detached:"..player_name.."_armor;armor;0.98,1.7;1,1;2]"..
+            "list[detached:"..player_name.."_armor;armor;0.98,2.7;1,1;3]"
     end
     formspec = "size[10,9.3]"..
-        "image_button_exit[10,0;1,1;;exit;X;true;true;]"..
+        "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
         "background[-0.19,-0.25;10.5,9.87;crafting_inventory_creative.png]"..
         "bgcolor[#080808BB;true]"..
         "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..

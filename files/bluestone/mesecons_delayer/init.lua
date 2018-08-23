@@ -48,10 +48,10 @@ local done = false
 for i = 1, 4 do
 local groups = {}
 if i == 1 and not done then
-    groups = {bendy=2,snappy=1,dig_immediate=2, mese = 1}
+    groups = {bendy=2,snappy = 1,dig_immediate=2, mese = 1}
     done = true
 else
-    groups = {bendy=2,snappy=1,dig_immediate=2, not_in_creative_inventory=1}
+    groups = {bendy=2,snappy = 1,dig_immediate=2, not_in_creative_inventory=1}
 end
 
 local delaytime
@@ -113,7 +113,6 @@ minetest.register_node("mesecons_delayer:delayer_off_"..tostring(i), {
     paramtype = "light",
     paramtype2 = "facedir",
     sunlight_propagates = true,
-    is_ground_content = true,
     drop = 'mesecons_delayer:delayer_off_1',
     on_punch = function (pos, node)
         if node.name=="mesecons_delayer:delayer_off_1" then
@@ -168,7 +167,6 @@ minetest.register_node("mesecons_delayer:delayer_on_"..tostring(i), {
     paramtype = "light",
     paramtype2 = "facedir",
     sunlight_propagates = true,
-    is_ground_content = true,
     drop = 'mesecons_delayer:delayer_off_1',
     on_punch = function (pos, node)
         if node.name=="mesecons_delayer:delayer_on_1" then

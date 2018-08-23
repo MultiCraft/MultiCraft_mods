@@ -1,5 +1,3 @@
-
--- Wolf
 	mobs:register_mob("mobs_animal:wolf", {
 		type = "animal",
 		visual = "mesh",

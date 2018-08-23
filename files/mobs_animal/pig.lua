@@ -1,5 +1,6 @@
 -- Warthog(Boar) by KrupnoPavel (MIT)
 -- Changed to Boar and tweaked by Kaadmy (WTFPL) and MoNTE48 (LGPLv3)
+
 mobs:register_mob("mobs_animal:pig", {
 		type = "animal",
 		passive = false,
