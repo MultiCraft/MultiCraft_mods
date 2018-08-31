@@ -48,13 +48,10 @@ mobs:register_mob("mobs_animal:kitten", {
 		end
 })
 
-
-local spawn_on = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
-
 mobs:spawn({
 	name = "mobs_animal:kitten",
-	nodes = {spawn_on},
-	min_light = 12,
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	min_light = 10,
 	interval = 30,
 	chance = 10000,
 	min_height = 0,

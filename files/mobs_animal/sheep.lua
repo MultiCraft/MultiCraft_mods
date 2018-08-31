@@ -185,10 +185,10 @@ end
 
 mobs:spawn({
 	name = "mobs_animal:sheep_white",
-	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
 	interval = 30,
-	chance = 8000,
+	chance = 20000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
@@ -196,10 +196,10 @@ mobs:spawn({
 
 mobs:spawn({
 	name = "mobs_animal:sheep_grey",
-	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
 	interval = 30,
-	chance = 8000,
+	chance = 20000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
@@ -207,9 +207,9 @@ mobs:spawn({
 	
 mobs:spawn({
 	name = "mobs_animal:sheep_dark_grey",
-	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	interval = 30,
-	chance = 8000,
+	chance = 20000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
@@ -217,10 +217,10 @@ mobs:spawn({
 	
 mobs:spawn({
 	name = "mobs_animal:sheep_black",
-	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
 	interval = 30,
-	chance = 8000,
+	chance = 20000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
@@ -228,10 +228,10 @@ mobs:spawn({
 	
 mobs:spawn({
 	name = "mobs_animal:sheep_brown",
-	nodes = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
 	interval = 30,
-	chance = 8000,
+	chance = 20000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true,
