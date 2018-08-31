@@ -100,12 +100,9 @@ mobs:register_mob("mobs_animal:bunny", {
 	damage = 5,
 })
 
-
-local spawn_on = {"default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
-
 mobs:spawn({
 	name = "mobs_animal:bunny",
-	nodes = {spawn_on},
+	nodes = {"default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 10,
 	interval = 30,
 	chance = 8000,

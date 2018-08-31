@@ -2991,7 +2991,7 @@ minetest.register_entity(name, {
 	jump_height = def.jump_height or 4, -- was 6
 	drawtype = def.drawtype, -- DEPRECATED, use rotate instead
 	rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
-	lifetimer = def.lifetimer or 180, -- 3 minutes
+	lifetimer = def.lifetimer or 1800, -- 30 min
 	hp_min = max(1, (def.hp_min or 5) * difficulty),
 	hp_max = max(1, (def.hp_max or 10) * difficulty),
 	physical = true,

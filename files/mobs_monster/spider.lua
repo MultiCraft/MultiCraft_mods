@@ -60,10 +60,11 @@ mobs:register_mob("mobs_monster:spider", {
 
 mobs:spawn({
 	name = "mobs_monster:spider",
-	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
+	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
 	min_light = 0,
 	max_light = 12,
-	chance = 7000,
+	interval = 30,
+	chance = 10000,
 	min_height = -50,
 	max_height = 31000,
 })
@@ -134,11 +135,11 @@ mobs:register_mob("mobs_monster:small_spider", {
 
 mobs:spawn({
 	name = "mobs_monster:small_spider",
-	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
+	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
 	min_light = 0,
 	max_light = 15,
 	interval = 30,
-	chance = 8000,
+	chance = 10000,
 	min_height = -50,
 	max_height = 31000,
 })
