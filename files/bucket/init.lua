@@ -1,4 +1,4 @@
--- Minetest 0.4 mod: bucket
+-- MultiCraft mod: bucket
 -- See README.txt for licensing and other information.
 
 minetest.register_alias("bucket", "bucket:bucket_empty")

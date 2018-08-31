@@ -1,6 +1,6 @@
 
 
--- multicraft 0.4 mod: vessels
+-- MultiCraft mod: vessels
 -- See README.txt for licensing and other information.
 
 minetest.register_node("vessels:glass_bottle", {

@@ -10,7 +10,7 @@ it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation; either version 3.0 of the License, or
 (at your option) any later version.
 
-http://www.gnu.org/licenses/lgpl-2.1.html
+http://www.gnu.org/licenses/lgpl-3.0.html
 
 License of media (textures and sounds)
 --------------------------------------
@@ -30,7 +30,3 @@ fire_large.ogg sampled from:
 
 fire_basic_flame_animated.png:
   Muadtralk
-
-fire_flint_steel.png
-  Gambit (WTFPL)
-

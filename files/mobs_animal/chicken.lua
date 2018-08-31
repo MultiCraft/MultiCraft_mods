@@ -190,7 +190,7 @@ local mobs_shoot_egg = function (item, player, pointed_thing)
 		z = dir.z * egg_VELOCITY
 	})
 
-	obj:setacceleration({
+	obj:set_acceleration({
 		x = dir.x * -3,
 		y = -egg_GRAVITY,
 		z = dir.z * -3

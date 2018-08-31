@@ -431,7 +431,7 @@ end)
 if ARMOR_DROP == true or ARMOR_DESTROY == true then
     minetest.register_on_dieplayer(function(player)
         local name = player:get_player_name()
-        local pos = player:getpos()
+        local pos = player:get_pos()
         if name and pos then
             local drop = {}
             local player_inv = player:get_inventory()
@@ -483,7 +483,7 @@ if ARMOR_DROP == true or ARMOR_DESTROY == true then
                             if math.random(1,2) == 1 then
                                 z = -z
                             end
-                            obj:setvelocity({x=1/x, y=obj:getvelocity().y, z=1/z})
+                            obj:setvelocity({x=1/x, y=obj:get_velocity().y, z=1/z})
                         end
                     end
                 end

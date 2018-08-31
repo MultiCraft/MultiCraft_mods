@@ -1,4 +1,4 @@
-multicraft 0.4 mod: vessels
+MultiCraft mod: vessels
 ==========================
 
 Crafts

@@ -45,7 +45,7 @@ end
 
 function railcart.cart:is_loaded()
 	for _, player in pairs(minetest.get_connected_players()) do
-		local pos = player:getpos()
+		local pos = player:get_pos()
 		if pos then
 			local dist = railtrack:get_distance(pos, self.pos)
 			if dist <= RELOAD_DISTANCE then
@@ -72,7 +72,7 @@ function railcart.cart:on_step(dtime)
 			entity = object:get_luaentity() or {}
 			entity.cart = self
 			object:setvelocity(self.vel)
-			object:setacceleration(self.acc)
+			object:set_acceleration(self.acc)
 		end
 	else
 		self.timer = railcart:update(self, self.timer)
@@ -322,7 +322,7 @@ end
 function railcart:update(cart, time, object)
 	if object then
 		cart.pos = object:getpos()
-		cart.vel = object:getvelocity()
+		cart.vel = object:get_velocity()
 	end
 	if not cart.target then
 		cart.pos = vector.new(cart.prev)
@@ -426,7 +426,7 @@ function railcart:update(cart, time, object)
 			object:setyaw(0)
 		end
 		object:setvelocity(cart.vel)
-		object:setacceleration(cart.acc)
+		object:set_acceleration(cart.acc)
 	end
 	return time
 end
