@@ -6,18 +6,11 @@ mobs:register_mob("mobs_animal:chicken", {
 	hp_min = 3,
 	hp_max = 6,
 	armor = 100,
-	collisionbox = {-0.3, -0.75, -0.3, 0.3, 0.1, 0.3},
+	collisionbox = {-0.35, -0.01, -0.35, 0.35, 0.75, 0.35},
 	visual = "mesh",
-	mesh = "mobs_chicken.x",
-	-- seems a lot of textures but this fixes the problem with the model
-	textures = {
-		{"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
-		"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png"},
-	},
-	child_texture = {
-		{"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
-		"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png"},
-	},
+	mesh = "mobs_chicken.b3d",
+	textures = {"mobs_chicken.png"},
+	child_texture = {"mobs_chicken.png"},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_chicken",
@@ -35,11 +28,12 @@ mobs:register_mob("mobs_animal:chicken", {
 	fall_speed = -8,
 	fear_height = 5,
 	animation = {
-		speed_normal = 15,
 		stand_start = 0,
-		stand_end = 1, -- 20
+		stand_end = 20,
 		walk_start = 20,
 		walk_end = 40,
+		run_start = 60,
+		run_end = 80,
 	},
 	follow = {"farming:seed_wheat", "farming:seed_cotton"},
 	view_range = 5,
@@ -74,7 +68,17 @@ mobs:register_mob("mobs_animal:chicken", {
 			max_hear_distance = 5,
 		})
 	end,
-})
+		after_activate = function(self, staticdata, def, dtime)
+			-- replace chicken using the old directx model
+			if self.mesh == "mobs_chicken.x" then
+				local pos = self.object:get_pos()
+				if pos then
+					minetest.add_entity(pos, self.name)
+					self.object:remove()
+				end
+			end
+		end,
+	})
 
 local spawn_on = {"default:dirt", "default:sand", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 
