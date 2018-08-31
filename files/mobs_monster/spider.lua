@@ -12,13 +12,12 @@ mobs:register_mob("mobs_monster:spider", {
 	hp_min = 15,
 	hp_max = 20,
 	armor = 100,
-	collisionbox = {-0.9, -0.01, -0.7, 0.7, 0.6, 0.7},
+	collisionbox = {-0.7, -0.01, -0.7, 0.7, 0.6, 0.7},
 	visual = "mesh",
-	mesh = "mobs_spider.x",
+	mesh = "mobs_spider.b3d",
 	textures = {
 		{"mobs_spider.png"},
 	},
-	visual_size = {x = 7, y = 7},
 	makes_footstep_sound = false,
 	sounds = {
 		random = "mobs_spider",
@@ -47,6 +46,16 @@ mobs:register_mob("mobs_monster:spider", {
 		punch_start = 25,
 		punch_end = 45,
 	},
+		after_activate = function(self, staticdata, def, dtime)
+			-- replace spider using the old directx model
+			if self.mesh == "mobs_spider.x" then
+				local pos = self.object:get_pos()
+				if pos then
+					minetest.add_entity(pos, self.name)
+					self.object:remove()
+				end
+			end
+		end,
 })
 
 mobs:spawn({
@@ -76,13 +85,13 @@ mobs:register_mob("mobs_monster:small_spider", {
 	hp_min = 5,
 	hp_max = 10,
 	armor = 100,
-	collisionbox = {-0.3, -0.01, -0.2, 0.2, 0.2, 0.2},
+	collisionbox = {-0.23, -0.01, -0.23, 0.23, 0.2, 0.23},
 	visual = "mesh",
-	mesh = "mobs_spider.x",
+	mesh = "mobs_spider.b3d",
 	textures = {
 		{"mobs_spider.png"},
 	},
-	visual_size = {x = 2, y = 2},
+	visual_size = {x = 0.3, y = 0.3},
 	makes_footstep_sound = false,
 	sounds = {
 		random = "mobs_spider",
@@ -111,6 +120,16 @@ mobs:register_mob("mobs_monster:small_spider", {
 		punch_start = 25,
 		punch_end = 45,
 	},
+		after_activate = function(self, staticdata, def, dtime)
+			-- replace spider using the old directx model
+			if self.mesh == "mobs_spider.x" then
+				local pos = self.object:get_pos()
+				if pos then
+					minetest.add_entity(pos, self.name)
+					self.object:remove()
+				end
+			end
+		end,
 })
 
 mobs:spawn({

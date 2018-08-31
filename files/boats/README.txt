@@ -1,4 +1,4 @@
-Minetest 0.4 mod: boats
+MultiCraft mod: boats
 =======================
 by PilzAdam, slightly modified for NeXt
 changed by TenPlus1 to add some new features

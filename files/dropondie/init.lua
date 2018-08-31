@@ -28,7 +28,7 @@ minetest.register_on_dieplayer(function(player)
 		return
 	end
 
-	local pos = player:getpos()
+	local pos = player:get_pos()
 
 	-- display death coordinates
 	minetest.chat_send_player(player:get_player_name(),

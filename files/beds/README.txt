@@ -1,4 +1,4 @@
-Minetest Game mod: beds
+MultiCraft mod: beds
 =======================
 See license.txt for license information.
 

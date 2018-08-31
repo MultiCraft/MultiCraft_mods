@@ -1,4 +1,4 @@
--- Minetest 0.4 mod: default
+-- MultiCraft mod: default
 -- See README.txt for licensing and other information.
 
 

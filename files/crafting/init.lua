@@ -24,7 +24,7 @@ end
 local function drop_fields(player, name)
     local inv = player:get_inventory()
     for i,stack in ipairs(inv:get_list(name)) do
-        item_drop(stack, player, player:getpos())
+        item_drop(stack, player, player:get_pos())
         stack:clear()
         inv:set_stack(name, i, stack)
     end
@@ -145,18 +145,11 @@ minetest.register_on_joinplayer(function(player)
 	--end
 	--add hotbar images
 	minetest.after(0.5,function()
-		player:hud_set_hotbar_image("crafting_hotbar.png")
- 		player:hud_set_hotbar_selected_image("crafting_hotbar_selected.png")
-
 		if show_armor then
 			local armor_orginal = armor.set_player_armor
 			armor.set_player_armor = function(self, player)
 				armor_orginal(self, player)
 				update_armor(player)
-				minetest.after(0.5,function()
-					--set_inventory(player)
-				return
-				end)
 			end
 		end
 	end)

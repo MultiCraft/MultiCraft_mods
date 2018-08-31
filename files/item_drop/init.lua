@@ -7,7 +7,7 @@ minetest.register_globalstep(function(dtime)
 	local player_collect_height = 1.2 --added to their pos y value
 	for _,player in ipairs(minetest.get_connected_players()) do
 		if player:get_hp() > 0 then
-			local pos = player:getpos()
+			local pos = player:get_pos()
 			local inv = player:get_inventory()
 			--collection
 			for _,object in ipairs(minetest.env:get_objects_inside_radius({x=pos.x,y=pos.y + player_collect_height,z=pos.z}, radius_collect)) do
@@ -86,7 +86,7 @@ if minetest.setting_getbool("creative_mode") == false then
 						if math.random(1,2) == 1 then
 							z = -z
 						end
-						obj:setvelocity({x=1/x, y=obj:getvelocity().y, z=1/z})
+						obj:setvelocity({x=1/x, y=obj:get_velocity().y, z=1/z})
 						obj:get_luaentity().age = 0.6
 						-- FIXME this doesnt work for deactiveted objects
 						if minetest.setting_get("remove_items") and tonumber(minetest.setting_get("remove_items")) then

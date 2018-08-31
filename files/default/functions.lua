@@ -83,6 +83,13 @@ function default.node_sound_glass_defaults(table)
 	return table
 end
 
+function default.node_sound_water_defaults(table)
+	table = table or {}
+	table.footstep = table.footstep or
+			{name = "default_water_footstep", gain = 0.2}
+	default.node_sound_defaults(table)
+	return table
+end
 
 --
 -- Lavacooling
@@ -342,11 +349,11 @@ snowball_VELOCITY=19
 
 --Shoot snowball.
 snow_shoot_snowball=function (item, player, pointed_thing)
-	local playerpos=player:getpos()
+	local playerpos=player:get_pos()
 	local obj=minetest.add_entity({x=playerpos.x,y=playerpos.y+1.5,z=playerpos.z}, "default:snowball_entity")
 	local dir=player:get_look_dir()
 	obj:setvelocity({x=dir.x*snowball_VELOCITY, y=dir.y*snowball_VELOCITY, z=dir.z*snowball_VELOCITY})
-	obj:setacceleration({x=dir.x*-3, y=-snowball_GRAVITY, z=dir.z*-3})
+	obj:set_acceleration({x=dir.x*-3, y=-snowball_GRAVITY, z=dir.z*-3})
 	item:take_item()
 	return item
 end

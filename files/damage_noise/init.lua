@@ -11,7 +11,7 @@ minetest.register_globalstep(function(dtime)
 		local oldhp = damage[player:get_player_name()]
 		
 		if oldhp > newhp then
-			local pos = player:getpos()
+			local pos = player:get_pos()
 			minetest.sound_play("hurt", {
 				pos = pos,
 				max_hear_distance = 10,
