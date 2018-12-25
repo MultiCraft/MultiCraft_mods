@@ -1,4 +1,3 @@
-HUD_ENABLE_HUNGER = nil 
 HUD_IW_MAX = 8
 HUD_IW_TICK = 0.4
 if minetest.is_singleplayer() == true then
@@ -35,7 +34,7 @@ hud.show_armor = minetest.get_modpath("3d_armor") ~= nil
 
 -- check if some settings are invalid
 local enable_hunger = minetest.settings:get_bool("hud_hunger_enable")
-if (enable_hunger == true or HUD_ENABLE_HUNGER == true) and not hud.show_hunger then
+if (enable_hunger == true) and not hud.show_hunger then
 	hud.notify_hunger(5)
 end
 

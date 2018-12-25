@@ -2,15 +2,14 @@
 local path = minetest.get_modpath("mobs_animal")
 
 -- Animals
-
+dofile(path .. "/bear.lua") -- KrupnoPavel
+dofile(path .. "/bunny.lua") -- ExeterDad
 dofile(path .. "/chicken.lua") -- JKmurray
 dofile(path .. "/cow.lua") -- KrupnoPavel
-dofile(path .. "/sheep.lua") -- PilzAdam
-dofile(path .. "/bunny.lua") -- ExeterDad
-dofile(path .. "/kitten.lua") -- Jordach/BFD
 dofile(path .. "/dog.lua") -- KrupnoPavel
+dofile(path .. "/kitten.lua") -- Jordach/BFD
 dofile(path .. "/pig.lua") -- KrupnoPavel
-dofile(path .. "/bear.lua") -- KrupnoPavel
+dofile(path .. "/sheep.lua") -- PilzAdam
 
 -- Removed
 mobs:register_mob("mobs_animal:rat", {

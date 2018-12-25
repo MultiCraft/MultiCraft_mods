@@ -44,6 +44,8 @@ for _, col in pairs(all_colours) do
 		run_velocity = 2,
 		runaway = true,
 		jump = true,
+		jump_height = 6,
+		pushable = true,
 		drops = {
 			{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 			{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
@@ -64,20 +66,37 @@ for _, col in pairs(all_colours) do
 		view_range = 8,
 		replace_rate = 10,
 		replace_what = {
-			{"group:grass", "air", 0},	
-			{"default:dirt_with_grass", "default:dirt", -1}
+			{"group:grass", "air", -1},
+			{"default:dirt_with_grass", "default:dirt", -2}
 		},
-		replace_with = "air",
-		replace_offset = -1,
 		fear_height = 3,
+		on_replace = function(self, pos, oldnode, newnode)
 
+			self.food = (self.food or 0) + 1
+
+			-- if sheep replaces 8x grass then it regrows wool
+			if self.food >= 8 then
+
+				self.food = 0
+				self.gotten = false
+
+				self.object:set_properties({
+		textures = {
+			{"mobs_sheep_" .. col[1] .. ".png"},
+		},
+		mesh = "mobs_sheep.b3d",
+				})
+			end
+		end,
 		on_rightclick = function(self, clicker)
 
 			--are we feeding?
 			if mobs:feed_tame(self, clicker, 8, true, true) then
 
-				--if full grow fuzz
-				if self.gotten == false then
+				--if fed 7x grass or wheat then sheep regrows wool
+				if self.food and self.food > 6 then
+
+					self.gotten = false
 
 					self.object:set_properties({
 						textures = {"mobs_sheep_"..col[1]..".png"},
