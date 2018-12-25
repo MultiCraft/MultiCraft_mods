@@ -1,15 +1,34 @@
--- minetest/fire/init.lua
-
--- Global namespace for functions
-
-fire = {}
-fire.mod = "redo"
 
 
--- Register flame nodes
+fire = {
+	mod = "redo",
+}
+
+-- Particle effects
+
+local function add_effect(pos)
+
+	minetest.add_particlespawner({
+		amount = 1,
+		time = 0.25,
+		minpos = pos,
+		maxpos = pos,
+		minvel = {x = -1, y = 2, z = -1},
+		maxvel = {x = 1, y = 4, z = 1},
+		minacc = {x = 0, y = 0, z = 0},
+		maxacc = {x = 0, y = 0, z = 0},
+		minexptime = 1,
+		maxexptime = 3,
+		minsize = 2,
+		maxsize = 5,
+		texture = "tnt_smoke.png",
+	})
+end
+
+-- Flame nodes
 
 minetest.register_node("fire:basic_flame", {
-	drawtype = "plantlike", -- changed from 'firelike' for drawing speed
+	drawtype = "firelike",
 	tiles = {
 		{
 			name = "fire_basic_flame_animated.png",
@@ -23,12 +42,13 @@ minetest.register_node("fire:basic_flame", {
 	},
 	inventory_image = "fire_basic_flame.png",
 	paramtype = "light",
-	light_source = 14,
+	light_source = 13,
 	walkable = false,
 	buildable_to = true,
 	sunlight_propagates = true,
 	damage_per_second = 4,
 	groups = {igniter = 2, dig_immediate = 3, not_in_creative_inventory = 1},
+	drop = {},
 	on_timer = function(pos)
 		local f = minetest.find_node_near(pos, 1, {"group:flammable"})
 		if not f then
@@ -36,10 +56,9 @@ minetest.register_node("fire:basic_flame", {
 			minetest.swap_node(pos, {name = "air"})
 			return
 		end
-		-- restart timer
+		-- Restart timer
 		return true
 	end,
-	drop = "",
 
 	on_construct = function(pos)
 		minetest.get_node_timer(pos):start(math.random(30, 60))
@@ -70,13 +89,13 @@ minetest.register_node("fire:permanent_flame", {
 	},
 	inventory_image = "fire_basic_flame.png",
 	paramtype = "light",
-	light_source = 14,
+	light_source = 13,
 	walkable = false,
 	buildable_to = true,
 	sunlight_propagates = true,
 	damage_per_second = 4,
 	groups = {igniter = 2, dig_immediate = 3},
-	drop = "",
+	drop = {},
 
 	on_blast = function()
 	end,
@@ -133,7 +152,6 @@ minetest.register_craft({
 		{"default:flint", "default:steel_ingot"}
 	}
 })
-
 
 -- Override coalblock to enable permanent flame above
 -- Coalblock is non-flammable to avoid unwanted basic_flame nodes
@@ -301,6 +319,7 @@ else -- Fire enabled
 					def.on_burn(p)
 				else
 --					minetest.remove_node(p)
+					add_effect(p)
 					minetest.swap_node(p, {name = "air"})
 					nodeupdate(p)
 				end
@@ -345,28 +364,23 @@ minetest.register_abm({
 
 -- used to drop items inside a chest or container
 function fire.drop_items(pos, invstring)
-
 	local meta = minetest.get_meta(pos)
 	local inv  = meta:get_inventory()
-
 	for i = 1, inv:get_size(invstring) do
-
 		local m_stack = inv:get_stack(invstring, i)
 		local obj = minetest.add_item(pos, m_stack)
-
 		if obj then
-			obj:setvelocity({
+			obj:set_velocity({
 				x = math.random(-10, 10) / 9,
 				y = 1,
 				z = math.random(-10, 10) / 9
 			})
 		end
 	end
-
 end
 
-
 -- override chest node so that it's flammable
+
 minetest.override_item("default:chest", {
 
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 3},

@@ -219,6 +219,7 @@ minetest.register_node(":mobs:egg", {
 	wield_image = "mobs_chicken_egg.png",
 	paramtype = "light",
 	walkable = false,
+	is_ground_content = true,
 	sunlight_propagates = true,
 	selection_box = {
 		type = "fixed",
@@ -253,6 +254,7 @@ minetest.register_craftitem(":mobs:chicken_raw", {
 description = "Raw Chicken",
 	inventory_image = "mobs_chicken_raw.png",
 	on_use = minetest.item_eat(2),
+	groups = {food_meat_raw = 1, food_chicken_raw = 1, flammable = 2},
 })
 
 -- cooked chicken

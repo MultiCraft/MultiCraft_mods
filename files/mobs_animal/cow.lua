@@ -23,6 +23,7 @@ mobs:register_mob("mobs_animal:cow", {
 	run_velocity = 2,
 	jump = true,
 	jump_height = 6,
+	pushable = true,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
@@ -45,19 +46,27 @@ mobs:register_mob("mobs_animal:cow", {
 		punch_start = 70,
 		punch_end = 100,
 	},
-	follow = "farming:wheat",
+	follow = {"farming:wheat", "default:grass"},
 	view_range = 8,
 	replace_rate = 10,
 	replace_what = {
 		{"group:grass", "air", 0},
 		{"default:dirt_with_grass", "default:dirt", -1}
 	},
-	replace_with = "air",
 	fear_height = 2,
 	on_rightclick = function(self, clicker)
 
 		-- feed or tame
-		if mobs:feed_tame(self, clicker, 8, true, true) then return end
+		if mobs:feed_tame(self, clicker, 8, true, true) then
+
+			-- if fed 7x wheat or grass then cow can be milked again
+			if self.food and self.food > 6 then
+				self.gotten = false
+			end
+
+			return
+		end
+
 		if mobs:protect(self, clicker) then return end
 		if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 
@@ -80,7 +89,8 @@ mobs:register_mob("mobs_animal:cow", {
 
 			local inv = clicker:get_inventory()
 
-			inv:remove_item("main", "bucket:bucket_empty")
+			tool:take_item()
+			clicker:set_wielded_item(tool)
 
 			if inv:room_for_item("main", {name = "mobs:bucket_milk"}) then
 				clicker:get_inventory():add_item("main", "mobs:bucket_milk")
@@ -95,6 +105,17 @@ mobs:register_mob("mobs_animal:cow", {
 			return
 		end
 	end,
+	on_replace = function(self, pos, oldnode, newnode)
+
+		self.food = (self.food or 0) + 1
+
+		-- if cow replaces 8x grass then it can be milked again
+		if self.food >= 8 then
+			self.food = 0
+			self.gotten = false
+		end
+	end,
+	
 		after_activate = function(self, staticdata, def, dtime)
 			-- replace cow using the old directx model
 			if self.mesh == "mobs_cow.x" then

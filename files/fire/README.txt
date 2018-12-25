@@ -1,8 +1,9 @@
-Minetest Game mod: fire (redo with changes by TenPlus1)
-=======================================================
+MutliCraft mod: fire (redo with changes by TenPlus1)
 
-License of source code:
------------------------
+=======================
+
+License of source code
+----------------------
 Copyright (C) 2012 Perttu Ahola (celeron55) <celeron55@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
@@ -24,9 +25,15 @@ Copyright (C) 2012 Perttu Ahola (celeron55) <celeron55@gmail.com>
 
 fire_small.ogg sampled from:
   http://www.freesound.org/people/dobroide/sounds/4211/
+  fire_small.ogg
 
 fire_large.ogg sampled from:
   http://www.freesound.org/people/Dynamicell/sounds/17548/
+  fire_large.ogg
+  fire_fire.*.ogg
+
+fire_small.ogg and fire_large.ogg are unused but kept temporarily to not break
+other mods that may use them.
 
 fire_basic_flame_animated.png:
   Muadtralk
