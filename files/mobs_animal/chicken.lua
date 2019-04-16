@@ -21,7 +21,7 @@ mobs:register_mob("mobs_animal:chicken", {
 	drops = {
 		{name = "mobs:chicken_raw", chance = 1, min = 1, max = 1},
 	},
-	water_damage = 1,
+	water_damage = 0,
 	lava_damage = 5,
 	light_damage = 0,
 	fall_damage = 0,
@@ -35,7 +35,7 @@ mobs:register_mob("mobs_animal:chicken", {
 		run_start = 60,
 		run_end = 80,
 	},
-	follow = {"farming:seed_wheat", "farming:seed_cotton"},
+	follow = {"farming:seed_wheat"},
 	view_range = 5,
 
 	on_rightclick = function(self, clicker)

@@ -22,6 +22,7 @@ local all_colours = {
 for _, col in pairs(all_colours) do
 
 	mobs:register_mob("mobs_animal:sheep_"..col[1], {
+		stepheight = 0.6,
 		type = "animal",
 		passive = true,
 		hp_min = 6,
@@ -51,7 +52,7 @@ for _, col in pairs(all_colours) do
 			{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
 			{name = "wool:"..col[1], chance = 1, min = 1, max = 1}
 		},
-		water_damage = 1,
+		water_damage = 0,
 		lava_damage = 5,
 		light_damage = 0,
 		animation = {

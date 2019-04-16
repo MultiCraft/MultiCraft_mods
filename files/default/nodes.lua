@@ -253,17 +253,6 @@ minetest.register_node("default:brick", {
     sounds = default.node_sound_stone_defaults(),
 })
 
-minetest.register_node("default:haybale", {
-    description = "Hay Bale",
-    tiles = {"default_hayblock_top.png", "default_hayblock_top.png", "default_hayblock_side.png"},
-    paramtype2 = "facedir",
-    is_ground_content = false,
-    on_place = minetest.rotate_node,
-    groups = {tree=1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2, building = 1},
-    sounds = default.node_sound_wood_defaults(),
-})
-
-
 --
 -- Trees
 --
@@ -530,6 +519,13 @@ minetest.register_node("default:junglegrass", {
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
+		drop = {
+		max_items = 1,
+		items = {
+			--{items = {'farming:seed_cotton'}, rarity = 8},
+			{items = {'default:junglegrass'}},
+		}
+	},
 	buildable_to = true,
 	groups = {snappy = 3, flammable = 2, flora = 1, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
@@ -1195,7 +1191,7 @@ minetest.register_node("default:chest", {
                     "list[current_name;main;0,0;9,3;]"..
                     "list[current_player;main;0,4;9,3;9]"..
                     "list[current_player;main;0,7.5.5;9,1;]")
-            meta:set_string("infotext", "Coffre")
+            meta:set_string("infotext", "Chest")
         end
         local inv = meta:get_inventory()
         inv:set_size("main", 9*3)
@@ -1259,7 +1255,7 @@ minetest.register_node("default:chest_left", {
                 "list[current_name;main;0,0;9,3;]"..
                 "list[current_player;main;0,4;9,3;9]"..
                 "list[current_player;main;0,7.5.5;9,1;]")
-        meta:set_string("infotext", "Coffre")
+        meta:set_string("infotext", "Chest")
         hacky_swap_node(p, "default:chest")
     end,
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
@@ -1469,21 +1465,13 @@ minetest.register_node("default:grass", {
     wield_image = "default_tallgrass.png",
     walkable = false,
     buildable_to = true,
-        --drop = {
-        --max_items = 1,
-        --items = {
-        --    {
-       --         -- player will get sapling with 1/20 chance
-       --         items = {'farming:wheat_seed'},
-       --         rarity = 5,
-       --     },
-       --     {
-       --         -- player will get leaves only if he get no saplings,
-       --         -- this is because max_items is 1
-      --          items = {''},
-      --      }
-       -- }
-    --},
+	drop = {
+		max_items = 1,
+		items = {
+			{items = {'farming:seed_wheat'}, rarity = 5},
+			{items = {'default:grass'}},
+		}
+    },
     paramtype = "light",
     groups = {snappy = 3, flammable = 3,attached_node=1,dig_immediate=3, decorative=1, grass=1},
     sounds = default.node_sound_leaves_defaults(),

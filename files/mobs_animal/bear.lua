@@ -38,6 +38,7 @@
 		hp_max = 15,
 		armor = 100,
 		knock_back = 1,
+		water_damage = 0,
 		lava_damage = 10,
 		fall_damage = 5,
 		makes_footstep_sound = true,

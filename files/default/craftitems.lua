@@ -111,13 +111,6 @@ minetest.register_craftitem("default:sugar", {
     groups = {materials = 1},
 })
 
-minetest.register_craftitem("default:string",{
-    description = "String",
-    inventory_image = "default_string.png",
-    groups = {materials = 1},
-})
-
-
 minetest.register_craftitem("default:quartz_crystal", {
     description = "Quartz Crystal",
     inventory_image = "default_quartz_crystal.png",

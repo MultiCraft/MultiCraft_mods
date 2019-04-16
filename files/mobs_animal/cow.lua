@@ -31,7 +31,7 @@ mobs:register_mob("mobs_animal:cow", {
 		{name = "mobs:leather", chance = 2, min = 1, max = 1},
 		{name = "mobs:leather", chance = 2, min = 1, max = 1}
 	},
-	water_damage = 1,
+	water_damage = 0,
 	lava_damage = 5,
 	light_damage = 0,
 	animation = {

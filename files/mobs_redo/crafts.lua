@@ -75,9 +75,9 @@ minetest.register_tool("mobs:lasso", {
 	minetest.register_craft({
 		output = "mobs:lasso",
 		recipe = {
-			{"default:string", "", "default:string"},
+			{"farming:string", "", "farming:string"},
 			{"", "default:diamond", ""},
-			{"default:string", "", "default:string"},
+			{"farming:string", "", "farming:string"},
 		}
 	})
 

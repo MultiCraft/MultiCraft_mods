@@ -28,9 +28,9 @@ mobs:register_mob("mobs_monster:spider", {
 	jump = true,
 	view_range = 15,
 	floats = 0,
---	drops = {
---		{name = "farming:string",
---		chance = 1, min = 1, max = 2},	},
+	drops = {
+		{name = "farming:string",
+		chance = 1, min = 1, max = 2},	},
 	water_damage = 5,
 	lava_damage = 5,
 	light_damage = 0,
@@ -103,9 +103,9 @@ mobs:register_mob("mobs_monster:small_spider", {
 	jump = true,
 	view_range = 10,
 	floats = 0,
---	drops = {
---		{name = "farming:string",
---		chance = 1, min = 1, max = 1},	},
+	drops = {
+		{name = "farming:string",
+		chance = 1, min = 1, max = 1},	},
 	water_damage = 5,
 	lava_damage = 5,
 	light_damage = 0,
@@ -161,7 +161,6 @@ minetest.register_node(":mobs:cobweb", {
 	liquid_range = 0,
 	walkable = false,
 	groups = {snappy = 1, disable_jump = 1},
-	--drop = "farming:cotton",
 	sounds = default.node_sound_leaves_defaults(),
 })
 

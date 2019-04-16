@@ -177,97 +177,91 @@ stairs.register_all("wood", "default:wood",
 	stairs.wood)
 
 stairs.register_all("junglewood", "default:junglewood",
-	{choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, not_in_craft_guide=1},
+	{choppy = 2, oddly_breakable_by_hand = 2, flammable = 3},
 	{"default_junglewood.png"},
 	"Jungle Wood",
 	stairs.wood)
 
 stairs.register_all("pine_wood", "default:pinewood",
-	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 3, not_in_craft_guide=1},
+	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
 	{"default_pine_wood.png"},
 	"Pine Wood",
 	stairs.wood)
 
 stairs.register_all("cobble", "default:cobble",
-	{cracky=3,stone=2},
+	{cracky = 3, stone = 2},
 	{"default_cobble.png"},
 	"Cobble",
 	stairs.stone)
 		
 stairs.register_all("mossy_cobble", "default:mossycobble",
-	{cracky=3, stone=2, not_in_craft_guide=1},
+	{cracky = 3, stone = 2},
 	{"default_mossycobble.png"},
 	"Mossy Cobble", 
 	stairs.stone)
 
-stairs.register_all("cloud", "default:cloud",
-	{unbreakable=1, not_in_craft_guide=1},
-	{"default_cloud.png"},
-	"Cloud",
-	stairs.wool)
-
 stairs.register_all("coal", "default:coalblock",
-	{cracky=3, not_in_craft_guide=1},
+	{cracky = 3},
 	{"default_coal_block.png"},
 	"Coal",
 	stairs.stone)
 
 stairs.register_all("steel", "default:steelblock",
-	{cracky=1,level=2, not_in_craft_guide=1},
+	{cracky = 1, level = 2},
 	{"default_steel_block.png"},
 	"Steel",
 	stairs.stone)
 
 stairs.register_all("gold", "default:goldblock",
-	{cracky=1, not_in_craft_guide=1},
+	{cracky = 1},
 	{"default_gold_block.png"},
 	"Gold",
 	stairs.stone)
 
 stairs.register_all("diamond", "default:diamondblock",
-	{cracky=1,level=3, not_in_craft_guide=1},
+	{cracky = 1, level=3},
 	{"default_diamond_block.png"},
 	"Diamond",
 	stairs.stone)
 
 stairs.register_all("stone", "default:stone",
-	{cracky=3,stone=1, not_in_craft_guide=1},
+	{cracky = 3, stone = 1},
 	{"default_stone.png"},
 	"Stone",
 	stairs.stone)
 
 stairs.register_all("mossycobble", "default:mossycobble",
-	{cracky=3, not_in_craft_guide=1},
+	{cracky = 3},
 	{"default_mossycobble.png"},
 	"Mossy Cobble",
 	stairs.stone)
 
 stairs.register_all("brick", "default:brick",
-	{cracky=3, not_in_craft_guide=1},
+	{cracky = 3},
 	{"default_brick.png"},
 	"Brick",
 	stairs.stone)
 
 stairs.register_all("sandstone", "default:sandstone",
-	{crumbly=2,cracky=3, not_in_craft_guide=1},
+	{crumbly = 2, cracky = 3},
 	{"default_sandstone_bottom.png"},
 	"Sandstone",
 	stairs.stone)
 
 stairs.register_all("glass", "default:glass",
-	{cracky=3, oddly_breakable_by_hand = 3, not_in_craft_guide=1},
+	{cracky = 3, oddly_breakable_by_hand = 3},
 	{"default_glass.png"},
 	"Glass",
 	stairs.glass)
 
 stairs.register_all("obsidian", "default:obsidian",
-	{cracky=1,level=2, unbreakable=1, not_in_craft_guide=1},
+	{cracky = 1, level = 2, unbreakable = 1, not_in_craft_guide=1},
 	{"default_obsidian.png"},
 	"Obsidian",
 	stairs.stone)
 
 stairs.register_all("stonebrick", "default:stonebrick",
-	{cracky=2,stone=1, not_in_craft_guide=1},
+	{cracky=2,stone = 1},
 	{"default_stone_brick.png"},
 	"Stone Brick",
 	stairs.stone)
@@ -276,8 +270,8 @@ stairs.register_all("stonebrick", "default:stonebrick",
 if minetest.get_modpath("farming") then
 
 stairs.register_all("straw", "farming:straw",
-	{snappy = 3, flammable = 4, not_in_craft_guide = 1},
-	{"farming_straw.png"},
+	{snappy = 3, flammable = 4},
+	{"farming_straw_side.png"},
 	"Straw",
 	stairs.leaves)
 
@@ -600,103 +594,10 @@ stairs.register_all("dungeon_stone", "castle:dungeon_stone",
 	stairs.stone)
 
 stairs.register_all("stonewall", "castle:stonewall",
-	{cracky=3, not_in_craft_guide=1},
+	{cracky = 3, not_in_craft_guide=1},
 	{"castle_stonewall.png"},
 	"Castle Wall",
 	stairs.stone)
-
-end
-
---= Ethereal Mod
-
-if minetest.get_modpath("ethereal") then
-
-stairs.register_all("bamboo_floor", "ethereal:bamboo_floor",
-	{snappy = 3, choppy = 3 , flammable = 2, not_in_craft_guide=1},
-	{"bamboo_floor.png"},
-	"Bamboo",
-	stairs.wood)
-
-stairs.register_all("crystal_block", "ethereal:crystal_block",
-	{cracky=1, level=2, not_in_craft_guide=1},
-	{"crystal_block.png"},
-	"Crystal Block",
-	stairs.glass)
-
-stairs.register_all("icebrick", "ethereal:icebrick",
-	{crumbly=3, melts = 1, not_in_craft_guide=1},
-	{"brick_ice.png"},
-	"Ice Brick",
-	stairs.glass)
-		
-stairs.register_all("snowbrick", "ethereal:snowbrick",
-	{crumbly=3, melts = 1, not_in_craft_guide=1},
-	{"brick_snow.png"},
-	"Snow Brick",
-	default.node_sound_dirt_defaults({
-		footstep = {name="default_snow_footstep", gain=0.25},
-		dug = {name="default_snow_footstep", gain=0.75},
-	}))
-
-stairs.register_all("dry_dirt", "ethereal:dry_dirt",
-	{crumbly=3, not_in_craft_guide=1},
-	{"ethereal_dry_dirt.png"},
-	"Dry Dirt",
-	stairs.dirt)
-
-stairs.register_all("mushroom_trunk", "ethereal:mushroom_trunk",
-	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 2, not_in_craft_guide=1},
-	{"mushroom_trunk.png"},
-	"Mushroom Trunk",
-	stairs.wood)
-
-stairs.register_all("mushroom", "ethereal:mushroom",
-	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 2, not_in_craft_guide=1},
-	{"mushroom_block.png"},
-	"Mushroom Top",
-	stairs.wood)
-
-stairs.register_all("frost_wood", "ethereal:frost_wood",
-	{choppy = 2, oddly_breakable_by_hand = 1,put_out_fire=1, not_in_craft_guide=1},
-	{"frost_wood.png"},
-	"Frost Wood",
-	stairs.wood)
-
-stairs.register_all("yellow_wood", "ethereal:yellow_wood",
-	{choppy = 2, oddly_breakable_by_hand = 1,put_out_fire=1, not_in_craft_guide=1},
-	{"yellow_wood.png"},
-	"Healing Tree Wood",
-	stairs.wood)
-
-stairs.register_all("palm_wood", "ethereal:palm_wood",
-	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 3, not_in_craft_guide=1},
-	{"moretrees_palm_wood.png"},
-	"Palm Wood",
-	stairs.wood)
-
-stairs.register_all("banana_wood", "ethereal:banana_wood",
-	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 3, not_in_craft_guide=1},
-	{"banana_wood.png"},
-	"Banana Wood",
-	stairs.wood)
-
-stairs.register_all("willow_wood", "ethereal:willow_wood",
-	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 3, not_in_craft_guide=1},
-	{"willow_wood.png"},
-	"Willow Wood",
-	stairs.wood)
-
-stairs.register_all("redwood_wood", "ethereal:redwood_wood",
-	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 3, not_in_craft_guide=1},
-	{"redwood_wood.png"},
-	"Redwood Wood",
-	stairs.wood)
-
-stairs.register_all("acacia_wood", "ethereal:acacia_wood",
-	{choppy = 2, oddly_breakable_by_hand = 1, flammable = 3, not_in_craft_guide=1},
-	{"moretrees_acacia_wood.png"},
-	"Acacia Wood",
-	stairs.wood)
 
 end
 
@@ -706,7 +607,7 @@ if minetest.get_modpath("wool") then
 
 grp = {
 	snappy = 2, choppy = 2, oddly_breakable_by_hand = 3, flammable = 3,
-	wool = 1, not_in_craft_guide = 1
+	wool = 1
 }
 
 stairs.register_all("wool_white", "wool:white",
