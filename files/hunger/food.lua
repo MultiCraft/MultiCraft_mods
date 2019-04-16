@@ -25,13 +25,10 @@ if minetest.get_modpath("mobs") then
 		register_food("mobs:chicken_cooked", 6)
 		register_food("mobs:chicken_raw", 2, "", 3)
 		register_food("mobs:chicken_egg_fried", 2)
+		register_food("mobs_monster:rotten_flesh", 1, "", 4)
 		if minetest.get_modpath("bucket") then
 			register_food("mobs:bucket_milk", 3, "bucket:bucket_empty")
 		end
-	else
-		register_food("mobs:meat", 6)
-		register_food("mobs:meat_raw", 3)
-		register_food("mobs:rat_cooked", 5)
 	end
 end
 

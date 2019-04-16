@@ -26,9 +26,9 @@ mobs:register_mob("mobs_animal:kitten", {
 	run_velocity = 2,
 	runaway = true,
 	jump = false,
-	--drops = {
-	--	{name = "farming:string", chance = 1, min = 1, max = 1},
-	--},
+	drops = {
+		{name = "farming:string", chance = 1, min = 1, max = 1},
+	},
 	water_damage = 1,
 	lava_damage = 5,
 	fear_height = 3,

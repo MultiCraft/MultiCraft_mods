@@ -35,7 +35,7 @@ mobs:register_mob("mobs_animal:pig", {
 			{name = "mobs:pork_raw",
 				chance = 2, min = 1, max = 1}
 		},
-		water_damage = 1,
+		water_damage = 0,
 		lava_damage = 5,
 		light_damage = 0,
 		fear_height = 2,

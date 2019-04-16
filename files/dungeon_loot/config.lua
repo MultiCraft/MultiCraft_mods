@@ -100,5 +100,5 @@ dungeon_loot.seedlings_list = {
 if minetest.get_modpath("farming") then
  	table.insert(dungeon_loot.consumables_list, {name="farming:bread", chance_and_amount = 10})
  	table.insert(dungeon_loot.seedlings_list, {name="farming:seed_wheat", chance = 1, amount = 10})
- 	table.insert(dungeon_loot.seedlings_list, {name="farming:seed_cotton", chance = 20, amount = 5})
+--	table.insert(dungeon_loot.seedlings_list, {name="farming:seed_cotton", chance = 20, amount = 5})
 end

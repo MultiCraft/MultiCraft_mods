@@ -3,7 +3,7 @@
 
 mobs = {
 	mod = "redo",
-	version = "20181220",
+	version = "20190402",
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
 
@@ -448,9 +448,39 @@ function mobs:line_of_sight(entity, pos1, pos2, stepsize)
 	return mob_class.line_of_sight(entity, pos1, pos2, stepsize)
 end
 
+function mob_class:attempt_flight_correction()
+
+	if self:flight_check() then return true end
+
+	-- We are not flying in what we are supposed to.
+	-- See if we can find intended flight medium and return to it
+	local pos = self.object:get_pos()
+	local searchnodes = self.fly_in
+
+	if type(searchnodes) == "string" then
+		searchnodes = {self.fly_in}
+	end
+
+	local flyable_nodes = minetest.find_nodes_in_area(
+		{x = pos.x - r, y = pos.y - r, z = pos.z - r},
+		{x = pos.x + r, y = pos.y + r, z = pos.z + r},
+		searchnodes)
+
+	if #flyable_nodes < 1 then
+		return false
+	end
+
+	local escape_target = flyable_nodes[math.random(1,#flyable_nodes)]
+	local escape_direction = vector.direction(pos, escape_target)
+
+	self.object:set_velocity(
+		vector.multiply(escape_direction, self.run_velocity))
+
+	return true
+end
 
 -- are we flying in what we are suppose to? (taikedz)
-function mob_class:flight_check(pos_w)
+function mob_class:flight_check()
 
 	local def = minetest.registered_nodes[self.standing_in]
 
@@ -480,6 +510,57 @@ function mob_class:flight_check(pos_w)
 	end
 
 	return false
+end
+
+
+-- if self.stay_near set then check periodically for nodes and turn to face/move
+function mob_class:do_stay_near()
+
+	if not self.stay_near then return false end
+
+	local pos = self.object:get_pos()
+	local searchnodes = self.stay_near[1]
+	local chance = self.stay_near[2] or 10
+
+	if random(1, chance) > 1 then
+		return false
+	end
+
+	if type(searchnodes) == "string" then
+		searchnodes = {self.stay_near[1]}
+	end
+
+	local r = self.view_range
+	local nearby_nodes = minetest.find_nodes_in_area(
+		{x = pos.x - r, y = pos.y - 1, z = pos.z - r},
+		{x = pos.x + r, y = pos.y + 1, z = pos.z + r},
+		searchnodes)
+
+	if #nearby_nodes < 1 then
+		return false
+	end
+
+	local target = nearby_nodes[math.random(1, #nearby_nodes)]
+	local direction = vector.direction(pos, target)
+
+	local vec = {
+		x = target.x - pos.x,
+		z = target.z - pos.z
+	}
+
+	yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
+
+	if target.x > pos.x then
+		yaw = yaw + pi
+	end
+
+	yaw = self:set_yaw(yaw, 4)
+
+	self:set_animation("walk")
+
+	self:set_velocity(self.walk_velocity)
+
+	return true
 end
 
 
@@ -533,7 +614,6 @@ function mob_class:update_tag()
 		nametag = self.nametag,
 		nametag_color = col
 	})
-
 end
 
 
@@ -970,6 +1050,7 @@ local entity_physics = function(pos, radius)
 		obj_pos = objs[n]:get_pos()
 
 		dist = get_distance(pos, obj_pos)
+
 		if dist < 1 then dist = 1 end
 
 		local damage = floor((4 / dist) * radius)
@@ -1804,8 +1885,10 @@ function mob_class:follow_flop()
 
 	-- swimmers flop when out of their element, and swim again when back in
 	if self.fly then
+
 		local s = self.object:get_pos()
-		if not self:flight_check(s) then
+
+		if not self:attempt_flight_correction() then
 
 			self.state = "flop"
 			self.object:set_velocity({x = 0, y = -5, z = 0})
@@ -2168,7 +2251,7 @@ function mob_class:do_states(dtime)
 				local p_y = floor(p2.y + 1)
 				local v = self.object:get_velocity()
 
-				if self:flight_check(s) then
+				if self:flight_check() then
 
 					if me_y < p_y then
 
@@ -2565,7 +2648,7 @@ end
 
 	if tr then
 		if weapon_def.original_description then
-			weapon:add_wear(toolranks.new_afteruse(weapon, hitter, nil, {wear = wear}))
+			toolranks.new_afteruse(weapon, hitter, nil, {wear = wear})
 		end
 	else
 	weapon:add_wear(wear)
@@ -2803,6 +2886,12 @@ function mob_class:mob_activate(staticdata, def, dtime)
 			self[_] = stat
 		end
 	end
+	
+	-- force current model into mob
+	self.mesh = def.mesh
+	self.base_mesh = def.mesh
+	self.collisionbox = def.collisionbox
+	self.selectionbox = def.selectionbox
 
 	-- select random texture, set model and size
 	if not self.base_texture then
@@ -2874,7 +2963,7 @@ function mob_class:mob_activate(staticdata, def, dtime)
 	end
 
 	if self.health == 0 then
-		self.health = random (self.hp_min, self.hp_max)
+		self.health = random(self.hp_min, self.hp_max)
 	end
 
 	-- pathfinding init
@@ -2917,7 +3006,7 @@ function mob_class:mob_activate(staticdata, def, dtime)
 
 	-- run after_activate
 	if def.after_activate then
-		def:after_activate(staticdata, def, dtime)
+		def.after_activate(self, staticdata, def, dtime)
 	end
 
 	if use_cmi then
@@ -3107,7 +3196,8 @@ function mob_class:on_step(dtime)
 	self:do_jump()
 
 	self:do_runaway_from(self)
-
+	
+	self:do_stay_near()
 end
 
 
@@ -3217,6 +3307,7 @@ minetest.register_entity(name, setmetatable({
 	runaway_from = def.runaway_from,
 	owner_loyal = def.owner_loyal,
 	pushable = def.pushable,
+	stay_near = def.stay_near,
 
 	on_spawn = def.on_spawn,
 
@@ -3291,7 +3382,8 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 		end
 
 		minetest.log("action",
-			string.format("[mobs] Chance setting for %s changed to %s (total: %s)", name, chance, aoc))
+			string.format("[mobs] Chance setting for %s changed to %s (total: %s)",
+				name, chance, aoc))
 
 	end
 
@@ -3910,12 +4002,12 @@ function mobs:protect(self, clicker)
 	end
 
 	if self.tamed == false then
-		minetest.chat_send_player(name, S("Not tamed!"))
+		minetest.chat_send_player(name, "Not tamed!")
 		return true -- false
 	end
 
 	if self.protected == true then
-		minetest.chat_send_player(name, S("Already protected!"))
+		minetest.chat_send_player(name, "Already protected!")
 		return true -- false
 	end
 
@@ -3943,12 +4035,9 @@ local mob_sta = {}
 -- feeding, taming and breeding (thanks blert2112)
 function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
-	if not self.follow then
-		return false
-	end
-
 	-- can eat/tame with item in hand
-	if self:follow_holding(clicker) then
+	if self.follow
+	and self:follow_holding(clicker) then
 
 		-- if not in creative then take item
 		if not mobs.is_creative(clicker:get_player_name()) then
@@ -3991,6 +4080,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 		-- feed and tame
 		self.food = (self.food or 0) + 1
+		
 		if self.food >= feed_count then
 
 			self.food = 0
@@ -3998,8 +4088,6 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 			if breed and self.hornytimer == 0 then
 				self.horny = true
 			end
-
-			self.gotten = false
 
 			if tame then
 
@@ -4017,7 +4105,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 			end
 
 			-- make sound when fed so many times
-			self:mob_sound(self.sounds.random)
+			--self:mob_sound(self.sounds.random)
 		end
 
 		return true

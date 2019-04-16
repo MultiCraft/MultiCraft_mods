@@ -70,8 +70,15 @@ minetest.register_alias("default:pinewood", "default:pine_wood")
 
 -- Gold nugget
 minetest.register_alias("default:gold_nugget", "default:gold_ingot")
+
 -- Sandstone Carved
 minetest.register_alias("default:sandstonecarved", "default:sandstonesmooth")
 
 -- Workbench
 minetest.register_alias("crafting:workbench", "default:workbench")
+
+-- String
+minetest.register_alias("default:string", "farming:string")
+
+-- Hay Bale
+minetest.register_alias("default:haybale", "farming:straw")

@@ -289,8 +289,8 @@ minetest.register_craft({
     output = "default:pole",
     recipe = {
         {'', '', 'default:stick'},
-        {'', 'default:stick', 'default:string'},
-        {'default:stick', '', 'default:string'},
+        {'', 'default:stick', 'farming:string'},
+        {'default:stick', '', 'farming:string'},
     }
 })
 
@@ -651,7 +651,6 @@ minetest.register_craft({
 })
 
 
-
 --
 -- Fuels
 --
@@ -740,12 +739,8 @@ minetest.register_craft({
     burntime = 15,
 })
 
-
---
---Temporary
---
 minetest.register_craft({
-    output = "default:string",
+    output = "farming:string",
     recipe = {{"default:paper", "default:paper"}},
 })
 
