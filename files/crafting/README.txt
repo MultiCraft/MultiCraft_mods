@@ -1,4 +1,4 @@
-multicraft mod "Crafting"
+MultiCraft mod "Crafting"
 =======================
 Version: 2.0.1
 
