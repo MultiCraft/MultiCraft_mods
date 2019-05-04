@@ -1,7 +1,6 @@
-local age                   = 1 --how old an item has to be before collecting
-local radius_magnet         = 2.5 --radius of item magnet
-local player_collect_height = 1.3 --added to their pos y value
-local adjuster_collect      = 0.01 --Delay before collecting to visualize moveme
+local age                   = 1 --How old an item has to be before collecting
+local radius_magnet         = 2 --Radius of item magnet
+local player_collect_height = 1.3 --Added to their pos y value
 
 --Item collection
 minetest.register_globalstep(function(dtime)
@@ -17,7 +16,7 @@ minetest.register_globalstep(function(dtime)
 					if object:get_luaentity().age > age then
 						if inv and inv:room_for_item("main", ItemStack(object:get_luaentity().itemstring)) then
 							--collect
-							if object:get_luaentity().collectioner == true and object:get_luaentity().age > age and object:get_luaentity().age > object:get_luaentity().age_stamp + adjuster_collect  then							
+							if object:get_luaentity().collectioner == true and object:get_luaentity().age > age and object:get_luaentity().age > object:get_luaentity().age_stamp then							
 							if object:get_luaentity().itemstring ~= "" then
 								inv:add_item("main", ItemStack(object:get_luaentity().itemstring))
 								minetest.sound_play("item_drop_pickup", {
@@ -65,7 +64,7 @@ if minetest.setting_getbool("creative_mode") == false then
 					local obj = minetest.add_item(pos, name)
 					if obj ~= nil then
 						obj:get_luaentity().collect = true
-	obj:get_luaentity().age = age
+						obj:get_luaentity().age = age
 					obj:setvelocity({x=math.random(-3,3), y=math.random(2,5), z=math.random(-3,3)})
 			end
 		end

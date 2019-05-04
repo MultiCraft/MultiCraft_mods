@@ -1,12 +1,4 @@
-local remi = minetest.setting_getbool("remove_items") or false
-local crea = minetest.setting_getbool("creative_mode")
-
 local drop = function(pos, itemstack)
-
-	-- is remove_items enabled?
-	if remi == true then
-		return
-	end
 
 	local obj = core.add_item(pos, itemstack:take_item(itemstack:get_count()))
 
@@ -24,7 +16,7 @@ end
 minetest.register_on_dieplayer(function(player)
 
 	-- are we in creative?
-	if crea then
+	if minetest.setting_getbool("creative_mode") then
 		return
 	end
 

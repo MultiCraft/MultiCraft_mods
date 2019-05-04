@@ -1,5 +1,0 @@
-minetest.register_on_newplayer(function (player)
-		player:get_inventory():add_item('main', 'default:sword_steel')
-		player:get_inventory():add_item('main', 'default:torch 8')
-		player:get_inventory():add_item('main', 'default:wood 64')
-	end)
