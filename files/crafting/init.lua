@@ -8,12 +8,12 @@ local function item_drop(itemstack, dropper, pos)
         local p = {x=pos.x, y=pos.y+1.2, z=pos.z}
         p.x = p.x+(math.random(1,3)*0.2)
         p.z = p.z+(math.random(1,3)*0.2)
-		local obj = minetest.env:add_item(p, itemstack)
+        local obj = minetest.env:add_item(p, itemstack)
         if obj then
             v.x = v.x*4
             v.y = v.y*4 + 2
             v.z = v.z*4
-            obj:setvelocity(v)
+            obj:set_velocity(v)
         end
     else
         minetest.add_item(pos, itemstack)
@@ -101,7 +101,7 @@ local function set_inventory(player)
         end
     end
 	local split_form = ""
-        split_form = 
+        split_form =
         "list[detached:split;main;7.99,3.15;1,1;]"
     form = form ..
     "list[current_player;main;0,4.5;9,3;9]"..
@@ -130,19 +130,16 @@ end)
 
 minetest.register_on_joinplayer(function(player)
  	if minetest.setting_getbool("creative_mode") then
-			minetest.after(0.5,function()
+			--[[minetest.after(0.5,function()
 			dofile(minetest.get_modpath("crafting").."/creative.lua")
 			crafting.set_creative_formspec(player, 0, 1)
 			return
-		end)
+		end)]]
 		else
 			--init inventory
 			set_inventory(player)
   	end
-	--set hotbar size
-	--if player.hud_set_hotbar_itemcount then
-		--minetest.after(0.5, player.hud_set_hotbar_itemcount, player, 8)
-	--end
+
 	--add hotbar images
 	minetest.after(0.5,function()
 		if show_armor then

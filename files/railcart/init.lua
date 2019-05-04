@@ -117,7 +117,7 @@ railcart:register_entity("railcart:cart_entity", {
 					"list[current_player;main;0,6.08;8,3;8]"..
 					"listring[detached:railcart_"..cart.id..";main]"..
 					"listring[current_player;main]"..
-					default.get_hotbar_bg(0,4.85)
+					--default.get_hotbar_bg(0,4.85)
 				minetest.show_formspec(name, "inventory", formspec)
 			end
 			return
