@@ -70,11 +70,6 @@ dofile(minetest.get_modpath("mesecons").."/util.lua");
 -- like calling action_on/off/change
 dofile(minetest.get_modpath("mesecons").."/internal.lua");
 
--- Deprecated stuff
--- To be removed in future releases
--- Currently there is nothing here
-dofile(minetest.get_modpath("mesecons").."/legacy.lua");
-
 -- API
 -- these are the only functions you need to remember
 

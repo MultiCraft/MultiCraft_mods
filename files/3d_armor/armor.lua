@@ -39,7 +39,8 @@ sfinv.override_page("sfinv:crafting", {
         "list[detached:"..player_name.."_armor;armor;0,0;1,1;]"..
         "list[detached:"..player_name.."_armor;armor;0,1;1,1;1]"..
         "list[detached:"..player_name.."_armor;armor;0,2;1,1;2]"..
-        "list[detached:"..player_name.."_armor;armor;0,3;1,1;3]"
+        "list[detached:"..player_name.."_armor;armor;0,3;1,1;3]"..
+		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"
 		return sfinv.make_formspec(player, context, form , true)
 	end,
 })

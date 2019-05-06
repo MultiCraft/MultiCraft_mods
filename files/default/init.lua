@@ -20,6 +20,7 @@ dofile(minetest.get_modpath("default").."/trees.lua")
 dofile(minetest.get_modpath("default").."/aliases.lua")
 dofile(minetest.get_modpath("default").."/furnace.lua")
 dofile(minetest.get_modpath("default").."/workbench.lua")
+dofile(minetest.get_modpath("default").."/chest.lua")
 
 minetest.register_on_newplayer(function (player)
 		player:get_inventory():add_item('main', 'default:sword_steel')

@@ -1395,7 +1395,7 @@ minetest.register_node("default:obsidian", {
     description = "Obsidian",
     tiles = {"default_obsidian.png"},
     sounds = default.node_sound_stone_defaults(),
-    groups = {cracky=4, level=2, oddly_breakable_by_hand = 4, building = 1},
+    groups = {cracky=4, level=2, oddly_breakable_by_hand = 3, building = 1},
 })
 
 minetest.register_node("default:apple", {
