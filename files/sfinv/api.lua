@@ -2,7 +2,10 @@ sfinv = {
 	pages = {},
 	pages_unordered = {},
 	contexts = {},
-	enabled = true
+	enabled = true,
+	gui_bg = "bgcolor[#080808BB;true]",
+	gui_bg_img = "background[-0.19,-0.25;9.41,9.49;gui_formbg.png]",
+	gui_slots = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]",
 }
 
 function sfinv.register_page(name, def)
@@ -36,17 +39,17 @@ function sfinv.get_nav_fs(player, context, nav, current_idx)
 	end
 end
 
-local theme_main = "bgcolor[#080808BB;true]" .. default.gui_bg ..
-		default.gui_bg_img
+local theme_main = "bgcolor[#080808BB;true]" .. sfinv.gui_bg ..
+		sfinv.gui_bg_img
 
-local theme_inv = default.gui_slots .. [[
-		list[current_player;main;0,4.7;8,1;]
-		list[current_player;main;0,5.85;8,3;8]
+local theme_inv = sfinv.gui_slots .. [[
+		list[current_player;main;0,4.5;9,3;9]
+		list[current_player;main;0,7.74;9,1;]
 	]]
 
 function sfinv.make_formspec(player, context, content, show_inv, size)
 	local tmp = {
-		size or "size[8,8.6]",
+		size or "size[9,8.75]",
 		theme_main,
 		sfinv.get_nav_fs(player, context, context.nav_titles, context.nav_idx),
 		content
