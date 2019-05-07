@@ -24,27 +24,6 @@ end
 
 local time = 0
 
-sfinv.override_page("sfinv:crafting", {
-	title = "Crafting",
-	get = function(self, player, context)
-		local player_name = player:get_player_name();
-		local form = [[
-				listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]
-				list[current_player;craft;4,1;2,1;1]
-				list[current_player;craft;4,2;2,1;4]
-				list[current_player;craftpreview;7.05,1.54;1,1;]
-				list[detached:split;main;7.99,3.15;1,1;]
-				image[1.5,0;2,4;default_player2d.png]
-			]] ..
-        "list[detached:"..player_name.."_armor;armor;0,0;1,1;]"..
-        "list[detached:"..player_name.."_armor;armor;0,1;1,1;1]"..
-        "list[detached:"..player_name.."_armor;armor;0,2;1,1;2]"..
-        "list[detached:"..player_name.."_armor;armor;0,3;1,1;3]"..
-		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"
-		return sfinv.make_formspec(player, context, form , true)
-	end,
-})
-
 armor = {
     player_hp = {},
     elements = {"head", "torso", "legs", "feet"},
