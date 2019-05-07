@@ -4,7 +4,7 @@ sfinv = {
 	contexts = {},
 	enabled = true,
 	gui_bg = "bgcolor[#080808BB;true]",
-	gui_bg_img = "background[-0.19,-0.25;9.41,9.49;gui_formbg.png]",
+	gui_bg_img = "",
 	gui_slots = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]",
 }
 
@@ -30,13 +30,15 @@ function sfinv.override_page(name, def)
 end
 
 function sfinv.get_nav_fs(player, context, nav, current_idx)
-	-- Only show tabs if there is more than one page
+	--[[ Only show tabs if there is more than one page
 	if #nav > 1 then
 		return "tabheader[0,0;sfinv_nav_tabs;" .. table.concat(nav, ",") ..
 				";" .. current_idx .. ";true;false]"
 	else
 		return ""
 	end
+	]]--
+	return ""
 end
 
 local theme_main = "bgcolor[#080808BB;true]" .. sfinv.gui_bg ..
