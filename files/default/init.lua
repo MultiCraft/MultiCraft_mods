@@ -22,13 +22,10 @@ dofile(minetest.get_modpath("default").."/furnace.lua")
 dofile(minetest.get_modpath("default").."/workbench.lua")
 dofile(minetest.get_modpath("default").."/chest.lua")
 
-minetest.register_on_newplayer(function (player)
-		player:get_inventory():add_item('main', 'default:sword_steel')
-		player:get_inventory():add_item('main', 'default:torch 8')
-		player:get_inventory():add_item('main', 'default:wood 64')
-end)
-
--- GUI related stuff
-default.gui_bg = "bgcolor[#080808BB;true]"
-default.gui_bg_img = "background[5,5;1,1;gui_formbg.png;true]"
-default.gui_slots = "listcolors[#00000069;#5A5A5A;#141318;#30434C;#FFF]"
+if not minetest.setting_getbool("creative_mode") then
+	minetest.register_on_newplayer(function (player)
+			player:get_inventory():add_item('main', 'default:sword_steel')
+			player:get_inventory():add_item('main', 'default:torch 8')
+			player:get_inventory():add_item('main', 'default:wood 64')
+	end)
+end

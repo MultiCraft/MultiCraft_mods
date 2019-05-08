@@ -1,3 +1,0 @@
-default
-sfinv
-3d_armor?

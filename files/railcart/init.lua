@@ -22,7 +22,7 @@ local function create_detached_inventory(id)
 			return count
 		end,
 	})
-	inv:set_size("main", 32)
+	--inv:set_size("main", 32)
 	return inv
 end
 

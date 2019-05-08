@@ -146,7 +146,7 @@ local function fill_chest(pos)
 		if n and n.name and n.name == "default:chest" then
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
-			inv:set_size("main", 8*4)
+			--inv:set_size("main", 8*4)
 			for i,v in ipairs(dungeon_loot.loot_types) do
 				local item, num = get_item_and_amount(v,pos.y)
 				if item then

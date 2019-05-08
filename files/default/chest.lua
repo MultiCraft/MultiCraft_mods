@@ -1,7 +1,7 @@
 default.chest_formspec = 
 	"size[9,9.75]"..
     "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-	"background[-0.19,-0.25;9.41,10.48;crafting_inventory_chest.png]"..
+	"background[-0.19,-0.25;9.41,10.48;formspec_chest.png]"..
 	"bgcolor[#080808BB;true]"..
 	"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
 	"list[current_name;main;0,0.5;9,4;]"..
@@ -23,7 +23,7 @@ function default.get_locked_chest_formspec(pos)
 	local formspec = 
 		"size[9,9.75]"..
         "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-		"background[-0.19,-0.25;9.41,10.48;crafting_inventory_chest.png]"..
+		"background[-0.19,-0.25;9.41,10.48;formspec_chest.png]"..
 		"bgcolor[#080808BB;true]"..
 		"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
 		"list[nodemeta:".. spos .. ";main;0,0.5;9,4;]"..
