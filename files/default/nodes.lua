@@ -1185,12 +1185,7 @@ minetest.register_node("default:chest", {
                     "list[current_player;main;0,10.5;9,1;]")
             m:set_string("infotext", "Large Chest")
         else
-            meta:set_string("formspec",
-                    "size[9,8.5]"..
-                    "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-                    "list[current_name;main;0,0;9,3;]"..
-                    "list[current_player;main;0,4;9,3;9]"..
-                    "list[current_player;main;0,7.5.5;9,1;]")
+            meta:set_string("formspec", default.chest_formspec)
             meta:set_string("infotext", "Chest")
         end
         local inv = meta:get_inventory()
