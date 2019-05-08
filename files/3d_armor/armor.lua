@@ -554,4 +554,3 @@ minetest.register_on_player_hpchange(function(player, hp_change)
 	end
 	return hp_change
 end)
-

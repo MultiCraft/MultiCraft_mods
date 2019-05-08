@@ -1,4 +1,4 @@
-Minetest Game mod: player_api
+MultiCraft Game mod: player_api
 =============================
 See license.txt for license information.
 
