@@ -24,6 +24,31 @@ end
 
 local time = 0
 
+local armor_def = setmetatable({}, {
+	__index = function()
+		return setmetatable({
+			groups = setmetatable({}, {
+				__index = function()
+					return 0
+				end})
+			}, {
+			__index = function()
+				return 0
+			end
+		})
+	end,
+})
+
+local armor_textures = setmetatable({}, {
+	__index = function()
+		return setmetatable({}, {
+			__index = function()
+				return "blank.png"
+			end
+		})
+	end
+})
+
 armor = {
     player_hp = {},
     elements = {"head", "torso", "legs", "feet"},
@@ -33,7 +58,8 @@ armor = {
         .."list[current_player;main;0,4.5;8,4;]"
         .."list[current_player;craft;4,1;3,3;]"
         .."list[current_player;craftpreview;7,2;1,1;]",]]
-    textures = {},
+    def = armor_def,
+    textures = armor_textures,
     default_skin = "character",
 }
 
@@ -63,11 +89,6 @@ elseif unified_inventory then
     })
 end]]
 
-armor.def = {
-    state = 0,
-    count = 0,
-}
-
 armor.update_player_visuals = function(self, player)
     if not player then
         return
@@ -87,11 +108,11 @@ armor.set_player_armor = function(self, player)
         return
     end
     local name = player:get_player_name()
-    local player_inv = player:get_inventory()
+    local armor_inv = self:get_armor_inventory(player)
     if not name then
         minetest.log("error", "Failed to read player name")
         return
-    elseif not player_inv then
+    elseif not armor_inv then
         minetest.log("error", "Failed to read player inventory")
         return
     end
@@ -109,7 +130,7 @@ armor.set_player_armor = function(self, player)
         elements[v] = false
     end
     for i=1, 4 do
-        local stack = player_inv:get_stack("armor", i)
+        local stack = armor_inv:get_stack("armor", i)
         local item = stack:get_name()
         if stack:get_count() == 1 then
             local def = stack:get_definition()
@@ -181,53 +202,39 @@ armor.update_armor = function(self, player)
     end
     local name = player:get_player_name()
     local hp = player:get_hp() or 0
-    if hp == 0 or hp == self.player_hp[name] then
+    if hp == 0 then
         return
     end
-    if self.player_hp[name] > hp then
-        local player_inv = player:get_inventory()
-        local armor_inv = minetest.get_inventory({type="detached", name=name.."_armor"})
-        if not player_inv then
-            minetest.log("error", "Failed to read player inventory")
-            return
-        elseif not armor_inv then
-            minetest.log("error", "Failed to read detached inventory")
-            return
-        end
-        local heal_max = 0
-        local state = 0
-        local items = 0
-        for i=1, 6 do
-            local stack = player_inv:get_stack("armor", i)
-            if stack:get_count() > 0 then
-                local use = stack:get_definition().groups["armor_use"] or 0
-                local heal = stack:get_definition().groups["armor_heal"] or 0
-                local item = stack:get_name()
-                stack:add_wear(use)
-                armor_inv:set_stack("armor", i, stack)
-                player_inv:set_stack("armor", i, stack)
-                state = state + stack:get_wear()
-                items = items + 1
-                if stack:get_count() == 0 then
-                    local desc = minetest.registered_items[item].description
-                    if desc then
-                        minetest.chat_send_player(name, "Your "..desc.." got destroyed!")
-                    end
-                    self:set_player_armor(player)
-                    armor:update_inventory(player)
+
+    local armor_inv = self:get_armor_inventory(player)
+    if not armor_inv then
+        minetest.log("error", "Failed to read detached inventory")
+        return
+    end
+    local state = 0
+    local items = 0
+    for i=1, 4 do
+        local stack = armor_inv:get_stack("armor", i)
+        if stack:get_count() > 0 then
+            local use = stack:get_definition().groups["armor_use"] or 0
+            local item = stack:get_name()
+            stack:add_wear(use)
+            armor_inv:set_stack("armor", i, stack)
+            state = state + stack:get_wear()
+            items = items + 1
+            if stack:get_count() == 0 then
+                local desc = minetest.registered_items[item].description
+                if desc then
+                    minetest.chat_send_player(name, "Your "..desc.." got destroyed!")
                 end
-                heal_max = heal_max + heal
+                self:set_player_armor(player)
+                armor:update_inventory(player)
             end
         end
-        self.def[name].state = state
-        self.def[name].count = items
-        heal_max = heal_max * ARMOR_HEAL_MULTIPLIER
-        if heal_max > math.random(100) then
-            player:set_hp(self.player_hp[name])
-            return
-        end
     end
-    self.player_hp[name] = hp
+	self:save_armor_inventory(player)
+	self.def[name].state = state
+	self.def[name].count = items
 end
 
 armor.get_player_skin = function(self, name)
@@ -265,6 +272,51 @@ end
         end
     end
 end]]
+armor.update_inventory = function(self, player) end
+
+armor.get_armor_inventory = function(self, player)
+	local name = player:get_player_name()
+	if name then
+		return minetest.get_inventory({type="detached", name=name.."_armor"})
+	end
+end
+
+armor.serialize_inventory_list = function(self, list)
+	local list_table = {}
+	for _, stack in ipairs(list) do
+		table.insert(list_table, stack:to_string())
+	end
+	return minetest.serialize(list_table)
+end
+
+armor.deserialize_inventory_list = function(self, list_string)
+	local list_table = minetest.deserialize(list_string)
+	local list = {}
+	for _, stack in ipairs(list_table or {}) do
+		table.insert(list, ItemStack(stack))
+	end
+	return list
+end
+
+armor.load_armor_inventory = function(self, player)
+	local inv = self:get_armor_inventory(player)
+	if inv then
+		local armor_list_string = player:get_attribute("3d_armor_inventory")
+		if armor_list_string then
+			inv:set_list("armor",
+				self:deserialize_inventory_list(armor_list_string))
+			return true
+		end
+	end
+end
+
+armor.save_armor_inventory = function(self, player)
+	local inv = self:get_armor_inventory(player)
+	if inv then
+		player:set_attribute("3d_armor_inventory",
+			self:serialize_inventory_list(inv:get_list("armor")))
+	end
+end
 
 -- Register Player Model
 
@@ -308,7 +360,6 @@ end)
 minetest.register_on_joinplayer(function(player)
     player_api.set_model(player, "3d_armor_character.b3d")
     local name = player:get_player_name()
-    local player_inv = player:get_inventory()
     local armor_inv = minetest.create_detached_inventory(name.."_armor",{
         allow_put = function(inv, listname, index, stack, player)
             local item = stack:get_name()
@@ -337,20 +388,17 @@ minetest.register_on_joinplayer(function(player)
             return 0
         end,
         on_put = function(inv, listname, index, stack, player)
-            player:get_inventory():set_stack(listname, index, stack)
+            armor:save_armor_inventory(player)
             armor:set_player_armor(player)
             --armor:update_inventory(player)
         end,
         on_take = function(inv, listname, index, stack, player)
-            player:get_inventory():set_stack(listname, index, nil)
+            armor:save_armor_inventory(player)
             armor:set_player_armor(player)
             --armor:update_inventory(player)
         end,
         on_move = function(inv, from_list, from_index, to_list, to_index, count, player)
-            local plaver_inv = player:get_inventory()
-            local stack = inv:get_stack(to_list, to_index)
-            player_inv:set_stack(to_list, to_index, stack)
-            player_inv:set_stack(from_list, from_index, nil)
+            armor:save_armor_inventory(player)
             armor:set_player_armor(player)
             --armor:update_inventory(player)
         end,
@@ -364,19 +412,20 @@ minetest.register_on_joinplayer(function(player)
     --[[if inventory_plus then
         inventory_plus.register_button(player,"armor", "Armor")
     end]]
-    armor_inv:set_size("armor", 4)
-    player_inv:set_size("armor", 4)
-    for i=1, 4 do
-        local stack = player_inv:get_stack("armor", i)
-        armor_inv:set_stack("armor", i, stack)
-    end
 
-    -- Legacy support, import player's armor from old inventory format
-    for _,v in pairs(armor.elements) do
-        local list = "armor_"..v
-        armor_inv:add_item("armor", player_inv:get_stack(list, 1))
-        player_inv:set_stack(list, 1, nil)
-    end
+    armor_inv:set_size("armor", 4)
+	if not armor:load_armor_inventory(player) then
+		local player_inv = player:get_inventory()
+		if player_inv then
+			player_inv:set_size("armor", 4)
+			for i=1, 4 do
+				local stack = player_inv:get_stack("armor", i)
+				armor_inv:set_stack("armor", i, stack)
+			end
+			player_inv:set_size("armor", 0)
+		end
+		armor:save_armor_inventory(player)
+	end
 
     armor.player_hp[name] = 0
     armor.def[name] = {
@@ -434,17 +483,18 @@ if ARMOR_DROP == true or ARMOR_DESTROY == true then
         local pos = player:get_pos()
         if name and pos then
             local drop = {}
-            local player_inv = player:get_inventory()
-            local armor_inv = minetest.get_inventory({type="detached", name=name.."_armor"})
-            for i=1, player_inv:get_size("armor") do
-                local stack = armor_inv:get_stack("armor", i)
-                if stack:get_count() > 0 then
-                    table.insert(drop, stack)
-                    armor_inv:set_stack("armor", i, nil)
-                    player_inv:set_stack("armor", i, nil)
-                end
-            end
-            armor:set_player_armor(player)
+            local armor_inv = self:get_armor_inventory(player)
+			if armor_inv then
+				for i=1, armor_inv:get_size("armor") do
+					local stack = armor_inv:get_stack("armor", i)
+					if stack:get_count() > 0 then
+						table.insert(drop, stack)
+						armor_inv:set_stack("armor", i, nil)
+					end
+				end
+			end
+			armor:save_armor_inventory(player)
+			armor:set_player_armor(player)
             --[[if unified_inventory then
                 unified_inventory.set_inventory_formspec(player, "craft")
             elseif inventory_plus then
@@ -492,13 +542,16 @@ if ARMOR_DROP == true or ARMOR_DESTROY == true then
     end)
 end
 
-minetest.register_globalstep(function(dtime)
-    time = time + dtime
-    if time > ARMOR_UPDATE_TIME then
-        for _,player in ipairs(minetest.get_connected_players()) do
-            armor:update_armor(player)
-        end
-        time = 0
-    end
+minetest.register_on_player_hpchange(function(player, hp_change)
+	if player and hp_change < 0 then
+		local name = player:get_player_name()
+		if name then
+			if armor.def[name].heal > math.random(100) then
+				hp_change = 0
+		    end
+		end
+		armor:update_armor(player)
+	end
+	return hp_change
 end)
 
