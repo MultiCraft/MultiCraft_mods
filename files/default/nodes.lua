@@ -118,10 +118,20 @@ minetest.register_node("default:stonebrickmossy", {
 minetest.register_node("default:dirt_with_grass", {
     description = "Dirt with Grass",
     tiles = {"default_grass.png", "default_dirt.png", "default_grass_side.png"},
-    groups = {crumbly = 3, soil=1, building = 1},
+    groups = {crumbly = 3, soil=1, building = 1, spreading_dirt_type = 1},
     drop = 'default:dirt',
     sounds = default.node_sound_dirt_defaults({
         footstep = {name="default_grass_footstep", gain=0.4},
+    }),
+})
+
+minetest.register_node("default:dirt_with_grass_footsteps", {
+    description = "Dirt with Grass and Footsteps",
+    tiles = {"default_grass.png", "default_dirt.png", "default_dirt.png^default_grass_side.png"},
+	groups = {crumbly = 3, soil = 1, not_in_creative_inventory = 1},
+	drop = 'default:dirt',
+	sounds = default.node_sound_dirt_defaults({
+		footstep = {name = "default_grass_footstep", gain = 0.25},
     }),
 })
 
@@ -129,20 +139,10 @@ minetest.register_node("default:dirt_with_dry_grass", {
     description = "Dirt with Dry Grass",
     tiles = {"default_dry_grass.png", "default_dirt.png",
 		"default_dry_grass_side.png"},
-    groups = {crumbly = 3, soil=1, building = 1},
-    drop = "default:dirt",
-    sounds = default.node_sound_dirt_defaults({
-        footstep = {name="default_grass_footstep", gain=0.6},
-    }),
-})
-
-minetest.register_node("default:dirt_with_grass_footsteps", {
-    description = "Dirt with Grass and Footsteps",
-    tiles = {"default_grass.png", "default_dirt.png", "default_dirt.png^default_grass_side.png"},
-    groups = {crumbly = 3, not_in_creative_inventory=1, soil=1},
-    drop = 'default:dirt',
-    sounds = default.node_sound_dirt_defaults({
-        footstep = {name="default_grass_footstep", gain=0.4},
+    groups = {crumbly = 3, soil=1, building = 1, spreading_dirt_type = 1},
+	drop = 'default:dirt',
+	sounds = default.node_sound_dirt_defaults({
+		footstep = {name = "default_grass_footstep", gain = 0.4},
     }),
 })
 
@@ -151,7 +151,7 @@ minetest.register_node("default:dirt_with_snow", {
 	tiles = {"default_snow.png", "default_dirt.png",
 		{name = "default_snow_side.png",
 			tileable_vertical = false}},
-	groups = {crumbly = 3, soil = 1, building = 1},
+	groups = {crumbly = 3, soil = 1, building = 1, spreading_dirt_type = 1, snowy = 1},
 	drop = 'default:dirt',
 	sounds = default.node_sound_dirt_defaults({
 		footstep = {name = "default_snow_footstep", gain = 0.4},
@@ -686,23 +686,6 @@ minetest.register_node("default:glass", {
     drop = "",
 })
 
----- colored glass
-AddGlass( "Glass Red",  "basecolor_red", "_red")
-AddGlass( "Glass Green",  "unicolor_dark_green", "_green")
-AddGlass( "Glass Blue",  "basecolor_blue", "_blue")
-AddGlass( "Glass Light Blue",  "basecolor_cyan", "_light_blue")
-AddGlass( "Glass Black",  "basecolor_black", "_black")
-AddGlass( "Glass White",  "basecolor_white", "_white")
-AddGlass( "Glass Yellow",  "basecolor_yellow", "_yellow")
-AddGlass( "Glass Brown",  "unicolor_dark_orange", "_brown")
-AddGlass( "Glass Orange",  "excolor_orange", "_orange")
-AddGlass( "Glass Pink",  "unicolor_light_red", "_pink")
-AddGlass( "Glass Gray",  "unicolor_darkgrey", "_gray")
-AddGlass( "Glass Lime",  "basecolor_green", "_lime")
-AddGlass( "Glass Silver",  "basecolor_grey", "_silver")
-AddGlass( "Glass Magenta",  "basecolor_magenta", "_magenta")
-AddGlass( "Glass Purple",  "excolor_violet", "_purple")
-
 minetest.register_node("default:ladder", {
     description = "Ladder",
     drawtype = "signlike",
@@ -814,7 +797,7 @@ minetest.register_node("default:water_source", {
 	liquid_alternative_source = "default:water_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 103, r = 30, g = 60, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1},
+	groups = {water = 3, liquid = 3, puts_out_fire = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_water_defaults(),
 })
 
@@ -907,7 +890,7 @@ minetest.register_node("default:river_water_source", {
 	liquid_renewable = false,
 	liquid_range = 2,
 	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1},
+	groups = {water = 3, liquid = 3, puts_out_fire = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_water_defaults(),
 })
 
@@ -1003,7 +986,7 @@ minetest.register_node("default:lava_source", {
 	liquid_renewable = false,
 	damage_per_second = 4 * 2,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {lava = 3, liquid = 2, hot = 3, igniter = 1},
+	groups = {lava = 3, liquid = 2, hot = 3, igniter = 1, not_in_creative_inventory = 1},
 })
 
 minetest.register_node("default:lava_flowing", {
@@ -1052,84 +1035,6 @@ minetest.register_node("default:lava_flowing", {
 	groups = {lava = 3, liquid = 2, hot = 3, igniter = 1,
 		not_in_creative_inventory = 1},
 })
-
-
-
-minetest.register_node("default:torch", {
-	inventory_image = "default_torch_on_floor.png",
-	wield_image = "default_torch_on_floor.png",
-	tiles = {
-		"default_torch_on_floor_top.png",
-		"default_torch_on_floor_bottom.png",
-		"default_torch_on_floor.png",
-		"default_torch_on_floor.png",
-		"default_torch_on_floor.png",
-		"default_torch_on_floor.png"
-	},
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	is_ground_content = false,
-	walkable = false,
-	light_source = default.LIGHT_MAX - 1,
-	groups = {choppy = 2, dig_immediate = 3, flammable = 1, attached_node = 1},
-	legacy_wallmounted = true,
-	sounds = default.node_sound_defaults(),
-	liquids_pointable = false,
-	drawtype = "nodebox",
-	paramtype = "light",
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.0625, -0.5, -0.0625, 0.0625, 0.125, 0.0625}, -- NodeBox1
-		}
-	},
-	selection_box = {
-		type = "wallmounted",
-		wall_top = {-0.1, 0.5 - 0.6, -0.1, 0.1, 0.5, 0.1},
-		wall_bottom = {-0.1, -0.5, -0.1, 0.1, -0.5 + 0.6, 0.1},
-		wall_side = {-0.5, -0.3, -0.1, -0.5 + 0.3, 0.3, 0.1},
-	},
-})
-
-
-local function get_chest_neighborpos(pos, param2, side)
-    if side == "right" then
-        if param2 == 0 then
-            return {x=pos.x-1, y=pos.y, z=pos.z}
-        elseif param2 == 1 then
-            return {x=pos.x, y=pos.y, z=pos.z+1}
-        elseif param2 == 2 then
-            return {x=pos.x+1, y=pos.y, z=pos.z}
-        elseif param2 == 3 then
-            return {x=pos.x, y=pos.y, z=pos.z-1}
-        end
-    else
-        if param2 == 0 then
-            return {x=pos.x+1, y=pos.y, z=pos.z}
-        elseif param2 == 1 then
-            return {x=pos.x, y=pos.y, z=pos.z-1}
-        elseif param2 == 2 then
-            return {x=pos.x-1, y=pos.y, z=pos.z}
-        elseif param2 == 3 then
-            return {x=pos.x, y=pos.y, z=pos.z+1}
-        end
-    end
-end
-
-local function hacky_swap_node(pos,name, param2)
-    local node = minetest.env:get_node(pos)
-    local meta = minetest.env:get_meta(pos)
-    if node.name == name then
-        return
-    end
-    node.name = name
-    node.param2 = param2 or node.param2
-    local meta0 = meta:to_table()
-    minetest.env:set_node(pos,node)
-    meta = minetest.env:get_meta(pos)
-    meta:from_table(meta0)
-end
 
 minetest.register_node("default:chest", {
     description = "Chest",
@@ -1185,7 +1090,12 @@ minetest.register_node("default:chest", {
                     "list[current_player;main;0,10.5;9,1;]")
             m:set_string("infotext", "Large Chest")
         else
-            meta:set_string("formspec", default.chest_formspec)
+            meta:set_string("formspec",
+                    "size[9,8.5]"..
+                    "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
+                    "list[current_name;main;0,0;9,3;]"..
+                    "list[current_player;main;0,4;9,3;9]"..
+                    "list[current_player;main;0,7.5.5;9,1;]")
             meta:set_string("infotext", "Chest")
         end
         local inv = meta:get_inventory()
@@ -1217,7 +1127,7 @@ minetest.register_node("default:chest", {
         minetest.log("action", player:get_player_name()..
                 " takes stuff from chest at "..minetest.pos_to_string(pos))
     end,
-    on_receive_fields = function(pos, formname, fields, sender)      
+    on_receive_fields = function(pos, formname, fields, sender)
        if fields.exit then
           print('test')
           fields.quit = true
@@ -1655,12 +1565,53 @@ minetest.register_node("default:snow", {
 })
 
 minetest.register_node("default:snowblock", {
-    description = "Snow Block",
-    tiles = {"default_snow.png"},
-    groups = {crumbly = 3, building = 1},
-    sounds = default.node_sound_dirt_defaults({
-        footstep = {name = "default_snow_footstep", gain = 0.4},
+	description = "Snow Block",
+	tiles = {"default_snow.png"},
+	groups = {crumbly = 3, building = 1},
+	sounds = default.node_sound_dirt_defaults({
+		footstep = {name = "default_snow_footstep", gain = 0.4},
 		dug = {name = "default_snow_footstep", gain = 0.75},
-    }),
+	}),
     drop = "default:snow 4",
 })
+
+--
+-- Color Glass
+--
+
+function AddGlass(desc, recipeitem, color)
+	minetest.register_node("default:glass"..color, {
+		description = desc,
+		drawtype = "glasslike",
+		tiles = {"xpanes_pane_glass"..color..".png"},
+		paramtype = "light",
+		use_texture_alpha = true,
+		groups = {cracky = 3, oddly_breakable_by_hand = 3, building = 1},
+		sounds = default.node_sound_glass_defaults(),
+		drop = "",
+	})
+
+	minetest.register_craft({
+		output = 'default:glass_'..color..'',
+		recipe = {
+			{'default:glass', 'group:dye,'..recipeitem}
+		}
+    })
+end
+
+-- Colored glass
+AddGlass( "Glass Red",  "basecolor_red", "_red")
+AddGlass( "Glass Green",  "unicolor_dark_green", "_green")
+AddGlass( "Glass Blue",  "basecolor_blue", "_blue")
+AddGlass( "Glass Light Blue",  "basecolor_cyan", "_light_blue")
+AddGlass( "Glass Black",  "basecolor_black", "_black")
+AddGlass( "Glass White",  "basecolor_white", "_white")
+AddGlass( "Glass Yellow",  "basecolor_yellow", "_yellow")
+AddGlass( "Glass Brown",  "unicolor_dark_orange", "_brown")
+AddGlass( "Glass Orange",  "excolor_orange", "_orange")
+AddGlass( "Glass Pink",  "unicolor_light_red", "_pink")
+AddGlass( "Glass Gray",  "unicolor_darkgrey", "_gray")
+AddGlass( "Glass Lime",  "basecolor_green", "_lime")
+AddGlass( "Glass Silver",  "basecolor_grey", "_silver")
+AddGlass( "Glass Magenta",  "basecolor_magenta", "_magenta")
+AddGlass( "Glass Purple",  "excolor_violet", "_purple")

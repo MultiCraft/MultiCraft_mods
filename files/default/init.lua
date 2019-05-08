@@ -22,6 +22,7 @@ dofile(default_path.."/crafting.lua")
 dofile(default_path.."/mapgen.lua")
 dofile(default_path.."/aliases.lua")
 dofile(default_path.."/workbench.lua")
+dofile(default_path.."/torch.lua")
 
 if not minetest.setting_getbool("creative_mode") then
 	minetest.register_on_newplayer(function (player)

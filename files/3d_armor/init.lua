@@ -1,5 +1,3 @@
-
-
 ARMOR_MOD_NAME = minetest.get_current_modname()
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/armor.lua")
 
@@ -193,5 +191,3 @@ for k, v in pairs(craft_ingreds) do
         },
     })
 end
-
-
