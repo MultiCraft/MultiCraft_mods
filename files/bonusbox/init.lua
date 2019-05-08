@@ -1,7 +1,6 @@
 -- Format of each item:
 -- {item_name, minimum, maximum}
 
--- Sample registration
 local items_ore = {
 	{"default:diamond", 1, 2},
 	{"default:emerald", 1, 2},
