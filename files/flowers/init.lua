@@ -142,11 +142,14 @@ function flowers.flower_spread(pos, node)
 	if num_soils >= 1 then
 		for si = 1, math.min(3, num_soils) do
 			local soil = soils[math.random(num_soils)]
+			local soil_name = minetest.get_node(soil).name
 			local soil_above = {x = soil.x, y = soil.y + 1, z = soil.z}
 			light = minetest.get_node_light(soil_above)
 			if light and light >= 13 and
+					-- Only spread to same surface node
+					soil_name == under.name and
 					-- Desert sand is in the soil group
-					minetest.get_node(soil).name ~= "default:desert_sand" then
+					soil_name ~= "default:desert_sand" then
 				minetest.set_node(soil_above, {name = node.name})
 			end
 		end
@@ -197,7 +200,7 @@ minetest.register_node("flowers:mushroom_brown", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, attached_node = 1, flammable = 1},
+	groups = {food_mushroom = 1, snappy = 3, attached_node = 1, flammable = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	on_use = minetest.item_eat(1),
 	selection_box = {
@@ -210,8 +213,10 @@ minetest.register_node("flowers:mushroom_brown", {
 -- Mushroom spread and death
 
 function flowers.mushroom_spread(pos, node)
+	if minetest.get_node_light(pos, 0.5) > 3 then
 	if minetest.get_node_light(pos, nil) == 15 then
 		minetest.remove_node(pos)
+		end
 		return
 	end
 	local positions = minetest.find_nodes_in_area_under_air(
@@ -223,8 +228,7 @@ function flowers.mushroom_spread(pos, node)
 	end
 	local pos2 = positions[math.random(#positions)]
 	pos2.y = pos2.y + 1
-	if minetest.get_node_light(pos, 0.5) <= 3 and
-			minetest.get_node_light(pos2, 0.5) <= 3 then
+	if minetest.get_node_light(pos2, 0.5) <= 3 then
 		minetest.set_node(pos2, {name = node.name})
 	end
 end
@@ -265,7 +269,6 @@ minetest.register_node("flowers:waterlily", {
 	liquids_pointable = true,
 	walkable = false,
 	buildable_to = true,
-	sunlight_propagates = true,
 	floodable = true,
 	groups = {snappy = 3, flower = 1, flammable = 1},
 	sounds = default.node_sound_leaves_defaults(),

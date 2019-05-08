@@ -1,6 +1,8 @@
 
 -- Mobs Api
 
+local use_cmi = minetest.global_exists("cmi")
+
 mobs = {
 	mod = "redo",
 	version = "20190402",
@@ -777,7 +779,7 @@ function mob_class:check_for_death(cmi_cause)
 		self.object:remove()
 	end
 
---	effect(pos, 20, "tnt_smoke.png")
+--	effect(pos, 20, "item_smoke.png")
 
 	return true
 end
@@ -859,8 +861,10 @@ function mob_class:do_env_damage()
 		and light <= self.light_damage_max then
 
 			self.health = self.health - self.light_damage
-
---			effect(pos, 5, "tnt_smoke.png")
+			pos.y = pos.y + 0.75 -- for particle effect position
+			effect(pos, 5, "heart.png")
+			self.nametag = "Health: " .. self.health .. " / " .. self.hp_max
+			self:update_tag()
 
 			if self:check_for_death({type = "light"}) then return end
 		end
@@ -906,7 +910,7 @@ function mob_class:do_env_damage()
 
 		self.health = self.health - nodef.damage_per_second
 
-		effect(pos, 5, "tnt_smoke.png")
+		effect(pos, 5, "item_smoke.png")
 
 		if self:check_for_death({type = "environment",
 				pos = pos, node = self.standing_in}) then return end
@@ -1211,7 +1215,7 @@ function mob_class:breed()
 								return
 						end
 					else
-						effect(pos, 15, "tnt_smoke.png", 1, 2, 2, 15, 5)
+						effect(pos, 15, "item_smoke.png", 1, 2, 2, 15, 5)
 					end
 
 					local mob = minetest.add_entity(pos, self.name)
@@ -2528,7 +2532,7 @@ function mob_class:falling(pos)
 
 				self.health = self.health - floor(d - 5)
 
---				effect(pos, 5, "tnt_smoke.png", 1, 2, 2, nil)
+--				effect(pos, 5, "item_smoke.png", 1, 2, 2, nil)
 
 				if self:check_for_death({type = "fall"}) then
 					return
@@ -3046,7 +3050,7 @@ function mob_class:mob_expire(pos, dtime)
 --			minetest.log("action",
 --				"lifetimer expired, removed @1", self.name)
 
---			effect(pos, 15, "tnt_smoke.png", 2, 4, 2, 0)
+--			effect(pos, 15, "item_smoke.png", 2, 4, 2, 0)
 
 			self.object:remove()
 
@@ -3684,7 +3688,7 @@ function mobs:safe_boom(self, pos, radius)
 
 	entity_physics(pos, radius)
 
---	effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
+--	effect(pos, 32, "item_smoke.png", radius * 3, radius * 5, radius, 1, 0)
 end
 
 
