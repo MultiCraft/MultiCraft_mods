@@ -408,7 +408,7 @@ minetest.register_on_joinplayer(function(player)
         allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
             return 0
         end,
-    })
+    }, name)
     --[[if inventory_plus then
         inventory_plus.register_button(player,"armor", "Armor")
     end]]

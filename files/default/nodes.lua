@@ -1036,6 +1036,45 @@ minetest.register_node("default:lava_flowing", {
 		not_in_creative_inventory = 1},
 })
 
+
+local function get_chest_neighborpos(pos, param2, side)
+    if side == "right" then
+        if param2 == 0 then
+            return {x=pos.x-1, y=pos.y, z=pos.z}
+        elseif param2 == 1 then
+            return {x=pos.x, y=pos.y, z=pos.z+1}
+        elseif param2 == 2 then
+            return {x=pos.x+1, y=pos.y, z=pos.z}
+        elseif param2 == 3 then
+            return {x=pos.x, y=pos.y, z=pos.z-1}
+        end
+    else
+        if param2 == 0 then
+            return {x=pos.x+1, y=pos.y, z=pos.z}
+        elseif param2 == 1 then
+            return {x=pos.x, y=pos.y, z=pos.z-1}
+        elseif param2 == 2 then
+            return {x=pos.x-1, y=pos.y, z=pos.z}
+        elseif param2 == 3 then
+            return {x=pos.x, y=pos.y, z=pos.z+1}
+        end
+    end
+end
+
+local function hacky_swap_node(pos,name, param2)
+    local node = minetest.env:get_node(pos)
+    local meta = minetest.env:get_meta(pos)
+    if node.name == name then
+        return
+    end
+    node.name = name
+    node.param2 = param2 or node.param2
+    local meta0 = meta:to_table()
+    minetest.env:set_node(pos,node)
+    meta = minetest.env:get_meta(pos)
+    meta:from_table(meta0)
+end
+
 minetest.register_node("default:chest", {
     description = "Chest",
     tiles = {"default_chest_top.png", "default_chest_top.png", "default_chest_side.png",
