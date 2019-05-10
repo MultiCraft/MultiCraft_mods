@@ -752,3 +752,8 @@ minetest.register_craft({
         {"farming:string", "farming:string", "farming:string"},
     }
 })
+
+minetest.register_craftitem("default:flint", {
+	description = "Flint",
+	inventory_image = "default_flint.png"
+})
