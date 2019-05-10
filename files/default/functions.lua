@@ -555,7 +555,7 @@ minetest.register_abm({
 --
 -- Snowballs
 --
-
+--[[
 -- Shoot snowball
 snow_shoot_snowball = function (item, player, pointed_thing)
 	local playerpos = player:get_pos()
@@ -576,8 +576,7 @@ snowball_ENTITY = {
 }
 
 -- Called when snowball is moving.
-snowball_ENTITY.on_step = function(self, dtime)
-	self.timer = self.timer+dtime
+snowball_ENTITY.on_step = function(self)
 	local pos = self.object:getpos()
 	local node = minetest.get_node(pos)
 
@@ -592,4 +591,4 @@ snowball_ENTITY.on_step = function(self, dtime)
 	self.lastpos = {x = pos.x, y = pos.y, z = pos.z}
 end
 
-minetest.register_entity("default:snowball_entity", snowball_ENTITY)
+minetest.register_entity("default:snowball_entity", snowball_entity)]]--
