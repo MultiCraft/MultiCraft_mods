@@ -67,4 +67,5 @@ minetest.register_craftitem("potions:glass_bottle", {
                 end,
 })
 
+minetest.register_alias("vessels:glass_bottle", "potions:glass_bottle")
 
