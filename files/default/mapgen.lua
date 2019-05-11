@@ -72,7 +72,7 @@ function default.register_ores()
 
 	-- Clay
 
-	minetest.register_ore({ 
+	minetest.register_ore({
 		ore_type        = "blob",
 		ore             = "default:clay",
 		wherein         = {"default:sand"},
@@ -93,7 +93,7 @@ function default.register_ores()
 
 	-- Sand
 
-	minetest.register_ore({ 
+	minetest.register_ore({
 		ore_type        = "blob",
 		ore             = "default:sand",
 		wherein         = {"default:stone", "default:sandstone",
@@ -427,7 +427,7 @@ function default.register_biomes()
 		heat_point = 15,
 		humidity_point = 35,
 	})
-	
+
 	minetest.register_biome({
 		name = "tundra_beach",
 		--node_dust = "",
@@ -902,7 +902,7 @@ function default.register_mgv6_decorations()
 	minetest.clear_registered_decorations()
 
 	-- Bonusbox chest
-	
+
 	minetest.register_decoration({
 		deco_type = "simple",
 		place_on = {"default:sand", "default:dirt_with_snow", "default:gravel",
@@ -914,7 +914,7 @@ function default.register_mgv6_decorations()
 		y_max = 31000,
 		decoration = {"bonusbox:chest"},
 	})
-	
+
 	-- Papyrus
 
 	minetest.register_decoration({
@@ -1105,8 +1105,8 @@ function default.register_decorations()
 		schematic = minetest.get_modpath("default") .. "/schematics/jungle_log.mts",
 		flags = "place_center_x",
 		rotation = "random",
-		--spawn_by = "default:dirt_with_rainforest_litter",
-		num_spawn_by = 8,
+--		spawn_by = "default:dirt_with_rainforest_litter",
+--		num_spawn_by = 8,
 	})
 
 	-- Taiga and temperate coniferous forest pine tree, small pine tree and log
@@ -1131,7 +1131,7 @@ function default.register_decorations()
 		schematic = minetest.get_modpath("default") .. "/schematics/pine_tree.mts",
 		flags = "place_center_x, place_center_z",
 	})
-	
+
 	minetest.register_decoration({
 		name = "default:small_pine_tree",
 		deco_type = "schematic",
@@ -1216,7 +1216,7 @@ function default.register_decorations()
 		flags = "place_center_x",
 		rotation = "random",
 		spawn_by = "default:dirt_with_dry_grass",
-		num_spawn_by = 8,
+--		num_spawn_by = 8,
 	})
 
 	-- Large cactus
@@ -1281,10 +1281,12 @@ function default.register_decorations()
 		y_min = 0,
 		y_max = 0,
 		schematic = minetest.get_modpath("default").."/schematics/papyrus.mts",
+--		spawn_by = "default:dirt_with_rainforest_litter",
+--		num_spawn_by = 8,
 	})
 
 	-- Bonusbox chest
-	
+
 	minetest.register_decoration({
 		deco_type = "simple",
 		place_on = {"default:sand", "default:dirt_with_snow", "default:gravel",
@@ -1296,7 +1298,7 @@ function default.register_decorations()
 		y_max = 31000,
 		decoration = {"bonusbox:chest"},
 	})
-	
+
 	-- Grass
 
 	minetest.register_decoration({

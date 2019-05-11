@@ -82,3 +82,6 @@ minetest.register_alias("default:string", "farming:string")
 
 -- Hay Bale
 minetest.register_alias("default:haybale", "farming:straw")
+
+-- Ladder
+minetest.register_alias("default:ladder", "default:ladder_wood")
