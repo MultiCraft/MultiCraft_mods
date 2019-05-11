@@ -136,7 +136,10 @@ function boat.on_punch(self, puncher)
 	end
 	if not self.driver then
 		self.removed = true
-		if not (creative and creative.is_enabled_for
+		local inv = puncher:get_inventory()
+		if not inv then
+			minetest.add_item(self.object:get_pos(), "boats:boat")
+		elseif not (creative and creative.is_enabled_for
 				and creative.is_enabled_for(name))
 				or not inv:contains_item("main", "boats:boat") then
 			local leftover = inv:add_item("main", "boats:boat")
