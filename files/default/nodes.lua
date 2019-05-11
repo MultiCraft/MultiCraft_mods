@@ -865,6 +865,7 @@ minetest.register_node("default:water_source", {
 	tiles = {
 		{
 			name = "default_water_source_animated.png",
+			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 32,
@@ -872,18 +873,15 @@ minetest.register_node("default:water_source", {
 				length = 2.0,
 			},
 		},
-	},
-	special_tiles = {
-		-- New-style water source material (mostly unused)
 		{
 			name = "default_water_source_animated.png",
+			backface_culling = true,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 32,
 				aspect_h = 32,
 				length = 2.0,
 			},
-			backface_culling = false,
 		},
 	},
 	alpha = 160,
@@ -958,6 +956,7 @@ minetest.register_node("default:river_water_source", {
 	tiles = {
 		{
 			name = "default_river_water_source_animated.png",
+			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 32,
@@ -965,17 +964,15 @@ minetest.register_node("default:river_water_source", {
 				length = 2.0,
 			},
 		},
-	},
-	special_tiles = {
 		{
 			name = "default_river_water_source_animated.png",
+			backface_culling = true,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 32,
 				aspect_h = 32,
 				length = 2.0,
 			},
-			backface_culling = false,
 		},
 	},
 	alpha = 160,
@@ -994,7 +991,7 @@ minetest.register_node("default:river_water_source", {
 	liquid_renewable = false,
 	liquid_range = 2,
 	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1, cools_lava = 1, not_in_creative_inventory = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_water_defaults(),
 })
 
@@ -1053,6 +1050,7 @@ minetest.register_node("default:lava_source", {
 	tiles = {
 		{
 			name = "default_lava_source_animated.png",
+			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 32,
@@ -1060,18 +1058,15 @@ minetest.register_node("default:lava_source", {
 				length = 3.0,
 			},
 		},
-	},
-	special_tiles = {
-		-- New-style lava source material (mostly unused)
 		{
 			name = "default_lava_source_animated.png",
+			backface_culling = true,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 32,
 				aspect_h = 32,
 				length = 3.0,
 			},
-			backface_culling = false,
 		},
 	},
 	paramtype = "light",

@@ -90,7 +90,7 @@ end
 if minetest.get_modpath("bushes_classic") then
 	-- bushes_classic mod, as found in the plantlife modpack
 	local berries = {
-	    "strawberry",
+		"strawberry",
 		"blackberry",
 		"blueberry",
 		"raspberry",
