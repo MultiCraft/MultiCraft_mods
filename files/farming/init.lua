@@ -54,9 +54,9 @@ minetest.register_craft({
 -- String
 
 minetest.register_craftitem("farming:string",{
-    description = "String",
-    inventory_image = "farming_string.png",
-    groups = {materials = 1},
+	description = "String",
+	inventory_image = "farming_string.png",
+	groups = {materials = 1},
 })
 
 -- Cotton
