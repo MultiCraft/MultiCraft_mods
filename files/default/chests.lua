@@ -27,20 +27,20 @@ local function get_chest_neighborpos(pos, param2, side)
 end
 
 local function hacky_swap_node(pos,name, param2)
-    local node = minetest.env:get_node(pos)
-    local meta = minetest.env:get_meta(pos)
+    local node = minetest.get_node(pos)
+    local meta = minetest.get_meta(pos)
     if node.name == name then
 		return
     end
     node.name = name
     node.param2 = param2 or node.param2
     local meta0 = meta:to_table()
-    minetest.env:set_node(pos,node)
-    meta = minetest.env:get_meta(pos)
+    minetest.set_node(pos,node)
+    meta = minetest.get_meta(pos)
     meta:from_table(meta0)
 end
 
-default.chest_formspec = 
+default.chest_formspec =
 	"size[9,9.75]"..
     "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
 	"background[-0.19,-0.25;9.41,10.48;formspec_chest.png]"..
@@ -62,7 +62,7 @@ function default.get_locked_chest_formspec(pos)
 			meta:set_int("chest_inv_ver",chest_inv_vers)
 		end
 	local spos = pos.x .. "," .. pos.y .. "," ..pos.z
-	local formspec = 
+	local formspec =
 		"size[9,9.75]"..
         "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
 		"background[-0.19,-0.25;9.41,10.48;formspec_chest.png]"..
@@ -98,10 +98,10 @@ minetest.register_node("default:chest", {
     legacy_facedir_simple = true,
     sounds = default.node_sound_wood_defaults(),
     on_construct = function(pos)
-		local param2 = minetest.env:get_node(pos).param2
-		local meta = minetest.env:get_meta(pos)
-		if minetest.env:get_node(get_chest_neighborpos(pos, param2, "right")).name == "default:chest" then
-			minetest.env:set_node(pos, {name="default:chest_right",param2=param2})
+		local param2 = minetest.get_node(pos).param2
+		local meta = minetest.get_meta(pos)
+		if minetest.get_node(get_chest_neighborpos(pos, param2, "right")).name == "default:chest" then
+			minetest.set_node(pos, {name="default:chest_right",param2=param2})
 			local p = get_chest_neighborpos(pos, param2, "right")
 			meta:set_string("formspec",
 					"size[9,11.5]"..
@@ -112,7 +112,7 @@ minetest.register_node("default:chest", {
 					"list[current_player;main;0,10.5;9,1;]")
 			meta:set_string("infotext", "Large Chest")
 			hacky_swap_node(p, "default:chest_left", param2)
-			local m = minetest.env:get_meta(p)
+			local m = minetest.get_meta(p)
 			m:set_string("formspec",
 					"size[9,11.5]"..
 					"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
@@ -121,8 +121,8 @@ minetest.register_node("default:chest", {
 					"list[current_player;main;0,7;9,3;9]"..
 					"list[current_player;main;0,10.5;9,1;]")
 			m:set_string("infotext", "Large Chest")
-		elseif minetest.env:get_node(get_chest_neighborpos(pos, param2, "left")).name == "default:chest" then
-			minetest.env:set_node(pos, {name="default:chest_left",param2=param2})
+		elseif minetest.get_node(get_chest_neighborpos(pos, param2, "left")).name == "default:chest" then
+			minetest.set_node(pos, {name="default:chest_left",param2=param2})
 			local p = get_chest_neighborpos(pos, param2, "left")
 			meta:set_string("formspec",
 					"size[9,11.5]"..
@@ -133,7 +133,7 @@ minetest.register_node("default:chest", {
 					"list[current_player;main;0,10.5;9,1;]")
 			meta:set_string("infotext", "Large Chest")
 			hacky_swap_node(p, "default:chest_right", param2)
-			local m = minetest.env:get_meta(p)
+			local m = minetest.get_meta(p)
 			m:set_string("formspec",
 					"size[9,11.5]"..
 					"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
@@ -155,7 +155,7 @@ minetest.register_node("default:chest", {
 		inv:set_size("main", 9*3)
     end,
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
-		local meta = minetest.env:get_meta(pos)
+		local meta = minetest.get_meta(pos)
 		local meta2 = meta
 		meta:from_table(oldmetadata)
 		local inv = meta:get_inventory()
@@ -163,7 +163,7 @@ minetest.register_node("default:chest", {
 			local stack = inv:get_stack("main", i)
 			if not stack:is_empty() then
 			    local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
-			    minetest.env:add_item(p, stack)
+			    minetest.add_item(p, stack)
 			end
 		end
 		meta:from_table(meta2:to_table())
@@ -197,16 +197,16 @@ minetest.register_node("default:chest_left", {
     drop = "default:chest",
     sounds = default.node_sound_wood_defaults(),
     on_destruct = function(pos)
-		local m = minetest.env:get_meta(pos)
+		local m = minetest.get_meta(pos)
 		if m:get_string("infotext") == "Chest" then
 			return
 		end
-		local param2 = minetest.env:get_node(pos).param2
+		local param2 = minetest.get_node(pos).param2
 		local p = get_chest_neighborpos(pos, param2, "left")
-		if not p or minetest.env:get_node(p).name ~= "default:chest_right" then
+		if not p or minetest.get_node(p).name ~= "default:chest_right" then
 			return
 		end
-		local meta = minetest.env:get_meta(p)
+		local meta = minetest.get_meta(p)
 		meta:set_string("formspec",
 			    "size[9,8.5]"..
 			    "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
@@ -217,7 +217,7 @@ minetest.register_node("default:chest_left", {
 		hacky_swap_node(p, "default:chest")
     end,
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
-		local meta = minetest.env:get_meta(pos)
+		local meta = minetest.get_meta(pos)
 		local meta2 = meta
 		meta:from_table(oldmetadata)
 		local inv = meta:get_inventory()
@@ -225,7 +225,7 @@ minetest.register_node("default:chest_left", {
 			local stack = inv:get_stack("main", i)
 			if not stack:is_empty() then
 			    local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
-			    minetest.env:add_item(p, stack)
+			    minetest.add_item(p, stack)
 			end
 		end
 		meta:from_table(meta2:to_table())
@@ -252,16 +252,16 @@ minetest.register_node("default:chest_right", {
     drop = "default:chest",
     sounds = default.node_sound_wood_defaults(),
     on_destruct = function(pos)
-		local m = minetest.env:get_meta(pos)
+		local m = minetest.get_meta(pos)
 		if m:get_string("infotext") == "Chest" then
 			return
 		end
-		local param2 = minetest.env:get_node(pos).param2
+		local param2 = minetest.get_node(pos).param2
 		local p = get_chest_neighborpos(pos, param2, "right")
-		if not p or minetest.env:get_node(p).name ~= "default:chest_left" then
+		if not p or minetest.get_node(p).name ~= "default:chest_left" then
 			return
 		end
-		local meta = minetest.env:get_meta(p)
+		local meta = minetest.get_meta(p)
 		meta:set_string("formspec",
 			    "size[9,8.5]"..
 			    "image_button_exit[9,0;1,1;close.png;exit;;true;true;]"..
@@ -272,7 +272,7 @@ minetest.register_node("default:chest_right", {
 		hacky_swap_node(p, "default:chest")
     end,
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
-		local meta = minetest.env:get_meta(pos)
+		local meta = minetest.get_meta(pos)
 		local meta2 = meta
 		meta:from_table(oldmetadata)
 		local inv = meta:get_inventory()
@@ -280,7 +280,7 @@ minetest.register_node("default:chest_right", {
 			local stack = inv:get_stack("main", i)
 			if not stack:is_empty() then
 			    local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
-			    minetest.env:add_item(p, stack)
+			    minetest.add_item(p, stack)
 			end
 		end
 		meta:from_table(meta2:to_table())

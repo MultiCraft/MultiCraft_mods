@@ -1047,7 +1047,7 @@ function default.register_decorations()
 	-- Emergent jungle tree
 	-- Due to 32 node height, altitude is limited and prescence depends on chunksize
 
-	local chunksize = tonumber(minetest.get_mapgen_setting("chunksize"))
+--[[	local chunksize = tonumber(minetest.get_mapgen_setting("chunksize"))
 	if chunksize >= 5 then
 		minetest.register_decoration({
 			name = "default:emergent_jungle_tree",
@@ -1072,7 +1072,7 @@ function default.register_decorations()
 			rotation = "random",
 			place_offset_y = -4,
 		})
-	end
+	end]]--
 
 	-- Jungle tree and log
 
