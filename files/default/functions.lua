@@ -555,40 +555,114 @@ minetest.register_abm({
 --
 -- Snowballs
 --
---[[
+
 -- Shoot snowball
 snow_shoot_snowball = function (item, player, pointed_thing)
-	local playerpos = player:get_pos()
-	local obj = minetest.add_entity({x = playerpos.x, y = playerpos.y + 1.5, z = playerpos.z}, "default:snowball_entity")
-	local dir = player:get_look_dir()
-	obj:setvelocity({x = dir.x * 19, y = dir.y * 19, z = dir.z * 19})
-	obj:set_acceleration({x = dir.x * -3, y = -9.81, z = dir.z * -3})
-	item:take_item()
+	local pos = player:get_pos()
+	local obj = minetest.add_entity({x=pos.x, y=pos.y + 1.5, z=pos.z},
+			"default:snowball_entity")
+	if obj then
+		local ent = obj:get_luaentity()
+		if ent then
+			ent.thrower = player:get_player_name()
+			local dir = player:get_look_dir()
+			obj:setvelocity({x = dir.x * 19, y = dir.y * 19, z = dir.z * 19})
+			obj:set_acceleration({x = dir.x * -3, y = -9.81, z = dir.z * -3})
+			item:take_item()
+		else
+			obj:remove()
+		end
+	end
 	return item
 end
 
 -- Snowball entity
-snowball_ENTITY = {
+local snowball_entity = {
 	physical = false,
-	textures = "default_snowball.png",
-	lastpos = "",
-	collisionbox = {0,0,0,0,0,0},
+	textures = {
+		"default_snow.png",
+		"default_snow.png",
+		"default_snow.png",
+		"default_snow.png",
+		"default_snow.png",
+		"default_snow.png",
+	},
+	visual = "cube",
+	visual_size = {x=0.25, y=0.25},
+	thrower = nil,
+	timer = 0,
+	lastpos = {},
+	collisionbox = {0,0,0, 0,0,0},
+	on_activate = function(self, staticdata)
+		if staticdata == "expired" then
+			self.object:remove()
+		end
+	end,
+	get_staticdata = function()
+		return "expired"
+	end,
 }
 
 -- Called when snowball is moving.
-snowball_ENTITY.on_step = function(self)
+snowball_entity.on_step = function(self, dtime)
+	self.timer = self.timer + dtime
+	if self.timer > 20 then
+		self.object:remove()
+		return
+	end
+	if not self.thrower then
+		return
+	end
+	local drop_pos = nil
 	local pos = self.object:getpos()
 	local node = minetest.get_node(pos)
-
--- Become item when hitting a node.
--- If there is no lastpos for some reason.
-	if self.lastpos.x ~= nil then
-		if node.name ~= "air" then
-			self.object:remove()
+	local objs = minetest.get_objects_inside_radius({x=pos.x, y=pos.y, z=pos.z}, 1)
+	for _, obj in pairs(objs) do
+		if obj:is_player() then
+			local name = obj:get_player_name()
+			if name ~= self.thrower then
+				drop_pos = obj:getpos()
+			end
+		elseif obj:get_luaentity() ~= nil and
+				obj:get_luaentity().name ~= "default:snowball_entity" then
+			drop_pos = obj:getpos()
 		end
 	end
--- Node will be added at last pos outside the node
-	self.lastpos = {x = pos.x, y = pos.y, z = pos.z}
+	if node.name ~= "air" and node.name ~= "ignore" then
+		for i = 1, 3 do
+			local p = {x=pos.x, y=pos.y + i, z=pos.z}
+			local n = minetest.get_node(p)
+			if n.name == "air" then
+				drop_pos = vector.new(p)
+				break
+			end
+		end
+		if not drop_pos then
+			self.object:remove()
+			return
+		end
+	end
+	if drop_pos then
+		node = minetest.get_node(drop_pos)
+		if node.name == "air" then
+			local pos_under = vector.subtract(drop_pos, {x=0, y=1, z=0})
+			node = minetest.get_node(pos_under)
+			if node.name then
+				local def = minetest.registered_items[node.name] or {}
+				if def.buildable_to == true then
+					minetest.add_node(pos_under, {name="default:snow"})
+				elseif def.walkable == true then
+					minetest.add_node(drop_pos, {name="default:snow"})
+				end
+			end
+		elseif node.name then
+			local def = minetest.registered_items[node.name]
+			if def and def.buildable_to == true then
+				minetest.add_node(drop_pos, {name="default:snow"})
+			end
+		end
+		self.object:remove()
+	end
 end
 
-minetest.register_entity("default:snowball_entity", snowball_entity)]]--
+minetest.register_entity("default:snowball_entity", snowball_entity)
