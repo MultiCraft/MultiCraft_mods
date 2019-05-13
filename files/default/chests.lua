@@ -26,20 +26,6 @@ local function get_chest_neighborpos(pos, param2, side)
     end
 end
 
-local function hacky_swap_node(pos,name, param2)
-    local node = minetest.get_node(pos)
-    local meta = minetest.get_meta(pos)
-    if node.name == name then
-		return
-    end
-    node.name = name
-    node.param2 = param2 or node.param2
-    local meta0 = meta:to_table()
-    minetest.set_node(pos,node)
-    meta = minetest.get_meta(pos)
-    meta:from_table(meta0)
-end
-
 default.chest_formspec =
 	"size[9,9.75]"..
     "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
@@ -52,27 +38,6 @@ default.chest_formspec =
 
 local chest_inv_size = 4*9
 local chest_inv_vers = 2
-
-function default.get_locked_chest_formspec(pos)
-		local meta = minetest.get_meta(pos)
-		local inv_v = meta:get_int("chest_inv_ver")
-		if inv_v and inv_v < chest_inv_vers then
-			local inv = meta:get_inventory()
-			inv:set_size("main",chest_inv_size)
-			meta:set_int("chest_inv_ver",chest_inv_vers)
-		end
-	local spos = pos.x .. "," .. pos.y .. "," ..pos.z
-	local formspec =
-		"size[9,9.75]"..
-        "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-		"background[-0.19,-0.25;9.41,10.48;formspec_chest.png]"..
-		"bgcolor[#080808BB;true]"..
-		"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
-		"list[nodemeta:".. spos .. ";main;0,0.5;9,4;]"..
-		"list[current_player;main;0,5.5;9,3;9]"..
-		"list[current_player;main;0,8.74;9,1;]"
-	return formspec
-end
 
 minetest.register_abm({
         nodenames = {"default:chest"},
@@ -111,7 +76,7 @@ minetest.register_node("default:chest", {
 					"list[current_player;main;0,7;9,3;9]"..
 					"list[current_player;main;0,10.5;9,1;]")
 			meta:set_string("infotext", "Large Chest")
-			hacky_swap_node(p, "default:chest_left", param2)
+			minetest.swap_node(p, {name="default:chest_left", param2=param2})
 			local m = minetest.get_meta(p)
 			m:set_string("formspec",
 					"size[9,11.5]"..
@@ -132,7 +97,7 @@ minetest.register_node("default:chest", {
 					"list[current_player;main;0,7;9,3;9]"..
 					"list[current_player;main;0,10.5;9,1;]")
 			meta:set_string("infotext", "Large Chest")
-			hacky_swap_node(p, "default:chest_right", param2)
+			minetest.swap_node(p, {name="default:chest_right", param2=param2})
 			local m = minetest.get_meta(p)
 			m:set_string("formspec",
 					"size[9,11.5]"..
@@ -214,7 +179,7 @@ minetest.register_node("default:chest_left", {
 			    "list[current_player;main;0,4;9,3;9]"..
 			    "list[current_player;main;0,7.5.5;9,1;]")
 		meta:set_string("infotext", "Chest")
-		hacky_swap_node(p, "default:chest")
+		minetest.swap_node(p, {name="default:chest", param2=param2})
     end,
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
@@ -269,7 +234,7 @@ minetest.register_node("default:chest_right", {
 			    "list[current_player;main;0,4;9,3;9]"..
 			    "list[current_player;main;0,7.5.5;9,1;]")
 		meta:set_string("infotext", "Chest")
-		hacky_swap_node(p, "default:chest")
+		minetest.swap_node(p, {name="default:chest", param2=param2})
     end,
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
