@@ -579,16 +579,8 @@ end
 -- Snowball entity
 local snowball_entity = {
 	physical = false,
-	textures = {
-		"default_snow.png",
-		"default_snow.png",
-		"default_snow.png",
-		"default_snow.png",
-		"default_snow.png",
-		"default_snow.png",
-	},
-	visual = "cube",
-	visual_size = {x=0.25, y=0.25},
+	textures = {"default_snowball.png",},
+	visual = "sprite",
 	thrower = nil,
 	timer = 0,
 	lastpos = {},

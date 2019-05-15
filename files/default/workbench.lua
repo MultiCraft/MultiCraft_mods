@@ -9,7 +9,7 @@ local function set_workbench(player)
 	local workbench = "size[9,8.75]" ..
 	"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
 	"background[-0.19,-0.25;9.41,9.49;formspec_workbench.png]" ..
-	"bgcolor[#080808BB;true]" ..
+	"bgcolor[#08080880;true]" ..
 	"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
 	"list[detached:split;main;8,3.15;1,1;]"..
 	"list[current_player;main;0,4.5;9,3;9]" ..

@@ -55,14 +55,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-    output = 'fences:fence_wood 2',
-    recipe = {
-        {'default:stick', 'default:stick', 'default:stick'},
-        {'default:stick', 'default:stick', 'default:stick'},
-    }
-})
-
-minetest.register_craft({
     output = 'signs:sign 3',
     recipe = {
         {'group:wood', 'group:wood', 'group:wood'},

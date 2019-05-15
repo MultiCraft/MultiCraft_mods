@@ -361,6 +361,7 @@ if fire_enabled then
 						maxexptime = 6,
 						minsize = 2,
 						maxsize = 4,
+						texture = "item_smoke.png"
 	})
 					minetest.check_for_falling(p)
 				end

@@ -752,7 +752,7 @@ Frame Root {
            96.078431;
            0.500000; 0.500000; 0.500000;;
            0.000000; 0.000000; 0.000000;;
-          TextureFilename {"default_wood.png";}
+          TextureFilename {"default_pine_wood.png";}
         }
       } // End of Cube_000 material list
     } // End of Cube_000 mesh
