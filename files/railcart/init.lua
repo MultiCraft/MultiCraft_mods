@@ -111,7 +111,7 @@ railcart:register_entity("railcart:cart_entity", {
 			local cart = self.cart or {}
 			if cart.id and name then
 				local formspec = "size[8,9]"..
-					default.gui_bg..default.gui_bg_img..default.gui_slots..
+					--default.gui_bg..default.gui_bg_img..default.gui_slots..
 					"list[detached:railcart_"..cart.id..";main;0,0.3;8,4;]"..
 					"list[current_player;main;0,4.85;8,1;]"..
 					"list[current_player;main;0,6.08;8,3;8]"..

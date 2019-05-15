@@ -3,9 +3,9 @@ sfinv = {
 	pages_unordered = {},
 	contexts = {},
 	enabled = true,
-	gui_bg = "bgcolor[#080808BB;true]",
+	gui_bg = "bgcolor[#08080880;true]",
 	gui_bg_img = "",
-	gui_slots = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]",
+	gui_slots = "",
 }
 
 function sfinv.register_page(name, def)
@@ -41,7 +41,7 @@ function sfinv.get_nav_fs(player, context, nav, current_idx)
 	return ""
 end
 
-local theme_main = "bgcolor[#080808BB;true]" .. sfinv.gui_bg ..
+local theme_main = sfinv.gui_bg ..
 		sfinv.gui_bg_img
 
 local theme_inv = sfinv.gui_slots .. [[

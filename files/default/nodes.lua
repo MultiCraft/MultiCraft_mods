@@ -220,7 +220,7 @@ minetest.register_node("default:snow", {
 	},
 	groups = {crumbly = 3, falling_node = 1, snowy = 1, puts_out_fire = 1, misc = 1},
 	sounds = default.node_sound_snow_defaults(),
---	on_use = snow_shoot_snowball,
+	on_use = snow_shoot_snowball,
 	on_construct = function(pos)
 	pos.y = pos.y - 1
 		if minetest.get_node(pos).name == "default:dirt_with_grass" then
@@ -308,12 +308,12 @@ minetest.register_node("default:sapling", {
 })
 
 minetest.register_node("default:leaves", {
-	description = "Leaves",
+	description = "Apple Tree Leaves",
 	drawtype = "allfaces_optional",
 	waving = 1,
-	visual_scale = 1.3,
 	tiles = {"default_leaves.png"},
 	paramtype = "light",
+	walkable = false,
 	is_ground_content = false,
 	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
 	drop = {
@@ -405,9 +405,9 @@ minetest.register_node("default:jungleleaves", {
 	description = "Jungle Tree Leaves",
 	drawtype = "allfaces_optional",
 	waving = 1,
-	visual_scale = 1.3,
 	tiles = {"default_jungleleaves.png"},
 	paramtype = "light",
+	walkable = false,
 	is_ground_content = false,
 	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
 	drop = {
@@ -483,7 +483,6 @@ minetest.register_node("default:pine_wood", {
 minetest.register_node("default:pine_needles",{
 	description = "Pine Needles",
 	drawtype = "allfaces_optional",
-	visual_scale = 1.3,
 	tiles = {"default_pine_needles.png"},
 	waving = 1,
 	paramtype = "light",
@@ -563,10 +562,10 @@ minetest.register_node("default:acacia_wood", {
 minetest.register_node("default:acacia_leaves", {
 	description = "Acacia Tree Leaves",
 	drawtype = "allfaces_optional",
-	visual_scale = 1.3,
 	tiles = {"default_acacia_leaves.png"},
 	waving = 1,
 	paramtype = "light",
+	walkable = false,
 	is_ground_content = false,
 	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
 	drop = {
@@ -801,6 +800,27 @@ minetest.register_node("default:diamondblock", {
 	groups = {cracky = 1, level = 3, building = 1},
 	sounds = default.node_sound_stone_defaults(),
 })
+
+
+minetest.register_node("default:dry_shrub", {
+	description = "Dry Shrub",
+	drawtype = "plantlike",
+	waving = 1,
+	tiles = {"default_dry_shrub.png"},
+	paramtype = "light",
+	paramtype2 = "meshoptions",
+	place_param2 = 4,
+	sunlight_propagates = true,
+	walkable = false,
+	buildable_to = true,
+	groups = {snappy = 3, flammable = 3, attached_node=1, decorative = 1},
+	sounds = default.node_sound_leaves_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = {-1/3, -1/2, -1/3, 1/3, 1/6, 1/3},
+	},
+})
+
 minetest.register_node("default:junglegrass", {
 	description = "Jungle Grass",
 	drawtype = "plantlike",
@@ -812,28 +832,27 @@ minetest.register_node("default:junglegrass", {
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
-		drop = {
+	buildable_to = true,
+	drop = {
 		max_items = 1,
 		items = {
 			--{items = {'farming:seed_cotton'}, rarity = 8},
 			{items = {'default:junglegrass'}},
 		}
 	},
-	buildable_to = true,
-	groups = {snappy = 3, flammable = 2, flora = 1, attached_node = 1},
+	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1},
 	sounds = default.node_sound_leaves_defaults(),
-	selection_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5},
-	},
 })
 
 minetest.register_node("default:grass", {
 	description = "Grass",
 	drawtype = "plantlike",
+	waving = 1,
 	tiles = {"default_tallgrass.png"},
 	inventory_image = "default_tallgrass.png",
 	wield_image = "default_tallgrass.png",
+	paramtype = "light",
+	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
 	drop = {
@@ -844,14 +863,26 @@ minetest.register_node("default:grass", {
 		}
 	},
 	paramtype = "light",
-	groups = {snappy = 3, flammable = 3,attached_node=1,dig_immediate = 3, decorative=1, grass=1},
+	groups = {snappy = 3, flora = 1, attached_node = 1, grass = 1,
+		flammable = 1, dig_immediate = 3, decorative = 1},
 	sounds = default.node_sound_leaves_defaults(),
-	after_dig_node = function(pos, oldnode, oldmetadata, user)
-	local item = user:get_wielded_item()
-		if item:get_name() == "default:shears" then
-			user:get_inventory():add_item("main", ItemStack(oldnode.name))
-		end
-  end
+})
+
+
+minetest.register_node("default:dry_grass", {
+	description = "Dry Grass",
+	drawtype = "plantlike",
+	waving = 1,
+	tiles = {"default_dry_tallgrass.png"},
+	inventory_image = "default_dry_tallgrass.png",
+	wield_image = "default_dry_tallgrass.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	buildable_to = true,
+	groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
+		not_in_creative_inventory=1, dry_grass = 1, dig_immediate = 3, decorative = 1},
+	sounds = default.node_sound_leaves_defaults(),
 })
 
 --
@@ -1411,9 +1442,6 @@ minetest.register_node("default:vine", {
 	drop = "",
 	after_dig_node = function(pos, oldnode, oldmetadata, user)
 		local item = user:get_wielded_item()
-		if item:get_name() == "default:shears" then
-			user:get_inventory():add_item("main", ItemStack(oldnode.name))
-		end
 		local next_find = true
 		local down = 1
 		while next_find == true do
@@ -1460,41 +1488,6 @@ minetest.register_node("default:brick", {
 	is_ground_content = false,
 	groups = {cracky = 3, building = 1},
 	sounds = default.node_sound_stone_defaults(),
-})
-
-minetest.register_node("default:dry_shrub", {
-	description = "Dry Shrub",
-	drawtype = "plantlike",
-	visual_scale = 1.0,
-	tiles = {"default_dry_shrub.png"},
-	paramtype = "light",
-	walkable = false,
-	groups = {snappy = 3, flammable = 3,attached_node=1, decorative = 1},
-	sounds = default.node_sound_leaves_defaults(),
-	selection_box = {
-		type = "fixed",
-		fixed = {-1/3, -1/2, -1/3, 1/3, 1/6, 1/3},
-	},
-})
-
-
-minetest.register_node("default:dry_grass", {
-	description = "Dry Grass",
-	drawtype = "plantlike",
-	tiles = {"default_dry_tallgrass.png"},
-	inventory_image = "default_dry_tallgrass.png",
-	wield_image = "default_dry_tallgrass.png",
-	walkable = false,
-	buildable_to = true,
-	paramtype = "light",
-	groups = {snappy = 3, flammable = 3, attached_node=1, dig_immediate = 3, decorative=1, grass=1},
-	sounds = default.node_sound_leaves_defaults(),
-	after_dig_node = function(pos, oldnode, oldmetadata, user)
-		local item = user:get_wielded_item()
-		if item:get_name() == "default:shears" then
-			user:get_inventory():add_item("main", ItemStack(oldnode.name))
-		end
-  end
 })
 
 minetest.register_node("default:glowstone", {
