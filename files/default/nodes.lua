@@ -1195,7 +1195,7 @@ local function update_bookshelf(pos)
 		local stack = invlist[i]
 		if stack:is_empty() then
 			formspec = formspec --[[..
-				"image[" .. bx .. "," .. by .. ";1,1;default_bookshelf_slot.png]"]]--
+				"image[" .. bx .. "," .. by .. ";1,1;default_bookshelf_slot.png]"]]
 		else
 			local metatable = stack:get_meta():to_table() or {}
 			if metatable.fields and metatable.fields.text then
@@ -1503,7 +1503,7 @@ minetest.register_node("default:glowstone", {
 			{items = {'default:glowdust 3'}, rarity = 2},
 			{items = {'default:glowdust 2'}},
 		}
-	},]]--
+	},]]
 	light_source = 12,
 })
 

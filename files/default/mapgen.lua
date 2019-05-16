@@ -1072,7 +1072,7 @@ function default.register_decorations()
 			rotation = "random",
 			place_offset_y = -4,
 		})
-	end]]--
+	end]]
 
 	-- Jungle tree and log
 

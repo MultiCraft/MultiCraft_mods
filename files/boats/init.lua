@@ -163,7 +163,7 @@ function boat.on_step(self, dtime)
 		minetest.add_item(self.object:get_pos(), "boats:boat")
 		self.object:remove()
 		return
-	end]]--
+	end]]
 
 	self.v = get_v(self.object:get_velocity()) * get_sign(self.v)
 	if self.driver then

@@ -26,34 +26,6 @@ local function get_chest_neighborpos(pos, param2, side)
     end
 end
 
-default.chest_formspec =
-	"size[9,9.75]"..
-    "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-	"background[-0.19,-0.25;9.41,10.48;formspec_chest.png]"..
-	"bgcolor[#08080880;true]"..
-	"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"..
-	"list[current_name;main;0,0.5;9,4;]"..
-	"list[current_player;main;0,5.5;9,3;9]"..
-	"list[current_player;main;0,8.74;9,1;]"
-
-local chest_inv_size = 4*9
-local chest_inv_vers = 2
-
-minetest.register_abm({
-        nodenames = {"default:chest"},
-        interval = 1,
-        chance = 1,
-        action = function(pos, node)
-		local meta = minetest.get_meta(pos)
-		local inv_v = meta:get_int("chest_inv_ver")
-		if inv_v and inv_v < chest_inv_vers then
-			local inv = meta:get_inventory()
-			inv:set_size("main",chest_inv_size)
-			meta:set_int("chest_inv_ver",chest_inv_vers)
-		end
-	end
-})
-
 minetest.register_node("default:chest", {
     description = "Chest",
     tiles = {"default_chest_top.png", "default_chest_top.png", "default_chest_side.png",
@@ -70,50 +42,60 @@ minetest.register_node("default:chest", {
 			local p = get_chest_neighborpos(pos, param2, "right")
 			meta:set_string("formspec",
 					"size[9,11.5]"..
-					"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-					"list[nodemeta:"..p.x..","..p.y..","..p.z..";main;0,0;9,3;]"..
-					"list[current_name;main;0,3;9,3;]"..
-					"list[current_player;main;0,7;9,3;9]"..
-					"list[current_player;main;0,10.5;9,1;]")
-			meta:set_string("infotext", "Large Chest")
+					"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]"..
+					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;true;]"..
+					"list[nodemeta:"..p.x..","..p.y..","..p.z..";main;0.01,0.4;9,3;]"..
+					"list[current_name;main;0.01,3.39;9,3;]"..
+					"list[current_player;main;0.01,7.4;9,3;9]"..
+					"list[current_player;main;0,10.61;9,1;]")
+			meta:set_string("infotext", "Large Chest 1")
 			minetest.swap_node(p, {name="default:chest_left", param2=param2})
 			local m = minetest.get_meta(p)
 			m:set_string("formspec",
 					"size[9,11.5]"..
-					"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-					"list[current_name;main;0,0;9,3;]"..
-					"list[nodemeta:"..pos.x..","..pos.y..","..pos.z..";main;0,3;9,3;]"..
-					"list[current_player;main;0,7;9,3;9]"..
-					"list[current_player;main;0,10.5;9,1;]")
-			m:set_string("infotext", "Large Chest")
+					"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]"..
+					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;true;]"..
+					"list[nodemeta:"..pos.x..","..pos.y..","..pos.z..";main;0.01,3.39;9,3;]"..
+					"list[current_name;main;0.01,0.4;9,3;]"..
+					"list[current_player;main;0.01,7.4;9,3;9]"..
+					"list[current_player;main;0,10.61;9,1;]")
+			m:set_string("infotext", "Large Chest 2")
 		elseif minetest.get_node(get_chest_neighborpos(pos, param2, "left")).name == "default:chest" then
 			minetest.set_node(pos, {name="default:chest_left",param2=param2})
 			local p = get_chest_neighborpos(pos, param2, "left")
 			meta:set_string("formspec",
 					"size[9,11.5]"..
-					"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-					"list[current_name;main;0,0;9,3;]"..
-					"list[nodemeta:"..p.x..","..p.y..","..p.z..";main;0,3;9,3;]"..
-					"list[current_player;main;0,7;9,3;9]"..
-					"list[current_player;main;0,10.5;9,1;]")
-			meta:set_string("infotext", "Large Chest")
+					"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]"..
+					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;true;]"..
+					"list[nodemeta:"..p.x..","..p.y..","..p.z..";main;0.01,3.39;9,3;]"..
+					"list[current_name;main;0.01,0.4;9,3;]"..
+					"list[current_player;main;0.01,7.4;9,3;9]"..
+					"list[current_player;main;0,10.61;9,1;]")
+			meta:set_string("infotext", "Large Chest 3")
 			minetest.swap_node(p, {name="default:chest_right", param2=param2})
 			local m = minetest.get_meta(p)
 			m:set_string("formspec",
 					"size[9,11.5]"..
-					"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-					"list[nodemeta:"..pos.x..","..pos.y..","..pos.z..";main;0,0;9,3;]"..
-					"list[current_name;main;0,3;9,3;]"..
-					"list[current_player;main;0,7;9,3;9]"..
-					"list[current_player;main;0,10.5;9,1;]")
-			m:set_string("infotext", "Large Chest")
+					"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]"..
+					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;true;]"..
+					"list[nodemeta:"..pos.x..","..pos.y..","..pos.z..";main;0.01,0.4;9,3;]"..
+					"list[current_name;main;0.01,3.39;9,3;]"..
+					"list[current_player;main;0.01,7.4;9,3;9]"..
+					"list[current_player;main;0,10.61;9,1;]")
+			m:set_string("infotext", "Large Chest 4")
 		else
 			meta:set_string("formspec",
-					"size[9,8.5]"..
-					"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-					"list[current_name;main;0,0;9,3;]"..
-					"list[current_player;main;0,4;9,3;9]"..
-					"list[current_player;main;0,7.5.5;9,1;]")
+					"size[9,8.75]"..
+					"background[-0.2,-0.26;9.41,9.49;formspec_chest.png]"..
+					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;true;]"..
+					"list[current_name;main;0,0.5;9,3;]"..
+					"list[current_player;main;0,4.5;9,3;9]" ..
+					"list[current_player;main;0,7.74;9,1;]")
 			meta:set_string("infotext", "Chest")
 		end
 		local inv = meta:get_inventory()
@@ -158,7 +140,7 @@ minetest.register_node("default:chest_left", {
     tiles = {"default_chest_top_big.png", "default_chest_top_big.png", "default_chest_side.png",
 		"default_chest_side.png", "default_chest_side_big.png^[transformFX", "default_chest_front_big.png"},
     paramtype2 = "facedir",
-    groups = {choppy = 2, oddly_breakable_by_hand = 2,not_in_creative_inventory=1},
+    groups = {choppy = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory=1},
     drop = "default:chest",
     sounds = default.node_sound_wood_defaults(),
     on_destruct = function(pos)
@@ -172,12 +154,14 @@ minetest.register_node("default:chest_left", {
 			return
 		end
 		local meta = minetest.get_meta(p)
-		meta:set_string("formspec",
-			    "size[9,8.5]"..
-			    "image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
-			    "list[current_name;main;0,0;9,3;]"..
-			    "list[current_player;main;0,4;9,3;9]"..
-			    "list[current_player;main;0,7.5.5;9,1;]")
+			meta:set_string("formspec",
+					"size[9,8.75]"..
+					"background[-0.2,-0.26;9.41,9.49;formspec_chest.png]"..
+					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;true;]"..
+					"list[current_name;main;0,0.5;9,3;]"..
+					"list[current_player;main;0,4.5;9,3;9]" ..
+					"list[current_player;main;0,7.74;9,1;]")
 		meta:set_string("infotext", "Chest")
 		minetest.swap_node(p, {name="default:chest", param2=param2})
     end,
@@ -213,7 +197,7 @@ minetest.register_node("default:chest_right", {
     tiles = {"default_chest_top_big.png^[transformFX", "default_chest_top_big.png^[transformFX", "default_chest_side.png",
 		"default_chest_side.png", "default_chest_side_big.png", "default_chest_front_big.png^[transformFX"},
     paramtype2 = "facedir",
-    groups = {choppy = 2, oddly_breakable_by_hand = 2,not_in_creative_inventory=1},
+    groups = {choppy = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory=1},
     drop = "default:chest",
     sounds = default.node_sound_wood_defaults(),
     on_destruct = function(pos)
@@ -227,12 +211,14 @@ minetest.register_node("default:chest_right", {
 			return
 		end
 		local meta = minetest.get_meta(p)
-		meta:set_string("formspec",
-			    "size[9,8.5]"..
-			    "image_button_exit[9,0;1,1;close.png;exit;;true;true;]"..
-			    "list[current_name;main;0,0;9,3;]"..
-			    "list[current_player;main;0,4;9,3;9]"..
-			    "list[current_player;main;0,7.5.5;9,1;]")
+			meta:set_string("formspec",
+					"size[9,8.75]"..
+					"background[-0.2,-0.26;9.41,9.49;formspec_chest.png]"..
+					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;true;]"..
+					"list[current_name;main;0,0.5;9,3;]"..
+					"list[current_player;main;0,4.5;9,3;9]" ..
+					"list[current_player;main;0,7.74;9,1;]")
 		meta:set_string("infotext", "Chest")
 		minetest.swap_node(p, {name="default:chest", param2=param2})
     end,

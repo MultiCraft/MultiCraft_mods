@@ -539,9 +539,9 @@ local moss_correspondences = {
 }
 minetest.register_abm({
 	label = "Moss growth",
-	nodenames = {"default:cobble", "stairs:slab_cobble", "stairs:stair_cobble",
+	nodenames = {"default:cobble"--[[, "stairs:slab_cobble", "stairs:stair_cobble",
 		"stairs:stair_inner_cobble", "stairs:stair_outer_cobble",
-		"walls:cobble"},
+		"walls:cobble"]]},
 	neighbors = {"group:water"},
 	interval = 16,
 	chance = 200,

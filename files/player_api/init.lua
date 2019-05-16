@@ -29,6 +29,13 @@ minetest.register_on_joinplayer(function(player)
 		{x = 200, y = 219},
 		30
 	)
+
+if PLATFORM ~= "Android" or PLATFORM ~= "iOS" then
 	player:hud_set_hotbar_image("gui_hotbar.png")
+	player:hud_set_hotbar_itemcount(9)
+else
+	player:hud_set_hotbar_image("gui_hotbar_touch.png")
+	player:hud_set_hotbar_itemcount(8)
+end
 	player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
 end)
