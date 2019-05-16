@@ -36,7 +36,7 @@ minetest.override_item("default:dirt_with_coniferous_litter", {
 		dry = "farming:soil",
 		wet = "farming:soil_wet"
 	}
-})]]--
+})]]
 
 minetest.register_node("farming:soil", {
 	description = "Soil",
@@ -115,7 +115,7 @@ minetest.register_node("farming:straw", {
 	"Straw Slab",
 	default.node_sound_leaves_defaults(),
 	true
-)]]--
+)]]
 
 minetest.register_abm({
 	label = "Farming soil",
