@@ -75,7 +75,8 @@ minetest.register_alias("default:gold_nugget", "default:gold_ingot")
 minetest.register_alias("default:sandstonecarved", "default:sandstonesmooth")
 
 -- Workbench
-minetest.register_alias("crafting:workbench", "default:workbench")
+minetest.register_alias("crafting:workbench", "workbench:workbench")
+minetest.register_alias("default:workbench", "workbench:workbench")
 
 -- String
 minetest.register_alias("default:string", "farming:string")
