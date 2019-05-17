@@ -64,7 +64,7 @@ if minetest.setting_getbool("creative_mode") == false then
 					local obj = minetest.add_item(pos, name)
 					if obj ~= nil then
 						obj:get_luaentity().collect = true
-						obj:get_luaentity().age = age
+						obj:get_luaentity().age = 0
 					obj:setvelocity({x=math.random(-3,3), y=math.random(2,5), z=math.random(-3,3)})
 			end
 		end
