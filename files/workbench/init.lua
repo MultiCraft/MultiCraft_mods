@@ -124,19 +124,19 @@ local formspecs = {
 		image[0,1.52;1,1;workbench_anvil.png]
 		list[context;tool;1.195,1.505;1,1;]
 		image[4.04,1.55;1,1;hammer_layout.png]
-		list[context;hammer;4.065,1.505;1,1;]	]],
+		list[context;hammer;4.06,1.50;1,1;]	]],
 }
 
 local split_inv = minetest.create_detached_inventory("split", {
-    allow_move = function(_, _, _, _, _, count, _)
-        return count
-    end,
-    allow_put = function(_, _, _, stack, _)
-        return stack:get_count() / 2
-    end,
-    allow_take = function(_, _, _, stack, _)
-        return stack:get_count()
-    end,
+	allow_move = function(_, _, _, _, _, count, _)
+		return count
+	end,
+	allow_put = function(_, _, _, stack, _)
+		return stack:get_count() / 2
+	end,
+	allow_take = function(_, _, _, stack, _)
+		return stack:get_count()
+	end,
 })
 split_inv:set_size("main", 1)
 
@@ -170,10 +170,10 @@ end
 
 function workbench:set_formspec(meta, id)
 	meta:set_string("formspec", "size[9,8.75;]"..
-		"bgcolor[#08080880;true]" ..
-		"background[-0.2,-0.26;9.41,9.49;formspec_workbench.png]" ..
+		"background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]" ..
+		sfinv.gui_bg..
+		sfinv.listcolors..
 		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]" ..
-		"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
 		"list[detached:split;main;8,3.14;1,1;]"..
 		"list[current_player;main;0.01,4.51;9,3;9]"..
 		"list[current_player;main;0.01,7.75;9,1;]"..

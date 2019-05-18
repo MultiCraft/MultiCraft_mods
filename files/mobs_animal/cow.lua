@@ -25,11 +25,11 @@ mobs:register_mob("mobs_animal:cow", {
 	jump_height = 6,
 	pushable = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
-		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-		{name = "mobs:leather", chance = 2, min = 1, max = 1},
-		{name = "mobs:leather", chance = 2, min = 1, max = 1}
+		{name = "mobs:meat_raw", chance = 1},
+		{name = "mobs:meat_raw", chance = 2},
+		{name = "mobs:meat_raw", chance = 2},
+		{name = "mobs:leather", chance = 2},
+		{name = "mobs:leather", chance = 2}
 	},
 	water_damage = 0,
 	lava_damage = 5,

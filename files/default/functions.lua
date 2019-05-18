@@ -206,7 +206,7 @@ function default.grow_papyrus(pos, node)
 	end
 	pos.y = pos.y + 1
 	local height = 0
-	while node.name == "default:papyrus" and height < 4 do
+	while node.name == "default:sugarcane" and height < 4 do
 		height = height + 1
 		pos.y = pos.y + 1
 		node = minetest.get_node(pos)
@@ -217,7 +217,7 @@ function default.grow_papyrus(pos, node)
 	if minetest.get_node_light(pos) < 13 then
 		return
 	end
-	minetest.set_node(pos, {name = "default:papyrus"})
+	minetest.set_node(pos, {name = "default:sugarcane"})
 	return true
 end
 
@@ -234,7 +234,7 @@ minetest.register_abm({
 
 minetest.register_abm({
 	label = "Grow papyrus",
-	nodenames = {"default:papyrus"},
+	nodenames = {"default:sugarcane"},
 	neighbors = {"default:dirt", "default:dirt_with_grass", "default:sand"},
 	interval = 14,
 	chance = 71,

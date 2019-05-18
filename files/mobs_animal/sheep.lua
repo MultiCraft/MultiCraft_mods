@@ -19,9 +19,10 @@ local all_colours = {
 
 -- Sheep by PilzAdam
 
-for _, col in pairs(all_colours) do
+for _, col in ipairs(all_colours) do
 
 	mobs:register_mob("mobs_animal:sheep_"..col[1], {
+		stay_near = {"farming:straw", 10},
 		stepheight = 0.6,
 		type = "animal",
 		passive = true,

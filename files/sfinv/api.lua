@@ -4,6 +4,7 @@ sfinv = {
 	contexts = {},
 	enabled = true,
 	gui_bg = "bgcolor[#08080880;true]",
+	listcolors = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]",
 	gui_bg_img = "",
 	gui_slots = "",
 }

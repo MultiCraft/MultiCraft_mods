@@ -244,9 +244,9 @@ function doors:register_door(name, def)
             if check_player_priv(pos, clicker) then
                 on_rightclick(pos, 1, name.."_t_2", name.."_b_1", name.."_t_1", {3,0,1,2})
                 if is_right(pos, clicker) then
-                    minetest.sound_play("doors_door_open", {gain = 0.3, max_hear_distance = 10})
+                    minetest.sound_play("doors_door_open", {pos = pos, gain = 0.3, max_hear_distance = 10})
                 else
-                    minetest.sound_play("doors_door_close", {gain = 0.3, max_hear_distance = 10})
+                    minetest.sound_play("doors_door_close", {pos = pos, gain = 0.3, max_hear_distance = 10})
                 end
             end
         end,

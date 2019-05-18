@@ -487,7 +487,8 @@ stairs.register_all("steelblock", "default:steelblock",
 	{cracky = 1, level = 2},
 	{"default_steel_block.png"},
 	"Steel",
-	stairs.stone)
+	stairs.metal)
+
 
 minetest.register_alias("stairs:steel", "stairs:steelblock")
 
@@ -498,6 +499,7 @@ stairs.register_all("goldblock", "default:goldblock",
 	stairs.metal)
 	
 minetest.register_alias("stairs:gold", "stairs:goldblock")
+minetest.register_alias("stairs:corner_gold", "stairs:goldblock")
 
 stairs.register_all("diamondblock", "default:diamondblock",
 	{cracky = 1, level=3},
@@ -540,12 +542,6 @@ stairs.register_all("ice", "default:ice",
 	"Ice",
 	default.node_sound_glass_defaults())
 
-
-stairs.register_all("glass", "default:glass",
-	{cracky = 3, oddly_breakable_by_hand = 3},
-	{"default_glass.png"},
-	"Glass",
-	stairs.glass)
 
 local colours = {
 	{"black",      "Black",      "#000000b0"},

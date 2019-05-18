@@ -1,4 +1,4 @@
-MultiCraft mod: dye
+MultiCraft game mod: dye
 ======================
 See license.txt for license information.
 See init.lua for documentation.

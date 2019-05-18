@@ -37,7 +37,7 @@ local torch_get_input_rules = function(node)
 end
 
 minetest.register_craft({
-    output = '"mesecons_torch:mesecon_torch_on" 4',
+    output = "mesecons_torch:mesecon_torch_on 4",
     recipe = {
     {"default:bluestone_dust"},
     {"default:stick"},}

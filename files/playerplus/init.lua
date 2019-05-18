@@ -2,7 +2,7 @@
 	walking on ice makes player walk faster,
 	stepping through snow or water slows player down,
 	touching a cactus hurts player,
-	and if head stuck inside a solid node suffocates player.
+	and	suffocation when head is inside solid node,.
 
 	PlayerPlus by TenPlus1
 ]]
@@ -25,7 +25,7 @@ end
 
 
 local armor_mod = minetest.get_modpath("3d_armor")
-local def = {}
+--local def = {}
 local time = 0
 
 
@@ -82,20 +82,44 @@ minetest.register_globalstep(function(dtime)
 		end
 
 		-- are we standing on any nodes that speed player up?
-		--nfast = nil
+		nfast = nil
 		if playerplus[name].nod_stand == "default:ice" then
-			def.speed = def.speed + 0.4
+			nfast = true
 		end
 
 		-- are we standing on any nodes that slow player down?
-		--nslow = nil
+		nslow = nil
 		if playerplus[name].nod_stand == "default:snow"
 		or playerplus[name].nod_stand == "default:snowblock"
-		-- wading in water? if so walk slower
+		-- The probable cause of the bug when swimming under water on the server!
 		or minetest.registered_nodes[ playerplus[name].nod_feet ].groups.water then
-			def.speed = def.speed - 0.4
+			nslow = true
 		end
 
+		-- apply speed changes
+		if nfast and not playerplus[name].nfast then
+			def.speed = def.speed + 0.4
+		
+			playerplus[name].nfast = true
+		
+		elseif not nfast and playerplus[name].nfast then
+			def.speed = def.speed - 0.4
+
+			playerplus[name].nfast = nil
+		end
+
+		-- apply slowdown changes
+		if nslow and not playerplus[name].nslow then
+			def.speed = def.speed - 0.3
+
+			playerplus[name].nslow = true
+
+		elseif not nslow and playerplus[name].nslow then
+			def.speed = def.speed + 0.3
+
+			playerplus[name].nslow = nil
+		end
+		
 	-- set player physics
 		player:set_physics_override(def.speed, def.jump, def.gravity)
 --[[

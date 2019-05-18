@@ -1,4 +1,4 @@
-Minetest mod "Hunger"
+MultiCraft game mod: Hunger
 =====================
 Version: 1.1.3
 
