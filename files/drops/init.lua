@@ -1,55 +1,85 @@
-local age					= 1 --How old an item has to be before collecting
-local radius_magnet			= 2 --Radius of item magnet
+local age = 1 --How old an item has to be before collecting
+local radius_magnet = 2 --Radius of item magnet
 local player_collect_height	= 1.3 --Added to their pos y value
 
---Item collection
-minetest.register_globalstep(function(dtime)
-	--collection
-	for _,player in ipairs(minetest.get_connected_players()) do
-		--don't magnetize to dead players
-		if player:get_hp() > 0 then
-			local pos = player:get_pos()
-			local inv = player:get_inventory()
-			--radial detection
-			for _,object in ipairs(minetest.env:get_objects_inside_radius({x=pos.x,y=pos.y + player_collect_height,z=pos.z}, radius_magnet)) do
-				if not object:is_player() and object:get_luaentity() and object:get_luaentity().name == "__builtin:item" then
-					if object:get_luaentity().age > age then
-						if inv and inv:room_for_item("main", ItemStack(object:get_luaentity().itemstring)) then
-							--collect
-							if object:get_luaentity().collectioner == true and object:get_luaentity().age > age and object:get_luaentity().age > object:get_luaentity().age_stamp then							
-							if object:get_luaentity().itemstring ~= "" then
-								inv:add_item("main", ItemStack(object:get_luaentity().itemstring))
-								minetest.sound_play("item_drop_pickup", {
-									pos = pos,
-									max_hear_distance = 15,
-									gain = 0.1,
-								})
-								object:get_luaentity().itemstring = ""
-								object:remove()
-							end
-							
-							--magnet
-							else
-								--moveto for extreme speed boost
-								local pos1 = pos
-								pos1.y = pos1.y + player_collect_height
-								object:moveto(pos1)
-								object:get_luaentity().collectioner = true
-								object:get_luaentity().age_stamp = object:get_luaentity().age
-							
-						end
-					end
+local function collect_items(player)
+	local pos = player:get_pos()
+	if not pos then
+		return
+	end
+	local col_pos = vector.add(pos, {x=0, y=player_collect_height, z=0})
+	local objects = minetest.get_objects_inside_radius(col_pos, radius_magnet)
+	for _,object in ipairs(objects) do
+		local entity = object:get_luaentity()
+		if entity and not object:is_player() and
+				entity.name == "__builtin:item" and entity.age > age then
+			if entity.collectioner == true and entity.age > entity.age_stamp then
+				local inv = player:get_inventory()
+				local item = ItemStack(entity.itemstring)
+				--collect
+				if item:get_name() ~= "" and inv and
+						inv:room_for_item("main", item) then
+					inv:add_item("main", item)
+					minetest.sound_play("item_drop_pickup", {
+						pos = pos,
+						max_hear_distance = 15,
+						gain = 0.1,
+					})
+					entity.itemstring = ""
+					object:remove()
 				end
-			end
+			else
+				--magnet, moveto for extreme speed boost
+				object:moveto(col_pos)
+				entity.collectioner = true
+				entity.age_stamp = entity.age
 			end
 		end
 	end
+end
+
+local function table_iter(t)
+	local i = 0
+	local n = table.getn(t)
+	return function ()
+		i = i + 1
+		if i <= n then
+			return t[i]
+		end
+	end
+end
+
+local player_iter = nil
+
+--Item collection
+minetest.register_globalstep(function()
+	if player_iter == nil then
+		local names = {}
+		for player in table_iter(minetest.get_connected_players()) do
+			local name = player:get_player_name()
+			if name then
+				table.insert(names, name)
+			end
+		end
+		player_iter = table_iter(names)
+	end
+	 -- only deal with one player per server step
+	local name = player_iter()
+	if name then
+		local player = minetest.get_player_by_name(name)
+		if player and player:is_player() and player:get_hp() > 0 then
+			--radial detection
+			collect_items(player)
+			return
+		end
+	end
+	player_iter = nil
 end)
 
 --Drop items on dig
 --This only works in survival
 if minetest.setting_getbool("creative_mode") == false then
-	function minetest.handle_node_drops(pos, drops, digger)
+	function minetest.handle_node_drops(pos, drops)
 		for _,item in ipairs(drops) do
 			local count, name
 			if type(item) == "string" then
@@ -60,18 +90,21 @@ if minetest.setting_getbool("creative_mode") == false then
 				name = item:get_name()
 			end
 			--if not inv or not inv:contains_item("main", ItemStack(name)) then
-				for i=1,count do
-					local obj = minetest.add_item(pos, name)
-					if obj ~= nil then
-						obj:get_luaentity().collect = true
-						obj:get_luaentity().age = 0
-					obj:setvelocity({x=math.random(-3,3), y=math.random(2,5), z=math.random(-3,3)})
+			for _ = 1, count do
+				local obj = minetest.add_item(pos, name)
+				if obj ~= nil then
+					obj:get_luaentity().collect = true
+					obj:get_luaentity().age = 0
+					obj:setvelocity({
+						x = math.random(-3, 3),
+						y = math.random(2, 5),
+						z = math.random(-3, 3)
+					})
+				end
 			end
-		end
 		end
 	end
 end
-
 
 --Throw items using player's velocity
 function minetest.item_drop(itemstack, dropper, pos)
