@@ -577,11 +577,11 @@ local function punch_gate(pos, node)
     local tmp_node2
         if state2 == 1 then
             state2 = 0
-            minetest.sound_play("door_close", {gain = 0.3, max_hear_distance = 10})
+            minetest.sound_play("doors_door_close", {pos = pos, gain = 0.3, max_hear_distance = 10})
             tmp_node2 = {name="fences:fencegate", param1=node.param1, param2=node.param2}
         else
             state2 = 1
-            minetest.sound_play("door_open", {gain = 0.3, max_hear_distance = 10})
+            minetest.sound_play("doors_door_open", {pos = pos, gain = 0.3, max_hear_distance = 10})
             tmp_node2 = {name="fences:fencegate_open", param1=node.param1, param2=node.param2}
         end
         update_gate(pos, tmp_node2)
@@ -614,7 +614,7 @@ minetest.register_node("fences:fencegate_open", {
         type = "fixed",
         fixed = {
 				{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/2},   --links
-				{1/2, -1/2+5/16, -1/16, 1/2, 1/2, 1/2-2/16},   --rechts
+				{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/2},   --rechts
             }
     },
     --on_punch = function(pos, node, puncher)
