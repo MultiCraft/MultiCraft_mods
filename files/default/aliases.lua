@@ -18,7 +18,7 @@ minetest.register_alias("jungletree", "default:jungletree")
 minetest.register_alias("junglegrass", "default:junglegrass")
 minetest.register_alias("leaves", "default:leaves")
 minetest.register_alias("cactus", "default:cactus")
-minetest.register_alias("papyrus", "default:papyrus")
+minetest.register_alias("papyrus", "default:sugarcane")
 minetest.register_alias("bookshelf", "default:bookshelf")
 minetest.register_alias("glass", "default:glass")
 minetest.register_alias("wooden_fence", "default:fence_wood")
@@ -86,3 +86,7 @@ minetest.register_alias("default:haybale", "farming:straw")
 
 -- Ladder
 minetest.register_alias("default:ladder", "default:ladder_wood")
+
+-- Ladder
+minetest.register_alias("default:reeds", "default:sugarcane")
+minetest.register_alias("default:papyrus", "default:sugarcane")

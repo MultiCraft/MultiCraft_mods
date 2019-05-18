@@ -3,7 +3,7 @@
 --
 
 local function get_chest_neighborpos(pos, param2, side)
-    if side == "right" then
+	if side == "right" then
 		if param2 == 0 then
 			return {x=pos.x-1, y=pos.y, z=pos.z}
 		elseif param2 == 1 then
@@ -13,7 +13,7 @@ local function get_chest_neighborpos(pos, param2, side)
 		elseif param2 == 3 then
 			return {x=pos.x, y=pos.y, z=pos.z-1}
 		end
-    else
+	else
 		if param2 == 0 then
 			return {x=pos.x+1, y=pos.y, z=pos.z}
 		elseif param2 == 1 then
@@ -23,18 +23,18 @@ local function get_chest_neighborpos(pos, param2, side)
 		elseif param2 == 3 then
 			return {x=pos.x, y=pos.y, z=pos.z+1}
 		end
-    end
+	end
 end
 
 minetest.register_node("default:chest", {
-    description = "Chest",
-    tiles = {"default_chest_top.png", "default_chest_top.png", "default_chest_side.png",
+	description = "Chest",
+	tiles = {"default_chest_top.png", "default_chest_top.png", "default_chest_side.png",
 		"default_chest_side.png", "default_chest_side.png", "default_chest_front.png"},
-    paramtype2 = "facedir",
-    groups = {choppy = 2, oddly_breakable_by_hand = 2, decorative = 1},
-    legacy_facedir_simple = true,
-    sounds = default.node_sound_wood_defaults(),
-    on_construct = function(pos)
+	paramtype2 = "facedir",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, decorative = 1},
+	legacy_facedir_simple = true,
+	sounds = default.node_sound_wood_defaults(),
+	on_construct = function(pos)
 		local param2 = minetest.get_node(pos).param2
 		local meta = minetest.get_meta(pos)
 		if minetest.get_node(get_chest_neighborpos(pos, param2, "right")).name == "default:chest" then
@@ -100,8 +100,8 @@ minetest.register_node("default:chest", {
 		end
 		local inv = meta:get_inventory()
 		inv:set_size("main", 9*3)
-    end,
-    after_dig_node = function(pos, oldnode, oldmetadata, digger)
+	end,
+	after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
 		local meta2 = meta
 		meta:from_table(oldmetadata)
@@ -109,41 +109,41 @@ minetest.register_node("default:chest", {
 		for i=1,inv:get_size("main") do
 			local stack = inv:get_stack("main", i)
 			if not stack:is_empty() then
-			    local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
-			    minetest.add_item(p, stack)
+				local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
+				minetest.add_item(p, stack)
 			end
 		end
 		meta:from_table(meta2:to_table())
-    end,
-    on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+	end,
+	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
 		minetest.log("action", player:get_player_name()..
-			    " moves stuff in chest at "..minetest.pos_to_string(pos))
-    end,
-    on_metadata_inventory_put = function(pos, listname, index, stack, player)
+				" moves stuff in chest at "..minetest.pos_to_string(pos))
+	end,
+	on_metadata_inventory_put = function(pos, listname, index, stack, player)
 		minetest.log("action", player:get_player_name()..
-			    " moves stuff to chest at "..minetest.pos_to_string(pos))
-    end,
-    on_metadata_inventory_take = function(pos, listname, index, stack, player)
+				" moves stuff to chest at "..minetest.pos_to_string(pos))
+	end,
+	on_metadata_inventory_take = function(pos, listname, index, stack, player)
 		minetest.log("action", player:get_player_name()..
-			    " takes stuff from chest at "..minetest.pos_to_string(pos))
-    end,
-    on_receive_fields = function(pos, formname, fields, sender)
-       if fields.exit then
+				" takes stuff from chest at "..minetest.pos_to_string(pos))
+	end,
+	on_receive_fields = function(pos, formname, fields, sender)
+		if fields.exit then
 		  print('test')
 		  fields.quit = true
-      --    minetest.show_formspec(sender:get_player_name(), 'quit', "")
-       end
-    end
+	  --	minetest.show_formspec(sender:get_player_name(), 'quit', "")
+		end
+	end
 })
 
 minetest.register_node("default:chest_left", {
-    tiles = {"default_chest_top_big.png", "default_chest_top_big.png", "default_chest_side.png",
+	tiles = {"default_chest_top_big.png", "default_chest_top_big.png", "default_chest_side.png",
 		"default_chest_side.png", "default_chest_side_big.png^[transformFX", "default_chest_front_big.png"},
-    paramtype2 = "facedir",
-    groups = {choppy = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory=1},
-    drop = "default:chest",
-    sounds = default.node_sound_wood_defaults(),
-    on_destruct = function(pos)
+	paramtype2 = "facedir",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory=1},
+	drop = "default:chest",
+	sounds = default.node_sound_wood_defaults(),
+	on_destruct = function(pos)
 		local m = minetest.get_meta(pos)
 		if m:get_string("infotext") == "Chest" then
 			return
@@ -164,8 +164,8 @@ minetest.register_node("default:chest_left", {
 					"list[current_player;main;0,7.74;9,1;]")
 		meta:set_string("infotext", "Chest")
 		minetest.swap_node(p, {name="default:chest", param2=param2})
-    end,
-    after_dig_node = function(pos, oldnode, oldmetadata, digger)
+	end,
+	after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
 		local meta2 = meta
 		meta:from_table(oldmetadata)
@@ -173,34 +173,34 @@ minetest.register_node("default:chest_left", {
 		for i=1,inv:get_size("main") do
 			local stack = inv:get_stack("main", i)
 			if not stack:is_empty() then
-			    local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
-			    minetest.add_item(p, stack)
+				local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
+				minetest.add_item(p, stack)
 			end
 		end
 		meta:from_table(meta2:to_table())
-    end,
-    on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+	end,
+	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
 		minetest.log("action", player:get_player_name()..
-			    " moves stuff in chest at "..minetest.pos_to_string(pos))
-    end,
-    on_metadata_inventory_put = function(pos, listname, index, stack, player)
+				" moves stuff in chest at "..minetest.pos_to_string(pos))
+	end,
+	on_metadata_inventory_put = function(pos, listname, index, stack, player)
 		minetest.log("action", player:get_player_name()..
-			    " moves stuff to chest at "..minetest.pos_to_string(pos))
-    end,
-    on_metadata_inventory_take = function(pos, listname, index, stack, player)
+				" moves stuff to chest at "..minetest.pos_to_string(pos))
+	end,
+	on_metadata_inventory_take = function(pos, listname, index, stack, player)
 		minetest.log("action", player:get_player_name()..
-			    " takes stuff from chest at "..minetest.pos_to_string(pos))
-    end,
+				" takes stuff from chest at "..minetest.pos_to_string(pos))
+	end,
 })
 
 minetest.register_node("default:chest_right", {
-    tiles = {"default_chest_top_big.png^[transformFX", "default_chest_top_big.png^[transformFX", "default_chest_side.png",
+	tiles = {"default_chest_top_big.png^[transformFX", "default_chest_top_big.png^[transformFX", "default_chest_side.png",
 		"default_chest_side.png", "default_chest_side_big.png", "default_chest_front_big.png^[transformFX"},
-    paramtype2 = "facedir",
-    groups = {choppy = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory=1},
-    drop = "default:chest",
-    sounds = default.node_sound_wood_defaults(),
-    on_destruct = function(pos)
+	paramtype2 = "facedir",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory=1},
+	drop = "default:chest",
+	sounds = default.node_sound_wood_defaults(),
+	on_destruct = function(pos)
 		local m = minetest.get_meta(pos)
 		if m:get_string("infotext") == "Chest" then
 			return
@@ -221,8 +221,8 @@ minetest.register_node("default:chest_right", {
 					"list[current_player;main;0,7.74;9,1;]")
 		meta:set_string("infotext", "Chest")
 		minetest.swap_node(p, {name="default:chest", param2=param2})
-    end,
-    after_dig_node = function(pos, oldnode, oldmetadata, digger)
+	end,
+	after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
 		local meta2 = meta
 		meta:from_table(oldmetadata)
@@ -230,22 +230,22 @@ minetest.register_node("default:chest_right", {
 		for i=1,inv:get_size("main") do
 			local stack = inv:get_stack("main", i)
 			if not stack:is_empty() then
-			    local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
-			    minetest.add_item(p, stack)
+				local p = {x=pos.x+math.random(0, 10)/10-0.5, y=pos.y, z=pos.z+math.random(0, 10)/10-0.5}
+				minetest.add_item(p, stack)
 			end
 		end
 		meta:from_table(meta2:to_table())
-    end,
-    on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+	end,
+	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
 		minetest.log("action", player:get_player_name()..
-			    " moves stuff in chest at "..minetest.pos_to_string(pos))
-    end,
-    on_metadata_inventory_put = function(pos, listname, index, stack, player)
+				" moves stuff in chest at "..minetest.pos_to_string(pos))
+	end,
+	on_metadata_inventory_put = function(pos, listname, index, stack, player)
 		minetest.log("action", player:get_player_name()..
-			    " moves stuff to chest at "..minetest.pos_to_string(pos))
-    end,
-    on_metadata_inventory_take = function(pos, listname, index, stack, player)
+				" moves stuff to chest at "..minetest.pos_to_string(pos))
+	end,
+	on_metadata_inventory_take = function(pos, listname, index, stack, player)
 		minetest.log("action", player:get_player_name()..
-			    " takes stuff from chest at "..minetest.pos_to_string(pos))
-    end,
+				" takes stuff from chest at "..minetest.pos_to_string(pos))
+	end,
 })

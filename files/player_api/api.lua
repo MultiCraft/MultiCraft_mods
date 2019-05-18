@@ -1,4 +1,4 @@
--- MultiCraft mod: player
+-- MultiCraft game mod: player
 -- See README.txt for licensing and other information.
 
 player_api = {}

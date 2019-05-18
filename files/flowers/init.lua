@@ -1,4 +1,4 @@
--- MultiCraft mod: default
+-- MultiCraft game mod: default
 -- See README.txt for licensing and other information.
 
 
@@ -173,10 +173,10 @@ minetest.register_abm({
 
 minetest.register_node("flowers:mushroom_red", {
 	description = "Red Mushroom",
-	tiles = {"flowers_mushroom_red.png"},
-	inventory_image = "flowers_mushroom_red.png",
-	wield_image = "flowers_mushroom_red.png",
-	drawtype = "plantlike",
+	tiles = {"3dmushrooms_red.png"},
+	inventory_image = "3dmushrooms_red_inv.png",
+	drawtype = "mesh",
+	mesh = "3dmushrooms.obj",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -186,16 +186,16 @@ minetest.register_node("flowers:mushroom_red", {
 	on_use = minetest.item_eat(-5),
 	selection_box = {
 		type = "fixed",
-		fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, -1 / 16, 4 / 16},
-	}
+		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
+	},	
 })
 
 minetest.register_node("flowers:mushroom_brown", {
 	description = "Brown Mushroom",
-	tiles = {"flowers_mushroom_brown.png"},
-	inventory_image = "flowers_mushroom_brown.png",
-	wield_image = "flowers_mushroom_brown.png",
-	drawtype = "plantlike",
+	tiles = {"3dmushrooms_brown.png"},
+	inventory_image = "3dmushrooms_brown_inv.png",
+	drawtype = "mesh",
+	mesh = "3dmushrooms.obj",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -205,8 +205,8 @@ minetest.register_node("flowers:mushroom_brown", {
 	on_use = minetest.item_eat(1),
 	selection_box = {
 		type = "fixed",
-		fixed = {-3 / 16, -0.5, -3 / 16, 3 / 16, -2 / 16, 3 / 16},
-	}
+		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
+	},
 })
 
 

@@ -22,6 +22,7 @@ mobs:register_mob("mobs_animal:bunny", {
 	walk_velocity = 1,
 	run_velocity = 2,
 	runaway = true,
+	runaway_from = {"mobs_animal:pumba", "player"},
 	jump = true,
 	jump_height = 6,
 	drops = {

@@ -5,7 +5,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20190402",
+	version = "20190513",
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
 
@@ -104,6 +104,7 @@ local mob_class = {
 	jump = true,
 	knock_back = true,
 	walk_chance = 50,
+	stand_chance = 30,
 	attack_chance = 5,
 	passive = false,
 	blood_amount = 5,
@@ -275,15 +276,15 @@ end
 
 
 -- set defined animation
-function mob_class:set_animation(anim)
+function mob_class:set_animation(anim, force)
 
 	if not self.animation
 	or not anim then return end
 
 	self.animation.current = self.animation.current or ""
 
-	-- only set different animation for attacks when setting to same set
-	if anim ~= "punch" and anim ~= "shoot"
+	-- only set different animation for attacks when using same set
+	if force ~= true and anim ~= "punch" and anim ~= "shoot"
 	and string.find(self.animation.current, anim) then
 		return
 	end
@@ -327,7 +328,7 @@ end
 
 
 -- check line of sight (BrunoMine)
-function mob_class:line_of_sight(pos1, pos2, stepsize)
+local line_of_sight = function(self, pos1, pos2, stepsize)
 
 	stepsize = stepsize or 1
 
@@ -398,7 +399,7 @@ end
 
 
 -- check line of sight (by BrunoMine, tweaked by Astrobe)
-function mob_class:NEW_line_of_sight(pos1, pos2, stepsize)
+local new_line_of_sight = function(self, pos1, pos2, stepsize)
 
 	if not pos1 or not pos2 then return end
 
@@ -444,11 +445,48 @@ function mob_class:NEW_line_of_sight(pos1, pos2, stepsize)
 	return false
 end
 
+-- check line of sight using raycasting (thanks Astrobe)
+local ray_line_of_sight = function(self, pos1, pos2)
+
+	local ray = minetest.raycast(pos1, pos2, true, false)
+	local thing = ray:next()
+
+	while thing do
+
+		if thing.type == "object"
+		and thing.ref ~= self.object
+		and not thing.ref:is_player() then return false end
+
+		if thing.type == "node" then
+
+			local name = minetest.get_node(thing.under).name
+
+			if minetest.registered_items[name].walkable then return false end
+		end
+
+		thing = ray:next()
+	end
+
+	return true
+end
+
+-- detect if using minetest 5.0 by searching for permafrost node
+local is_50 = minetest.registered_nodes["default:permafrost"]
+
+function mob_class:line_of_sight(pos1, pos2, stepsize)
+
+	if is_50 then -- only use if minetest 5.0 is detected
+		return ray_line_of_sight(self, pos1, pos2)
+	end
+
+	return line_of_sight(self, pos1, pos2, stepsize)
+end
+
 -- global function
 function mobs:line_of_sight(entity, pos1, pos2, stepsize)
-
-	return mob_class.line_of_sight(entity, pos1, pos2, stepsize)
+	return entity:line_of_sight(pos1, pos2, stepsize)
 end
+
 
 function mob_class:attempt_flight_correction()
 
@@ -464,8 +502,8 @@ function mob_class:attempt_flight_correction()
 	end
 
 	local flyable_nodes = minetest.find_nodes_in_area(
-		{x = pos.x - r, y = pos.y - r, z = pos.z - r},
-		{x = pos.x + r, y = pos.y + r, z = pos.z + r},
+		{x = pos.x - 1, y = pos.y - 1, z = pos.z - 1},
+		{x = pos.x + 1, y = pos.y + 1, z = pos.z + 1},
 		searchnodes)
 
 	if #flyable_nodes < 1 then
@@ -480,6 +518,7 @@ function mob_class:attempt_flight_correction()
 
 	return true
 end
+
 
 -- are we flying in what we are suppose to? (taikedz)
 function mob_class:flight_check()
@@ -1573,7 +1612,7 @@ function mob_class:smart_mobs(s, p, dist, dtime)
 			self.path.stuck_timer = stuck_timeout - 2
 
 			-- frustration! cant find the damn path :(
-			self:mob_sound(self.sounds.random)
+			--self:mob_sound(self.sounds.random)
 		else
 			-- yay i found path
 			self:mob_sound(self.sounds.war_cry)
@@ -2068,11 +2107,11 @@ function mob_class:do_states(dtime)
 
 		if self.facing_fence == true
 		or temp_is_cliff
-		or random(1, 100) <= 30 then
+		or random(1, 100) <= self.stand_chance then
 
 			self:set_velocity(0)
 			self.state = "stand"
-			self:set_animation("stand")
+			self:set_animation("stand", true)
 		else
 			self:set_velocity(self.walk_velocity)
 
@@ -2231,7 +2270,7 @@ function mob_class:do_states(dtime)
 						minetest.sound_play(self.sounds.explode, {
 							pos = pos,
 							gain = 1.0,
-							max_hear_distance = self.sounds.distance or 16
+							max_hear_distance = self.sounds.distance or 32
 						})
 
 						entity_physics(pos, entity_damage_radius)
@@ -3272,11 +3311,12 @@ minetest.register_entity(name, setmetatable({
 	follow = def.follow,
 	jump = def.jump,
 	walk_chance = def.walk_chance,
+	stand_chance = def.stand_chance,
 	attack_chance = def.attack_chance,
 	passive = def.passive,
 	knock_back = def.knock_back,
-	blood_amount = def.blood_amount or 5,
-	blood_texture = def.blood_texture or "mobs_blood.png",
+	blood_amount = def.blood_amount,
+	blood_texture = def.blood_texture,
 	shoot_offset = def.shoot_offset,
 	floats = def.floats,
 	replace_rate = def.replace_rate,
@@ -3728,14 +3768,14 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 	local invimg = background
 
 	if addegg == 1 then
-		invimg = "mobs_chicken_egg.png^(" .. invimg ..
-			"^[mask:mobs_chicken_egg_overlay.png)"
+		invimg = "(" .. invimg ..
+			"^[mask:mobs_egg_overlay.png)"
 	end
 
 	-- register new spawn egg containing mob information
 	minetest.register_craftitem(mob .. "_set", {
 
-		description = "@1 (Tamed)", desc,
+		description = desc.." (Tamed)",
 		inventory_image = invimg,
 		groups = {spawn_egg = 2, not_in_creative_inventory = 1},
 		stack_max = 1,
@@ -3905,7 +3945,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso,
 		if self.owner ~= name
 		and force_take == false then
 
-			minetest.chat_send_player(name, "@1 is owner!", self.owner)
+			minetest.chat_send_player(name, self.owner.." is owner!")
 
 		return false
 		end
@@ -4063,8 +4103,8 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 			if self.htimer < 1 then
 
 				minetest.chat_send_player(clicker:get_player_name(),
-					"@1 at full health (@2)",
-					self.name:split(":")[2], tostring(self.health))
+					self.name:split(":")[2]
+					.. " at full health (" .. tostring(self.health) .. ")")
 
 				self.htimer = 5
 			end
@@ -4097,8 +4137,8 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 				if self.tamed == false then
 					minetest.chat_send_player(clicker:get_player_name(),
-						"@1 has been tamed!",
-						self.name:split(":")[2])
+						self.name:split(":")[2]
+						.. " has been tamed!")
 				end
 
 				self.tamed = true
@@ -4132,7 +4172,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 		minetest.show_formspec(name, "mobs_nametag", "size[8,4]"
 			.. "field[0.5,1;7.5,0;name;"
 			.. minetest.formspec_escape("Enter name:") .. ";" .. tag .. "]"
-.. "button_exit[2.5,3.5;3,1;mob_rename;"
+			.. "button_exit[2.5,3.5;3,1;mob_rename;"
 			.. minetest.formspec_escape("Rename") .. "]")
 	end
 

@@ -1,4 +1,4 @@
-Minetest mod "Better HUD"
+MultiCraft game mod: Better HUD
 =========================
 Version: 2.1.5
 

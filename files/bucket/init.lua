@@ -1,4 +1,4 @@
--- MultiCraft mod: bucket
+-- MultiCraft game mod: bucket
 -- See README.txt for licensing and other information.
 
 minetest.register_alias("bucket", "bucket:bucket_empty")
@@ -30,15 +30,15 @@ local function check_protection(pos, name, text)
 end
 
 -- Register a new liquid
---    source = name of the source node
---    flowing = name of the flowing node
---    itemname = name of the new bucket item (or nil if liquid is not takeable)
---    inventory_image = texture of the new bucket item (ignored if itemname == nil)
---    name = text description of the bucket item
---    groups = (optional) groups of the bucket item, for example {water_bucket = 1}
---    force_renew = (optional) bool. Force the liquid source to renew if it has a
---                  source neighbour, even if defined as 'liquid_renewable = false'.
---                  Needed to avoid creating holes in sloping rivers.
+--		source = name of the source node
+--		flowing = name of the flowing node
+--		itemname = name of the new bucket item (or nil if liquid is not takeable)
+--		inventory_image = texture of the new bucket item (ignored if itemname == nil)
+--		name = text description of the bucket item
+--		groups = (optional) groups of the bucket item, for example {water_bucket = 1}
+--		force_renew = (optional) bool. Force the liquid source to renew if it has a
+--					source neighbour, even if defined as 'liquid_renewable = false'.
+--					Needed to avoid creating holes in sloping rivers.
 -- This function can be called from any mod (that depends on bucket).
 function bucket.register_liquid(source, flowing, itemname, inventory_image, name,
 		groups, force_renew)

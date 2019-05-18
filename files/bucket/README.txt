@@ -1,4 +1,4 @@
-MultiCraft mod: bucket
+MultiCraft game mod: bucket
 =========================
 
 License of source code:

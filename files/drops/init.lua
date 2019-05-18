@@ -1,6 +1,6 @@
-local age                   = 1 --How old an item has to be before collecting
-local radius_magnet         = 2 --Radius of item magnet
-local player_collect_height = 1.3 --Added to their pos y value
+local age					= 1 --How old an item has to be before collecting
+local radius_magnet			= 2 --Radius of item magnet
+local player_collect_height	= 1.3 --Added to their pos y value
 
 --Item collection
 minetest.register_globalstep(function(dtime)

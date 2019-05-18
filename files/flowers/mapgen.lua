@@ -155,12 +155,12 @@ local function register_waterlily()
 end
 
 function flowers.register_decorations()
-	register_flower(436,     "rose")
-	register_flower(19822,   "tulip")
+	register_flower(436,	 "rose")
+	register_flower(19822,	 "tulip")
 	register_flower(1220999, "dandelion_yellow")
-	register_flower(36662,   "orchid")
-	register_flower(1133,    "allium")
-	register_flower(73133,   "dandelion_white")
+	register_flower(36662,	 "orchid")
+	register_flower(1133,	 "allium")
+	register_flower(73133,	 "dandelion_white")
 
 	register_mushroom("mushroom_brown")
 	register_mushroom("mushroom_red")
