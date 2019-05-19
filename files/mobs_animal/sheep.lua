@@ -1,4 +1,4 @@
-
+-- Sheep by PilzAdam
 local all_colours = {
 	{"black",      "Black"     },
 	{"blue",       "Blue"      },
@@ -17,13 +17,11 @@ local all_colours = {
 	{"yellow",     "Yellow"    },
 }
 
--- Sheep by PilzAdam
-
 for _, col in ipairs(all_colours) do
 
 	mobs:register_mob("mobs_animal:sheep_"..col[1], {
 		stay_near = {"farming:straw", 10},
-		stepheight = 0.6,
+		stepheight = 1.1,
 		type = "animal",
 		passive = true,
 		hp_min = 6,
@@ -46,7 +44,7 @@ for _, col in ipairs(all_colours) do
 		run_velocity = 2,
 		runaway = true,
 		jump = true,
-		jump_height = 6,
+		jump_height = 4,
 		pushable = true,
 		drops = {
 			{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
@@ -225,7 +223,7 @@ mobs:spawn({
 	max_height = 31000,
 	day_toggle = true,
 })
-	
+
 mobs:spawn({
 	name = "mobs_animal:sheep_dark_grey",
 	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
@@ -235,7 +233,7 @@ mobs:spawn({
 	max_height = 31000,
 	day_toggle = true,
 })
-	
+
 mobs:spawn({
 	name = "mobs_animal:sheep_black",
 	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
@@ -246,7 +244,7 @@ mobs:spawn({
 	max_height = 31000,
 	day_toggle = true,
 })
-	
+
 mobs:spawn({
 	name = "mobs_animal:sheep_brown",
 	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},

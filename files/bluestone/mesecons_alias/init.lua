@@ -1,5 +1,3 @@
-
-
 -- This file registers aliases for the /give /giveme commands.
 
 minetest.register_alias("mesecons:removestone", "mesecons_random:removestone")

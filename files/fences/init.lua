@@ -641,7 +641,7 @@ minetest.register_node("fences:fencegate", {
     paramtype2 = "facedir",
     sunlight_propagates = true,
     walkable = true,
-    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, mesecon_effector_on=1, fences=1, mese = 1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, mesecon_effector_on = 1, fences = 1},
     drop = 'fences:fencegate',
     drawtype = "nodebox",
     node_box = {

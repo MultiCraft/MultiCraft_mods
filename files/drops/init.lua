@@ -1,6 +1,6 @@
-local age = 1 --How old an item has to be before collecting
+local age = 0.5 --How old an item has to be before collecting
 local radius_magnet = 2 --Radius of item magnet
-local player_collect_height	= 1.3 --Added to their pos y value
+local player_collect_height = 1.3 --Added to their pos y value
 
 local function collect_items(player)
 	local pos = player:get_pos()

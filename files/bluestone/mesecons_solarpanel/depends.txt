@@ -1,3 +1,2 @@
-default
 mesecons
 mesecons_materials

@@ -1,5 +1,3 @@
-
-
 -- Function that get the input/output rules of the delayer
 local delayer_get_output_rules = function(node)
     local rules = {{x = 0, y = 0, z = 1}}
@@ -32,24 +30,23 @@ end
 local delayer_activate = function(pos, node)
     local def = minetest.registered_nodes[node.name]
     local time = def.delayer_time
-    mesecon:swap_node(pos, def.delayer_onstate)
+	minetest.swap_node(pos, {name = def.delayer_onstate, param2=node.param2})
     minetest.after(time, delayer_turnon , {pos = pos, node = node})
 end
 
 local delayer_deactivate = function(pos, node)
     local def = minetest.registered_nodes[node.name]
     local time = def.delayer_time
-    mesecon:swap_node(pos, def.delayer_offstate)
+	minetest.swap_node(pos, {name = def.delayer_offstate, param2=node.param2})
     minetest.after(time, delayer_turnoff, {pos = pos, node = node})
 end
 
 -- Register the 2 (states) x 4 (delay times) delayers
-local done = false
+
 for i = 1, 4 do
 local groups = {}
-if i == 1 and not done then
-    groups = {bendy=2,snappy = 1,dig_immediate=2, mese = 1}
-    done = true
+if i == 1 then 
+	groups = {bendy=2,snappy=1,dig_immediate=2}
 else
     groups = {bendy=2,snappy = 1,dig_immediate=2, not_in_creative_inventory=1}
 end
@@ -58,8 +55,7 @@ local delaytime
 if      i == 1 then delaytime = 0.1
 elseif  i == 2 then delaytime = 0.3
 elseif  i == 3 then delaytime = 0.5
-elseif  i == 4 then delaytime = 1.0
-end
+elseif  i == 4 then delaytime = 1.0 end
 
 local boxes
 if i == 1 then
@@ -113,16 +109,17 @@ minetest.register_node("mesecons_delayer:delayer_off_"..tostring(i), {
     paramtype = "light",
     paramtype2 = "facedir",
     sunlight_propagates = true,
+	is_ground_content = true,
     drop = 'mesecons_delayer:delayer_off_1',
     on_punch = function (pos, node)
         if node.name=="mesecons_delayer:delayer_off_1" then
-            mesecon:swap_node(pos,"mesecons_delayer:delayer_off_2")
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_2", param2=node.param2})
         elseif node.name=="mesecons_delayer:delayer_off_2" then
-            mesecon:swap_node(pos,"mesecons_delayer:delayer_off_3")
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_3", param2=node.param2})
         elseif node.name=="mesecons_delayer:delayer_off_3" then
-            mesecon:swap_node(pos,"mesecons_delayer:delayer_off_4")
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_4", param2=node.param2})
         elseif node.name=="mesecons_delayer:delayer_off_4" then
-            mesecon:swap_node(pos,"mesecons_delayer:delayer_off_1")
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_1", param2=node.param2})
         end
     end,
     delayer_time = delaytime,
@@ -167,16 +164,17 @@ minetest.register_node("mesecons_delayer:delayer_on_"..tostring(i), {
     paramtype = "light",
     paramtype2 = "facedir",
     sunlight_propagates = true,
+	is_ground_content = true,
     drop = 'mesecons_delayer:delayer_off_1',
     on_punch = function (pos, node)
         if node.name=="mesecons_delayer:delayer_on_1" then
-            mesecon:swap_node(pos,"mesecons_delayer:delayer_on_2")
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_2", param2=node.param2})
         elseif node.name=="mesecons_delayer:delayer_on_2" then
-            mesecon:swap_node(pos,"mesecons_delayer:delayer_on_3")
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_3", param2=node.param2})
         elseif node.name=="mesecons_delayer:delayer_on_3" then
-            mesecon:swap_node(pos,"mesecons_delayer:delayer_on_4")
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_4", param2=node.param2})
         elseif node.name=="mesecons_delayer:delayer_on_4" then
-            mesecon:swap_node(pos,"mesecons_delayer:delayer_on_1")
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_1", param2=node.param2})
         end
     end,
     delayer_time = delaytime,
@@ -200,6 +198,6 @@ minetest.register_craft({
     output = "mesecons_delayer:delayer_off_1",
     recipe = {
         {"mesecons_torch:mesecon_torch_on", "", "mesecons_torch:mesecon_torch_on"},
-        {"default:stone","default:stone", "default:stone"},
+		{"default:cobble","default:cobble", "default:cobble"},
     }
 })

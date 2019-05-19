@@ -1,5 +1,4 @@
 -- Kitten by Jordach / BFD
-
 mobs:register_mob("mobs_animal:kitten", {
 	stepheight = 0.6,
 	type = "animal",
@@ -27,7 +26,7 @@ mobs:register_mob("mobs_animal:kitten", {
 	runaway = true,
 	jump = false,
 	drops = {
-		{name = "farming:string", chance = 1, min = 1, max = 1},
+		{name = "farming:string", chance = 1, min = 1, max = 1}
 	},
 	water_damage = 1,
 	lava_damage = 5,

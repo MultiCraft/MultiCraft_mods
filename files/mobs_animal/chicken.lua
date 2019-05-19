@@ -1,5 +1,4 @@
 -- Chicken by JK Murray
-
 mobs:register_mob("mobs_animal:chicken", {
 	type = "animal",
 	passive = true,
@@ -19,7 +18,7 @@ mobs:register_mob("mobs_animal:chicken", {
 	run_velocity = 3,
 	runaway = true,
 	drops = {
-		{name = "mobs:chicken_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:chicken_raw", chance = 1, min = 1, max = 1}
 	},
 	water_damage = 0,
 	lava_damage = 5,
