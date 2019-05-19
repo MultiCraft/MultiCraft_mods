@@ -140,34 +140,6 @@ local split_inv = minetest.create_detached_inventory("split", {
 })
 split_inv:set_size("main", 1)
 
-local function item_drop(itemstack, dropper, pos)
-	if dropper:is_player() then
-		local v = dropper:get_look_dir()
-		local p = {x=pos.x, y=pos.y+1.2, z=pos.z}
-		p.x = p.x+(math.random(1,3)*0.2)
-		p.z = p.z+(math.random(1,3)*0.2)
-		local obj = minetest.add_item(p, itemstack)
-		if obj then
-			v.x = v.x*4
-			v.y = v.y*4 + 2
-			v.z = v.z*4
-			obj:setvelocity(v)
-		end
-	else
-		minetest.add_item(pos, itemstack)
-	end
-	return itemstack
-end
-
-local function drop_fields(player, name)
-	local inv = player:get_inventory()
-	for i,stack in ipairs(inv:get_list(name)) do
-		item_drop(stack, player, player:get_pos())
-		stack:clear()
-		inv:set_stack(name, i, stack)
-	end
-end
-
 function workbench:set_formspec(meta, id)
 	meta:set_string("formspec", "size[9,8.75;]"..
 		"background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]" ..
@@ -297,7 +269,19 @@ minetest.register_node("workbench:workbench", {
 	on_metadata_inventory_put = workbench.on_put,
 	on_metadata_inventory_take = workbench.on_take,
 	allow_metadata_inventory_put = workbench.put,
-	allow_metadata_inventory_move = workbench.move
+	allow_metadata_inventory_move = workbench.move,
+	on_receive_fields = function(pos, formname, fields, sender)
+		if fields.quit and pos and sender then
+			local inv = sender:get_inventory()
+			if inv then
+				for i, stack in ipairs(inv:get_list("craft")) do
+					minetest.item_drop(stack, nil, pos)
+					stack:clear()
+					inv:set_stack("craft", i, stack)
+				end
+			end
+		end
+	end,
 })
 
 minetest.register_tool("workbench:hammer", {
