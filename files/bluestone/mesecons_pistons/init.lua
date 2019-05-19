@@ -55,12 +55,12 @@ piston_get_direction = function (dir, node)
 end
 
 local piston_remove_pusher = function (pos, node)
-	pistonspec = minetest.registered_nodes[node.name].mesecons_piston
+	local pistonspec = minetest.registered_nodes[node.name].mesecons_piston
 	if pushername == pistonspec.pusher then --make sure there actually is a pusher (for compatibility reasons mainly)
 		return
 	end
 
-	dir = piston_get_direction(pistonspec.dir, node)
+	local dir = piston_get_direction(pistonspec.dir, node)
     local pusherpos = mesecon:addPosRule(pos, dir)
     local pushername = minetest.get_node(pusherpos).name
 
@@ -98,9 +98,9 @@ local piston_off = function (pos, node)
     piston_remove_pusher (pos, node)
 
     if pistonspec.sticky then
-		dir = piston_get_direction(pistonspec.dir, node)
-		pullpos = mesecon:addPosRule(pos, dir)
-		stack = mesecon:mvps_pull_single(pullpos, dir)
+		local dir = piston_get_direction(pistonspec.dir, node)
+		local pullpos = mesecon:addPosRule(pos, dir)
+		local stack = mesecon:mvps_pull_single(pullpos, dir)
 		mesecon:mvps_process_stack(pos, dir, stack)
     end
 end

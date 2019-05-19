@@ -25,7 +25,7 @@ mobs:register_mob("mobs_monster:skeleton", {
 	armor = 100,
 	knock_back = 1,
 	light_damage = 1,
-	lava_damage = 10,
+	lava_damage = 5,
 	damage = 1,
 	reach = 2,
 	attack_type = "dogfight",

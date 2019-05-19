@@ -1,4 +1,3 @@
-
 local register_food = hunger.register_food
 
 register_food("default:apple", 2)

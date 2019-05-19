@@ -1,4 +1,3 @@
-
 -- global values
 hud.registered_items = {}
 hud.damage_events = {}
@@ -62,7 +61,7 @@ function hud.register(name, def)
 			end
 		end
 	end
-	
+
 	-- no error so far, return success
 	return true
 end
@@ -107,7 +106,7 @@ function hud.swap_statbar(player, item1, item2)
 		player:hud_change(bg1.id, "offset", def2.offset)
 		if pos_swap == true then
 			player:hud_change(bg1.id, "position", def2.position)
-		end	
+		end
 	end
 	if bg2 ~= nil and bg2.id then
 		player:hud_change(bg2.id, "offset", def1.offset)
@@ -128,7 +127,7 @@ function hud.change_item(player, name, def)
 	local i_name = player:get_player_name().."_"..name
 	local elem = hud_id[i_name]
 	if not elem then
-		throw_error("Given HUD element " .. dump(name) .. " does not exist".." hהההה")
+		throw_error("Given HUD element " .. dump(name) .. " does not exist")
 		return false
 	end
 
@@ -161,7 +160,7 @@ function hud.change_item(player, name, def)
 					player:hud_change(bg.id, "number", def.max)
 					bg.max = def.max
 					bg.number = def.max
-				end	
+				end
 			end
 		end
 	end
@@ -239,10 +238,10 @@ minetest.register_on_joinplayer(function(player)
 end)
 
 function hud.player_event(player, event)
-	if not player then return end -- ADDED
+	if not player then return end
 
 	--needed for first update called by on_join
-	minetest.after(0, function(player) -- ADDED (player)
+	minetest.after(0.1, function(player)
 		if event == "health_changed" then
 			for _,v in pairs(hud.damage_events) do
 				if v.func then
@@ -262,7 +261,7 @@ function hud.player_event(player, event)
 		if event == "hud_changed" then--called when flags changed
 
 		end
-	end, player) -- ADDED , player)
+	end, player)
 end
 
 core.register_playerevent(hud.player_event)
