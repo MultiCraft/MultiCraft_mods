@@ -1,5 +1,3 @@
-
-
 -- WALL LEVER
 -- Basically a switch that can be attached to a wall
 -- Powers the block 2 nodes behind (using a receiver)
@@ -29,10 +27,10 @@ minetest.register_node("mesecons_walllever:wall_lever_off", {
         fixed = {{ -2/16, -3/16,  8/16, 2/16, 3/16,  4/16 },    -- the base
              { -1/16, -8/16, 7/16, 1/16, 0/16,  5/16 }} -- the lever itself.
     },
-    groups = {dig_immediate=2, mese = 1},
+    groups = {dig_immediate=2},
     description="Lever",
     on_punch = function (pos, node)
-        mesecon:swap_node(pos, "mesecons_walllever:wall_lever_on")
+		minetest.swap_node(pos, {name = "mesecons_walllever:wall_lever_on", param2 = node.param2})
         mesecon:receptor_on(pos, mesecon.rules.buttonlike_get(node))
         minetest.sound_play("mesecons_lever", {pos=pos})
     end,
@@ -68,10 +66,10 @@ minetest.register_node("mesecons_walllever:wall_lever_on", {
              { -1/16, 0/16, 7/16, 1/16, 8/16,  5/16 }}  -- the lever itself.
     },
     groups = {dig_immediate = 2, not_in_creative_inventory = 1},
-    drop = '"mesecons_walllever:wall_lever_off" 1',
+	drop = "mesecons_walllever:wall_lever_off 1",
     description="Lever",
     on_punch = function (pos, node)
-        mesecon:swap_node(pos, "mesecons_walllever:wall_lever_off")
+		minetest.swap_node(pos, {name = "mesecons_walllever:wall_lever_off", param2 = node.param2})
         mesecon:receptor_off(pos, mesecon.rules.buttonlike_get(node))
         minetest.sound_play("mesecons_lever", {pos=pos})
     end,
@@ -83,9 +81,9 @@ minetest.register_node("mesecons_walllever:wall_lever_on", {
 })
 
 minetest.register_craft({
-    output = 'mesecons_walllever:wall_lever_off',
+	output = "mesecons_walllever:wall_lever_off 2",
     recipe = {
-        {'default:stick'},
-        {'default:stone'},
+		{"default:cobble"},
+		{"default:stick"},
     }
 })

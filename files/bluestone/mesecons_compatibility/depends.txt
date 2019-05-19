@@ -1,4 +1,2 @@
-
 mesecons
 doors
-default

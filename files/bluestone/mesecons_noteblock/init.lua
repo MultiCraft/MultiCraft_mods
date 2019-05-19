@@ -1,9 +1,7 @@
-
-
 minetest.register_node("mesecons_noteblock:noteblock", {
     description = "Noteblock",
     tiles = {"mesecons_noteblock.png"},
-    groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 2, mese = 1},
+    groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 2},
     drawtype = "allfaces_optional",
     visual_scale = 1.3,
     paramtype="light",
@@ -25,7 +23,7 @@ minetest.register_node("mesecons_noteblock:noteblock", {
 })
 
 minetest.register_craft({
-    output = '"mesecons_noteblock:noteblock" 1',
+	output = "mesecons_noteblock:noteblock 1",
     recipe = {
         {"group:wood", "group:wood", "group:wood"},
         {"default:steel_ingot", "default:bluestone_dust", "default:steel_ingot"},

@@ -1,5 +1,3 @@
-
-
 local pp_box_off = {
     type = "fixed",
     fixed = { -7/16, -8/16, -7/16, 7/16, -7/16, 7/16 },
@@ -10,7 +8,7 @@ local pp_box_on = {
     fixed = { -7/16, -8/16, -7/16, 7/16, -7.5/16, 7/16 },
 }
 
-pp_on_timer = function (pos, elapsed)
+local function pp_on_timer(pos, elapsed)
     local node   = minetest.get_node(pos)
     local ppspec = minetest.registered_nodes[node.name].pressureplate
 
@@ -59,12 +57,12 @@ function mesecon:register_pressure_plate(offstate, onstate, description, texture
 
     minetest.register_node(offstate, {
         drawtype = "nodebox",
-        tiles = {texture_off},
+        tiles = texture_off,
         wield_image = texture_off,
         paramtype = "light",
         selection_box = pp_box_off,
         node_box = pp_box_off,
-        groups = {snappy = 2, oddly_breakable_by_hand = 3, mese = 1},
+        groups = {snappy = 2, oddly_breakable_by_hand = 3},
             description = description,
         pressureplate = ppspec,
         on_timer = pp_on_timer,
@@ -78,7 +76,7 @@ function mesecon:register_pressure_plate(offstate, onstate, description, texture
 
     minetest.register_node(onstate, {
         drawtype = "nodebox",
-        tiles = {texture_on},
+        tiles = texture_on,
         paramtype = "light",
         selection_box = pp_box_on,
         node_box = pp_box_on,
@@ -111,14 +109,14 @@ mesecon:register_pressure_plate(
     "mesecons_pressureplates:pressure_plate_wood_off",
     "mesecons_pressureplates:pressure_plate_wood_on",
     "Wooden Pressure Plate",
-    "default_wood.png",
-    "default_wood.png",
+    {"default_wood.png"},
+    {"default_wood.png"},
     {{"default:wood", "default:wood"}})
 
 mesecon:register_pressure_plate(
     "mesecons_pressureplates:pressure_plate_stone_off",
     "mesecons_pressureplates:pressure_plate_stone_on",
     "Stone Pressure Plate",
-    "default_stone.png",
-    "default_stone.png",
+    {"default_stone.png"},
+    {"default_stone.png"},
     {{"default:cobble", "default:cobble"}})

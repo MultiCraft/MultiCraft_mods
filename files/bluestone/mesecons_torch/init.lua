@@ -1,5 +1,3 @@
-
-
 --MESECON TORCHES
 
 local rotate_torch_rules = function (rules, param2)
@@ -77,8 +75,8 @@ minetest.register_node("mesecons_torch:mesecon_torch_on", {
     walkable = false,
     paramtype2 = "wallmounted",
     selection_box = torch_selectionbox,
-    groups = {dig_immediate=3, mese = 1},
-    light_source = default.LIGHT_MAX-10,
+    groups = {dig_immediate=3},
+    light_source = default.LIGHT_MAX-5,
     description="Bluestone Torch",
     mesecons = {receptor = {
         state = mesecon.state.on,
@@ -89,7 +87,7 @@ minetest.register_node("mesecons_torch:mesecon_torch_on", {
 minetest.register_node("mesecons_torch:bluestoneblock", {
     description = "Bluestone Block",
     tiles = {"default_bluestone_block.png"},
-    groups = {cracky=1, mese = 1},
+    groups = {cracky=1},
     sounds = default.node_sound_stone_defaults(),
     mesecons = {receptor = {
         state = mesecon.state.on,
@@ -128,11 +126,11 @@ minetest.register_abm({
 
         if is_powered then
             if node.name == "mesecons_torch:mesecon_torch_on" then
-                mesecon:swap_node(pos, "mesecons_torch:mesecon_torch_off")
+               minetest.swap_node(pos, {name = "mesecons_torch:mesecon_torch_off", param2 = node.param2})
                 mesecon:receptor_off(pos, torch_get_output_rules(node))
             end
         elseif node.name == "mesecons_torch:mesecon_torch_off" then
-            mesecon:swap_node(pos, "mesecons_torch:mesecon_torch_on")
+            minetest.swap_node(pos, {name = "mesecons_torch:mesecon_torch_on", param2 = node.param2})
             mesecon:receptor_on(pos, torch_get_output_rules(node))
         end
     end

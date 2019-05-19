@@ -1,6 +1,5 @@
 -- Warthog(Boar) by KrupnoPavel (MIT)
 -- Changed to Boar and tweaked by Kaadmy (WTFPL) and MoNTE48 (LGPLv3)
-
 mobs:register_mob("mobs_animal:pig", {
 		type = "animal",
 		passive = false,
@@ -28,12 +27,9 @@ mobs:register_mob("mobs_animal:pig", {
 		follow = {"default:apple", "farming:potato"},
 		view_range = 5,
 		drops = {
-			{name = "mobs:pork_raw",
-				chance = 1, min = 1, max = 1},
-			{name = "mobs:pork_raw",
-				chance = 2, min = 1, max = 1},
-			{name = "mobs:pork_raw",
-				chance = 2, min = 1, max = 1}
+			{name = "mobs:pork_raw", chance = 1, min = 1, max = 1},
+			{name = "mobs:pork_raw", chance = 2, min = 1, max = 1},
+			{name = "mobs:pork_raw", chance = 2, min = 1, max = 1}
 		},
 		water_damage = 0,
 		lava_damage = 5,

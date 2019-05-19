@@ -14,7 +14,7 @@ function boost_cart:on_rail_step(entity, pos, distance)
 	entity.sound_counter = entity.sound_counter - distance
 
 	if HAVE_MESECONS_ENABLED then
-		boost_cart:signal_detector_rail(pos)
+		--boost_cart:signal_detector_rail(pos)
 	end
 end
 
