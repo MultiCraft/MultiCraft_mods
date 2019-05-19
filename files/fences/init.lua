@@ -96,7 +96,7 @@ minetest.register_node("fences:fence_wood", {
     tiles = {"default_wood.png"},
     inventory_image = "fences_fence.png",
     paramtype = "light",
-    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fences=1, decorative = 1},
+    groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fences = 1},
     drop = 'fences:fence_wood',
     sunlight_propagates = true,
     drawtype = "nodebox",
@@ -666,7 +666,7 @@ minetest.register_node("fences:fencegate", {
             }
     },
     on_construct = function(pos)
-        me2 = minetest.get_node(pos)
+        local me2 = minetest.get_node(pos)
         meta2 = minetest.get_meta(pos)
         meta2:set_int("state", 0)
         state2 = 0

@@ -1,4 +1,3 @@
-
 hud = {}
 
 local path = minetest.get_modpath("hud")

@@ -237,11 +237,11 @@ function execute_actions(dtime)
 	local nactions = mesecon.to_update
 	mesecon.to_update = {}
 	for _,i in ipairs(nactions) do
-		node = minetest.get_node(i.pos)
+		local node = minetest.get_node(i.pos)
 		if node.name=="ignore" then
 			add_action(i.pos, i.action, i.rname)
 		else
-			effector = mesecon:get_effector(node.name)
+			local effector = mesecon:get_effector(node.name)
 			if i.action == "on" then
 				if effector and effector.action_on then
 					effector.action_on(i.pos, node, i.rname)

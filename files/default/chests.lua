@@ -31,7 +31,7 @@ minetest.register_node("default:chest", {
 	tiles = {"default_chest_top.png", "default_chest_top.png", "default_chest_side.png",
 		"default_chest_side.png", "default_chest_side.png", "default_chest_front.png"},
 	paramtype2 = "facedir",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, decorative = 1},
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
 	legacy_facedir_simple = true,
 	sounds = default.node_sound_wood_defaults(),
 	on_construct = function(pos)
@@ -49,7 +49,7 @@ minetest.register_node("default:chest", {
 					"list[current_name;main;0.01,3.39;9,3;]"..
 					"list[current_player;main;0.01,7.4;9,3;9]"..
 					"list[current_player;main;0,10.61;9,1;]")
-			meta:set_string("infotext", "Large Chest 1")
+			meta:set_string("infotext", "Large Chest")
 			minetest.swap_node(p, {name="default:chest_left", param2=param2})
 			local m = minetest.get_meta(p)
 			m:set_string("formspec",
@@ -61,7 +61,7 @@ minetest.register_node("default:chest", {
 					"list[current_name;main;0.01,0.4;9,3;]"..
 					"list[current_player;main;0.01,7.4;9,3;9]"..
 					"list[current_player;main;0,10.61;9,1;]")
-			m:set_string("infotext", "Large Chest 2")
+			m:set_string("infotext", "Large Chest")
 		elseif minetest.get_node(get_chest_neighborpos(pos, param2, "left")).name == "default:chest" then
 			minetest.set_node(pos, {name="default:chest_left",param2=param2})
 			local p = get_chest_neighborpos(pos, param2, "left")
@@ -74,7 +74,7 @@ minetest.register_node("default:chest", {
 					"list[current_name;main;0.01,0.4;9,3;]"..
 					"list[current_player;main;0.01,7.4;9,3;9]"..
 					"list[current_player;main;0,10.61;9,1;]")
-			meta:set_string("infotext", "Large Chest 3")
+			meta:set_string("infotext", "Large Chest")
 			minetest.swap_node(p, {name="default:chest_right", param2=param2})
 			local m = minetest.get_meta(p)
 			m:set_string("formspec",
@@ -86,7 +86,7 @@ minetest.register_node("default:chest", {
 					"list[current_name;main;0.01,3.39;9,3;]"..
 					"list[current_player;main;0.01,7.4;9,3;9]"..
 					"list[current_player;main;0,10.61;9,1;]")
-			m:set_string("infotext", "Large Chest 4")
+			m:set_string("infotext", "Large Chest")
 		else
 			meta:set_string("formspec",
 					"size[9,8.75]"..

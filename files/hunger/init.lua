@@ -6,9 +6,9 @@ HUNGER_TICK = 600 -- time in seconds after that 1 hunger point is taken
 HUNGER_HEALTH_TICK = 4 -- time in seconds after player gets healed/damaged
 HUNGER_MOVE_TICK = 0.5 -- time in seconds after the movement is checked
 
-HUNGER_EXHAUST_DIG = 3 -- exhaustion increased this value after digged node
+HUNGER_EXHAUST_DIG = 2 -- exhaustion increased this value after digged node
 HUNGER_EXHAUST_PLACE = 1 -- exhaustion increased this value after placed
-HUNGER_EXHAUST_MOVE = 1.5 -- exhaustion increased this value if player movement detected
+HUNGER_EXHAUST_MOVE = 2 -- exhaustion increased this value if player movement detected
 HUNGER_EXHAUST_LVL = 160 -- at what exhaustion player saturation gets lowered
 
 HUNGER_HEAL = 1 -- number of HP player gets healed after HUNGER_HEALTH_TICK
@@ -47,7 +47,7 @@ if minetest.settings:get_bool("enable_damage") then
 				lvl = 20
 			end
 
-			hud.swap_statbar(player, "hunger", "air")
+		--	hud.swap_statbar(player, "hunger", "air")
 			hud.change_item(player, "hunger", {number = lvl, max = 20})
 		end)
 	end)

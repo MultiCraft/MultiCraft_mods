@@ -589,7 +589,7 @@ function mob_class:do_stay_near()
 		z = target.z - pos.z
 	}
 
-	yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
+	local yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 	if target.x > pos.x then
 		yaw = yaw + pi

@@ -1,4 +1,3 @@
-
 -- read/write
 function hunger.read(player)
 	local inv = player:get_inventory()
@@ -259,7 +258,7 @@ function hunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound)
 
 		-- eating sound
 		sound = sound or "hunger_eat"
-		minetest.sound_play(sound, {to_player = name, gain = 0.7})
+		minetest.sound_play(sound, {to_player = name, gain = 0.5})
 
 		if replace_with_item then
 			if itemstack:is_empty() then
