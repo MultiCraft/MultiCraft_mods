@@ -56,6 +56,7 @@ end
 
 local piston_remove_pusher = function (pos, node)
 	local pistonspec = minetest.registered_nodes[node.name].mesecons_piston
+	local pushername
 	if pushername == pistonspec.pusher then --make sure there actually is a pusher (for compatibility reasons mainly)
 		return
 	end

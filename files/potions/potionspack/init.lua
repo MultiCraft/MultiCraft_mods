@@ -100,6 +100,7 @@ potions.register_potion("Regen", "purple", 35,
 function(itemstack, user, pointed_thing)
 	local regen_I = true
 	minetest.chat_send_player(user:get_player_name(), "Regeneration I for 35 seconds")
+	local regen_II
 	if regen_II == true then
 		local regen
 		regen = function ( )

@@ -457,7 +457,7 @@ stairs.register_all("mossycobble", "default:mossycobble",
 	"Mossy Cobble", 
 	stairs.stone)
 
-minetest.register_alias("stairs:mossy_cobble", "stairs:mossycobble")
+minetest.register_alias("stairs:mossy_cobble", "stairs:stair_mossycobble")
 
 -- Sandstone types
 
@@ -489,17 +489,19 @@ stairs.register_all("steelblock", "default:steelblock",
 	"Steel",
 	stairs.metal)
 
-
-minetest.register_alias("stairs:steel", "stairs:steelblock")
+minetest.register_alias("stairs:stair_steel", "stairs:stair_steelblock")
+minetest.register_alias("stairs:slab_steel", "stairs:stair_steelblock")
+minetest.register_alias("stairs:corner_steel", "stairs:stair_steelblock")
 
 stairs.register_all("goldblock", "default:goldblock",
 	{cracky = 1},
 	{"default_gold_block.png"},
 	"Gold",
 	stairs.metal)
-	
-minetest.register_alias("stairs:gold", "stairs:goldblock")
-minetest.register_alias("stairs:corner_gold", "stairs:goldblock")
+
+minetest.register_alias("stairs:stair_gold", "stairs:stair_goldblock")
+minetest.register_alias("stairs:corner_gold", "stairs:stair_goldblock")
+minetest.register_alias("stairs:stair_gold", "stairs:stair_goldblock")
 
 stairs.register_all("diamondblock", "default:diamondblock",
 	{cracky = 1, level=3},
@@ -507,7 +509,9 @@ stairs.register_all("diamondblock", "default:diamondblock",
 	"Diamond",
 	stairs.stone)
 	
-minetest.register_alias("stairs:diamond", "stairs:diamondblock")
+minetest.register_alias("stairs:stair_diamond", "stairs:stair_diamondblock")
+minetest.register_alias("stairs:slab_diamond", "stairs:slab_diamondblock")
+minetest.register_alias("stairs:corner_diamond", "stairs:corner_diamondblock")
 
 -- Glass types
 

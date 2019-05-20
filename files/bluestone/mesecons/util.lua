@@ -89,6 +89,7 @@ function mesecon:rule2meta(findrule, allrules)
 	end
 end
 
+local convert_base
 if convert_base then
 	print(
 		"base2dec is tonumber(num,base1)\n"..
