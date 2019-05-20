@@ -1511,24 +1511,24 @@ minetest.register_node("default:sponge", {
 			on_water = true
 		end
 		for i=-1,1 do
-			p = {x=pos.x+i, y=pos.y, z=pos.z}
-			n = minetest.get_node(p)
+			local p = {x=pos.x+i, y=pos.y, z=pos.z}
+			local n = minetest.get_node(p)
 			-- On verifie si il y a de l'eau
 			if (n.name=="default:water_flowing") or (n.name == "default:water_source") then
 				on_water = true
 			end
 		end
 		for i=-1,1 do
-			p = {x=pos.x, y=pos.y+i, z=pos.z}
-			n = minetest.get_node(p)
+			local p = {x=pos.x, y=pos.y+i, z=pos.z}
+			local n = minetest.get_node(p)
 			-- On verifie si il y a de l'eau
 			if (n.name=="default:water_flowing") or (n.name == "default:water_source") then
 				on_water = true
 			end
 		end
 		for i=-1,1 do
-			p = {x=pos.x, y=pos.y, z=pos.z+i}
-			n = minetest.get_node(p)
+			local p = {x=pos.x, y=pos.y, z=pos.z+i}
+			local n = minetest.get_node(p)
 			-- On verifie si il y a de l'eau
 			if (n.name=="default:water_flowing") or (n.name == "default:water_source") then
 				on_water = true
@@ -1549,8 +1549,8 @@ minetest.register_node("default:sponge", {
 					end
 			  end
 			end
-			p = {x=pos.x, y=pos.y, z=pos.z}
-			n = minetest.get_node(p)
+			local p = {x=pos.x, y=pos.y, z=pos.z}
+			local n = minetest.get_node(p)
 			if change == true then
 				minetest.set_node(pointed_thing.above, {name = "default:sponge_wet"})
 			else
