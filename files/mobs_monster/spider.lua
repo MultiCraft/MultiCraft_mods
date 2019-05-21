@@ -152,7 +152,7 @@ minetest.register_node(":mobs:cobweb", {
 	inventory_image = "mobs_cobweb.png",
 	paramtype = "light",
 	sunlight_propagates = true,
-	liquid_viscosity = 11,
+	liquid_viscosity = 7,
 	liquidtype = "source",
 	liquid_alternative_flowing = "mobs:cobweb",
 	liquid_alternative_source = "mobs:cobweb",
@@ -166,8 +166,8 @@ minetest.register_node(":mobs:cobweb", {
 minetest.register_craft({
 	output = "mobs:cobweb",
 	recipe = {
-		{"farming:string", "", "farming:string"},
-		{"", "farming:string", ""},
-		{"farming:string", "", "farming:string"},
+		{"farming:string", "farming:string", "farming:string"},
+		{"farming:string", "farming:string", "farming:string"},
+		{"farming:string", "farming:string", "farming:string"},
 	}
 })

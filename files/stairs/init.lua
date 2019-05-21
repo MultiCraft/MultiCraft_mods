@@ -129,7 +129,7 @@ function stairs.register_stair(subname, recipeitem, groups, images, description,
 	if not recipeitem then
 		return
 	end
-	
+
 	-- stair recipes
 	minetest.register_craft({
 		output = "stairs:stair_" .. subname .. " 6",
@@ -450,11 +450,11 @@ stairs.register_all("cobble", "default:cobble",
 	{"default_cobble.png"},
 	"Cobble",
 	stairs.stone)
-		
+
 stairs.register_all("mossycobble", "default:mossycobble",
 	{cracky = 3},
 	{"default_mossycobble.png"},
-	"Mossy Cobble", 
+	"Mossy Cobble",
 	stairs.stone)
 
 minetest.register_alias("stairs:mossy_cobble", "stairs:stair_mossycobble")
@@ -490,8 +490,8 @@ stairs.register_all("steelblock", "default:steelblock",
 	stairs.metal)
 
 minetest.register_alias("stairs:stair_steel", "stairs:stair_steelblock")
-minetest.register_alias("stairs:slab_steel", "stairs:stair_steelblock")
-minetest.register_alias("stairs:corner_steel", "stairs:stair_steelblock")
+minetest.register_alias("stairs:slab_steel", "stairs:slab_steelblock")
+minetest.register_alias("stairs:corner_steel", "stairs:corner_steelblock")
 
 stairs.register_all("goldblock", "default:goldblock",
 	{cracky = 1},
@@ -500,15 +500,15 @@ stairs.register_all("goldblock", "default:goldblock",
 	stairs.metal)
 
 minetest.register_alias("stairs:stair_gold", "stairs:stair_goldblock")
-minetest.register_alias("stairs:corner_gold", "stairs:stair_goldblock")
-minetest.register_alias("stairs:stair_gold", "stairs:stair_goldblock")
+minetest.register_alias("stairs:slab_gold", "stairs:slab_goldblock")
+minetest.register_alias("stairs:corner_gold", "stairs:corner_goldblock")
 
 stairs.register_all("diamondblock", "default:diamondblock",
 	{cracky = 1, level=3},
 	{"default_diamond_block.png"},
 	"Diamond",
 	stairs.stone)
-	
+
 minetest.register_alias("stairs:stair_diamond", "stairs:stair_diamondblock")
 minetest.register_alias("stairs:slab_diamond", "stairs:slab_diamondblock")
 minetest.register_alias("stairs:corner_diamond", "stairs:corner_diamondblock")
@@ -597,7 +597,7 @@ stairs.register_all("lapis_block", "lapis:lapis_block",
 	{"default_lapis_block.png"},
 	"Lapis",
 	stairs.stone)
-	
+
 minetest.register_alias("stairs:lapis", "stairs:lapis_block")
 minetest.register_alias("stairs:lapisblock", "stairs:lapis_block")
 

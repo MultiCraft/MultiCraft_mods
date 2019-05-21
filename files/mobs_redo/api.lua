@@ -5,7 +5,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20190513",
+	version = "20190520",
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
 
@@ -64,7 +64,7 @@ end
 local aoc_range = tonumber(minetest.settings:get("active_block_range")) * 16
 
 -- pathfinding settings
-local enable_pathfinding = false -- for server!
+local enable_pathfinding = minetest.is_singleplayer() -- disable pathfinder in multiplayer
 local stuck_timeout = 3 -- how long before mob gets stuck in place and starts searching
 local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
@@ -81,8 +81,8 @@ local mob_class = {
 	fly_in = "air",
 	owner = "",
 	order = "",
-	jump_height = 4, -- was 6
-	lifetimer = 1800, -- 30 minutes
+	jump_height = 4,
+	lifetimer = 1800, -- was 30 minutes
 	physical = true,
 	collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
 	visual_size = {x = 1, y = 1},
@@ -461,7 +461,8 @@ local ray_line_of_sight = function(self, pos1, pos2)
 
 			local name = minetest.get_node(thing.under).name
 
-			if minetest.registered_items[name].walkable then return false end
+			if minetest.registered_items[name]
+			and minetest.registered_items[name].walkable then return false end
 		end
 
 		thing = ray:next()

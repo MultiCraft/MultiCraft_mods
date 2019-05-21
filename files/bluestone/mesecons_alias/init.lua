@@ -30,6 +30,7 @@ minetest.register_alias("mesecons:solarpanel", "mesecons_solarpanel:solar_panel_
 
 --Backwards compatibility
 minetest.register_alias("mesecons:mesecon_off", "mesecons:wire_00000000_off")
+minetest.register_alias("default:bluestone_dust", "mesecons:wire_00000000_off")
 minetest.register_alias("mesecons_pistons:piston_sticky", "mesecons_pistons:piston_sticky_on")
 minetest.register_alias("mesecons_pistons:piston_normal", "mesecons_pistons:piston_normal_on")
 minetest.register_alias("mesecons_pistons:piston_up_normal", "mesecons_pistons:piston_up_normal_on")

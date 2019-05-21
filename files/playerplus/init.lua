@@ -90,9 +90,7 @@ minetest.register_globalstep(function(dtime)
 		-- are we standing on any nodes that slow player down?
 		nslow = nil
 		if playerplus[name].nod_stand == "default:snow"
-		or playerplus[name].nod_stand == "default:snowblock"
-		-- The probable cause of the bug when swimming under water on the server!
-		or minetest.registered_nodes[ playerplus[name].nod_feet ].groups.water then
+		or playerplus[name].nod_stand == "default:snowblock" then
 			nslow = true
 		end
 
