@@ -1024,7 +1024,6 @@ function default.register_decorations()
 		name = "default:apple_log",
 		deco_type = "schematic",
 		place_on = {"default:dirt_with_grass"},
-		place_offset_y = 1,
 		sidelen = 16,
 		noise_params = {
 			offset = 0.0012,
@@ -1096,7 +1095,6 @@ function default.register_decorations()
 		deco_type = "schematic",
 --		place_on = {"default:dirt_with_rainforest_litter"},
 		place_on = {"default:dirt_with_grass", "default:dirt"},
-		place_offset_y = 1,
 		sidelen = 80,
 		fill_ratio = 0.005,
 		biomes = {"rainforest", "rainforest_swamp"},
@@ -1158,7 +1156,6 @@ function default.register_decorations()
 		deco_type = "schematic",
 --		place_on = {"default:dirt_with_snow", "default:dirt_with_coniferous_litter"},
 		place_on = {"default:dirt_with_snow", "default:dirt_with_grass"},
-		place_offset_y = 1,
 		sidelen = 80,
 		fill_ratio = 0.0018,
 		biomes = {"taiga", "coniferous_forest", "floatland_coniferous_forest"},
@@ -1199,7 +1196,6 @@ function default.register_decorations()
 		name = "default:acacia_log",
 		deco_type = "schematic",
 		place_on = {"default:dirt_with_dry_grass"},
-		place_offset_y = 1,
 		sidelen = 16,
 		noise_params = {
 			offset = 0,

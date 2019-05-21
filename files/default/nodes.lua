@@ -1539,8 +1539,8 @@ minetest.register_node("default:sponge", {
 				for i=-3,3 do
 					for j=-3,3 do
 						for k=-3,3 do
-							p = {x=pos.x+i, y=pos.y+j, z=pos.z+k}
-							n = minetest.get_node(p)
+							local p = {x=pos.x+i, y=pos.y+j, z=pos.z+k}
+							local n = minetest.get_node(p)
 							if (n.name=="default:water_flowing") or (n.name == "default:water_source")then
 								minetest.set_node(p, {name="air"})
 								change = true

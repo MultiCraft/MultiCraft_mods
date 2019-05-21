@@ -485,13 +485,6 @@ minetest.register_craft({
 	}
 })
 
-
-minetest.register_craft({
-	output = 'default:bluestone_dust',
-	recipe = {{"mesecons:wire_00000000_off"}},
-})
-
-
 minetest.register_craft({
 	output = "default:apple_gold",
 	recipe = {
@@ -730,15 +723,6 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "farming:string",
 	recipe = {{"default:paper", "default:paper"}},
-})
-
-minetest.register_craft({
-	output = "default:cobweb",
-	recipe = {
-		{"farming:string", "farming:string", "farming:string"},
-		{"farming:string", "farming:string", "farming:string"},
-		{"farming:string", "farming:string", "farming:string"},
-	}
 })
 
 minetest.register_craftitem("default:flint", {
