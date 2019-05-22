@@ -45,7 +45,6 @@ for _, col in ipairs(all_colours) do
 		runaway = true,
 		jump = true,
 		jump_height = 4,
-		pushable = true,
 		drops = {
 			{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 			{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
