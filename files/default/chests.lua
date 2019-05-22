@@ -129,7 +129,6 @@ minetest.register_node("default:chest", {
 	end,
 	on_receive_fields = function(pos, formname, fields, sender)
 		if fields.exit then
-		  print('test')
 		  fields.quit = true
 	  --	minetest.show_formspec(sender:get_player_name(), 'quit', "")
 		end
