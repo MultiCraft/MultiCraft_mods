@@ -40,7 +40,19 @@ function default.node_sound_sand_defaults(table)
 	table.footstep = table.footstep or
 			{name = "default_sand_footstep", gain = 0.12}
 	table.dug = table.dug or
-			{name = "default_sand_footstep", gain = 0.4}
+			{name = "default_sand_footstep", gain = 0.24}
+	table.place = table.place or
+			{name = "default_place_node", gain = 1.0}
+	default.node_sound_defaults(table)
+	return table
+end
+
+function default.node_sound_gravel_defaults(table)
+	table = table or {}
+	table.footstep = table.footstep or
+			{name = "default_gravel_footstep", gain = 0.4}
+	table.dug = table.dug or
+			{name = "default_gravel_footstep", gain = 1.0}
 	table.place = table.place or
 			{name = "default_place_node", gain = 1.0}
 	default.node_sound_defaults(table)

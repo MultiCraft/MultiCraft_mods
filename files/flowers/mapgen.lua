@@ -46,7 +46,6 @@ end
 
 local function register_mgv6_waterlily()
 	minetest.register_decoration({
-		name = "flowers:waterlily",
 		deco_type = "simple",
 		place_on = {"default:dirt"},
 		sidelen = 16,
@@ -62,8 +61,7 @@ local function register_mgv6_waterlily()
 		y_min = 0,
 		decoration = "flowers:waterlily",
 		param2 = 0,
-		param2_max = 3,
-		place_offset_y = 1,
+		rotation = "random",
 	})
 end
 
@@ -132,14 +130,13 @@ end
 
 local function register_waterlily()
 	minetest.register_decoration({
-		name = "default:waterlily",
 		deco_type = "simple",
 		place_on = {"default:dirt"},
 		sidelen = 16,
 		noise_params = {
 			offset = -0.12,
 			scale = 0.3,
-			spread = {x = 200, y = 200, z = 200},
+			spread = {x = 100, y = 100, z = 100},
 			seed = 33,
 			octaves = 3,
 			persist = 0.7
@@ -148,9 +145,7 @@ local function register_waterlily()
 		y_max = 0,
 		y_min = 0,
 		decoration = "flowers:waterlily",
-		param2 = 0,
-		param2_max = 3,
-		place_offset_y = 1,
+		rotation = "random",
 	})
 end
 

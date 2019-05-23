@@ -631,6 +631,10 @@ minetest.register_craft({
 	recipe = "default:stonebrick",
 })
 
+minetest.register_craft({
+	output = "farming:string",
+	recipe = {{"default:paper", "default:paper"}},
+})
 
 --
 -- Fuels
@@ -674,7 +678,7 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "default:sapling",
+	recipe = "group:sapling",
 	burntime = 5,
 })
 
@@ -710,7 +714,7 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "crafting:workbench",
+	recipe = "workbench:workbench",
 	burntime = 15,
 })
 
@@ -718,14 +722,4 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "default:chest",
 	burntime = 15,
-})
-
-minetest.register_craft({
-	output = "farming:string",
-	recipe = {{"default:paper", "default:paper"}},
-})
-
-minetest.register_craftitem("default:flint", {
-	description = "Flint",
-	inventory_image = "default_flint.png"
 })

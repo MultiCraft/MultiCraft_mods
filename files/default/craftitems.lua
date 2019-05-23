@@ -1,14 +1,9 @@
 -- mods/default/craftitems.lua
 
---
--- Crafting items
---
-
 minetest.register_craftitem("default:stick", {
 	description = "Stick",
 	inventory_image = "default_stick.png",
 	groups = {stick = 1, flammable = 2},
-
 })
 
 minetest.register_craftitem("default:paper", {
@@ -162,7 +157,7 @@ end)
 minetest.register_craftitem("default:book", {
 	description = "Book",
 	inventory_image = "default_book.png",
-	groups = {book = 1, flammable = 3, misc = 1},
+	groups = {book = 1, flammable = 3},
 	on_use = book_on_use,
 })
 
@@ -253,4 +248,9 @@ minetest.register_craftitem("default:sugar", {
 minetest.register_craftitem("default:quartz_crystal", {
 	description = "Quartz Crystal",
 	inventory_image = "default_quartz_crystal.png",
+})
+
+minetest.register_craftitem("default:flint", {
+	description = "Flint",
+	inventory_image = "default_flint.png"
 })
