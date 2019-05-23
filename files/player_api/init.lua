@@ -30,7 +30,7 @@ minetest.register_on_joinplayer(function(player)
 		30
 	)
 
-if core.get_platform() ~= "Android" or core.get_platform() ~= "iOS" then
+if PLATFORM ~= "Android" or PLATFORM ~= "iOS" then
 	player:hud_set_hotbar_image("gui_hotbar.png")
 	player:hud_set_hotbar_itemcount(9)
 else
