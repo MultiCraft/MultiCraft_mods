@@ -1,4 +1,4 @@
--- MultiCraft game mod: default
+-- MultiCraft Game mod: default
 -- See README.txt for licensing and other information.
 
 -- The API documentation in here was moved into doc/lua_api.txt
@@ -16,12 +16,12 @@ dofile(default_path.."/trees.lua")
 dofile(default_path.."/nodes.lua")
 dofile(default_path.."/chests.lua")
 dofile(default_path.."/furnace.lua")
+dofile(default_path.."/torch.lua")
 dofile(default_path.."/tools.lua")
 dofile(default_path.."/craftitems.lua")
 dofile(default_path.."/crafting.lua")
 dofile(default_path.."/mapgen.lua")
 dofile(default_path.."/aliases.lua")
-dofile(default_path.."/torch.lua")
 
 if not minetest.setting_getbool("creative_mode") then
 	minetest.register_on_newplayer(function (player)
