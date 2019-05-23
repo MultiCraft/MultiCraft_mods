@@ -3857,8 +3857,8 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 					ent.tamed = true
 				end
 
-				-- if not in creative then take item
-				if not mobs.is_creative(placer:get_player_name()) then
+				-- if not in creative then take item and minimal protection against creating a large number of mobs on the server
+				if not mobs.is_creative(placer:get_player_name()) or not minetest.is_singleplayer() then
 					itemstack:take_item()
 				end
 			end
