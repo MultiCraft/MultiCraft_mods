@@ -591,12 +591,6 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "cooking",
-	output = "default:sponge",
-	recipe = "default:sponge_wet",
-})
-
-minetest.register_craft({
-	type = "cooking",
 	output = "default:steak",
 	recipe = "default:beef_raw",
 })

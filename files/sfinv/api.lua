@@ -46,8 +46,8 @@ local theme_main = sfinv.gui_bg ..
 		sfinv.gui_bg_img
 
 local theme_inv = sfinv.gui_slots .. [[
-		list[current_player;main;0.01,4.49;9,3;9]
-		list[current_player;main;0.01,7.72;9,1;]
+		list[current_player;main;0.01,4.51;9,3;9]
+		list[current_player;main;0.01,7.74;9,1;]
 	]]
 
 function sfinv.make_formspec(player, context, content, show_inv, size)

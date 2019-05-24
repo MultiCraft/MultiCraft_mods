@@ -884,7 +884,7 @@ minetest.register_node("default:dry_shrub", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, flammable = 3, attached_node=1},
+	groups = {snappy = 3, flammable = 3, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
 		type = "fixed",
@@ -953,7 +953,7 @@ minetest.register_node("default:dry_grass", {
 	walkable = false,
 	buildable_to = true,
 	groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
-		not_in_creative_inventory=1, dry_grass = 1, dig_immediate = 3},
+		dry_grass = 1, dig_immediate = 3},
 	sounds = default.node_sound_leaves_defaults(),
 })
 
@@ -1401,40 +1401,6 @@ minetest.register_node("default:vine", {
   end,
 })
 
---
--- Quartz
---
-
-minetest.register_node("default:quartz_ore", {
-	description = "Quartz Ore",
-	tiles = {"default_quartz_ore.png"},
-	groups = {cracky = 3, stone = 1},
-	drop = 'default:quartz_crystal',
-	sounds = default.node_sound_stone_defaults(),
-})
-
-minetest.register_node("default:quartz_block", {
-	description = "Quartz Block",
-	tiles = {"default_quartz_block_top.png", "default_quartz_block_bottom.png", "default_quartz_block_side.png"},
-	groups = {snappy = 1, bendy = 2,cracky = 1,level = 2},
-	sounds = default.node_sound_stone_defaults(),
-})
-
-minetest.register_node("default:quartz_chiseled", {
-	description = "Chiseled Quartz",
-	tiles = {"default_quartz_chiseled_top.png", "default_quartz_chiseled_top.png", "default_quartz_chiseled_side.png"},
-	groups = {snappy = 1,bendy=2,cracky = 1,level = 2},
-	sounds = default.node_sound_stone_defaults(),
-})
-
-minetest.register_node("default:quartz_pillar", {
-	description = "Quartz Pillar",
-	paramtype2 = "facedir",
-	on_place = minetest.rotate_node,
-	tiles = {"default_quartz_pillar_top.png", "default_quartz_pillar_top.png", "default_quartz_pillar_side.png"},
-	groups = {snappy = 1,bendy=2,cracky = 1,level = 2},
-	sounds = default.node_sound_stone_defaults(),
-})
 
 minetest.register_node("default:glass", {
 	description = "Glass",
@@ -1476,99 +1442,10 @@ minetest.register_node("default:glowstone", {
 	light_source = 12,
 })
 
-minetest.register_node("default:sponge", {
-	description = "Sponge",
-	drawtype = "normal",
-	tiles = {"default_sponge.png"},
-	paramtype = 'light',
-	walkable = true,
-	pointable = true,
-	diggable = true,
-	buildable_to = false,
-	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 3, flammable = 3},
-		on_place = function(itemstack, placer, pointed_thing)
-		local pn = placer:get_player_name()
-		if pointed_thing.type ~= "node" then
-			return itemstack
-		end
-		if minetest.is_protected(pointed_thing.above, pn) then
-			return itemstack
-		end
-			local change = false
-			local on_water = false
-			local pos = pointed_thing.above
-		-- verifier si il est dans l'eau ou a cotée
-		if string.find(minetest.get_node(pointed_thing.above).name, "water_source")
-		or  string.find(minetest.get_node(pointed_thing.above).name, "water_flowing") then
-			on_water = true
-		end
-		for i=-1,1 do
-			local p = {x=pos.x+i, y=pos.y, z=pos.z}
-			local n = minetest.get_node(p)
-			-- On verifie si il y a de l'eau
-			if (n.name=="default:water_flowing") or (n.name == "default:water_source") then
-				on_water = true
-			end
-		end
-		for i=-1,1 do
-			local p = {x=pos.x, y=pos.y+i, z=pos.z}
-			local n = minetest.get_node(p)
-			-- On verifie si il y a de l'eau
-			if (n.name=="default:water_flowing") or (n.name == "default:water_source") then
-				on_water = true
-			end
-		end
-		for i=-1,1 do
-			local p = {x=pos.x, y=pos.y, z=pos.z+i}
-			local n = minetest.get_node(p)
-			-- On verifie si il y a de l'eau
-			if (n.name=="default:water_flowing") or (n.name == "default:water_source") then
-				on_water = true
-			end
-		end
-
-			if on_water == true then
-				for i=-3,3 do
-					for j=-3,3 do
-						for k=-3,3 do
-							local p = {x=pos.x+i, y=pos.y+j, z=pos.z+k}
-							local n = minetest.get_node(p)
-							if (n.name=="default:water_flowing") or (n.name == "default:water_source")then
-								minetest.set_node(p, {name="air"})
-								change = true
-						  end
-						end
-					end
-			  end
-			end
-			local p = {x=pos.x, y=pos.y, z=pos.z}
-			local n = minetest.get_node(p)
-			if change == true then
-				minetest.set_node(pointed_thing.above, {name = "default:sponge_wet"})
-			else
-				minetest.set_node(pointed_thing.above, {name = "default:sponge"})
-			end
-		return itemstack
-
-  end
-})
-
-minetest.register_node("default:sponge_wet", {
-	description = "Wet Sponge",
-	drawtype = "normal",
-	tiles = {"default_sponge_wet.png"},
-	paramtype = 'light',
-	walkable = true,
-	pointable = true,
-	diggable = true,
-	buildable_to = false,
-	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 3, not_in_creative_inventory = 1},
-})
-
-
 minetest.register_node("default:slimeblock", {
 	description = "Slime Block",
 	drawtype = "nodebox",
+	tiles = {"default_slimeblock.png"},
 	paramtype = "light",
 	node_box = {
 		type = "fixed",
@@ -1577,11 +1454,45 @@ minetest.register_node("default:slimeblock", {
 			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
 		}
 	},
-	tiles = {"default_slimeblock.png"},
-	paramtype = "light",
 	use_texture_alpha = true,
 	sunlight_propagates = true,
-	groups = {oddly_breakable_by_hand = 3,dig_immediate = 2,bouncy=70,disable_jump=1, fall_damage_add_percent=-100},
+	groups = {oddly_breakable_by_hand = 3, disable_jump = 1, fall_damage_add_percent=-100},
+})
+
+
+--
+-- Quartz
+--
+
+minetest.register_node("default:quartz_ore", {
+	description = "Quartz Ore",
+	tiles = {"default_quartz_ore.png"},
+	groups = {cracky = 3, stone = 1},
+	drop = 'default:quartz_crystal',
+	sounds = default.node_sound_stone_defaults(),
+})
+
+minetest.register_node("default:quartz_block", {
+	description = "Quartz Block",
+	tiles = {"default_quartz_block_top.png", "default_quartz_block_bottom.png", "default_quartz_block_side.png"},
+	groups = {snappy = 1, bendy = 2,cracky = 1,level = 2},
+	sounds = default.node_sound_stone_defaults(),
+})
+
+minetest.register_node("default:quartz_chiseled", {
+	description = "Chiseled Quartz",
+	tiles = {"default_quartz_chiseled_top.png", "default_quartz_chiseled_top.png", "default_quartz_chiseled_side.png"},
+		groups = {snappy = 1, bendy = 2, cracky = 1, level = 2},
+	sounds = default.node_sound_stone_defaults(),
+})
+
+minetest.register_node("default:quartz_pillar", {
+	description = "Quartz Pillar",
+	paramtype2 = "facedir",
+	on_place = minetest.rotate_node,
+	tiles = {"default_quartz_pillar_top.png", "default_quartz_pillar_top.png", "default_quartz_pillar_side.png"},
+		groups = {snappy = 1, bendy = 2, cracky = 1, level = 2},
+	sounds = default.node_sound_stone_defaults(),
 })
 
 --
