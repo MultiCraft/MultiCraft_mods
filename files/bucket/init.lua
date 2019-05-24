@@ -97,6 +97,14 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 					end
 				end
 
+				if minetest.is_singleplayer() ~= true then
+					local player_name = user:get_player_name()
+					if pointed_thing.under.y > 8 then
+						minetest.chat_send_player(player_name, "Too much liquid is bad, right?", true)
+					return itemstack
+					end
+				end
+
 				if check_protection(lpos, user
 						and user:get_player_name()
 						or "", "place "..source) then
