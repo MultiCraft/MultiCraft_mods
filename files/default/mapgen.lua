@@ -874,20 +874,6 @@ end
 
 function default.register_mgv6_decorations()
 
-	-- Bonusbox chest
-
-	minetest.register_decoration({
-		deco_type = "simple",
-		place_on = {"default:sand", "default:dirt_with_snow", "default:gravel",
- 			"default:snowblock", "default:dirt_with_grass", "default:redsand",
-			"default:redsandstone"},
-		sidelen = 80,
-		fill_ratio = 0.0002,
-		y_min = 1,
-		y_max = 31000,
-		decoration = {"bonusbox:chest"},
-	})
-
 	-- Sugar Cane
 
 	minetest.register_decoration({
@@ -1251,20 +1237,6 @@ function default.register_decorations()
 		schematic = minetest.get_modpath("default").."/schematics/papyrus.mts",
 --		spawn_by = "default:dirt_with_rainforest_litter",
 --		num_spawn_by = 8,
-	})
-
-	-- Bonusbox chest
-
-	minetest.register_decoration({
-		deco_type = "simple",
-		place_on = {"default:sand", "default:dirt_with_snow", "default:gravel",
- 			"default:snowblock", "default:dirt_with_grass", "default:redsand",
-			"default:redsandstone", "default:dirt_with_dry_grass"},
-		sidelen = 80,
-		fill_ratio = 0.0002,
-		y_min = 1,
-		y_max = 31000,
-		decoration = {"bonusbox:chest"},
 	})
 
 	-- Grasses
