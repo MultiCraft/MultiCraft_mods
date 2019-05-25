@@ -325,11 +325,11 @@ minetest.register_tool("default:sword_diamond", {
 --
 
 minetest.register_tool("default:pole", {
-	description = "Fishing Rod",
+	description = "Fishing Pole",
 	groups = {},
 	inventory_image = "default_tool_fishing_pole.png",
 	stack_max = 1,
-	groups = {tools=1},
+	groups = {tools = 1},
 	liquids_pointable = true,
 	on_use = function (itemstack, user, pointed_thing)
 		if pointed_thing and pointed_thing.under then
