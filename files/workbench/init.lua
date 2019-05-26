@@ -166,11 +166,34 @@ function workbench.construct(pos)
 	workbench:set_formspec(meta, 1)
 end
 
-function workbench.fields(pos, _, fields)
+function workbench.fields(pos, _, fields, sender)
 	local meta = minetest.get_meta(pos)
 	if		fields.back		then workbench:set_formspec(meta, 1)
 	elseif	fields.creating	then workbench:set_formspec(meta, 2)
-	elseif	fields.anvil	then workbench:set_formspec(meta, 3) end
+	elseif	fields.anvil	then workbench:set_formspec(meta, 3)
+	elseif	fields.quit and pos and sender then
+		local inv = sender:get_inventory()
+		if inv then
+			for i, stack in ipairs(inv:get_list("craft")) do
+				minetest.item_drop(stack, nil, pos)
+				stack:clear()
+				inv:set_stack("craft", i, stack)
+			end
+		end
+		inv = meta:get_inventory()
+		if inv then
+			for _, name in pairs({"input", "tool", "hammer"}) do
+				local stack = inv:get_stack(name, 1)
+				minetest.item_drop(stack, nil, pos)
+				stack:clear()
+				inv:set_stack(name, 1, stack)
+			end
+			for i, stack in ipairs(inv:get_list("forms")) do
+				stack:clear()
+				inv:set_stack("forms", i, stack)
+			end
+		end
+	end
 end
 
 function workbench.dig(pos)
@@ -270,18 +293,6 @@ minetest.register_node("workbench:workbench", {
 	on_metadata_inventory_take = workbench.on_take,
 	allow_metadata_inventory_put = workbench.put,
 	allow_metadata_inventory_move = workbench.move,
-	on_receive_fields = function(pos, formname, fields, sender)
-		if fields.quit and pos and sender then
-			local inv = sender:get_inventory()
-			if inv then
-				for i, stack in ipairs(inv:get_list("craft")) do
-					minetest.item_drop(stack, nil, pos)
-					stack:clear()
-					inv:set_stack("craft", i, stack)
-				end
-			end
-		end
-	end,
 })
 
 minetest.register_tool("workbench:hammer", {
