@@ -6,7 +6,7 @@ player_api.register_model("character.b3d", {
 	textures = {"character.png", },
 	animations = {
 		-- Standard animations.
-		stand     = {x = 0,   y = 79},
+		stand     = {x = 0,   y = 0}, -- y = 79
 		lay       = {x = 162, y = 166},
 		walk      = {x = 168, y = 187},
 		mine      = {x = 189, y = 198},
@@ -23,7 +23,7 @@ minetest.register_on_joinplayer(function(player)
 	player_api.player_attached[player:get_player_name()] = false
 	player_api.set_model(player, "character.b3d")
 	player:set_local_animation(
-		{x = 0,   y = 79},
+		{x = 0,   y = 0}, -- y = 79
 		{x = 168, y = 187},
 		{x = 189, y = 198},
 		{x = 200, y = 219},
