@@ -1,0 +1,4 @@
+[mod] visible wielded items [wieldview]
+=======================================
+
+License Source Code: Copyright (C) 2013-2018 Stuart Jones - LGPLv3.0+ (with the permission of the author)
