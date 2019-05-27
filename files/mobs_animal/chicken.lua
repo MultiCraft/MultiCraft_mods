@@ -90,7 +90,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:chicken", "Chicken", "mobs_chicken_inv.png", 0)
+mobs:register_egg("mobs_animal:chicken", "Chicken", "mobs_chicken_egg_inv.png", 1)
 
 mobs:alias_mob("mobs:chicken", "mobs_animal:chicken") -- compatibility
 

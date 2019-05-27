@@ -68,7 +68,7 @@ mobs:spawn({
 	max_height = 31000,
 })
 
-mobs:register_egg("mobs_monster:spider", "Spider", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
+mobs:register_egg("mobs_monster:spider", "Spider egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
 
 mobs:alias_mob("mobs:spider", "mobs_monster:spider") -- compatibility
 

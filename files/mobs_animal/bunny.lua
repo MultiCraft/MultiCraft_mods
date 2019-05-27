@@ -23,7 +23,7 @@ mobs:register_mob("mobs_animal:bunny", {
 	runaway = true,
 	runaway_from = {"mobs_animal:pumba", "player"},
 	jump = true,
-	jump_height = 4,
+	jump_height = 5,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 	},
@@ -111,7 +111,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:bunny", "Bunny", "mobs_bunny_inv.png", 0)
+mobs:register_egg("mobs_animal:bunny", "Bunny egg", "mobs_bunny_evil.png", 1)
 
 -- compatibility
 mobs:alias_mob("mobs:bunny", "mobs_animal:bunny")

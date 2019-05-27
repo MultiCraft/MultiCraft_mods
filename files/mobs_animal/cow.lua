@@ -138,7 +138,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:cow", "Cow", "default_grass.png", 1)
+mobs:register_egg("mobs_animal:cow", "Cow", "mobs_cow_egg.png", 1)
 
 mobs:alias_mob("mobs:cow", "mobs_animal:cow") -- compatibility
 

@@ -30,6 +30,7 @@ mobs:register_mob("mobs_animal:kitten", {
 	},
 	water_damage = 1,
 	lava_damage = 5,
+	fall_damage = 2,
 	fear_height = 3,
 	animation = {
 		speed_normal = 42,
@@ -61,6 +62,6 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:kitten", "Kitten", "mobs_kitten_inv.png", 0)
+mobs:register_egg("mobs_animal:kitten", "Cat's egg", "mobs_kitten_egg.png", 1)
 
 mobs:alias_mob("mobs:kitten", "mobs_animal:kitten") -- compatibility
