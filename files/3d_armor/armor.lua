@@ -63,32 +63,6 @@ armor = {
     default_skin = "character",
 }
 
---[[if inventory_plus then
-    armor.formspec = "size[8,8.5]button[0,0;2,0.5;main;Back]"
-        .."list[detached:player_name_armor;armor;0,1;2,3;]"
-        .."image[2.5,0.75;2,4;armor_preview]"
-        .."label[5,1;Level: armor_level]"
-        .."label[5,1.5;Heal:  armor_heal]"
-        .."list[current_player;main;0,4.5;8,4;]"
-elseif unified_inventory then
-    unified_inventory.register_button("armor", {
-        type = "image",
-        image = "inventory_plus_armor.png",
-    })
-    unified_inventory.register_page("armor", {
-        get_formspec = function(player)
-            local name = player:get_player_name()
-            local formspec = "background[0.06,0.99;7.92,7.52;3d_armor_ui_form.png]"
-                .."label[0,0;Armor]"
-                .."list[detached:"..name.."_armor;armor;0,1;2,3;]"
-                .."image[2.5,0.75;2,4;"..armor.textures[name].preview.."]"
-                .."label[5,1;Level: "..armor.def[name].level.."]"
-                .."label[5,1.5;Heal:  "..armor.def[name].heal.."]"
-            return {formspec=formspec}
-        end,
-    })
-end]]
-
 armor.update_player_visuals = function(self, player)
     if not player then
         return
@@ -318,25 +292,6 @@ armor.save_armor_inventory = function(self, player)
 	end
 end
 
--- Register Player Model
-
-player_api.register_model("3d_armor_character.b3d", {
-    animation_speed = 30,
-    textures = {
-        armor.default_skin..".png",
-        "3d_armor_trans.png",
-        "3d_armor_trans.png",
-    },
-    animations = {
-        stand = {x=0, y=79},
-        lay = {x=162, y=166},
-        walk = {x=168, y=187},
-        mine = {x=189, y=198},
-        walk_mine = {x=200, y=219},
-        sit = {x=81, y=160},
-    },
-})
-
 -- Register Callbacks
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
@@ -358,7 +313,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 end)
 
 minetest.register_on_joinplayer(function(player)
-    player_api.set_model(player, "3d_armor_character.b3d")
     local name = player:get_player_name()
     local armor_inv = minetest.create_detached_inventory(name.."_armor",{
         allow_put = function(inv, listname, index, stack, player)
@@ -409,9 +363,6 @@ minetest.register_on_joinplayer(function(player)
             return 0
         end,
     }, name)
-    --[[if inventory_plus then
-        inventory_plus.register_button(player,"armor", "Armor")
-    end]]
 
     armor_inv:set_size("armor", 4)
 	if not armor:load_armor_inventory(player) then
