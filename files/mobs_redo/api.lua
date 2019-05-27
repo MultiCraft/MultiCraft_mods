@@ -82,7 +82,7 @@ local mob_class = {
 	owner = "",
 	order = "",
 	jump_height = 4,
-	lifetimer = 1800, -- was 30 minutes
+	lifetimer = 1200, -- was 20 minutes
 	physical = true,
 	collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
 	visual_size = {x = 1, y = 1},
@@ -91,7 +91,7 @@ local mob_class = {
 	walk_velocity = 1,
 	run_velocity = 2,
 	light_damage = 0,
-	light_damage_min = 14,
+	light_damage_min = 12,
 	light_damage_max = 15,
 	water_damage = 0,
 	lava_damage = 0,
@@ -1255,7 +1255,7 @@ function mob_class:breed()
 								return
 						end
 					else
-						effect(pos, 15, "item_smoke.png", 1, 2, 2, 15, 5)
+						effect(pos, 15, "heart.png", 1, 2, 2, 15, 5)
 					end
 
 					local mob = minetest.add_entity(pos, self.name)

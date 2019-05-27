@@ -194,7 +194,7 @@ for _, col in ipairs(all_colours) do
 		end
 	})
 
-	mobs:register_egg("mobs_animal:sheep_"..col[1], col[2] .. " Sheep", "wool_"..col[1]..".png", 1)
+	mobs:register_egg("mobs_animal:sheep_"..col[1], col[2] .. " Sheep egg", "wool_"..col[1]..".png", 1)
 
 	-- compatibility
 	mobs:alias_mob("mobs:sheep_" .. col[1], "mobs_animal:sheep_" .. col[1])

@@ -61,7 +61,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:pig", "Pig", "wool_pink.png", 1)
+mobs:register_egg("mobs_animal:pig", "Pig egg", "mobs_pig_egg.png", 1)
 
 -- compatibility
 mobs:alias_mob("mobs:pig", "mobs_animal:pig")

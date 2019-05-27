@@ -13,7 +13,6 @@ mobs:register_mob("mobs_animal:wolf", {
 	textures = {
 		{"mobs_wolf.png"},
 	},
-	fear_height = 4,
 	runaway = false,
 	jump = false,
 	jump_height = 4,
@@ -36,7 +35,8 @@ mobs:register_mob("mobs_animal:wolf", {
 	knock_back = 2,
 	water_damage = 0,
 	lava_damage = 5,
-	fall_damage = 4,
+	fall_damage = 3,
+	fear_height = 4,
 	makes_footstep_sound = true,
 	sounds = {
 		war_cry = "mobs_wolf_attack",
@@ -69,7 +69,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:wolf", "Wolf", "wool_grey.png", 1)
+mobs:register_egg("mobs_animal:wolf", "Wolf's egg", "wool_grey.png", 1)
 
 -- Dog
 mobs:register_mob("mobs_animal:dog", {
@@ -145,7 +145,7 @@ mobs:register_mob("mobs_animal:dog", {
 		end
 })
 
-	mobs:register_egg("mobs_animal:dog", "Dog", "wool_brown.png", 1)
+mobs:register_egg("mobs_animal:dog", "Dog Egg", "wool_brown.png", 1)
 
 -- compatibility
 mobs:alias_mob("mobs:wolf", "mobs_animal:wolf")

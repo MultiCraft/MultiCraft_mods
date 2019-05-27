@@ -1,8 +1,7 @@
 mobs:register_mob("mobs_animal:bear", {
-	type = "npc",
+	type = "animal",
 	visual = "mesh",
 	mesh = "mobs_bear.b3d",
-	rotate = 0,
 	collisionbox = {-0.5, -0.01, -0.5, 0.5, 1.49, 0.5},
 	animation = {
 		speed_normal = 15,	speed_run = 30,
@@ -18,30 +17,32 @@ mobs:register_mob("mobs_animal:bear", {
 		random = "mobs_bear",
 		attack = "mobs_bear_angry",
 	},
-	fear_height = 4,
 	runaway = false,
 	jump = false,
 	jump_height = 4,
 	fly = false,
 	walk_chance = 75,
+	walk_velocity = 3,
 	run_velocity = 3,
-	view_range = 14,
+	view_range = 10,
 	follow = {
 		"farming:blueberries", "farming:raspberries"
 	},
+	passive = false,
 	attack_type = "dogfight",
 	damage = 4,
 	reach = 3,
 	attacks_monsters = true,
 	pathfinding = true,
+	group_attack = true,
 	hp_min = 10,
 	hp_max = 15,
 	armor = 100,
-	knock_back = 1,
+	knock_back = 2,
 	water_damage = 0,
-	lava_damage = 10,
-	fall_damage = 5,
-	makes_footstep_sound = true,
+	lava_damage = 5,
+	fall_damage = 3,
+	fear_height = 4,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
@@ -102,7 +103,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:bear", "Bear", "wool_brown.png", 1)
+mobs:register_egg("mobs_animal:bear", "Bear egg", "mobs_bear_egg.png", 1)
 
 -- compatibility
 mobs:alias_mob("mobs:bear", "mobs_animal:bear")

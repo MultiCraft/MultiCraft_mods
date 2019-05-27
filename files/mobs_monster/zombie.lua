@@ -61,7 +61,7 @@ mobs:spawn({
 	max_height = 31000,
 })	
 
-mobs:register_egg("mobs_monster:zombie", "Zombie", "zombie_head.png", 0)
+mobs:register_egg("mobs_monster:zombie", "Zombie Head", "zombie_head.png", 0)
 
 -- compatibility
 mobs:alias_mob("mobs:zombie", "mobs_monster:zombie")

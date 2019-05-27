@@ -59,7 +59,9 @@ mobs:spawn({
 	chance = 7000,
 	min_height = -50,
 	max_height = 31000,
-})	
+})
+
+mobs:register_egg("mobs_monster:skeleton", "Skeleton egg", "mobs_chicken_egg.png^default_bone.png", 1)
 
 -- compatibility
 mobs:alias_mob("mobs:skeleton", "mobs_monster:skeleton")
