@@ -40,9 +40,9 @@ end
 minetest.register_node("bonusbox:chest", {
 	tiles = {
 		"chest_top.png",
-		"chest_bottom.png",
-		"chest_right.png",
-		"chest_left.png",
+		"chest_top.png^[transformFY",
+		"chest_side.png",
+		"chest_side.png^[transformFX",
 		"chest_back.png",
 		"chest_front.png"
 	},
@@ -66,8 +66,8 @@ minetest.register_node("bonusbox:chest_open", {
 	tiles = {
 		"chest_open_top.png",
 		"chest_open_bottom.png",
-		"chest_open_riqht.png",
-		"chest_open_left.png",
+		"chest_open_side.png",
+		"chest_open_side.png^[transformFX",
 		"chest_open_back.png",
 		"chest_open_front.png"
 	},
@@ -92,8 +92,8 @@ minetest.register_node("bonusbox:chest_cap", {
 	tiles = {
 		"chest_open_top.png",
 		"chest_open_bottom.png",
-		"chest_open_right_two.png",
-		"chest_open_left_two.png",
+		"chest_open_side_two.png",
+		"chest_open_side_two.png^[transformFX",
 		"chest_open_back_two.png",
 		"chest_open_front_two.png"
 	},

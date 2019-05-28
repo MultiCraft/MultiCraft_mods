@@ -18,6 +18,17 @@ player_api.register_model("character.b3d", {
 	eye_height = 1.47,
 })
 
+minetest.register_node("player_api:hand", {
+	tiles = {"character.png"},
+	wield_scale = {x = 1, y = 1, z = 0.7},
+	paramtype = "light",
+	drawtype = "mesh",
+	mesh = "hand.b3d",
+	inventory_image = "blank.png",
+	drop = "",
+	node_placement_prediction = "",
+})
+
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)
 	player_api.player_attached[player:get_player_name()] = false
@@ -30,13 +41,9 @@ minetest.register_on_joinplayer(function(player)
 		30
 	)
 
-if PLATFORM == "Android" or PLATFORM == "iOS" then
-	player:hud_set_hotbar_image("gui_hotbar_touch.png")
-	player:hud_set_hotbar_itemcount(8)
-else
-	player:hud_set_hotbar_image("gui_hotbar.png")
 	player:hud_set_hotbar_itemcount(9)
-end
-
+	player:hud_set_hotbar_image("gui_hotbar.png")
 	player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
+	
+	player:get_inventory():set_stack("hand", 1, "player_api:hand")
 end)
