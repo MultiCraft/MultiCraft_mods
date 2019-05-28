@@ -54,7 +54,7 @@ mobs:register_mob("mobs_animal:wolf", {
 			end
 			return
 		end
-		mobs:capture_mob(self, clicker, 0, 0, 80, true, nil)
+		--mobs:capture_mob(self, clicker, 0, 0, 80, true, nil)
 	end
 })
 
@@ -141,7 +141,7 @@ mobs:register_mob("mobs_animal:dog", {
 		end
 			return
 		end
-		mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
+		--mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
 		end
 })
 

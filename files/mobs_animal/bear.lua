@@ -78,7 +78,7 @@ mobs:register_mob("mobs_animal:bear", {
 			end
 			return
 		end
-		mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
+		--mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
 		end,
 	after_activate = function(self, staticdata, def, dtime)
 		-- replace bear using the old directx model
