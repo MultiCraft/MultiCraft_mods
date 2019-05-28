@@ -90,7 +90,7 @@ armor.set_player_armor = function(self, player)
         minetest.log("error", "Failed to read player inventory")
         return
     end
-    local armor_texture = "3d_armor_trans.png"
+    local armor_texture = "blank.png"
     local armor_level = 0
     local armor_heal = 0
     local state = 0
@@ -390,8 +390,8 @@ minetest.register_on_joinplayer(function(player)
     }
     armor.textures[name] = {
         skin = armor.default_skin..".png",
-        armor = "3d_armor_trans.png",
-        wielditem = "3d_armor_trans.png",
+        armor = "blank.png",
+        wielditem = "blank.png",
         preview = armor.default_skin.."_preview.png",
     }
     if minetest.get_modpath("skins") then

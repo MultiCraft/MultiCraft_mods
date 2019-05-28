@@ -1,27 +1,12 @@
 stairs = {}
 stairs.mod = "redo"
 
-
-function default.node_sound_wool_defaults(table)
-	table = table or {}
-	table.footstep = table.footstep or
-			{name = "wool_coat_movement", gain = 1.0}
-	table.dug = table.dug or
-			{name = "wool_coat_movement", gain = 0.25}
-	table.place = table.place or
-			{name = "default_place_node", gain = 1.0}
-	return table
-end
-
-
 stairs.wood = default.node_sound_wood_defaults()
 stairs.dirt = default.node_sound_dirt_defaults()
 stairs.stone = default.node_sound_stone_defaults()
 stairs.glass = default.node_sound_glass_defaults()
 stairs.leaves = default.node_sound_leaves_defaults()
 stairs.metal = default.node_sound_metal_defaults()
-stairs.wool = stairs.leaves
-
 
 -- cache creative
 local creative = minetest.settings:get_bool("creative_mode")
@@ -534,11 +519,7 @@ stairs.register_all("snowblock", "default:snowblock",
 	{crumbly = 3, puts_out_fire = 1, cools_lava = 1, snowy = 1},
 	{"default_snow.png"},
 	"Snow Block",
-	default.node_sound_dirt_defaults({
-		footstep = {name = "default_snow_footstep", gain = 0.15},
-		dug = {name = "default_snow_footstep", gain = 0.2},
-		dig = {name = "default_snow_footstep", gain = 0.2}
-	}))
+	default.node_sound_snow_defaults())
 
 stairs.register_all("ice", "default:ice",
 	{cracky = 3, puts_out_fire = 1, cools_lava = 1},
@@ -611,7 +592,7 @@ stairs.register_all("wool_" .. colours[i][1], "wool:" .. colours[i][1],
 	{snappy = 2, choppy = 2, oddly_breakable_by_hand = 3, flammable = 3},
 	{"wool_" .. colours[i][1] .. ".png"},
 	colours[i][2] .. " Wool",
-	stairs.wool)
+	default.node_wool_defaults())
 
 end
 
