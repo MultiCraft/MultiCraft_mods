@@ -41,7 +41,7 @@ mobs:register_mob("mobs_animal:chicken", {
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
+		--if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
 	end,
 
 	do_custom = function(self, dtime)
@@ -67,16 +67,16 @@ mobs:register_mob("mobs_animal:chicken", {
 			max_hear_distance = 5,
 		})
 	end,
-		after_activate = function(self, staticdata, def, dtime)
-			-- replace chicken using the old directx model
-			if self.mesh == "mobs_chicken.x" then
-				local pos = self.object:get_pos()
-				if pos then
-					minetest.add_entity(pos, self.name)
-					self.object:remove()
-				end
+	after_activate = function(self, staticdata, def, dtime)
+		-- replace chicken using the old directx model
+		if self.mesh == "mobs_chicken.x" then
+			local pos = self.object:get_pos()
+			if pos then
+				minetest.add_entity(pos, self.name)
+				self.object:remove()
 			end
-		end,
+		end
+	end,
 	})
 
 mobs:spawn({
@@ -90,7 +90,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:chicken", "Chicken", "mobs_chicken_egg_inv.png", 1)
+mobs:register_egg("mobs_animal:chicken", "Chicken egg", "mobs_chicken_egg_inv.png", 1)
 
 mobs:alias_mob("mobs:chicken", "mobs_animal:chicken") -- compatibility
 
@@ -118,7 +118,7 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 
 	hit_node = function(self, pos, node)
 
-		if math.random(1, 10) > 1 then
+		if math.random(1, 8) > 1 then
 			return
 		end
 
@@ -210,7 +210,7 @@ end
 
 -- egg
 minetest.register_node(":mobs:egg", {
-	description = "Chicken Egg",
+	description = "Egg",
 	tiles = {"mobs_chicken_egg.png"},
 	inventory_image  = "mobs_chicken_egg.png",
 	visual_scale = 0.7,

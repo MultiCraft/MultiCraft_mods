@@ -67,7 +67,7 @@ mobs:register_mob("mobs_animal:cow", {
 		end
 
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
+		--if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 
 		local tool = clicker:get_wielded_item()
 		local name = clicker:get_player_name()

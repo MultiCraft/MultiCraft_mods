@@ -50,7 +50,7 @@ mobs:register_mob("mobs_animal:bunny", {
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
+		--if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
 
 		-- Monty Python tribute
 		local item = clicker:get_wielded_item()

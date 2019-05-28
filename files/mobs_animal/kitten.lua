@@ -47,7 +47,7 @@ mobs:register_mob("mobs_animal:kitten", {
 
 		if mobs:feed_tame(self, clicker, 4, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 50, 50, 90, false, nil) then return end
+		--if mobs:capture_mob(self, clicker, 50, 50, 90, false, nil) then return end
 		end
 })
 

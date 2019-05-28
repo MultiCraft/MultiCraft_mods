@@ -190,7 +190,7 @@ for _, col in ipairs(all_colours) do
 			if mobs:protect(self, clicker) then return end
 
 			--are we capturing?
-			if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
+			--if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 		end
 	})
 
