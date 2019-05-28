@@ -44,7 +44,7 @@ wieldview.get_item_texture = function(self, item)
 end
 
 wieldview.update_wielded_item = function(self, player)
-	if not player or minetest.is_singleplayer() == true then
+	if not player or minetest.is_singleplayer() then
 		return
 	end
 	local name = player:get_player_name()

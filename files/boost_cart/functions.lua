@@ -223,9 +223,6 @@ function boost_cart:boost_rail(pos, amount)
 end
 
 function boost_cart:register_rail(name, def_overwrite)
-	local sound_func = default.node_sound_metal_defaults
-		or default.node_sound_defaults
-
 	local def = {
 		drawtype = "raillike",
 		paramtype = "light",
@@ -236,7 +233,7 @@ function boost_cart:register_rail(name, def_overwrite)
 			type = "fixed",
 			fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
 		},
-		sounds = sound_func()
+		sounds = default.node_sound_metal_defaults(),
 	}
 	for k, v in pairs(def_overwrite) do
 		def[k] = v

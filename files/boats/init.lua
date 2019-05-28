@@ -138,9 +138,7 @@ function boat.on_punch(self, puncher)
 		local inv = puncher:get_inventory()
 		if not inv then
 			minetest.add_item(self.object:get_pos(), "boats:boat")
-		elseif not (creative and creative.is_enabled_for
-				and creative.is_enabled_for(name))
-				or not inv:contains_item("main", "boats:boat") then
+		else
 			local leftover = inv:add_item("main", "boats:boat")
 			-- if no room in inventory add a replacement boat to the world
 			if not leftover:is_empty() then
@@ -321,7 +319,8 @@ minetest.register_craftitem("boats:boat", {
 			end
 			local player_name = placer and placer:get_player_name() or ""
 			if not (creative and creative.is_enabled_for and
-					creative.is_enabled_for(player_name)) then
+					creative.is_enabled_for(player_name)) or
+					not minetest.is_singleplayer() then
 				itemstack:take_item()
 			end
 		end

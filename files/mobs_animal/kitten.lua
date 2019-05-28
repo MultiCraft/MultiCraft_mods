@@ -24,7 +24,8 @@ mobs:register_mob("mobs_animal:kitten", {
 	walk_chance = 15,
 	run_velocity = 2,
 	runaway = true,
-	jump = false,
+	jump = true,
+	jump_height = 5,
 	drops = {
 		{name = "farming:string", chance = 1, min = 1, max = 1}
 	},

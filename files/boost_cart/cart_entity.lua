@@ -440,12 +440,8 @@ minetest.register_entity(":carts:cart", cart_entity)
 if not boost_cart.mtg_compat then
 	minetest.register_craftitem(":carts:cart", {
 		description = "Cart (Sneak+Click to pick up)",
-		inventory_image = minetest.inventorycube(
-			"cart_top.png",
-			"cart_side.png",
-			"cart_side.png"
-		),
-		wield_image = "cart_side.png",
+		inventory_image = "carts_cart_inv.png",
+		wield_image = "carts_cart_inv.png",
 		on_place = function(itemstack, placer, pointed_thing)
 			if not pointed_thing.type == "node" then
 				return
@@ -458,7 +454,9 @@ if not boost_cart.mtg_compat then
 				return
 			end
 
-			if not minetest.settings:get_bool("creative_mode") then
+			minetest.sound_play({name = "default_place_node_metal", gain = 0.5},
+			{pos = pointed_thing.above})
+			if not minetest.settings:get_bool("creative_mode") or not minetest.is_singleplayer() then
 				itemstack:take_item()
 			end
 			return itemstack
