@@ -46,21 +46,20 @@ end
 
 local function register_mgv6_waterlily()
 	minetest.register_decoration({
-		deco_type = "simple",
+		deco_type = "schematic",
 		place_on = {"default:dirt"},
 		sidelen = 16,
 		noise_params = {
-			offset = -0.12,
-			scale = 0.3,
+			offset = -0.02,
+			scale = 0.1,
 			spread = {x = 100, y = 100, z = 100},
-			seed = 33,
+			seed = 48,
 			octaves = 3,
 			persist = 0.7
 		},
-		y_max = 0,
 		y_min = 0,
-		decoration = "flowers:waterlily",
-		param2 = 0,
+		y_max = 0,
+		schematic = minetest.get_modpath("flowers") .. "/schematics/waterlily.mts",
 		rotation = "random",
 	})
 end
@@ -93,7 +92,7 @@ local function register_flower(seed, flower_name)
 		noise_params = {
 			offset = -0.02,
 			scale = 0.04,
-			spread = {x = 200, y = 200, z = 200},
+			spread = {x = 100, y = 100, z = 100},
 			seed = seed,
 			octaves = 3,
 			persist = 0.6
@@ -130,21 +129,20 @@ end
 
 local function register_waterlily()
 	minetest.register_decoration({
-		deco_type = "simple",
+		deco_type = "schematic",
 		place_on = {"default:dirt"},
 		sidelen = 16,
 		noise_params = {
-			offset = -0.12,
-			scale = 0.3,
+			offset = -0.02,
+			scale = 0.1,
 			spread = {x = 100, y = 100, z = 100},
-			seed = 33,
+			seed = 48,
 			octaves = 3,
 			persist = 0.7
 		},
-		biomes = {"rainforest_swamp", "savanna_shore", "deciduous_forest_shore"},
-		y_max = 0,
 		y_min = 0,
-		decoration = "flowers:waterlily",
+		y_max = 0,
+		schematic = minetest.get_modpath("flowers") .. "/schematics/waterlily.mts",
 		rotation = "random",
 	})
 end
