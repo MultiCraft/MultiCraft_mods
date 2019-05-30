@@ -281,7 +281,7 @@ function doors:register_door(name, def)
                 if is_right(pos, clicker) then
                     minetest.sound_play("doors_door_open", {pos=pos, gain = 0.3, max_hear_distance = 10})
                 else
-                    minetest.sound_play("doors_door_close", {gain = 0.3, max_hear_distance = 10})
+                    minetest.sound_play("doors_door_close", {pos=pos, gain = 0.3, max_hear_distance = 10})
                 end
             end
         end,
