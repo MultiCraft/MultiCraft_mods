@@ -1,5 +1,11 @@
 dofile(minetest.get_modpath("player_api") .. "/api.lua")
 
+local creative_mode_cache = minetest.settings:get_bool("creative_mode")
+
+function player_api.is_enabled_for(name)
+	return creative_mode_cache
+end
+
 -- Default player appearance
 player_api.register_model("character.b3d", {
 	animation_speed = 30,
@@ -18,16 +24,56 @@ player_api.register_model("character.b3d", {
 	eye_height = 1.47,
 })
 
-minetest.register_node("player_api:hand", {
-	tiles = {"character.png"},
-	wield_scale = {x = 1, y = 1, z = 0.7},
-	paramtype = "light",
-	drawtype = "mesh",
-	mesh = "hand.b3d",
-	inventory_image = "blank.png",
-	drop = "",
-	node_placement_prediction = "",
+if creative_mode_cache then
+	local digtime = 128
+	local caps = {times = {digtime, digtime, digtime}, uses = 0, maxlevel = 192}
+	minetest.register_node("player_api:hand", {
+		tiles = {"character.png"},
+		wield_scale = {x = 1, y = 1, z = 0.7},
+		paramtype = "light",
+		drawtype = "mesh",
+		mesh = "hand.b3d",
+		inventory_image = "blank.png",
+		drop = "",
+		node_placement_prediction = "",
+		range = 10,
+		tool_capabilities = {
+			full_punch_interval = 0.9,
+			max_drop_level = 3,
+			groupcaps = {
+				crumbly = caps,
+				cracky  = caps,
+				snappy  = caps,
+				choppy  = caps,
+				oddly_breakable_by_hand = caps,
+			},
+			damage_groups = {fleshy = 5},
+		}
 })
+else
+	minetest.register_node("player_api:hand", {
+		tiles = {"character.png"},
+		wield_scale = {x = 1, y = 1, z = 0.7},
+		paramtype = "light",
+		drawtype = "mesh",
+		mesh = "hand.b3d",
+		inventory_image = "blank.png",
+		drop = "",
+		node_placement_prediction = "",
+		tool_capabilities = {
+		full_punch_interval = 0.9,
+		max_drop_level = 0,
+		groupcaps = {
+			crumbly = {times={[2]=3.00, [3]=0.70}, uses=0, maxlevel=1},
+			snappy = {times={[3]=0.40}, uses=0, maxlevel=1},
+			choppy = {times={[3]=3}},
+			cracky = {times={[10]=10, [3]=7.5}},
+			oddly_breakable_by_hand = {times = {[0]=90.00, [1]=7.00, [2]=3.00, [3]=3*3.33, [4]=250, [5]=999999.0, [6]=0.5}, uses = 0, maxlevel = 5}
+		},
+		damage_groups = {fleshy = 1},
+	}
+})
+end
 
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)
@@ -38,8 +84,7 @@ minetest.register_on_joinplayer(function(player)
 		{x = 168, y = 187},
 		{x = 189, y = 198},
 		{x = 200, y = 219},
-		30
-	)
+		30)
 
 	player:hud_set_hotbar_itemcount(9)
 	player:hud_set_hotbar_image("gui_hotbar.png")
