@@ -1,3 +1,4 @@
+local has_armor = minetest.get_modpath("3d_armor")
 local time = 0
 local update_time = tonumber(minetest.settings:get("wieldview_update_time"))
 if not update_time then
@@ -16,6 +17,19 @@ wieldview = {
 }
 
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/transform.lua")
+
+local function update_player_visuals(player, wield_image)
+	local name = player:get_player_name()
+	if has_armor then
+		armor.textures[name].wielditem = wield_image
+		armor:update_player_visuals(player)
+		return
+	end
+	local animation = player_api.get_animation(player) or {}
+	local textures = animation.textures or {}
+	local skin = textures[1] and textures[1] or "character.png"
+	player_api.set_textures(player, {skin, "blank.png", wield_image})
+end
 
 wieldview.get_item_texture = function(self, item)
 	local texture = "blank.png"
@@ -57,8 +71,7 @@ wieldview.update_wielded_item = function(self, player)
 		if self.wielded_item[name] == item then
 			return
 		end
-		armor.textures[name].wielditem = self:get_item_texture(item)
-		armor:update_player_visuals(player)
+		update_player_visuals(player, self:get_item_texture(item))
 	end
 	self.wielded_item[name] = item
 end

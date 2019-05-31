@@ -47,13 +47,24 @@ function beds.register_bed(name, def)
 				return itemstack
 			end
 
-			local node_def = minetest.registered_nodes[minetest.get_node(pos).name]
-			if not node_def or not node_def.buildable_to then
-				return itemstack
-			end
-
+			local pos_front = vector.new(pos)
 			local dir = placer and placer:get_look_dir() and
-				minetest.dir_to_facedir(placer:get_look_dir()) or 0
+				minetest.dir_to_facedir(placer:get_look_dir()) % 4 or 0
+			if dir == 1 then
+				pos_front.x = pos_front.x + 1
+			elseif dir == 2 then
+				pos_front.z = pos_front.z - 1
+			elseif dir == 3 then
+				pos_front.x = pos_front.x - 1
+			else
+				pos_front.z = pos_front.z + 1
+			end
+			for _, p in pairs({pos_front, pos}) do
+				local node_def = minetest.registered_nodes[minetest.get_node(p).name]
+				if not node_def or not node_def.buildable_to then
+					return itemstack
+				end
+			end
 
 			minetest.set_node(pos, {name = name, param2 = dir})
 
