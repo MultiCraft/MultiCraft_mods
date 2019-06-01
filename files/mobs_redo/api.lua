@@ -82,7 +82,7 @@ local mob_class = {
 	owner = "",
 	order = "",
 	jump_height = 4,
-	lifetimer = 1200, -- was 20 minutes
+	lifetimer = 600, -- was 10 minutes
 	physical = true,
 	collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
 	visual_size = {x = 1, y = 1},

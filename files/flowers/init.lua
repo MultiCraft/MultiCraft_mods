@@ -1,16 +1,10 @@
--- MultiCraft game mod: default
--- See README.txt for licensing and other information.
-
-
 -- Namespace for functions
 
 flowers = {}
 
-
 -- Map Generation
 
 dofile(minetest.get_modpath("flowers") .. "/mapgen.lua")
-
 
 --
 -- Flowers
@@ -25,7 +19,6 @@ minetest.register_alias("flowers:flower_orchid", "flowers:orchid")
 minetest.register_alias("flowers:flower_allium", "flowers:allium")
 minetest.register_alias("flowers:flower_dandelion_white", "flowers:dandelion_white")
 minetest.register_alias("flowers:dandelion_white", "flowers:oxeye_daisy")
-
 
 -- Flower registration
 

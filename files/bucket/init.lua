@@ -1,6 +1,3 @@
--- MultiCraft game mod: bucket
--- See README.txt for licensing and other information.
-
 minetest.register_alias("bucket", "bucket:bucket_empty")
 minetest.register_alias("bucket_water", "bucket:bucket_water")
 minetest.register_alias("bucket_lava", "bucket:bucket_lava")

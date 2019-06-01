@@ -1250,10 +1250,10 @@ minetest.register_node("default:lava_flowing", {
 --
 
 local bookshelf_formspec =
-	"size[8,7;]" ..
-	"list[context;books;0,0.3;8,2;]" ..
-	"list[current_player;main;0,2.85;8,1;]" ..
-	"list[current_player;main;0,4.08;8,3;8]" ..
+	"size[9,7;]" ..
+	"list[context;books;0,0.3;9,2;]" ..
+	"list[current_player;main;0,2.85;9,1;]" ..
+	"list[current_player;main;0,4.08;9,3;9]" ..
 	"listring[context;books]" ..
 	"listring[current_player;main]"
 
