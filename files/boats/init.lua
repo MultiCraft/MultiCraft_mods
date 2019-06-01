@@ -290,8 +290,8 @@ minetest.register_entity("boats:boat", boat)
 minetest.register_craftitem("boats:boat", {
 	description = "Boat",
 	inventory_image = "boats_inventory.png",
-	wield_scale = {x = 2, y = 2, z = 1},
 	liquids_pointable = true,
+	stack_max = 1,
 	groups = {rail = 1, flammable = 2},
 
 	on_place = function(itemstack, placer, pointed_thing)

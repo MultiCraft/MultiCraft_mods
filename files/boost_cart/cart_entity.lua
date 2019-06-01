@@ -442,6 +442,7 @@ if not boost_cart.mtg_compat then
 		description = "Cart (Sneak+Click to pick up)",
 		inventory_image = "carts_cart_inv.png",
 		wield_image = "carts_cart_inv.png",
+		stack_max = 1,
 		on_place = function(itemstack, placer, pointed_thing)
 			if not pointed_thing.type == "node" then
 				return

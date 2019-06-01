@@ -3826,6 +3826,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 		description = desc,
 		inventory_image = invimg,
 		groups = grp,
+		stack_max = 1,
 
 		on_place = function(itemstack, placer, pointed_thing)
 

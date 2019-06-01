@@ -69,7 +69,8 @@ function beds.register_bed(name, def)
 			minetest.set_node(pos, {name = name, param2 = dir})
 
 			if not (creative and creative.is_enabled_for
-					and creative.is_enabled_for(player_name)) then
+					and creative.is_enabled_for(player_name)) or
+					not minetest.is_singleplayer() then
 				itemstack:take_item()
 			end
 			return itemstack
