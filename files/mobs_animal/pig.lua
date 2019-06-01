@@ -52,7 +52,7 @@ mobs:register_mob("mobs_animal:pig", {
 
 mobs:spawn({
 	name = "mobs_animal:pig",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass"},
 	min_light = 5,
 	interval = 30,
 	chance = 15000,
