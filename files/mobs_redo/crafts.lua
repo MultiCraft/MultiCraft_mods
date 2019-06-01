@@ -65,23 +65,9 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
--- lasso
-minetest.register_tool("mobs:lasso", {
-	description = "Lasso (right-click animal to put in inventory)",
-	inventory_image = "mobs_magic_lasso.png",
-	groups = {flammable = 2},
-})
+minetest.register_alias("mobs:magic_lasso", "farming:string")
+minetest.register_alias("mobs:lasso", "farming:string")
 
-	minetest.register_craft({
-		output = "mobs:lasso",
-		recipe = {
-			{"farming:string", "", "farming:string"},
-			{"", "default:diamond", ""},
-			{"farming:string", "", "farming:string"},
-		}
-	})
-
-minetest.register_alias("mobs:magic_lasso", "mobs:lasso")
 -- shears (right click to shear animal)
 minetest.register_tool("mobs:shears", {
 	description = "Steel Shears (right-click to shear)",

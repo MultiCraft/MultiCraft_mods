@@ -1,6 +1,3 @@
--- MultiCraft game mod: player
--- See README.txt for licensing and other information.
-
 player_api = {}
 
 -- Player animation blending
@@ -45,7 +42,7 @@ function player_api.set_model(player, model_name)
 			textures = player_textures[name] or model.textures,
 			visual = "mesh",
 			visual_size = model.visual_size or {x = 1, y = 1},
-			collisionbox = model.collisionbox or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
+			collisionbox = model.collisionbox, -- or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
 			stepheight = model.stepheight or 0.6,
 			eye_height = model.eye_height or 1.47,
 		})
@@ -53,7 +50,7 @@ function player_api.set_model(player, model_name)
 	else
 		player:set_properties({
 			visual = "upright_sprite",
-			collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.75, 0.3},
+		--	collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.75, 0.3},
 			stepheight = 0.6,
 			eye_height = 1.625,
 		})
