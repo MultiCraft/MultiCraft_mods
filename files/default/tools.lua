@@ -309,7 +309,6 @@ minetest.register_tool("default:pole", {
 	description = "Fishing Pole",
 	groups = {},
 	inventory_image = "default_tool_fishing_pole.png",
-	stack_max = 1,
 	groups = {tools = 1},
 	liquids_pointable = true,
 	on_use = function (itemstack, user, pointed_thing)

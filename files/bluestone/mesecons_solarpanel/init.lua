@@ -54,12 +54,12 @@ minetest.register_craft({
 
 minetest.register_abm(
 	{nodenames = {"mesecons_solarpanel:solar_panel_off"},
-	interval = 1,
+	interval = 3,
 	chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		local light = minetest.get_node_light(pos, nil)
 
-		if light >= 12 then
+		if light >= 10 then
 			minetest.set_node(pos, {name="mesecons_solarpanel:solar_panel_on", param2=node.param2})
 			mesecon:receptor_on(pos)
 		end
@@ -68,12 +68,12 @@ minetest.register_abm(
 
 minetest.register_abm(
 	{nodenames = {"mesecons_solarpanel:solar_panel_on"},
-	interval = 1,
+	interval = 3,
 	chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		local light = minetest.get_node_light(pos, nil)
 
-		if light < 12 then
+		if light < 10 then
 			minetest.set_node(pos, {name="mesecons_solarpanel:solar_panel_off", param2=node.param2})
 			mesecon:receptor_off(pos)
 		end

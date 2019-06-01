@@ -112,7 +112,7 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_abm({
+--[[minetest.register_abm({
 	nodenames = {"mesecons_torch:mesecon_torch_off","mesecons_torch:mesecon_torch_on"},
 	interval = 1,
 	chance = 1,
@@ -135,7 +135,7 @@ minetest.register_abm({
 			mesecon:receptor_on(pos, torch_get_output_rules(node))
 		end
 	end
-})
+})]]
 
 -- Param2 Table (Block Attached To)
 -- 5 = z-1
