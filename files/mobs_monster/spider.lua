@@ -10,11 +10,13 @@ mobs:register_mob("mobs_monster:spider", {
 	hp_min = 15,
 	hp_max = 20,
 	armor = 100,
-	collisionbox = {-0.7, -0.01, -0.7, 0.7, 0.6, 0.7},
+	collisionbox = {-0.8, -0.5, -0.8, 0.8, 0, 0.8},
 	visual = "mesh",
 	mesh = "mobs_spider.b3d",
 	textures = {
 		{"mobs_spider.png"},
+		{"mobs_spider_grey.png"},
+		{"mobs_spider_orange.png"},
 	},
 	makes_footstep_sound = false,
 	sounds = {
@@ -59,7 +61,7 @@ mobs:register_mob("mobs_monster:spider", {
 
 mobs:spawn({
 	name = "mobs_monster:spider",
-	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
+	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
 	min_light = 0,
 	max_light = 12,
 	interval = 30,
@@ -69,13 +71,14 @@ mobs:spawn({
 })
 
 mobs:register_egg("mobs_monster:spider", "Spider egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
+mobs:register_egg("mobs_monster:small_spider", "Small Spider egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
 
 mobs:alias_mob("mobs:spider", "mobs_monster:spider") -- compatibility
 
 -- Small spider
 
 mobs:register_mob("mobs_monster:small_spider", {
-	docile_by_day = true,
+	--docile_by_day = true,
 	group_attack = true,
 	type = "animal",
 	passive = false,
@@ -85,11 +88,13 @@ mobs:register_mob("mobs_monster:small_spider", {
 	hp_min = 5,
 	hp_max = 10,
 	armor = 100,
-	collisionbox = {-0.23, -0.01, -0.23, 0.23, 0.2, 0.23},
+	collisionbox = {-0.3, -0.15, -0.3, 0.3, 0.05, 0.3},
 	visual = "mesh",
 	mesh = "mobs_spider.b3d",
 	textures = {
 		{"mobs_spider.png"},
+		{"mobs_spider_grey.png"},
+		{"mobs_spider_orange.png"},
 	},
 	visual_size = {x = 0.3, y = 0.3},
 	makes_footstep_sound = false,
@@ -134,7 +139,7 @@ mobs:register_mob("mobs_monster:small_spider", {
 
 mobs:spawn({
 	name = "mobs_monster:small_spider",
-	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:cobble", "default:mossycobble"},
+	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
 	min_light = 0,
 	max_light = 15,
 	interval = 30,

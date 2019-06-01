@@ -236,7 +236,7 @@ mobs:spawn({
 
 mobs:spawn({
 	name = "mobs_animal:sheep_black",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass",  "default:dirt_with_grass"},
 	min_light = 7,
 	interval = 30,
 	chance = 40000,
@@ -247,7 +247,7 @@ mobs:spawn({
 
 mobs:spawn({
 	name = "mobs_animal:sheep_brown",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass",  "default:dirt_with_grass"},
 	min_light = 7,
 	interval = 30,
 	chance = 40000,

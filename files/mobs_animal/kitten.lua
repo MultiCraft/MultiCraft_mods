@@ -54,7 +54,7 @@ mobs:register_mob("mobs_animal:kitten", {
 
 mobs:spawn({
 	name = "mobs_animal:kitten",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass", "default:dirt_with_dry_grass"},
 	min_light = 10,
 	interval = 30,
 	chance = 10000,
