@@ -620,3 +620,125 @@ minetest.register_craft({
         {'', '', ''},
     }
 })
+
+
+---- Fence Gate ----
+
+function doors.register_fencegate(name, def)
+	local fence = {
+		description = def.description,
+		drawtype = "nodebox",
+		tiles = {},
+		inventory_image = def.inventory_image,
+		wield_image = def.wield_image,
+		paramtype = "light",
+		paramtype2 = "facedir",
+		sunlight_propagates = true,
+		is_ground_content = false,
+		drop = name .. "_closed",
+		connect_sides = {"left", "right"},
+		groups = def.groups,
+		sounds = def.sounds,
+		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+			local node_def = minetest.registered_nodes[node.name]
+			minetest.swap_node(pos, {name = node_def.gate, param2 = node.param2})
+			minetest.sound_play(node_def.sound, {pos = pos, gain = 0.3,
+				max_hear_distance = 8})
+			return itemstack
+		end,
+	}
+
+
+	if type(def.texture) == "string" then
+		fence.tiles[1] = {name = def.texture, backface_culling = true}
+	elseif def.texture.backface_culling == nil then
+		fence.tiles[1] = table.copy(def.texture)
+		fence.tiles[1].backface_culling = true
+	else
+		fence.tiles[1] = def.texture
+	end
+
+	if not fence.sounds then
+		fence.sounds = default.node_sound_wood_defaults()
+	end
+
+	fence.groups.fence = 1
+
+	local fence_closed = table.copy(fence)
+	fence_closed.node_box = {
+		type = "fixed",
+        fixed = {
+			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/16},		-- Left completion
+			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},		-- Right completion
+			{-2/16, -1/2+6/16, -1/16, 0, 1/2-1/16, 1/16},		-- Center Left
+			{0, -1/2+6/16, -1/16, 2/16, 1/2-1/16, 1/16},		-- Center Right
+			{-2/16, 1/2-4/16, 1/16, -1/2, 1/2-1/16, -1/16},		-- Above (cross) -z
+			{-2/16, -1/2+6/16, 1/16, -1/2, -1/2+9/16, -1/16},	-- Bottom (cross) -z
+			{2/16, 1/2-4/16, -1/16, 1/2, 1/2-1/16, 1/16},		-- Above (transverse) z
+			{2/16, -1/2+6/16, -1/16, 1/2, -1/2+9/16, 1/16},		-- Below (across) z
+			{-2/16, 1/2, -2/16, -2/16, 1/2+8/16, -2/16},
+			{-2/16, 1/2, 2/16, -2/16, 1/2+8/16, 2/16},
+			{2/16, 1/2, -2/16, 2/16, 1/2+8/16, -2/16},
+			{2/16, 1/2, 2/16, 2/16, 1/2+8/16, 2/16},
+			{-6/16, 1/2-1/16, 1/16, -6/16, 1/2+8/16, 1/16},		-- Top block (cross) -x 1 side
+			{-6/16, 1/2-1/16, -1/16, -6/16, 1/2+8/16, -1/16},	-- Top block (cross) -x 2 side
+			{5/16, 1/2-1/16, 1/16, 5/16, 1/2+8/16, 1/16},		-- Top block (cross) x 1 side
+			{5/16, 1/2-1/16, -1/16, 5/16, 1/2+8/16, -1/16},		-- Top block (cross) x 2 side
+		}
+	}
+	fence_closed.gate = name .. "_open"
+	fence_closed.sound = "doors_fencegate_open"
+	fence_closed.selection_box = {
+		type = "fixed",
+        fixed = {
+			{-1/2, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},			-- Gate
+		}
+	}
+	local fence_open = table.copy(fence)
+	fence_open.node_box = {
+        type = "fixed",
+        fixed = {
+			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/16},		-- Left completion
+			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},		-- Right completion
+			{-1/2, 1/2-4/16, 1/16, -1/2+2/16, 1/2-1/16, 1/2-2/16}, -- Top-left (transverse) x
+			{-1/2, -1/2+6/16, 1/16, -1/2+2/16, -1/2+9/16, 1/2-2/16}, -- Bottom-left (transverse) x
+			{1/2-2/16, 1/2-4/16, 1/16, 1/2, 1/2-1/16, 1/2},		-- Top-right (transverse) x
+			{1/2-2/16, -1/2+6/16, 1/16, 1/2, -1/2+9/16, 1/2},	-- Bottom-right (transverse) x
+			{-1/2, -1/2+6/16, 6/16, -1/2+2/16, 1/2-1/16, 1/2},	-- Center Left
+			{1/2-2/16, 1/2-4/16, 1/2, 1/2, -1/2+9/16, 6/16},	-- Center Right
+		},
+	}
+	fence_open.gate = name .. "_closed"
+	fence_open.sound = "doors_fencegate_close"
+	fence_open.groups.not_in_creative_inventory = 1
+	fence_open.selection_box = {
+		type = "fixed",
+        fixed = {
+			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/2},		-- Left
+			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/2},		-- Right
+		}
+	}
+
+	minetest.register_node(":" .. name .. "_closed", fence_closed)
+	minetest.register_node(":" .. name .. "_open", fence_open)
+
+	minetest.register_craft({
+		output = name .. "_closed",
+		recipe = {
+			{"group:stick", def.material, "group:stick"},
+			{"group:stick", def.material, "group:stick"}
+		}
+	})
+end
+
+doors.register_fencegate("doors:gate_wood", {
+	description = "Apple Wood Fence Gate",
+	texture = "default_wood.png",
+    inventory_image = "default_wood_fencegate.png",
+    wield_image = "default_wood_fencegate.png",
+	material = "default:wood",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2}
+})
+
+minetest.register_alias("fences:fencegate_open", "doors:gate_wood")
+minetest.register_alias("fences:fencegate", "doors:gate_wood_closed")

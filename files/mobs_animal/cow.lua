@@ -115,16 +115,16 @@ mobs:register_mob("mobs_animal:cow", {
 		end
 	end,
 
-		after_activate = function(self, staticdata, def, dtime)
-			-- replace cow using the old directx model
-			if self.mesh == "mobs_cow.x" then
-				local pos = self.object:get_pos()
-				if pos then
-					minetest.add_entity(pos, self.name)
-					self.object:remove()
-				end
+	after_activate = function(self, staticdata, def, dtime)
+		-- replace cow using the old directx model
+		if self.mesh == "mobs_cow.x" then
+			local pos = self.object:get_pos()
+			if pos then
+				minetest.add_entity(pos, self.name)
+				self.object:remove()
 			end
-		end,
+		end
+	end,
 	})
 
 mobs:spawn({
