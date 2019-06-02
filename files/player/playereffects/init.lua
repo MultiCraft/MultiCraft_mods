@@ -37,7 +37,7 @@ playereffects.last_effect_id = 0
 playereffects.use_hud = true
 
 -- Wheather to use autosave (true or false)
-playereffects.use_autosave = true
+playereffects.use_autosave = false
 
 -- The time interval between autosaves, in seconds (only used when use_autosave is true)
 playereffects.autosave_time = 10
@@ -93,7 +93,7 @@ function playereffects.register_effect_type(effect_type_id, description, icon, g
 	effect_type.repeat_interval = repeat_interval
 
 	playereffects.effect_types[effect_type_id] = effect_type
-	minetest.log("action", "[playereffects] Effect type "..effect_type_id.." registered!")
+--	minetest.log("action", "[playereffects] Effect type "..effect_type_id.." registered!")
 end
 
 function playereffects.apply_effect_type(effect_type_id, duration, player, repeat_interval_time_left)

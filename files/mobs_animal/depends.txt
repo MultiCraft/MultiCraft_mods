@@ -1,2 +1,4 @@
 default
 mobs
+dye
+wool
