@@ -189,7 +189,7 @@ end
 
 
 --
--- Papyrus and cactus growing
+-- Sugarcane and cactus growing
 --
 
 -- Wrapping the functions in ABM action is necessary to make overriding them possible
@@ -257,7 +257,7 @@ minetest.register_abm({
 })
 
 minetest.register_abm({
-	label = "Grow papyrus",
+	label = "Grow sugarcane",
 	nodenames = {"default:sugarcane"},
 	neighbors = {"default:dirt", "default:dirt_with_grass", "default:sand"},
 	interval = 14,

@@ -443,6 +443,7 @@ if not boost_cart.mtg_compat then
 		inventory_image = "carts_cart_inv.png",
 		wield_image = "carts_cart_inv.png",
 		stack_max = 1,
+		sounds = default.node_sound_metal_defaults(),
 		on_place = function(itemstack, placer, pointed_thing)
 			if not pointed_thing.type == "node" then
 				return
@@ -455,8 +456,7 @@ if not boost_cart.mtg_compat then
 				return
 			end
 
-			minetest.sound_play({name = "default_place_node_metal", gain = 0.5},
-			{pos = pointed_thing.above})
+			minetest.sound_play({pos = pointed_thing.above, name = "default_place_node_metal", gain = 1})
 			if not minetest.settings:get_bool("creative_mode") or not minetest.is_singleplayer() then
 				itemstack:take_item()
 			end
