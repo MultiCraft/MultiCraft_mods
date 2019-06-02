@@ -1191,7 +1191,7 @@ minetest.register_node("default:lava_source", {
 	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1},
 	on_construct = function(pos)
 		if minetest.is_singleplayer() ~= true then
-			if pos.y >= 1 then 
+			if pos.y >= 1 then
 				minetest.env:remove_node(pos)
 			end
 		end
@@ -1366,6 +1366,17 @@ minetest.register_node("default:ladder_wood", {
 	legacy_wallmounted = true,
 	sounds = default.node_sound_wood_defaults(),
 })
+
+
+default.register_fence("default:fence_wood", {
+	description = "Apple Wood Fence",
+	texture = "default_wood.png",
+    inventory_image = "default_wood_fence.png",
+	material = "default:wood",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	sounds = default.node_sound_wood_defaults()
+})
+
 
 minetest.register_node("default:vine", {
 	description = "Vine",
