@@ -646,6 +646,16 @@ function doors.register_fencegate(name, def)
 				max_hear_distance = 8})
 			return itemstack
 		end,
+		mesecons = {effector = {
+			action_on = function(pos, node, clicker, itemstack, pointed_thing)
+				local node_def = minetest.registered_nodes[node.name]
+				minetest.swap_node(pos, {name = node_def.gate, param2 = node.param2})
+				minetest.sound_play(node_def.sound, {pos = pos, gain = 0.3,
+					max_hear_distance = 8})
+				return itemstack
+			end,
+			},
+		}
 	}
 
 

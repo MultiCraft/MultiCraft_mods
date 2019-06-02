@@ -787,7 +787,7 @@ minetest.register_node("default:goldblock", {
 	tiles = {"default_gold_block.png"},
   	is_ground_content = false,
 	groups = {cracky = 1},
-	sounds = default.node_sound_metal_defaults(),
+	sounds = default.node_sound_stone_defaults(),
 })
 
 minetest.register_node("default:stone_with_emerald", {

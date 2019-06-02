@@ -197,7 +197,7 @@ function cart_entity:on_step(dtime)
 	if not self.driver and #self.attached_items == 0 then
 		self.count = (self.count or 0) + dtime
 
-		if self.count > 300 then
+		if self.count > 120 then
 			minetest.add_item(self.object:get_pos(), "carts:cart")
 			if self.sound_handle then
 				minetest.sound_stop(self.sound_handle)
@@ -469,7 +469,6 @@ if not boost_cart.mtg_compat then
 				return
 			end
 
-			minetest.sound_play({pos = pointed_thing.above, name = "default_place_node_metal", gain = 1})
 			if not minetest.settings:get_bool("creative_mode") or not minetest.is_singleplayer() then
 				itemstack:take_item()
 			end
