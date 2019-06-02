@@ -62,7 +62,8 @@ minetest.register_globalstep(function(dtime)
 		or playerplus[name].nod_stand == "default:snowblock"
 		or playerplus[name].nod_stand == "default:bedrock"
 		or playerplus[name].nod_stand == "default:slimeblock"
-		or playerplus[name].nod_stand == "mobs:cobweb" then
+		or playerplus[name].nod_stand == "mobs:cobweb"
+		or playerplus[name].nod_feet  == "mobs:cobweb" then
 			nslow = true
 		end
 

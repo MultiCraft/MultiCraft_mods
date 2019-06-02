@@ -1,25 +1,10 @@
 -- Sheep by PilzAdam
-local all_colours = {
-	{"black",      "Black"     },
-	{"blue",       "Blue"      },
-	{"brown",      "Brown"     },
-	{"cyan",       "Cyan"      },
-	{"dark_green", "Dark Green"},
-	{"dark_grey",  "Dark Grey" },
-	{"green",      "Green"     },
-	{"grey",       "Grey"      },
-	{"magenta",    "Magenta"   },
-	{"orange",     "Orange"    },
-	{"pink",       "Pink"      },
-	{"red",        "Red"       },
-	{"violet",     "Violet"    },
-	{"white",      "White"     },
-	{"yellow",     "Yellow"    },
-}
+local dyes = dye.dyes
 
-for _, col in ipairs(all_colours) do
+for i = 1, #dyes do
+	local name, desc = unpack(dyes[i])
 
-	mobs:register_mob("mobs_animal:sheep_"..col[1], {
+	mobs:register_mob("mobs_animal:sheep_" .. name, {
 		stay_near = {"farming:straw", 10},
 		stepheight = 1.1,
 		type = "animal",
@@ -31,7 +16,7 @@ for _, col in ipairs(all_colours) do
 		visual = "mesh",
 		mesh = "mobs_sheep.b3d",
 		textures = {
-			{"mobs_sheep_" .. col[1] .. ".png"},
+			{"mobs_sheep_" .. name .. ".png"},
 		},
 		gotten_texture = {"mobs_sheep_shaved.png"},
 		gotten_mesh = "mobs_sheep_shaved.b3d",
@@ -48,7 +33,7 @@ for _, col in ipairs(all_colours) do
 		drops = {
 			{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 			{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-			{name = "wool:"..col[1], chance = 1, min = 1, max = 1}
+			{name = "wool:" .. name, chance = 1, min = 1, max = 1}
 		},
 		water_damage = 0,
 		lava_damage = 5,
@@ -80,10 +65,10 @@ for _, col in ipairs(all_colours) do
 				self.gotten = false
 
 				self.object:set_properties({
-		textures = {
-			{"mobs_sheep_" .. col[1] .. ".png"},
-		},
-		mesh = "mobs_sheep.b3d",
+					textures = {
+						{"mobs_sheep_" .. name .. ".png"},
+					},
+					mesh = "mobs_sheep.b3d",
 				})
 			end
 		end,
@@ -98,7 +83,7 @@ for _, col in ipairs(all_colours) do
 					self.gotten = false
 
 					self.object:set_properties({
-						textures = {"mobs_sheep_"..col[1]..".png"},
+						textures = {"mobs_sheep_" .. name .. ".png"},
 						mesh = "mobs_sheep.b3d",
 					})
 				end
@@ -108,14 +93,14 @@ for _, col in ipairs(all_colours) do
 
 			local item = clicker:get_wielded_item()
 			local itemname = item:get_name()
-			local name = clicker:get_player_name()
+			local player = clicker:get_player_name()
 
 			--are we giving a haircut>
 			if itemname == "mobs:shears" then
 
 				if self.gotten ~= false
 				or self.child ~= false
-				or name ~= self.owner
+				or player ~= self.owner
 				or not minetest.get_modpath("wool") then
 					return
 				end
@@ -124,7 +109,7 @@ for _, col in ipairs(all_colours) do
 
 				local obj = minetest.add_item(
 					self.object:get_pos(),
-					ItemStack( "wool:" .. col[1] .. " " .. math.random(1, 3) )
+					ItemStack( "wool:" .. name .. " " .. math.random(1, 3) )
 				)
 
 				if obj then
@@ -154,13 +139,14 @@ for _, col in ipairs(all_colours) do
 				if self.gotten == false
 				and self.child == false
 				and self.tamed == true
-				and name == self.owner then
+				and player == self.owner then
 
 					local colr = string.split(itemname, ":")[2]
 
-					for _,c in pairs(all_colours) do
+					for i = 1, #dyes do
+						local name = unpack(dyes[i])
 
-						if c[1] == colr then
+						if name == colr then
 
 							local pos = self.object:get_pos()
 
@@ -169,7 +155,7 @@ for _, col in ipairs(all_colours) do
 							local mob = minetest.add_entity(pos, "mobs_animal:sheep_" .. colr)
 							local ent = mob:get_luaentity()
 
-							ent.owner = name
+							ent.owner = player
 							ent.tamed = true
 
 							-- take item
@@ -194,10 +180,10 @@ for _, col in ipairs(all_colours) do
 		end
 	})
 
-	mobs:register_egg("mobs_animal:sheep_"..col[1], col[2] .. " Sheep egg", "wool_"..col[1]..".png", 1)
+	mobs:register_egg("mobs_animal:sheep_" .. name, desc .. " Sheep egg", "wool_" .. name .. ".png", 1)
 
 	-- compatibility
-	mobs:alias_mob("mobs:sheep_" .. col[1], "mobs_animal:sheep_" .. col[1])
+	mobs:alias_mob("mobs:sheep_" .. name, "mobs_animal:sheep_" .. name)
 
 end
 
