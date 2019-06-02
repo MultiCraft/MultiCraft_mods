@@ -109,3 +109,36 @@ minetest.register_on_joinplayer(function(player)
 	
 	player:get_inventory():set_stack("hand", 1, "player_api:hand")
 end)
+
+-- Items for the new player
+minetest.register_on_newplayer(function (player)
+	if creative_mode_cache then
+		player:get_inventory():add_item('main', 'default:sword_steel')
+		player:get_inventory():add_item('main', 'default:torch 8')
+		player:get_inventory():add_item('main', 'default:wood 64')
+	end
+end)
+
+-- Drop items at death
+minetest.register_on_dieplayer(function(player)
+	local pos = player:get_pos()
+	local inv = player:get_inventory()
+
+	-- Drop inventory items
+	for i = 1, inv:get_size("main") do
+		local stack = inv:get_stack("main", i)
+		minetest.item_drop(stack, nil, pos)
+		inv:set_stack("main", i, nil)
+	end
+
+	-- Drop crafting grid items
+	for i = 1, inv:get_size("craft") do
+		local stack = inv:get_stack("craft", i)
+		minetest.item_drop(stack, nil, pos)
+		inv:set_stack("craft", i, nil)
+	end
+	
+	-- Display death coordinates
+	minetest.chat_send_player(player:get_player_name(), "Your last coordinates: "
+		.. minetest.pos_to_string(vector.round(pos)))
+end)

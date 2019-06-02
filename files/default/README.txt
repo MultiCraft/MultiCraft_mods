@@ -101,6 +101,8 @@ http://freesound.org/people/Ryding/sounds/94337/
 
 Ferk (CC0 1.0):
   default_item_smoke.ogg, based on a sound by http://opengameart.org/users/bart
+  
+wool_coat_movement.ogg from freeSFX.co.uk and has a Creative Commons license
 
   player_damage.1.ogg
   player_damage.2.ogg

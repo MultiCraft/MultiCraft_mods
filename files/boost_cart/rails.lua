@@ -18,39 +18,6 @@ minetest.register_craft({
 	}
 })
 
---[[
--- Moreores' copper rail
-if minetest.get_modpath("moreores") then
-	minetest.register_alias("carts:copperrail", "moreores:copper_rail")
-
-	if minetest.raillike_group then
-		-- Ensure that this rail uses the same connect_to_raillike
-		local new_groups = minetest.registered_nodes["moreores:copper_rail"].groups
-		new_groups.connect_to_raillike = minetest.raillike_group("rail")
-		minetest.override_item("moreores:copper_rail", {
-			groups = new_groups
-		})
-	end
-else
-	boost_cart:register_rail(":carts:copperrail", {
-		description = "Copper rail",
-		tiles = {
-			"carts_rail_straight_cp.png", "carts_rail_curved_cp.png",
-			"carts_rail_t_junction_cp.png", "carts_rail_crossing_cp.png"
-		},
-		groups = boost_cart:get_rail_groups()
-	})
-
-	minetest.register_craft({
-		output = "carts:copperrail 12",
-		recipe = {
-			{"default:copper_ingot", "", "default:copper_ingot"},
-			{"default:copper_ingot", "group:stick", "default:copper_ingot"},
-			{"default:copper_ingot", "", "default:copper_ingot"},
-		}
-	})
-end
-]]
 -- Power rail
 boost_cart:register_rail(":carts:powerrail", {
 	description = "Powered rail",

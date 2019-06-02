@@ -192,6 +192,24 @@ end
 
 local v3_len = vector.length
 function cart_entity:on_step(dtime)
+
+	-- Drop cart if there is no player or items inside.
+	if not self.driver and #self.attached_items == 0 then
+		self.count = (self.count or 0) + dtime
+
+		if self.count > 300 then
+			minetest.add_item(self.object:get_pos(), "carts:cart")
+			if self.sound_handle then
+				minetest.sound_stop(self.sound_handle)
+			end
+			self.object:remove()
+			return
+		end
+
+	else
+		self.count = 0
+	end
+
 	rail_sound(self, dtime)
 	local vel = self.object:get_velocity()
 	if self.punched then
@@ -405,16 +423,11 @@ function cart_entity:on_step(dtime)
 	if player and dir.y ~= old_y_dir then
 		local feet = {x=0, y=0, z=0}
 		local eye = {x=0, y=-4, z=0}
-		feet.y = boost_cart.old_player_model and 6 or -4
+		feet.y = 6
 		if dir.y ~= 0 then
 			-- TODO: Find a better way to calculate this
-			if boost_cart.old_player_model then
-				feet.y = feet.y + 2
-				feet.z = -dir.y * 6
-			else
-				feet.y = feet.y + 4
-				feet.z = -dir.y * 2
-			end
+			feet.y = feet.y + 2
+			feet.z = -dir.y * 6
 			eye.z = -dir.y * 8
 		end
 		player:set_attach(self.object, "", feet,

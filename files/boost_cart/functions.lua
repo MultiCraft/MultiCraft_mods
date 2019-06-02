@@ -18,7 +18,7 @@ function boost_cart:manage_attachment(player, obj)
 	default.player_attached[player_name] = status
 
 	if status then
-		local y_pos = self.old_player_model and 6 or -4
+		local y_pos = 6
 		if player:get_properties().visual == "upright_sprite" then
 			y_pos = -4
 		end
@@ -233,7 +233,7 @@ function boost_cart:register_rail(name, def_overwrite)
 			type = "fixed",
 			fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
 		},
-		sounds = default.node_sound_metal_defaults(),
+		sounds = default.node_sound_metal_defaults()
 	}
 	for k, v in pairs(def_overwrite) do
 		def[k] = v
