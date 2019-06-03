@@ -828,10 +828,10 @@ minetest.register_node("default:diamondblock", {
 minetest.register_node("default:cactus", {
 	description = "Cactus",
 	drawtype = "nodebox",
-	tiles = {"default_cactus_top.png", "default_cactus_bottom.png", "default_cactus_side.png","default_cactus_side.png","default_cactus_side.png","default_cactus_side.png"},
-	groups = {snappy = 1, choppy = 3, flammable = 2},
+	tiles = {"default_cactus_top.png", "default_cactus_bottom.png", "default_cactus_side.png"},
+	paramtype2 = "facedir",
+	groups = {choppy = 3, flammable = 2, attached_node = 1},
 	sounds = default.node_sound_wood_defaults(),
-	paramtype = "light",
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -848,8 +848,18 @@ minetest.register_node("default:cactus", {
 			{-7/16, -8/16, -7/16, 7/16, 8/16, 7/16},
 		},
 	},
+})
 
-
+minetest.register_abm({
+	nodenames = {"default:cactus"},
+	interval = 1,
+	chance = 1,
+	action = function(pos, node, active_object_count, active_object_count_wider)
+		local players = minetest.get_objects_inside_radius(pos, 1)
+		for i, player in ipairs(players) do
+			player:set_hp(player:get_hp() - 2)
+		end
+	end,
 })
 
 minetest.register_node("default:sugarcane", {
