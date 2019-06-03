@@ -10,10 +10,12 @@ local node_ok = function(pos, fallback)
 	return fallback
 end
 
-
 local time = 0
--- check speed
+-- check interval
 local check = 0.5
+if not minetest.is_singleplayer() then
+	local check = 1
+end
 
 minetest.register_globalstep(function(dtime)
 	time = time + dtime
@@ -23,7 +25,7 @@ minetest.register_globalstep(function(dtime)
 	-- reset time for next check
 	time = 0
 	-- define locals outside loop
-	local name, pos, ndef, def, nslow, nfast
+	local name, pos, ndef, nslow
 
 	-- loop through players
 	for _,player in ipairs(minetest.get_connected_players()) do
@@ -47,15 +49,6 @@ minetest.register_globalstep(function(dtime)
 
 		pos.y = pos.y - 0.2 -- reset pos
 
---	[ Physics ]
-
-		-- are we standing on any nodes that speed player up?
-		nfast = nil
-		if playerplus[name].nod_stand == "default:ice"
-		or playerplus[name].nod_stand == "default:packedice" then
-			nfast = true
-		end
-
 		-- are we standing on any nodes that slow player down?
 		nslow = nil
 		if playerplus[name].nod_stand == "default:snow"
@@ -63,19 +56,11 @@ minetest.register_globalstep(function(dtime)
 		or playerplus[name].nod_stand == "default:bedrock"
 		or playerplus[name].nod_stand == "default:slimeblock"
 		or playerplus[name].nod_stand == "mobs:cobweb"
-		or playerplus[name].nod_feet  == "mobs:cobweb" then
+		or playerplus[name].nod_feet  == "mobs:cobweb"
+		or playerplus[name].nod_head  == "mobs:cobweb" then
 			nslow = true
 		end
 
-		-- apply speed changes
-		if nfast and not playerplus[name].nfast then
-			playerphysics.add_physics_factor(player, "speed", "playerplusspeed", 1.5)
-			playerplus[name].nfast = true
-
-		elseif not nfast and playerplus[name].nfast then
-			playerphysics.remove_physics_factor(player, "speed", "playerplusspeed")
-			playerplus[name].nfast = nil
-		end
 		-- apply slowdown changes
 		if nslow and not playerplus[name].nslow then
 			playerphysics.add_physics_factor(player, "speed", "playerplusslow", 0.7)
@@ -85,39 +70,8 @@ minetest.register_globalstep(function(dtime)
 			playerphysics.remove_physics_factor(player, "speed", "playerplusslow")
 			playerplus[name].nslow = nil
 		end
-
---	[ HP ]
-
-		-- Is player suffocating inside a normal node without no_clip privs?
-		local ndef = minetest.registered_nodes[playerplus[name].nod_head]
-
-		if ndef.walkable == true
-		and ndef.drowning == 0
-		and ndef.damage_per_second <= 0
-		and ndef.groups.disable_suffocation ~= 1
-		and ndef.drawtype == "normal"
-		and not minetest.check_player_privs(name, {noclip = true}) then
-
-			if player:get_hp() > 0 then
-				player:set_hp(player:get_hp() - 2)
-			end
-		end
-
-		-- am I near a cactus?
-		local near = minetest.find_node_near(pos, 1, "default:cactus")
-
-		if near then
-			-- am I touching the cactus? if so it hurts
-			for _,object in pairs(minetest.get_objects_inside_radius(near, 1.1)) do
-
-				if object:get_hp() > 0 then
-					object:set_hp(object:get_hp() - 2)
-				end
-			end
-		end
 	end
 end)
-
 
 -- set to blank on join (for 3rd party mods)
 minetest.register_on_joinplayer(function(player)

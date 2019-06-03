@@ -112,7 +112,7 @@ end)
 
 -- Items for the new player
 minetest.register_on_newplayer(function (player)
-	if creative_mode_cache then
+	if not creative_mode_cache then
 		player:get_inventory():add_item('main', 'default:sword_steel')
 		player:get_inventory():add_item('main', 'default:torch 8')
 		player:get_inventory():add_item('main', 'default:wood 64')
