@@ -110,6 +110,12 @@ wool_coat_movement.ogg from freeSFX.co.uk and has a Creative Commons license
   http://www.freesound.org/people/thecheeseman/sounds/44428/
   http://www.freesound.org/people/thecheeseman/sounds/44429/
   http://www.freesound.org/people/thecheeseman/sounds/44430/
+ 
+  player_damage.1.ogg from TenPlus1 mobs_redo mod (Creative Commons sounds from Freesound.org)
+  
+  sonictechtonic (CC BY 3.0):
+https://www.freesound.org/people/sonictechtonic/sounds/241872/
+  player_damage.2.ogg
 
 Schematics
 ----------
