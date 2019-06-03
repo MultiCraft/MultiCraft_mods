@@ -171,13 +171,12 @@ end
 -- food functions
 local food = hunger.food
 
-function hunger.register_food(name, hunger_change, replace_with_item, poisen, heal, sound)
+function hunger.register_food(name, hunger_change, replace_with_item, poisen, heal)
 	food[name] = {}
 	food[name].saturation = hunger_change -- hunger points added
 	food[name].replace = replace_with_item -- what item is given back after eating
 	food[name].poisen = poisen -- time its poisening
 	food[name].healing = heal -- amount of HP
-	food[name].sound = sound -- special sound that is played when eating
 end
 
 -- Poison player
@@ -220,11 +219,11 @@ function hunger.eat(hp_change, replace_with_item, itemstack, user, pointed_thing
 		def.saturation = hp_change * 1.3
 		def.replace = replace_with_item
 	end
-	local func = hunger.item_eat(def.saturation, def.replace, def.poisen, def.healing, def.sound)
+	local func = hunger.item_eat(def.saturation, def.replace, def.poisen, def.healing)
 	return func(itemstack, user, pointed_thing)
 end
 
-function hunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound)
+function hunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 	return function(itemstack, user, pointed_thing)
 
 		if itemstack:take_item() == nil and user == nil then
@@ -255,10 +254,6 @@ function hunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound)
 			hud.change_item(user, "hunger", {text = "hunger_statbar_poisen.png"})
 			poisenp(1.0, poisen, 0, user)
 		end
-
-		-- eating sound
-		sound = sound or "hunger_eat"
-		minetest.sound_play(sound, {to_player = name, gain = 0.5})
 
 		if replace_with_item then
 			if itemstack:is_empty() then

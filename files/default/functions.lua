@@ -132,13 +132,13 @@ end
 function default.node_wool_defaults(table)
 	table = table or {}
 	table.footstep = table.footstep or
-			{name = "wool_coat_movement", gain = 0.4}
+			{name = "default_wool_footstep", gain = 0.4}
 	table.dig = table.dig or
-			{name = "wool_coat_movement", gain = 0.6}
+			{name = "default_wool_footstep", gain = 0.6}
 	table.dug = table.dug or
-			{name = "wool_coat_movement", gain = 0.6}
+			{name = "default_wool_footstep", gain = 0.6}
 	table.place = table.place or
-			{name = "default_place_node", gain = 1.0}
+			{name = "default_wool_footstep", gain = 1.0}
 	return table
 end
 
