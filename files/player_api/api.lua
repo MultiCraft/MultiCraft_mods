@@ -122,10 +122,14 @@ minetest.register_globalstep(function(dtime)
 				end
 				if controls.LMB then
 					player_set_animation(player, "walk_mine", animation_speed_mod)
+				elseif controls.RMB then
+					player_set_animation(player, "walk_mine", animation_speed_mod)
 				else
 					player_set_animation(player, "walk", animation_speed_mod)
 				end
 			elseif controls.LMB then
+				player_set_animation(player, "mine")
+			elseif controls.RMB then
 				player_set_animation(player, "mine")
 			else
 				player_set_animation(player, "stand", animation_speed_mod)
