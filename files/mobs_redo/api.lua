@@ -2704,7 +2704,7 @@ end
 if damage >= 1 then
 
 	-- weapon sounds
-		if weapon_def.sounds then
+	--[[	if weapon_def.sounds then
 
 			local s = random(0, #weapon_def.sounds)
 
@@ -2717,7 +2717,7 @@ if damage >= 1 then
 				object = self.object,
 			max_hear_distance = 5
 		})
-	end
+	end ]]
 
 		-- blood_particles
 		if not disable_blood and self.blood_amount > 0 then

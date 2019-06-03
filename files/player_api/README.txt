@@ -15,7 +15,3 @@ Authors of media (textures, models and sounds)
 stujones11 (CC BY-SA 3.0):
   character.b3d
   character.blend -- Both derived from a model by MirceaKitsune (CC BY-SA 3.0)
-
-sonictechtonic (CC BY 3.0):
-https://www.freesound.org/people/sonictechtonic/sounds/241872/
-  player_damage.ogg
