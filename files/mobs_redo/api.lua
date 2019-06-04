@@ -75,6 +75,10 @@ local node_ice = "default:ice"
 local node_snowblock = "default:snowblock"
 local node_snow = "default:snow"
 mobs.fallback_node = minetest.registered_aliases["mapgen_dirt"] or "default:dirt"
+local lifetime = 1200 -- 20 min
+if not minetest.is_singleplayer() then
+	lifetime = 300 -- 5 min
+end
 
 local mob_class = {
 	stepheight = 1.1, -- was 0.6
@@ -82,7 +86,7 @@ local mob_class = {
 	owner = "",
 	order = "",
 	jump_height = 4,
-	lifetimer = 600, -- was 10 minutes
+	lifetimer = lifetime,
 	physical = true,
 	collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
 	visual_size = {x = 1, y = 1},
@@ -2760,7 +2764,7 @@ if damage >= 1 then
 			self.object:settexturemod("")
 		end)
 	end)
-	
+
 	end -- END if damage
 
 		-- knock back effect (only on full punch)
@@ -2930,7 +2934,7 @@ function mob_class:mob_activate(staticdata, def, dtime)
 			self[_] = stat
 		end
 	end
-	
+
 	-- force current model into mob
 	self.mesh = def.mesh
 	self.base_mesh = def.mesh
@@ -3240,7 +3244,7 @@ function mob_class:on_step(dtime)
 	self:do_jump()
 
 	self:do_runaway_from(self)
-	
+
 	self:do_stay_near()
 end
 
@@ -3754,7 +3758,7 @@ end
 
 -- Register spawn eggs
 
--- Note: This also introduces the “spawn_egg” group:
+-- Note: This also introduces the "spawn_egg" group:
 -- * spawn_egg=1: Spawn egg (generic mob, no metadata)
 -- * spawn_egg=2: Spawn egg (captured/tamed mob, metadata)
 function mobs:register_egg(mob, desc, background, addegg, no_creative)
@@ -4126,7 +4130,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 		-- feed and tame
 		self.food = (self.food or 0) + 1
-		
+
 		if self.food >= feed_count then
 
 			self.food = 0
