@@ -10,60 +10,40 @@ local ppa = minetest.get_modpath("playerphysics")
 pep = {}
 function pep.register_potion(potiondef)
 	local on_use
-	if(potiondef.effect_type ~= nil) then
-		on_use = function(itemstack, user, pointed_thing)
-			-- Particles
-			minetest.add_particlespawner({
-				amount = 40,
-				time = 0.1,
-				minpos = pointed_thing.above,
-				maxpos = pointed_thing.above,
-				minvel = {x = -1, y = 1, z = -1},
-				maxvel = {x = 1, y = 2, z = 1},
-				minacc = {x = 0, y = -5, z = 0},
-				maxacc = {x = 0, y = -9, z = 0},
-				minexptime = 1,
-				maxexptime = 3,
-				minsize = 1,
-				maxsize = 3,
-				collisiondetection = false,
-				vertical = false,
-				texture = "pep_"..potiondef.basename..".png",
-			})
+	on_use = function(itemstack, user, pointed_thing)
+		-- Particles
+		minetest.add_particlespawner({
+			amount = 30,
+			time = 0.1,
+			minpos = pointed_thing.above,
+			maxpos = pointed_thing.above,
+			minvel = {x = -1, y = 1, z = -1},
+			maxvel = {x = 1, y = 2, z = 1},
+			minacc = {x = 0, y = -5, z = 0},
+			maxacc = {x = 0, y = -9, z = 0},
+			minexptime = 1,
+			maxexptime = 3,
+			minsize = 1,
+			maxsize = 2,
+			collisiondetection = false,
+			vertical = false,
+			texture = "pep_"..potiondef.basename.."_particle.png",
+		})
+		if(potiondef.effect_type ~= nil) then
 			playereffects.apply_effect_type(potiondef.effect_type, potiondef.duration, user)
 			itemstack:take_item()
-			return itemstack
-		end
-	else
-		on_use = function(itemstack, user, pointed_thing)
-			-- Particles
-			minetest.add_particlespawner({
-				amount = 40,
-				time = 0.1,
-				minpos = pointed_thing.above,
-				maxpos = pointed_thing.above,
-				minvel = {x = -1, y = 1, z = -1},
-				maxvel = {x = 1, y = 2, z = 1},
-				minacc = {x = 0, y = -5, z = 0},
-				maxacc = {x = 0, y = -9, z = 0},
-				minexptime = 1,
-				maxexptime = 3,
-				minsize = 1,
-				maxsize = 3,
-				collisiondetection = false,
-				vertical = false,
-				texture = "pep_"..potiondef.basename..".png",
-			})
+		else
 			itemstack:take_item()
-			return itemstack
 		end
+		return itemstack
 	end
+
 	minetest.register_craftitem("pep:"..potiondef.basename, {
 		description = string.format(S("Glass Bottle (%s)"), potiondef.contentstring),
 		_doc_items_longdesc = potiondef.longdesc,
 		_doc_items_usagehelp = S("Hold it in your hand, then left-click to drink it."),
-		inventory_image = "pep_"..potiondef.basename..".png^[mask:pep_glass_bottle_overlay.png",
-		wield_image = "pep_"..potiondef.basename..".png^[mask:pep_glass_bottle_overlay.png",
+		inventory_image = "pep_"..potiondef.basename..".png",
+		wield_image = "pep_"..potiondef.basename..".png",
 		on_use = on_use,
 		groups = {vessel = 1},
 	})
@@ -350,7 +330,7 @@ if(minetest.get_modpath("default")~=nil) then
 		type = "shapeless",
 		output = "pep:breath",
 		recipe = { "default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus",
-			   "default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus", "vessels:glass_bottle" }
+				"default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus", "vessels:glass_bottle" }
 	})
 	minetest.register_craft({
 		type = "shapeless",
@@ -361,8 +341,8 @@ if(minetest.get_modpath("default")~=nil) then
 		minetest.register_craft({
 			type = "shapeless",
 			output = "pep:jumpplus",
-			recipe = { "flowers:flower_tulip", "default:grass_1", "default:mese_crystal_fragment",
-				   "default:mese_crystal_fragment", "vessels:glass_bottle" }
+			recipe = { "flowers:tulip", "default:grass_1", "mesecons:wire_00000000_off_fragment",
+					"mesecons:wire_00000000_off_fragment", "vessels:glass_bottle" }
 		})
 		minetest.register_craft({
 			type = "shapeless",
@@ -388,12 +368,12 @@ if(minetest.get_modpath("default")~=nil) then
 	minetest.register_craft({
 		type = "shapeless",
 		output = "pep:jumpminus",
-		recipe = { "default:leaves", "default:jungleleaves", "default:iron_lump", "flowers:dandelion_yellow", "vessels:glass_bottle" }
+		recipe = { "default:leaves", "default:jungleleaves", "default:iron_lump", "flowers:oxeye_daisy", "vessels:glass_bottle" }
 	})
 	minetest.register_craft({
 		type = "shapeless",
 		output = "pep:grav0",
-		recipe = { "default:mese_crystal", "vessels:glass_bottle" }
+		recipe = { "mesecons:wire_00000000_off", "vessels:glass_bottle" }
 	})
 	minetest.register_craft({
 		type = "shapeless",
@@ -410,7 +390,7 @@ if(minetest.get_modpath("flowers") ~= nil) then
 	minetest.register_craft({
 		type = "shapeless",
 		output = "pep:speedplus",
-		recipe = { "default:pine_sapling", "default:cactus", "flowers:dandelion_yellow", "default:junglegrass", "vessels:glass_bottle" }
+		recipe = { "default:pine_sapling", "default:cactus", "flowers:oxeye_daisy", "default:junglegrass", "vessels:glass_bottle" }
 	})
 end
 end

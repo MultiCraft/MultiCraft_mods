@@ -160,7 +160,6 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 
 -- egg throwing item
 
-local egg_GRAVITY = 9
 local egg_VELOCITY = 19
 
 -- shoot egg
@@ -194,7 +193,7 @@ local mobs_shoot_egg = function (item, player, pointed_thing)
 
 	obj:set_acceleration({
 		x = dir.x * -3,
-		y = -egg_GRAVITY,
+		y = -9.81,
 		z = dir.z * -3
 	})
 

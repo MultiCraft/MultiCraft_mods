@@ -33,10 +33,13 @@ playereffects.last_effect_id = 0
 	Settings for Player Effects
 ]]
 
--- Wheather to use the HUD to expose the active effects to players (true or false)
+-- Whether to use the HUD to expose the active effects to players (true or false)
 playereffects.use_hud = true
 
--- Wheather to use autosave (true or false)
+-- Whether to use save (true, false or minetest.is_singleplayer())
+playereffects.save = minetest.is_singleplayer()
+
+-- Whether to use autosave (true or false)
 playereffects.use_autosave = false
 
 -- The time interval between autosaves, in seconds (only used when use_autosave is true)
@@ -45,20 +48,22 @@ playereffects.autosave_time = 10
 
 --[=[ Load inactive_effects and last_effect_id from playereffects, if this file exists  ]=]
 do
-	local filepath = minetest.get_worldpath().."/playereffects"
-	local file = io.open(filepath, "r")
-	if file then
-		minetest.log("action", "[playereffects] playereffects opened.")
-		local string = file:read()
-		io.close(file)
-		if(string ~= nil) then
-			local savetable = minetest.deserialize(string)
-			playereffects.inactive_effects = savetable.inactive_effects
-			minetest.debug("[playereffects] playereffects successfully read.")
-			minetest.debug("[playereffects] inactive_effects = "..dump(playereffects.inactive_effects))
-			playereffects.last_effect_id = savetable.last_effect_id
-			minetest.debug("[playereffects] last_effect_id = "..dump(playereffects.last_effect_id))
-			
+	if playereffects.save then
+		local filepath = minetest.get_worldpath().."/playereffects"
+		local file = io.open(filepath, "r")
+		if file then
+			minetest.log("action", "[playereffects] playereffects opened.")
+			local string = file:read()
+			io.close(file)
+			if(string ~= nil) then
+				local savetable = minetest.deserialize(string)
+				playereffects.inactive_effects = savetable.inactive_effects
+				minetest.debug("[playereffects] playereffects successfully read.")
+				minetest.debug("[playereffects] inactive_effects = "..dump(playereffects.inactive_effects))
+				playereffects.last_effect_id = savetable.last_effect_id
+				minetest.debug("[playereffects] last_effect_id = "..dump(playereffects.last_effect_id))
+				
+			end
 		end
 	end
 end
@@ -391,8 +396,10 @@ minetest.register_on_leaveplayer(function(player)
 end)
 
 minetest.register_on_shutdown(function()
-	minetest.log("action", "[playereffects] Server shuts down. Rescuing data into playereffects")
-	playereffects.save_to_file()
+	if playereffects.save then
+		minetest.log("action", "[playereffects] Server shuts down. Rescuing data into playereffects")
+		playereffects.save_to_file()
+	end
 end)
 
 minetest.register_on_joinplayer(function(player)
@@ -508,7 +515,7 @@ function playereffects.hud_effect(effect_type_id, player, pos, time_left, repeat
 				scale = { x = 1, y = 1 },
 				position = { x = 1, y = 0.3 },
 				name = "effect_icon_"..effect_type_id,
-				text = playereffects.effect_types[effect_type_id].icon.."^[mask:pep_glass_bottle_overlay.png",
+				text = playereffects.effect_types[effect_type_id].icon,
 				alignment = { x = -1, y=0 },
 				direction = 0,
 				offset = { x = -186, y = pos*20 },
