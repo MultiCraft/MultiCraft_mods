@@ -2760,7 +2760,7 @@ if damage >= 1 then
 
 		self.object:settexturemod("^[colorize:#ff000085")
 
-		core.after(0.5, function()
+		minetest.after(0.5, function()
 			self.object:settexturemod("")
 		end)
 	end)
