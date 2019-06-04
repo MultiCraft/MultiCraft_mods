@@ -152,11 +152,14 @@ end
 
 
 function boat.on_step(self, dtime)
-
+	local drop_timer = 300 -- 5 min
+	if not minetest.is_singleplayer() then
+		drop_timer = 60 -- 1 min
+	end
 	self.count = (self.count or 0) + dtime
 
 	-- Drop boat if the player is not on board
-	if self.count > 120 then
+	if self.count > drop_timer then
 		minetest.add_item(self.object:get_pos(), "boats:boat")
 		self.object:remove()
 		return
