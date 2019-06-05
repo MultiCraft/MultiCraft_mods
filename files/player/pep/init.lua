@@ -8,6 +8,22 @@ end
 local ppa = minetest.get_modpath("playerphysics")
 
 pep = {}
+
+function return_empty_bottle(potiondef, user, itemstack)
+	local inventory = user:get_inventory()
+	local empty_vessel = "vessels:glass_bottle"
+	if (itemstack:is_empty()) then
+		return ItemStack(empty_vessel)
+	else
+		if inventory:room_for_item("main", "vessels:glass_bottle") then
+			inventory:add_item("main", "vessels:glass_bottle")
+		else
+			minetest.add_item(user:getpos(), empty_vessel)
+		end
+	end
+	return itemstack
+end
+
 function pep.register_potion(potiondef)
 	local on_use
 	on_use = function(itemstack, user, pointed_thing)
@@ -32,8 +48,10 @@ function pep.register_potion(potiondef)
 		if(potiondef.effect_type ~= nil) then
 			playereffects.apply_effect_type(potiondef.effect_type, potiondef.duration, user)
 			itemstack:take_item()
+			itemstack = return_empty_bottle(potiondef, user, itemstack)
 		else
 			itemstack:take_item()
+			itemstack = return_empty_bottle(potiondef, user, itemstack)
 		end
 		return itemstack
 	end
@@ -52,11 +70,7 @@ end
 pep.moles = {}
 
 function pep.enable_mole_mode(playername)
-	pep.moles[playername] = true
-end
-
-function pep.disable_mole_mode(playername)
-	pep.moles[playername] = false
+	pep.moles[playername] = minetest.is_singleplayer()
 end
 
 function pep.yaw_to_vector(yaw)
@@ -230,9 +244,6 @@ playereffects.register_effect_type("pepbreath", S("Perfect breath"), "pep_breath
 playereffects.register_effect_type("pepmole", S("Mole mode"), "pep_mole.png", {"autodig"},
 	function(player)
 		pep.enable_mole_mode(player:get_player_name())
-	end,
-	function(effect, player)
-		pep.disable_mole_mode(player:get_player_name())
 	end
 )
 

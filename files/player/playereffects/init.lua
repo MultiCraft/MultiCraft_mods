@@ -168,9 +168,9 @@ function playereffects.apply_effect_type(effect_type_id, duration, player, repea
 		end
 	end
 
-	--[[ show no more than 20 effects on the screen, so that hud_update does not need to be called so often ]]
+	--[[ show no more than 10 effects on the screen, so that hud_update does not need to be called so often ]]
 	local text_id, icon_id
-	if(free_hudpos <= 20) then
+	if(free_hudpos <= 10) then
 		text_id, icon_id = playereffects.hud_effect(effect_type_id, player, free_hudpos, duration, repeat_interval_time_left)
 		local hudinfo = {
 				text_id = text_id,
@@ -507,7 +507,7 @@ function playereffects.hud_effect(effect_type_id, player, pos, time_left, repeat
 			alignment = { x = -1, y = 0 },
 			direction = 1,
 			number = color,
-			offset = { x = -5, y = pos*20 } 
+			offset = { x = -5, y = pos*30 } 
 		})
 		if(playereffects.effect_types[effect_type_id].icon ~= nil) then
 			icon_id = player:hud_add({
@@ -518,7 +518,7 @@ function playereffects.hud_effect(effect_type_id, player, pos, time_left, repeat
 				text = playereffects.effect_types[effect_type_id].icon,
 				alignment = { x = -1, y=0 },
 				direction = 0,
-				offset = { x = -186, y = pos*20 },
+				offset = { x = -200, y = pos*30 },
 			})
 		end	
 	else
