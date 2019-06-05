@@ -54,7 +54,7 @@ minetest.register_tool("default:pick_gold", {
 		groupcaps={
 			cracky = {times={[1]=2.4, [2]=1.2, [3]=0.60}, uses=20, maxlevel=3},
 		},
-		damage_groups = {fleshy=5},
+		damage_groups = {fleshy=4},
 	},
 	sound = {breaks = "default_tool_breaks"},
 })
@@ -132,7 +132,7 @@ minetest.register_tool("default:shovel_gold", {
 		groupcaps={
 			crumbly = {times={[1]=1.20, [2]=0.60, [3]=0.30}, uses=20, maxlevel=3},
 		},
-		damage_groups = {fleshy=4},
+		damage_groups = {fleshy=3},
 	},
 	sound = {breaks = "default_tool_breaks"},
 })
@@ -207,7 +207,7 @@ minetest.register_tool("default:axe_gold", {
 		groupcaps={
 			choppy={times={[1]=2.20, [2]=1.00, [3]=0.60}, uses=20, maxlevel=3},
 		},
-		damage_groups = {fleshy=6},
+		damage_groups = {fleshy=5},
 	},
 	sound = {breaks = "default_tool_breaks"},
 })
@@ -221,7 +221,7 @@ minetest.register_tool("default:axe_diamond", {
 		groupcaps={
 			choppy={times={[1]=2.10, [2]=0.90, [3]=0.50}, uses=30, maxlevel=3},
 		},
-		damage_groups = {fleshy=7},
+		damage_groups = {fleshy=6},
 	},
 	sound = {breaks = "default_tool_breaks"},
 })
@@ -236,10 +236,7 @@ minetest.register_tool("default:sword_wood", {
 	tool_capabilities = {
 		full_punch_interval = 1,
 		max_drop_level=0,
-		groupcaps={
-			snappy = {times={[2]=1.6, [3]=0.40}, uses=10, maxlevel=1},
-		},
-		damage_groups = {fleshy=2},
+		damage_groups = {fleshy=3},
 	},
 	groups = {flammable = 2},
 	sound = {breaks = "default_tool_breaks"},
@@ -251,9 +248,6 @@ minetest.register_tool("default:sword_stone", {
 	tool_capabilities = {
 		full_punch_interval = 1.2,
 		max_drop_level=0,
-		groupcaps={
-			snappy = {times={[2]=1.4, [3]=0.40}, uses=20, maxlevel=1},
-		},
 		damage_groups = {fleshy=4},
 	},
 	sound = {breaks = "default_tool_breaks"},
@@ -265,9 +259,6 @@ minetest.register_tool("default:sword_steel", {
 	tool_capabilities = {
 		full_punch_interval = 0.8,
 		max_drop_level=1,
-		groupcaps={
-			snappy = {times={[1]=2.5, [2]=1.20, [3]=0.35}, uses=30, maxlevel=2},
-		},
 		damage_groups = {fleshy=6},
 	},
 	sound = {breaks = "default_tool_breaks"},
@@ -279,9 +270,6 @@ minetest.register_tool("default:sword_gold", {
 	tool_capabilities = {
 		full_punch_interval = 0.7,
 		max_drop_level=1,
-		groupcaps={
-			snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
-		},
 		damage_groups = {fleshy=7},
 	},
 	sound = {breaks = "default_tool_breaks"},
@@ -293,9 +281,6 @@ minetest.register_tool("default:sword_diamond", {
 	tool_capabilities = {
 		full_punch_interval = 0.7,
 		max_drop_level=1,
-		groupcaps={
-			snappy = {times={[1]=1.90, [2]=0.90, [3]=0.30}, uses=40, maxlevel=3},
-		},
 		damage_groups = {fleshy=8},
 	},
 	sound = {breaks = "default_tool_breaks"},
@@ -309,13 +294,12 @@ minetest.register_tool("default:pole", {
 	description = "Fishing Pole",
 	groups = {},
 	inventory_image = "default_tool_fishing_pole.png",
-	groups = {tools = 1},
 	liquids_pointable = true,
 	on_use = function (itemstack, user, pointed_thing)
 		if pointed_thing and pointed_thing.under then
 			local node = minetest.get_node(pointed_thing.under)
 			if string.find(node.name, "default:water") then
-				if math.random(1, 100) > 50 then
+				if math.random(1, 8) == 8 then
 					local inv = user:get_inventory()
 					if inv:room_for_item("main", {name="default:fish_raw", count=1, wear=0, metadata=""}) then
 						inv:add_item("main", {name="default:fish_raw", count=1, wear=0, metadata=""})
