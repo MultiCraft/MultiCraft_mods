@@ -1,12 +1,12 @@
-HUD_SB_SIZE = {x = 24, y = 24}
-HUD_HEALTH_POS = {x = 0.5, y = 1}
-HUD_HEALTH_OFFSET = {x = -248, y = -93}
-HUD_AIR_POS = {x = 0.5, y = 1}
-HUD_AIR_OFFSET = {x = 6, y = -124}
-HUD_HUNGER_POS = {x = 0.5, y = 1}
-HUD_HUNGER_OFFSET =  {x = 6, y = -93}
-HUD_ARMOR_POS = {x = 0.5, y = 1}
-HUD_ARMOR_OFFSET = {x = -248, y = -124}
+HUD_SB_SIZE       = {x = 24,   y = 24}
+HUD_HEALTH_POS    = {x = 0.5,  y = 1}
+HUD_HEALTH_OFFSET = {x = -248, y = -110}
+HUD_AIR_POS       = {x = 0.5,  y = 1}
+HUD_AIR_OFFSET    = {x = 6,    y = -124}
+HUD_HUNGER_POS    = {x = 0.5,  y = 1}
+HUD_HUNGER_OFFSET = {x = 6,    y = -110}
+HUD_ARMOR_POS     = {x = 0.5,  y = 1}
+HUD_ARMOR_OFFSET  = {x = -248, y = -124}
 
 -- read hud.conf settings
 function hud.read_conf()

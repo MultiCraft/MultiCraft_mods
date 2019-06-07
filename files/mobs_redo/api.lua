@@ -665,6 +665,8 @@ end
 
 -- drop items
 function mob_class:item_drop()
+	local pos = self.object:get_pos()
+	self.drops = type(self.drops) == "function" and self.drops(pos) or self.drops
 
 	-- check for nil or no drops
 	if not self.drops or #self.drops == 0 then
@@ -682,7 +684,6 @@ function mob_class:item_drop()
 		and self.cause_of_death.puncher:is_player() or nil
 
 	local obj, item, num
-	local pos = self.object:get_pos()
 
 	for n = 1, #self.drops do
 
