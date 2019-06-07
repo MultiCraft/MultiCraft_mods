@@ -26,11 +26,18 @@ mobs:register_mob("mobs_animal:pig", {
 	jump = true,
 	follow = {"default:apple", "farming:potato"},
 	view_range = 5,
-	drops = {
-		{name = "mobs:pork_raw", chance = 1, min = 1, max = 1},
-		{name = "mobs:pork_raw", chance = 2, min = 1, max = 1},
-		{name = "mobs:pork_raw", chance = 2, min = 1, max = 1}
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			--experience.add_orb(math.random(1,3), pos) -- random amount between 1 and 3
+			experience.add_orb(3, pos)
+		end
+
+		return {
+			{name = "mobs:pork_raw", chance = 1, min = 1, max = 1},
+			{name = "mobs:pork_raw", chance = 2, min = 1, max = 1},
+			{name = "mobs:pork_raw", chance = 2, min = 1, max = 1}
+		}
+	end,
 	water_damage = 0,
 	lava_damage = 5,
 	light_damage = 0,
