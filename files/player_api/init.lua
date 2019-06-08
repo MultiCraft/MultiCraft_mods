@@ -81,11 +81,11 @@ else
 			full_punch_interval = 0.9,
 			max_drop_level = 0,
 			groupcaps = {
-				crumbly = {times = {[2]=3.00, [3]=0.70}, uses = 0, maxlevel = 1},
-				snappy = {times ={[3]=0.40}, uses = 0, maxlevel = 1},
-				choppy = {times = {[3]=3}, uses = 0, maxlevel = 1},
-				cracky = {times = {[10]=10, [3]=7.5}, uses = 0, maxlevel = 1},
-				oddly_breakable_by_hand = {times = {[0]=90.00, [1]=7.00, [2]=3.00, [3]=3*3.33, [4]=250, [5]=999999.0, [6]=0.5}, uses = 0, maxlevel = 5}
+				crumbly = {times = {[1]=5.0, [2]=3.0, [3]=0.7}, uses = 0, maxlevel = 1},
+				snappy = {times = {[3]=0.4}, uses = 0, maxlevel = 1},
+				choppy = {times = {[1]=6.0, [2]=4.0, [3]=3.0}, uses = 0, maxlevel = 1},
+				cracky = {times = {[1]=7.0, [2]=4.0, [3]=3.0}, uses = 0, maxlevel = 1},
+				oddly_breakable_by_hand = {times = {[1]=3.5 ,[2]=2.0, [3]=0.7}, uses = 0}
 		},
 		damage_groups = {fleshy = 1},
 	}
@@ -106,7 +106,7 @@ minetest.register_on_joinplayer(function(player)
 	player:hud_set_hotbar_itemcount(9)
 	player:hud_set_hotbar_image("gui_hotbar.png")
 	player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
-	
+
 	player:get_inventory():set_stack("hand", 1, "player_api:hand")
 end)
 
@@ -137,7 +137,7 @@ minetest.register_on_dieplayer(function(player)
 		minetest.item_drop(stack, nil, pos)
 		inv:set_stack("craft", i, nil)
 	end
-	
+
 	-- Display death coordinates
 	minetest.chat_send_player(player:get_player_name(), "Your last coordinates: "
 		.. minetest.pos_to_string(vector.round(pos)))
