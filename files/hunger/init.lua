@@ -18,11 +18,6 @@ HUNGER_STARVE_LVL = 3 -- level of staturation that causes starving
 
 HUNGER_MAX = 30 -- maximum level of saturation
 
-
-local modpath = minetest.get_modpath("hunger")
-dofile(modpath .. "/functions.lua")
-dofile(modpath .. "/food.lua")
-
 -- legacy functions
 hud.item_eat = hunger.item_eat
 hud.set_hunger = hunger.save
@@ -32,6 +27,10 @@ hud.load_hunger = hunger.load
 
 -- Callbacks
 if minetest.settings:get_bool("enable_damage") then
+
+	local modpath = minetest.get_modpath("hunger")
+	dofile(modpath .. "/functions.lua")
+	dofile(modpath .. "/food.lua")
 
 	minetest.register_on_joinplayer(function(player)
 		minetest.after(0.1, function()

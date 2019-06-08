@@ -419,7 +419,7 @@ stairs.register_all("acacia_wood", "default:acacia_wood",
 -- Stone types
 
 stairs.register_all("stone", "default:stone",
-	{cracky=3,stone=1, },
+	{cracky = 3, stone=1},
 	{"default_stone.png"},
 	"Stone",
 	stairs.stone)
@@ -489,7 +489,7 @@ minetest.register_alias("stairs:slab_gold", "stairs:slab_goldblock")
 minetest.register_alias("stairs:corner_gold", "stairs:corner_goldblock")
 
 stairs.register_all("diamondblock", "default:diamondblock",
-	{cracky = 1, level=3},
+	{cracky = 1, level = 3},
 	{"default_diamond_block.png"},
 	"Diamond",
 	stairs.stone)

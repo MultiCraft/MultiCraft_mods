@@ -737,7 +737,7 @@ minetest.register_node("default:steelblock", {
 	description = "Steel Block",
 	tiles = {"default_steel_block.png"},
 	is_ground_content = false,
-	groups = {cracky = 1,level = 2},
+	groups = {cracky = 1, level = 2},
 	sounds = default.node_sound_stone_defaults(),
 })
 
@@ -1460,7 +1460,7 @@ minetest.register_node("default:glowstone", {
 			{items = {'default:glowdust 2'}},
 		}
 	},]]
-	light_source = 12,
+	light_source = default.LIGHT_MAX - 3,
 })
 
 minetest.register_node("default:slimeblock", {
@@ -1496,14 +1496,14 @@ minetest.register_node("default:quartz_ore", {
 minetest.register_node("default:quartz_block", {
 	description = "Quartz Block",
 	tiles = {"default_quartz_block_top.png", "default_quartz_block_bottom.png", "default_quartz_block_side.png"},
-	groups = {snappy = 1, bendy = 2,cracky = 1,level = 2},
+	groups = {snappy = 1, bendy = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults(),
 })
 
 minetest.register_node("default:quartz_chiseled", {
 	description = "Chiseled Quartz",
 	tiles = {"default_quartz_chiseled_top.png", "default_quartz_chiseled_top.png", "default_quartz_chiseled_side.png"},
-		groups = {snappy = 1, bendy = 2, cracky = 1, level = 2},
+		groups = {snappy = 1, bendy = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults(),
 })
 
@@ -1512,7 +1512,7 @@ minetest.register_node("default:quartz_pillar", {
 	paramtype2 = "facedir",
 	on_place = minetest.rotate_node,
 	tiles = {"default_quartz_pillar_top.png", "default_quartz_pillar_top.png", "default_quartz_pillar_side.png"},
-		groups = {snappy = 1, bendy = 2, cracky = 1, level = 2},
+		groups = {snappy = 1, bendy = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults(),
 })
 

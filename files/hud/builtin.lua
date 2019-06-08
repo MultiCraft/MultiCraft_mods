@@ -20,15 +20,8 @@ end
 
 hud.read_conf()
 
-local damage_enabled = minetest.settings:get_bool("enable_damage")
-
 hud.show_hunger = minetest.get_modpath("hunger") ~= nil
 hud.show_armor = minetest.get_modpath("3d_armor") ~= nil
-
-if damage_enabled ~= true then
-	hud.show_armor = false
-	return
-end
 
 hud.register("health", {
 	hud_elem_type = "statbar",

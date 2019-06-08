@@ -1,7 +1,10 @@
 hud = {}
 
-local path = minetest.get_modpath("hud")
+if minetest.settings:get_bool("enable_damage") then
 
-dofile(path .. "/api.lua")
-dofile(path .. "/builtin.lua")
-dofile(path .. "/legacy.lua")
+	local modpath = minetest.get_modpath("hud")
+	dofile(modpath .. "/api.lua")
+	dofile(modpath .. "/builtin.lua")
+	dofile(modpath .. "/legacy.lua")
+
+end
