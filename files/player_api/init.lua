@@ -94,6 +94,12 @@ end
 
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)
+
+	-- Temporary solution to the problem of loading yaw 'nul' on iOS
+	if (player:get_look_horizontal() == 0) then
+		player:set_look_horizontal(0.01)
+	end
+
 	player_api.player_attached[player:get_player_name()] = false
 	player_api.set_model(player, "character.b3d")
 	player:set_local_animation(
@@ -108,6 +114,15 @@ minetest.register_on_joinplayer(function(player)
 	player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
 
 	player:get_inventory():set_stack("hand", 1, "player_api:hand")
+
+	-- Temporary solution to the problem of loading yaw 'nul' on iOS
+	if PLATFORM == "iOS" then
+		minetest.after(5, function()
+			if (player:get_look_horizontal() == 0) then
+				minetest.request_shutdown()
+			end
+		end)
+	end
 end)
 
 -- Items for the new player
