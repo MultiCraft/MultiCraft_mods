@@ -170,7 +170,6 @@ minetest.register_node("default:sand", {
 	sounds = default.node_sound_sand_defaults(),
 })
 
-
 minetest.register_node("default:gravel", {
 	description = "Gravel",
 	tiles = {"default_gravel.png"},
@@ -191,6 +190,20 @@ minetest.register_node("default:redsand", {
 	groups = {crumbly = 3, falling_node = 1, redsand = 1},
 	sounds = default.node_sound_sand_defaults(),
 })
+
+if not minetest.is_singleplayer() then
+
+	minetest.override_item("default:sand", {
+		groups = {crumbly = 3, falling_node = 0, sand = 1},
+	})
+	minetest.override_item("default:gravel", {
+		groups = {crumbly = 2, falling_node = 0},
+	})
+	minetest.override_item("default:redsand", {
+		groups = {crumbly = 3, falling_node = 0, redsand = 1},
+	})
+
+end
 
 minetest.register_node("default:clay", {
 	description = "Clay",
@@ -1200,7 +1213,7 @@ minetest.register_node("default:lava_source", {
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
 	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1},
 	on_construct = function(pos)
-		if minetest.is_singleplayer() ~= true then
+		if not minetest.is_singleplayer() then
 			if pos.y >= 1 then
 				minetest.env:remove_node(pos)
 			end
