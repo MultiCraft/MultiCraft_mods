@@ -1,31 +1,12 @@
-HUD_SB_SIZE       = {x = 24,   y = 24}
-HUD_HEALTH_POS    = {x = 0.5,  y = 1}
-HUD_HEALTH_OFFSET = {x = -248, y = -110}
-HUD_AIR_POS       = {x = 0.5,  y = 1}
-HUD_AIR_OFFSET    = {x = 6,    y = -124}
-HUD_HUNGER_POS    = {x = 0.5,  y = 1}
-HUD_HUNGER_OFFSET = {x = 6,    y = -110}
-HUD_ARMOR_POS     = {x = 0.5,  y = 1}
-HUD_ARMOR_OFFSET  = {x = -248, y = -124}
-
--- read hud.conf settings
-function hud.read_conf()
-	local mod_path = minetest.get_modpath("hud")
-	local set = io.open(mod_path .. "/hud.conf", "r")
-	if set then
-		dofile(mod_path .. "/hud.conf")
-		set:close()
-	end
-end
-
-hud.read_conf()
-
-hud.show_hunger = minetest.get_modpath("hunger") ~= nil
-hud.show_armor = minetest.get_modpath("3d_armor") ~= nil
+HUD_SB_SIZE			= {x = 24,		y = 24}
+HUD_HEALTH_OFFSET	= {x = -255,	y = -109}
+HUD_AIR_OFFSET		= {x = 15,		y = -134}
+HUD_HUNGER_OFFSET	= {x = 15,		y = -109}
+HUD_ARMOR_OFFSET	= {x = -255,	y = -134}
 
 hud.register("health", {
 	hud_elem_type = "statbar",
-	position = HUD_HEALTH_POS,
+	position = {x = 0.5, y = 1},
 	size = HUD_SB_SIZE,
 	text = "heart.png",
 	number = 20,
@@ -44,7 +25,7 @@ hud.register("health", {
 
 hud.register("air", {
 	hud_elem_type = "statbar",
-	position = HUD_AIR_POS,
+	position = {x = 0.5, y = 1},
 	size = HUD_SB_SIZE,
 	text = "bubble.png",
 	number = 0,
@@ -68,7 +49,7 @@ hud.register("air", {
 
 hud.register("armor", {
 	hud_elem_type = "statbar",
-	position = HUD_ARMOR_POS,
+	position = {x = 0.5, y = 1},
 	size = HUD_SB_SIZE,
 	text = "hud_armor_fg.png",
 	number = 0,
@@ -81,7 +62,7 @@ hud.register("armor", {
 
 hud.register("hunger", {
 	hud_elem_type = "statbar",
-	position = HUD_HUNGER_POS,
+	position = {x = 0.5, y = 1},
 	size = HUD_SB_SIZE,
 	text = "hud_hunger_fg.png",
 	number = 20,

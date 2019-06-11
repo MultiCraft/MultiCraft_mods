@@ -1,12 +1,13 @@
 stairs = {}
 stairs.mod = "redo"
 
-stairs.wood = default.node_sound_wood_defaults()
+--[[stairs.wood = default.node_sound_wood_defaults()
 stairs.dirt = default.node_sound_dirt_defaults()
 stairs.stone = default.node_sound_stone_defaults()
 stairs.glass = default.node_sound_glass_defaults()
 stairs.leaves = default.node_sound_leaves_defaults()
 stairs.metal = default.node_sound_metal_defaults()
+stairs.wool = default.node_sound_wool_defaults()]]
 
 -- cache creative
 local creative = minetest.settings:get_bool("creative_mode")
@@ -82,7 +83,7 @@ end
 
 
 -- Node will be called stairs:stair_<subname>
-function stairs.register_stair(subname, recipeitem, groups, images, description, snds, alpha)
+--[[function stairs.register_stair(subname, recipeitem, groups, images, description, snds, alpha)
 	local stair_images = set_textures(images)
 	local new_groups = table.copy(groups)
 	new_groups.stair = 1
@@ -133,11 +134,11 @@ function stairs.register_stair(subname, recipeitem, groups, images, description,
 			{"stairs:stair_" .. subname, "stairs:stair_" .. subname},
 		},
 	})
-end
+end]]
 
 
 -- Node will be called stairs:slab_<subname>
-function stairs.register_slab(subname, recipeitem, groups, images, description, snds, alpha)
+--[[function stairs.register_slab(subname, recipeitem, groups, images, description, snds, alpha)
 	local slab_images = set_textures(images)
 	local new_groups = table.copy(groups)
 	new_groups.slab = 1
@@ -183,7 +184,7 @@ function stairs.register_slab(subname, recipeitem, groups, images, description, 
 			{"stairs:slab_" .. subname},
 		},
 	})
-end
+end]]
 
 
 -- Node will be called stairs:stair_outer_<subname>
@@ -219,7 +220,7 @@ function stairs.register_stair_outer(subname, recipeitem, groups, images, descri
 	minetest.register_alias("stairs:corner_" .. subname, "stairs:stair_outer_" .. subname)
 
 	-- if no recipe item provided then skip craft recipes
-	if not recipeitem then
+	--[[if not recipeitem then
 		return
 	end
 
@@ -240,18 +241,17 @@ function stairs.register_stair_outer(subname, recipeitem, groups, images, descri
 			{"stairs:stair_outer_" .. subname, "stairs:stair_outer_" .. subname},
 			{"stairs:stair_outer_" .. subname, "stairs:stair_outer_" .. subname},
 		},
-	})
+	})]]
 end
 
 -- compatibility function for previous stairs:corner_<subname>
-function stairs.register_corner(subname, recipeitem, groups, images, description, snds, alpha)
+--[[function stairs.register_corner(subname, recipeitem, groups, images, description, snds, alpha)
 	stairs.register_stair_outer(subname, recipeitem, groups, images, description, snds, alpha)
-end
+end]]
 
 
 -- Node will be called stairs:stair_inner_<subname>
-function stairs.register_stair_inner(subname, recipeitem, groups, images, description, snds, alpha)
-
+--[[function stairs.register_stair_inner(subname, recipeitem, groups, images, description, snds, alpha)
 	local stair_images = set_textures(images)
 	local new_groups = table.copy(groups)
 	new_groups.stair = 1
@@ -306,12 +306,12 @@ function stairs.register_stair_inner(subname, recipeitem, groups, images, descri
 			{"stairs:stair_inner_" .. subname, "stairs:stair_inner_" .. subname},
 		},
 	})
-end
+end]]
 
 -- compatibility function for previous stairs:invcorner_<subname>
-function stairs.register_invcorner(subname, recipeitem, groups, images, description, snds, alpha)
+--[[function stairs.register_invcorner(subname, recipeitem, groups, images, description, snds, alpha)
 	stairs.register_stair_inner(subname, recipeitem, groups, images, description, snds, alpha)
-end
+end]]
 
 
 -- Node will be called stairs:slope_<subname>
@@ -352,7 +352,7 @@ function stairs.register_slope(subname, recipeitem, groups, images, description,
 	})
 
 	-- slope recipe
-	minetest.register_craft({
+	--[[minetest.register_craft({
 		output = "stairs:slope_" .. subname .. " 6",
 		recipe = {
 			{recipeitem, "", ""},
@@ -366,27 +366,28 @@ function stairs.register_slope(subname, recipeitem, groups, images, description,
 		recipe = {
 			{"stairs:slope_" .. subname, "stairs:slope_" .. subname},
 		},
-	})
+	})]]
 end
 
 
 -- Nodes will be called stairs:{stair,slab}_<subname>
 function stairs.register_stair_and_slab(subname, recipeitem, groups, images,
 		desc_stair, desc_slab, sounds, alpha)
-	stairs.register_stair(subname, recipeitem, groups, images, desc_stair, sounds, alpha)
-	stairs.register_slab(subname, recipeitem, groups, images, desc_slab, sounds, alpha)
+--	stairs.register_stair(subname, recipeitem, groups, images, desc_stair, sounds, alpha)
+--	stairs.register_slab(subname, recipeitem, groups, images, desc_slab, sounds, alpha)
+	stairs.register_slope(subname, recipeitem, groups, images, desc_stair, snds, alpha)
 end
 
 -- Nodes will be called stairs:{stair,slab,corner,invcorner,slope}_<subname>
-function stairs.register_all(subname, recipeitem, groups, images, desc, snds, alpha)
+--[[function stairs.register_all(subname, recipeitem, groups, images, desc, snds, alpha)
 	stairs.register_stair(subname, recipeitem, groups, images, desc, snds, alpha)
 	stairs.register_slab(subname, recipeitem, groups, images, desc, snds, alpha)
 	stairs.register_corner(subname, recipeitem, groups, images, desc, snds, alpha)
 	stairs.register_invcorner(subname, recipeitem, groups, images, desc, snds, alpha)
 	stairs.register_slope(subname, recipeitem, groups, images, desc, snds, alpha)
-end
+end]]
 
-
+--[[
 local grp = {} -- Helper
 
 --= Default
@@ -592,8 +593,8 @@ stairs.register_all("wool_" .. colours[i][1], "wool:" .. colours[i][1],
 	{snappy = 2, choppy = 2, oddly_breakable_by_hand = 3, flammable = 3},
 	{"wool_" .. colours[i][1] .. ".png"},
 	colours[i][2] .. " Wool",
-	default.node_wool_defaults())
+	stairs.wool)
 
 end
 
-end
+end]]

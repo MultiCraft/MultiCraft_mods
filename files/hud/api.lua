@@ -14,7 +14,6 @@ local function throw_error(msg)
 	minetest.log("error", "Better HUD[error]: " .. msg)
 end
 
-
 --
 -- API
 --
@@ -121,9 +120,9 @@ function hud.change_item(player, name, def)
 	if def.offset and elem.offset then
 		if def.item_name and def.offset == "item" then
 			-- for legacy reasons
-			if def.item_name then
+			--[[if def.item_name then
 				hud.swap_statbar(player, name, def.item_name)
-			end
+			end]]
 		else
 			player:hud_change(elem.id, "offset", def.offset)
 			elem.offset = def.offset
@@ -149,6 +148,35 @@ function hud.remove_item(player, name)
 	return true
 end
 
+-- Armor
+
+
+if hud.show_armor then
+	local armor_org_func = armor.set_player_armor
+
+	local function get_armor_lvl(def)
+		-- items/protection based display
+		local lvl = def.level or 0
+		local max = 63 -- full diamond armor
+		-- TODO: is there a sane way to read out max values?
+		local ret = lvl/max
+		if ret > 1 then
+			ret = 1
+		end
+		return tonumber(20 * ret)
+	end
+
+	function armor.set_player_armor(self, player)
+		armor_org_func(self, player)
+		local name = player:get_player_name()
+		local def = self.def
+		local armor_lvl = 0
+		if def[name] and def[name].level then
+			armor_lvl = get_armor_lvl(def[name])
+		end
+		hud.change_item(player, "armor", {number = armor_lvl})
+	end
+end
 
 --
 -- Add registered HUD items to joining players
@@ -168,10 +196,10 @@ end
 minetest.register_on_joinplayer(function(player)
 
 	-- first: hide the default statbars
-	local hud_flags = player:hud_get_flags()
+	--[[local hud_flags = player:hud_get_flags()
 	hud_flags.healthbar = false
 	hud_flags.breathbar = false
-	player:hud_set_flags(hud_flags)
+	player:hud_set_flags(hud_flags)]]
 
 	-- now add the backgrounds for statbars
 	for _,item in pairs(sb_bg) do

@@ -129,7 +129,7 @@ function default.node_sound_snow_defaults(table)
 	return table
 end
 
-function default.node_wool_defaults(table)
+function default.node_sound_wool_defaults(table)
 	table = table or {}
 	table.footstep = table.footstep or
 			{name = "default_wool_footstep", gain = 0.4}

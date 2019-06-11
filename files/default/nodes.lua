@@ -178,7 +178,7 @@ minetest.register_node("default:gravel", {
 	drop = {
 		max_items = 1,
 		items = {
-			{items = {'default:flint'},rarity = 8},
+			{items = {'default:flint'}, rarity = 8},
 			{items = {'default:gravel'}}
 		}
 	},
@@ -263,7 +263,7 @@ minetest.register_node("default:ice", {
 	is_ground_content = false,
 	paramtype = "light",
 	use_texture_alpha = true,
-		groups = {cracky = 3, cools_lava = 1, slippery = 3},
+	groups = {cracky = 3, cools_lava = 1, slippery = 3},
 	sounds = default.node_sound_glass_defaults(),
 })
 
@@ -1462,6 +1462,7 @@ minetest.register_node("default:brick", {
 minetest.register_node("default:glowstone", {
 	description = "Glowstone",
 	tiles = {"default_glowstone.png"},
+	paramtype = "light",
 	groups = {cracky = 3},
 --[[	drop = {
 	max_items = 1,
@@ -1594,7 +1595,7 @@ function AddGlass(desc, recipeitem, color)
 		tiles = {"xpanes_pane_glass"..color..".png"},
 		paramtype = "light",
 		use_texture_alpha = true,
-		groups = {cracky = 3, oddly_breakable_by_hand = 3},
+		groups = {cracky = 3, oddly_breakable_by_hand = 3, colorglass = 1},
 		sounds = default.node_sound_glass_defaults(),
 		drop = "",
 	})

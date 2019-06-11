@@ -7,7 +7,8 @@ local min, ceil = math.min, math.ceil
 local nodes = {}
 for node, def in pairs(minetest.registered_nodes) do
 	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass") and
-		(def.groups.cracky or def.groups.choppy) and
+		--(def.groups.crumbly or def.groups.cracky or def.groups.snappy or def.groups.choppy) and // ToDo!!!
+		(def.groups.cracky or def.groups.snappy or def.groups.choppy) and
 		not def.on_construct and
 		not def.after_place_node and
 		not def.on_rightclick and
@@ -15,7 +16,8 @@ for node, def in pairs(minetest.registered_nodes) do
 		not def.allow_metadata_inventory_take and
 		not (def.groups.not_in_creative_inventory == 1) and
 		not (def.groups.not_cuttable == 1) and
-		not def.groups.wool and
+		--not def.groups.wool and
+		not def.groups.colorglass and
 		(def.tiles and type(def.tiles[1]) == "string" and not
 		def.tiles[1]:find("default_mineral")) and
 		not def.mesecons and
@@ -46,21 +48,23 @@ nodes = nodes..WB.custom_nodes_register
 -- Nodeboxes definitions
 workbench.defs = {
 	-- Name		  Yield   X  Y   Z  W   H  L
-	{"nanoslab",	8,	{ 0, 0,  0, 8,  1, 8  }},
+--	{"nanoslab",	8,	{ 0, 0,  0, 8,  1, 8  }},
 	{"micropanel",	8,	{ 0, 0,  0, 16, 1, 8  }},
 	{"microslab",	4,	{ 0, 0,  0, 16, 1, 16 }},
 	{"thinstair",	4,	{ 0, 7,  0, 16, 1, 8   },
 						{ 0, 15, 8, 16, 1, 8  }},
 	{"cube",		4,	{ 0, 0,  0, 8,  8, 8  }},
 	{"panel",		4,	{ 0, 0,  0, 16, 8, 8  }},
-	{"slab",		2,	nil					   },
+	{"slab",		2,	{ 0, 0,  0, 16, 8, 16  }},
 	{"doublepanel",	2,	{ 0, 0,  0, 16, 8, 8   },
 						{ 0, 8,  8, 16, 8, 8  }},
 	{"halfstair",	2,	{ 0, 0,  0, 8,  8, 16  },
 						{ 0, 8,  8, 8,  8, 8  }},
 	{"outerstair",	1,	{ 0, 0,  0, 16, 8, 16  },
 						{ 0, 8,  8, 8,  8, 8  }},
-	{"stair",		1,	nil					   },
+	{"stair",		1,	{ 0, 0,  0, 16, 8, 16  },
+						{ 0, 8,  8, 16, 8, 8  }},
+	{"slope",		2,	nil					   },
 	{"innerstair",	1,	{ 0, 0,  0, 16, 8, 16  },
 						{ 0, 8,  8, 16, 8, 8   },
 						{ 0, 8,  0, 8,  8, 8  }}
@@ -325,7 +329,7 @@ for i=1, #nodes do
 	if d[3] then
 		local groups = {}
 		local tiles
-		groups.not_in_creative_inventory = 1
+		--groups.not_in_creative_inventory = 1
 
 		for k, v in pairs(def.groups) do
 			if k ~= "wood" and k ~= "stone" and k ~= "level" then
@@ -346,7 +350,7 @@ for i=1, #nodes do
 		if not minetest.registered_nodes["stairs:slab_"..node:match(":(.*)")] then
 			stairs.register_stair_and_slab(node:match(":(.*)"), node,
 				groups, tiles, def.description.." Stair",
-				def.description.." Slab", def.sounds)
+				def.description, def.sounds)
 		end
 
 		minetest.register_node(":"..node.."_"..d[1], {
