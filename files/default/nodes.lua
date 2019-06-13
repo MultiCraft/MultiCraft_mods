@@ -105,7 +105,7 @@ minetest.register_node("default:obsidian", {
 minetest.register_node("default:bedrock", {
 	description = "Bedrock",
 	tiles = {"default_bedrock.png"},
-	groups = {oddly_breakable_by_hand = 5, not_in_creative_inventory = 1},
+	groups = {oddly_breakable_by_hand = 5, speed = -30, not_in_creative_inventory = 1},
 	sounds = default.node_sound_stone_defaults(),
 })
 
@@ -230,7 +230,7 @@ minetest.register_node("default:snow", {
 			{-0.5, -0.5, -0.5,  0.5, -0.5+2/16, 0.5},
 		},
 	},
-	groups = {crumbly = 3, falling_node = 1, snowy = 1, puts_out_fire = 1, misc = 1},
+	groups = {crumbly = 3, falling_node = 1, snowy = 1, puts_out_fire = 1, misc = 1, speed = -30},
 	sounds = default.node_sound_snow_defaults(),
 	on_use = snow_shoot_snowball,
 	on_construct = function(pos)
@@ -244,7 +244,7 @@ minetest.register_node("default:snow", {
 minetest.register_node("default:snowblock", {
 	description = "Snow Block",
 	tiles = {"default_snow.png"},
-	groups = {crumbly = 3, cools_lava = 1, snowy = 1},
+	groups = {crumbly = 3, cools_lava = 1, snowy = 1, speed = -30},
 	sounds = default.node_sound_snow_defaults(),
 	drop = "default:snow 4",
 	on_construct = function(pos)
@@ -1491,7 +1491,7 @@ minetest.register_node("default:slimeblock", {
 	},
 	use_texture_alpha = true,
 	sunlight_propagates = true,
-	groups = {oddly_breakable_by_hand = 3, disable_jump = 1, fall_damage_add_percent=-100},
+	groups = {oddly_breakable_by_hand = 3, disable_jump = 1, fall_damage_add_percent = -100, speed = -30},
 })
 
 
