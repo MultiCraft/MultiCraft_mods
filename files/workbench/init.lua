@@ -55,7 +55,7 @@ workbench.defs = {
 						{ 0, 15, 8, 16, 1, 8  }},
 	{"cube",		4,	{ 0, 0,  0, 8,  8, 8  }},
 	{"panel",		4,	{ 0, 0,  0, 16, 8, 8  }},
-	{"slab",		2,	{ 0, 0,  0, 16, 8, 16  }},
+	{"slab",		2,	{ 0, 0,  0, 16, 8, 16 }},
 	{"doublepanel",	2,	{ 0, 0,  0, 16, 8, 8   },
 						{ 0, 8,  8, 16, 8, 8  }},
 	{"halfstair",	2,	{ 0, 0,  0, 8,  8, 16  },
@@ -69,7 +69,6 @@ workbench.defs = {
 						{ 0, 8,  8, 16, 8, 8   },
 						{ 0, 8,  0, 8,  8, 8  }}
 }
-
 
 -- Tools allowed to be repaired
 function workbench:repairable(stack)
@@ -260,7 +259,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
 
 	if listname == "input" then
-		if stackname == inputname then
+		if stackname == inputname and registered_nodes[inputname.."_cube"] then
 			workbench:get_output(inv, input, stackname)
 		else
 			inv:set_list("forms", {})
@@ -296,29 +295,7 @@ minetest.register_node("workbench:workbench", {
 	on_metadata_inventory_put = workbench.on_put,
 	on_metadata_inventory_take = workbench.on_take,
 	allow_metadata_inventory_put = workbench.put,
-	allow_metadata_inventory_move = workbench.move,
-})
-
-minetest.register_tool("workbench:hammer", {
-	description = "Hammer",
-	inventory_image = "workbench_hammer.png",
-	on_use = function() do return end end
-})
-
-minetest.register_craft({
-	output = "workbench:workbench",
-	recipe = {
-		{"group:wood", "group:wood"},
-		{"group:wood", "group:wood"}
-	}
-})
-
-minetest.register_craft({
-	output = "workbench:hammer",
-	recipe = {
-		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
-		{"", "group:stick", ""}
-	}
+	allow_metadata_inventory_move = workbench.move
 })
 
 for _, d in pairs(workbench.defs) do
@@ -338,7 +315,7 @@ for i=1, #nodes do
 		end
 
 		if def.tiles then
-			if #def.tiles > 1 and not (def.drawtype:sub(1,5) == "glass") then
+			if #def.tiles > 1 and (def.drawtype:sub(1,5) ~= "glass") then
 				tiles = def.tiles
 			else
 				tiles = {def.tiles[1]}
@@ -361,7 +338,7 @@ for i=1, #nodes do
 			sounds = def.sounds,
 			tiles = tiles,
 			groups = groups,
-			-- `unpack` has been changed to `table.unpack` in newest Lua versions.
+			-- `unpack` has been changed to `table.unpack` in newest Lua versions
 			node_box = workbench:pixelbox(16, {unpack(d, 3)}),
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node
@@ -369,3 +346,27 @@ for i=1, #nodes do
 	end
 end
 end
+
+-- Craft items
+
+minetest.register_tool("workbench:hammer", {
+	description = "Hammer",
+	inventory_image = "workbench_hammer.png",
+	on_use = function() do return end end
+})
+
+minetest.register_craft({
+	output = "workbench:workbench",
+	recipe = {
+		{"group:wood", "group:wood"},
+		{"group:wood", "group:wood"}
+	}
+})
+
+minetest.register_craft({
+	output = "workbench:hammer",
+	recipe = {
+		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
+		{"", "group:stick", ""}
+	}
+})

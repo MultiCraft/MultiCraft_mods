@@ -1,8 +1,8 @@
 HUD_SB_SIZE			= {x = 24,		y = 24}
-HUD_HEALTH_OFFSET	= {x = -255,	y = -109}
-HUD_AIR_OFFSET		= {x = 15,		y = -134}
-HUD_HUNGER_OFFSET	= {x = 15,		y = -109}
-HUD_ARMOR_OFFSET	= {x = -255,	y = -134}
+HUD_HEALTH_OFFSET	= {x = -249,	y = -109}
+HUD_AIR_OFFSET		= {x = 8,		y = -134}
+HUD_HUNGER_OFFSET	= {x = 8,		y = -109}
+HUD_ARMOR_OFFSET	= {x = -249,	y = -134}
 
 hud.register("health", {
 	hud_elem_type = "statbar",
