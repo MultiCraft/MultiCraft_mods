@@ -108,3 +108,6 @@ minetest.register_alias("fences:fence_wood_32", "default:fence_wood")
 minetest.register_alias("fences:fence_wood_33", "default:fence_wood")
 minetest.register_alias("fences:fence_wood_34", "default:fence_wood")
 minetest.register_alias("fences:fence_wood_35", "default:fence_wood")
+
+-- Hardened Clay
+minetest.register_alias("hardened_clay:hardened_clay", "default:hardened_clay")

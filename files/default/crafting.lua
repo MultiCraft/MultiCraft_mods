@@ -569,6 +569,12 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "cooking",
+	output = "default:hardened_clay",
+	recipe = "default:clay",
+})
+
+minetest.register_craft({
+	type = "cooking",
 	output = "default:fish",
 	recipe = "default:fish_raw",
 --  cooktime = 2,

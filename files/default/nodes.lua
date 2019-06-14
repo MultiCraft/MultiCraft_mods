@@ -213,6 +213,14 @@ minetest.register_node("default:clay", {
 	sounds = default.node_sound_dirt_defaults(),
 })
 
+minetest.register_node("default:hardened_clay", {
+	description = "Hardened Clay",
+	tiles = {"hardened_clay.png"},
+	is_ground_content = false,
+	groups = {cracky = 3, hardened_clay = 1},
+	sounds = default.node_sound_defaults(),
+})
+
 
 minetest.register_node("default:snow", {
 	description = "Snow",
@@ -1583,44 +1591,3 @@ default.register_leafdecay({
 	leaves = {"default:acacia_leaves"},
 	radius = 2,
 })
-
---
--- Color Glass
---
-
-function AddGlass(desc, recipeitem, color)
-	minetest.register_node("default:glass"..color, {
-		description = desc,
-		drawtype = "glasslike",
-		tiles = {"xpanes_pane_glass"..color..".png"},
-		paramtype = "light",
-		use_texture_alpha = true,
-		groups = {cracky = 3, oddly_breakable_by_hand = 3, colorglass = 1},
-		sounds = default.node_sound_glass_defaults(),
-		drop = "",
-	})
-
-	minetest.register_craft({
-		output = 'default:glass_'..color..'',
-		recipe = {
-			{'default:glass', 'group:dye,'..recipeitem}
-		}
-	})
-end
-
--- Colored glass
-AddGlass( "Glass Red",		"basecolor_red", 		"_red")
-AddGlass( "Glass Green",	"unicolor_dark_green",	"_green")
-AddGlass( "Glass Blue",		"basecolor_blue",		"_blue")
-AddGlass( "Glass Light Blue", "basecolor_cyan",		"_light_blue")
-AddGlass( "Glass Black",	"basecolor_black",		"_black")
-AddGlass( "Glass White",	"basecolor_white",		"_white")
-AddGlass( "Glass Yellow",	"basecolor_yellow",		"_yellow")
-AddGlass( "Glass Brown",	"unicolor_dark_orange",	"_brown")
-AddGlass( "Glass Orange",	"excolor_orange",		"_orange")
-AddGlass( "Glass Pink",		"unicolor_light_red",	"_pink")
-AddGlass( "Glass Gray",		"unicolor_darkgrey",	"_gray")
-AddGlass( "Glass Lime",		"basecolor_green",		"_lime")
-AddGlass( "Glass Silver",	"basecolor_grey",		"_silver")
-AddGlass( "Glass Magenta",	"basecolor_magenta",	"_magenta")
-AddGlass( "Glass Purple",	"excolor_violet",		"_purple")

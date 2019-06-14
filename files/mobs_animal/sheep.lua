@@ -64,12 +64,10 @@ for i = 1, #dyes do
 				self.food = 0
 				self.gotten = false
 
-				self.object:set_properties({
-					textures = {
-						{"mobs_sheep_" .. name .. ".png"},
-					},
-					mesh = "mobs_sheep.b3d",
-				})
+					self.object:set_properties({
+						textures = {"mobs_sheep_" .. name .. ".png"},
+						mesh = "mobs_sheep.b3d",
+					})
 			end
 		end,
 		on_rightclick = function(self, clicker)
