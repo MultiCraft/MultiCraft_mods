@@ -61,9 +61,9 @@ local function table_iter(t)
 end
 
 local player_iter = nil
+local players_per_step = 1
 
---Item collection
-minetest.register_globalstep(function()
+local function get_next_player()
 	if player_iter == nil then
 		local names = {}
 		for player in table_iter(minetest.get_connected_players()) do
@@ -73,16 +73,25 @@ minetest.register_globalstep(function()
 			end
 		end
 		player_iter = table_iter(names)
+		players_per_step = math.floor(#names / 10) + 1
+		return
 	end
-	 -- only deal with one player per server step
 	local name = player_iter()
-	if name then
-		local player = minetest.get_player_by_name(name)
-		if player and player:is_player() and player:get_hp() > 0 then
-			--radial detection
-			collect_items(player)
-			return
+	player_iter = name and player_iter
+	return name or get_next_player()
+end
+
+--Item collection
+minetest.register_globalstep(function()
+	-- only deal with 1/10 of total player count on each server step
+	for i = 1, players_per_step do
+		local name = get_next_player()
+		if name then
+			local player = minetest.get_player_by_name(name)
+			if player and player:is_player() and player:get_hp() > 0 then
+				--radial detection
+				collect_items(player)
+			end
 		end
 	end
-	player_iter = nil
 end)
