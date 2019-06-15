@@ -1,5 +1,6 @@
-ARMOR_MOD_NAME = minetest.get_current_modname()
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/armor.lua")
+local modpath = minetest.get_modpath("3d_armor")
+dofile(modpath .. "/armor.lua")
+dofile(modpath .. "/hud.lua")
 
 -- Regisiter Head Armor
 

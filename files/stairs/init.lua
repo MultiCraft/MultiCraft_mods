@@ -375,7 +375,7 @@ function stairs.register_stair_and_slab(subname, recipeitem, groups, images,
 		desc_stair, desc_slab, sounds, alpha)
 --	stairs.register_stair(subname, recipeitem, groups, images, desc_stair, sounds, alpha)
 --	stairs.register_slab(subname, recipeitem, groups, images, desc_slab, sounds, alpha)
-	stairs.register_slope(subname, recipeitem, groups, images, desc_stair, snds, alpha)
+	stairs.register_slope(subname, recipeitem, groups, images, desc_stair, sounds, alpha)
 end
 
 -- Nodes will be called stairs:{stair,slab,corner,invcorner,slope}_<subname>
