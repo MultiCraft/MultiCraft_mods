@@ -7,7 +7,7 @@ ARMOR_DESTROY = false
 ARMOR_LEVEL_MULTIPLIER = 1
 ARMOR_HEAL_MULTIPLIER = 1
 
-local modpath = minetest.get_modpath(ARMOR_MOD_NAME)
+local modpath = minetest.get_modpath("3d_armor")
 local worldpath = minetest.get_worldpath()
 local input = io.open(modpath.."/armor.conf", "r")
 if input then

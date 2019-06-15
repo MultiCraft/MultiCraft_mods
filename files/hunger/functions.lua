@@ -177,7 +177,7 @@ local function poisenp(tick, time, time_left, player)
 	if time_left < time then
 		minetest.after(tick, poisenp, tick, time, time_left, player)
 	else
-		hud.change_item(player, "hunger", {text = "hud_hunger_fg.png"})
+		hud.change_item(player, "hunger", {text = "hunger_statbar_fg.png"})
 	end
 	local hp = player:get_hp() -1 or 0
 	if hp > 0 then
