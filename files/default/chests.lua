@@ -43,7 +43,8 @@ minetest.register_node("default:chest", {
 			meta:set_string("formspec",
 					"size[9,11.5]"..
 					"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]"..
-					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					default.gui_bg..
+					default.listcolors..
 					"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;true;]"..
 					"list[nodemeta:"..p.x..","..p.y..","..p.z..";main;0.01,0.4;9,3;]"..
 					"list[current_name;main;0.01,3.39;9,3;]"..
@@ -55,7 +56,8 @@ minetest.register_node("default:chest", {
 			m:set_string("formspec",
 					"size[9,11.5]"..
 					"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]"..
-					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					default.gui_bg..
+					default.listcolors..
 					"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;true;]"..
 					"list[nodemeta:"..pos.x..","..pos.y..","..pos.z..";main;0.01,3.39;9,3;]"..
 					"list[current_name;main;0.01,0.4;9,3;]"..
@@ -68,7 +70,8 @@ minetest.register_node("default:chest", {
 			meta:set_string("formspec",
 					"size[9,11.5]"..
 					"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]"..
-					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					default.gui_bg..
+					default.listcolors..
 					"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;true;]"..
 					"list[nodemeta:"..p.x..","..p.y..","..p.z..";main;0.01,3.39;9,3;]"..
 					"list[current_name;main;0.01,0.4;9,3;]"..
@@ -80,7 +83,8 @@ minetest.register_node("default:chest", {
 			m:set_string("formspec",
 					"size[9,11.5]"..
 					"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]"..
-					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					default.gui_bg..
+					default.listcolors..
 					"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;true;]"..
 					"list[nodemeta:"..pos.x..","..pos.y..","..pos.z..";main;0.01,0.4;9,3;]"..
 					"list[current_name;main;0.01,3.39;9,3;]"..
@@ -91,7 +95,8 @@ minetest.register_node("default:chest", {
 			meta:set_string("formspec",
 					"size[9,8.75]"..
 					"background[-0.2,-0.26;9.41,9.49;formspec_chest.png]"..
-					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					default.gui_bg..
+					default.listcolors..
 					"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;true;]"..
 					"list[current_name;main;0,0.5;9,3;]"..
 					"list[current_player;main;0,4.5;9,3;9]" ..
@@ -156,7 +161,8 @@ minetest.register_node("default:chest_left", {
 			meta:set_string("formspec",
 					"size[9,8.75]"..
 					"background[-0.2,-0.26;9.41,9.49;formspec_chest.png]"..
-					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					default.gui_bg..
+					default.listcolors..
 					"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;true;]"..
 					"list[current_name;main;0,0.5;9,3;]"..
 					"list[current_player;main;0,4.5;9,3;9]" ..
@@ -213,7 +219,8 @@ minetest.register_node("default:chest_right", {
 			meta:set_string("formspec",
 					"size[9,8.75]"..
 					"background[-0.2,-0.26;9.41,9.49;formspec_chest.png]"..
-					"listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]" ..
+					default.gui_bg..
+					default.listcolors..
 					"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;true;]"..
 					"list[current_name;main;0,0.5;9,3;]"..
 					"list[current_player;main;0,4.5;9,3;9]" ..

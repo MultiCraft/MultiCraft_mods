@@ -6,7 +6,7 @@ beds.spawn = {}
 
 beds.formspec = "size[8,11;true]" ..
 	"no_prepend[]" ..
-	"bgcolor[#08080880;true]" ..
+	default.gui_bg..
 	"button_exit[2,10;4,0.75;leave;Leave Bed]"
 
 local modpath = minetest.get_modpath("beds")
