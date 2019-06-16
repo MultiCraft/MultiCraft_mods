@@ -259,7 +259,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
 
 	if listname == "input" then
-		if stackname == inputname and registered_nodes[inputname.."_cube"] then
+		if stackname == inputname and minetest.registered_nodes[inputname.."_cube"] then
 			workbench:get_output(inv, input, stackname)
 		else
 			inv:set_list("forms", {})
