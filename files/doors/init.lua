@@ -144,6 +144,9 @@ function doors:register_door(name, def)
         if not def.only_placer_can_open then
             return true
         end
+		if not player then
+			return
+		end
         local meta = minetest.get_meta(pos)
         local pn = player:get_player_name()
         return meta:get_string("doors_owner") == pn
