@@ -26,14 +26,14 @@ if minetest.settings:get_bool("enable_damage") then
 
 	hud.register("armor", {
 		hud_elem_type = "statbar",
-		position = {x = 0.5, y = 1},
-		size = {x = 24, y = 24},
-		text = "3d_armor_statbar_fg.png",
-		number = 0,
-		alignment = {x = -1, y = -1},
-		offset = {x = -249,	y = -134},
-		background = "3d_armor_statbar_bg.png",
-		autohide_bg = true,
-		max = 20,
+		position      = {x = 0.5,  y = 1},
+		alignment     = {x = -1,   y = -1},
+		offset        = {x = -247, y = -134},
+		size          = {x = 24,   y = 24},
+		text          = "3d_armor_statbar_fg.png",
+		background    = "3d_armor_statbar_bg.png",
+		number        = 0,
+		max           = 20,
+		autohide_bg   = true,
 	})
 end
