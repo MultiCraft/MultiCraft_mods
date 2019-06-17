@@ -23,14 +23,13 @@ if minetest.settings:get_bool("enable_damage") then
 
 	hud.register("hunger", {
 		hud_elem_type = "statbar",
-		position = {x = 0.5, y = 1},
-		size = {x = 24, y = 24},
-		text = "hunger_statbar_fg.png",
-		number = 20,
-		alignment = {x = -1, y = -1},
-		offset = {x = 8, y = -109},
-		background = "hunger_statbar_bg.png",
-		max = 20,
+		position      = {x = 0.5, y = 1},
+		alignment     = {x = -1,  y = -1},
+		offset        = {x = 8,   y = -108},
+		size          = {x = 24,  y = 24},
+		text          = "hunger_statbar_fg.png",
+		background    = "hunger_statbar_bg.png",
+		number        = 20,
 	})
 
 	local modpath = minetest.get_modpath("hunger")
