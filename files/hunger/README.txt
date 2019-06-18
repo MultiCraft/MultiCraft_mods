@@ -1,4 +1,4 @@
-MultiCraft game mod: Hunger
+MultiCraft Game mod: Hunger
 =====================
 Version: 1.1.3
 

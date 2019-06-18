@@ -28,8 +28,8 @@ local torch_get_output_rules = function(node)
 end
 
 local torch_get_input_rules = function(node)
-local rules =	{{x = -2, y = 0, z = 0},
-							{x = -1, y = 1, z = 0}}
+	local rules = 	{{x = -2, y = 0, z = 0},
+				 {x = -1, y = 1, z = 0}}
 
 	return rotate_torch_rules(rules, node.param2)
 end
@@ -49,11 +49,12 @@ local torch_selectionbox =
 	wall_side = {-0.5, -0.1, -0.1, -0.5+0.6, 0.1, 0.1},
 }
 
-minetest.register_node("mesecons_torch:mesecon_torch_off", {
+--[[minetest.register_node("mesecons_torch:mesecon_torch_off", {
 	drawtype = "torchlike",
 	tiles = {"jeija_torches_off.png", "jeija_torches_off_ceiling.png", "jeija_torches_off_side.png"},
 	inventory_image = "jeija_torches_off.png",
 	paramtype = "light",
+	is_ground_content = false,
 	walkable = false,
 	paramtype2 = "wallmounted",
 	selection_box = torch_selectionbox,
@@ -63,30 +64,34 @@ minetest.register_node("mesecons_torch:mesecon_torch_off", {
 		state = mesecon.state.off,
 		rules = torch_get_output_rules
 	}}
-})
+})]]
 
 minetest.register_node("mesecons_torch:mesecon_torch_on", {
+	description = "Bluestone Torch",
 	drawtype = "torchlike",
 	tiles = {"jeija_torches_on.png", "jeija_torches_on_ceiling.png", "jeija_torches_on_side.png"},
 	inventory_image = "jeija_torches_on.png",
 	wield_image = "jeija_torches_on.png",
 	paramtype = "light",
+	is_ground_content = false,
 	sunlight_propagates = true,
 	walkable = false,
 	paramtype2 = "wallmounted",
 	selection_box = torch_selectionbox,
-	groups = {dig_immediate=3},
+	groups = {dig_immediate = 3, attached_node = 1},
 	light_source = default.LIGHT_MAX-5,
-	description="Bluestone Torch",
 	mesecons = {receptor = {
 		state = mesecon.state.on,
 		rules = torch_get_output_rules
 	}},
 })
 
+minetest.register_alias("mesecons_torch:mesecon_torch_off", "mesecons_torch:mesecon_torch_on")
+
 minetest.register_node("mesecons_torch:bluestoneblock", {
 	description = "Bluestone Block",
 	tiles = {"bluestone_block.png"},
+	paramtype = "light",
 	groups = {cracky = 1},
 	light_source = default.LIGHT_MAX-5,
 	sounds = default.node_sound_stone_defaults(),
