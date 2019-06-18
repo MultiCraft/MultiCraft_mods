@@ -1,4 +1,4 @@
-MultiCraft game mod: boats
+MultiCraft Game mod: boats
 ========================
 See license.txt for license information.
 

@@ -1,4 +1,4 @@
-MultiCraft game mod: beds
+MultiCraft Game mod: beds
 =======================
 See license.txt for license information.
 
