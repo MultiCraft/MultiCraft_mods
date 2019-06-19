@@ -21,6 +21,10 @@ HUNGER_MAX = 30 -- maximum level of saturation
 -- Callbacks
 if minetest.settings:get_bool("enable_damage") then
 
+	local modpath = minetest.get_modpath("hunger")
+	dofile(modpath .. "/functions.lua")
+	dofile(modpath .. "/food.lua")
+
 	hud.register("hunger", {
 		hud_elem_type = "statbar",
 		position      = {x = 0.5, y = 1},
@@ -29,15 +33,11 @@ if minetest.settings:get_bool("enable_damage") then
 		size          = {x = 24,  y = 24},
 		text          = "hunger_statbar_fg.png",
 		background    = "hunger_statbar_bg.png",
-		number        = 20,
+		number        = 20
 	})
 
-	local modpath = minetest.get_modpath("hunger")
-	dofile(modpath .. "/functions.lua")
-	dofile(modpath .. "/food.lua")
-
 	minetest.register_on_joinplayer(function(player)
-		minetest.after(0.1, function()
+		minetest.after(0.5, function()
 			local inv = player:get_inventory()
 			if inv then
 				inv:set_size("hunger", 1)
@@ -51,7 +51,7 @@ if minetest.settings:get_bool("enable_damage") then
 					lvl = 20
 				end
 
-				hud.change_item(player, "hunger", {number = lvl, max = 20})
+				hud.change_item(player, "hunger", {number = lvl})
 			end
 		end)
 	end)
