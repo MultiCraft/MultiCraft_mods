@@ -1,6 +1,20 @@
 -- (c) Copyright BlockMen (2013-2016), LGPLv3.0+
 
 if minetest.settings:get_bool("enable_damage") then
+
+	hud.register("armor", {
+		hud_elem_type = "statbar",
+		position      = {x = 0.5,  y = 1},
+		alignment     = {x = -1,   y = -1},
+		offset        = {x = -247, y = -134},
+		size          = {x = 24,   y = 24},
+		text          = "3d_armor_statbar_fg.png",
+		background    = "3d_armor_statbar_bg.png",
+		number        = 0,
+		max           = 20,
+		autohide_bg   = true,
+	})
+
 	local armor_org_func = armor.set_player_armor
 	local function get_armor_lvl(def)
 		-- items/protection based display
@@ -23,17 +37,4 @@ if minetest.settings:get_bool("enable_damage") then
 		end
 		hud.change_item(player, "armor", {number = armor_lvl})
 	end
-
-	hud.register("armor", {
-		hud_elem_type = "statbar",
-		position      = {x = 0.5,  y = 1},
-		alignment     = {x = -1,   y = -1},
-		offset        = {x = -247, y = -134},
-		size          = {x = 24,   y = 24},
-		text          = "3d_armor_statbar_fg.png",
-		background    = "3d_armor_statbar_bg.png",
-		number        = 0,
-		max           = 20,
-		autohide_bg   = true,
-	})
 end
