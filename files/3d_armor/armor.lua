@@ -428,70 +428,25 @@ minetest.register_on_joinplayer(function(player)
     end
 end)
 
-if ARMOR_DROP == true or ARMOR_DESTROY == true then
-    minetest.register_on_dieplayer(function(player)
-        local name = player:get_player_name()
-        local pos = player:get_pos()
-        if name and pos then
-            local drop = {}
-            local armor_inv = self:get_armor_inventory(player)
-			if armor_inv then
-				for i=1, armor_inv:get_size("armor") do
-					local stack = armor_inv:get_stack("armor", i)
-					if stack:get_count() > 0 then
-						table.insert(drop, stack)
-						armor_inv:set_stack("armor", i, nil)
-					end
+minetest.register_on_dieplayer(function(player)
+    local name = player:get_player_name()
+    local pos = player:get_pos()
+    if name and pos then
+        local drop = {}
+        local armor_inv = armor:get_armor_inventory(player)
+		if armor_inv then
+			for i=1, armor_inv:get_size("armor") do
+				local stack = armor_inv:get_stack("armor", i)
+				if stack:get_count() > 0 then
+					minetest.item_drop(stack, player, pos)
+					armor_inv:set_stack("armor", i, nil)
 				end
 			end
-			armor:save_armor_inventory(player)
-			armor:set_player_armor(player)
-            --[[if unified_inventory then
-                unified_inventory.set_inventory_formspec(player, "craft")
-            elseif inventory_plus then
-                local formspec = inventory_plus.get_formspec(player,"main")
-                inventory_plus.set_inventory_formspec(player, formspec)
-            else
-                armor:update_inventory(player)
-            end]]
-            if ARMOR_DESTROY == false then
-                if minetest.get_modpath("bones") then
-                    minetest.after(ARMOR_BONES_DELAY, function()
-                        pos = vector.round(pos)
-                        local node = minetest.get_node(pos)
-                        if node.name == "bones:bones" then
-                            local meta = minetest.get_meta(pos)
-                            local owner = meta:get_string("owner")
-                            local inv = meta:get_inventory()
-                            if name == owner then
-                                for _,stack in ipairs(drop) do
-                                    if inv:room_for_item("main", stack) then
-                                        inv:add_item("main", stack)
-                                    end
-                                end
-                            end
-                        end
-                    end)
-                else
-                    for _,stack in ipairs(drop) do
-                        local obj = minetest.add_item(pos, stack)
-                        if obj then
-                            local x = math.random(1, 5)
-                            if math.random(1,2) == 1 then
-                                x = -x
-                            end
-                            local z = math.random(1, 5)
-                            if math.random(1,2) == 1 then
-                                z = -z
-                            end
-                            obj:setvelocity({x=1/x, y=obj:get_velocity().y, z=1/z})
-                        end
-                    end
-                end
-            end
-        end
-    end)
-end
+		end
+		armor:save_armor_inventory(player)
+		armor:set_player_armor(player)
+    end
+end)
 
 minetest.register_on_player_hpchange(function(player, hp_change)
 	if player and hp_change < 0 then
