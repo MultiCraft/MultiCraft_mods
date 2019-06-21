@@ -240,7 +240,7 @@ minetest.register_node("default:snow", {
 	},
 	groups = {crumbly = 3, falling_node = 1, snowy = 1, puts_out_fire = 1, misc = 1, speed = -30},
 	sounds = default.node_sound_snow_defaults(),
-	on_use = snow_shoot_snowball,
+	on_use = default.snow_shoot_snowball,
 	on_construct = function(pos)
 	pos.y = pos.y - 1
 		if minetest.get_node(pos).name == "default:dirt_with_grass" then
