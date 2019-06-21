@@ -2,20 +2,9 @@ local age = 0.5 --How old an item has to be before collecting
 local radius_magnet = 2 --Radius of item magnet
 local player_collect_height = 1.3 --Added to their pos y value
 
-local function valid_pos(pos)
-	if pos then
-		for _, v in pairs({"x", "y", "z"}) do
-			if not pos[v] or pos[v] < -32000 or pos[v] > 32000 then
-				return
-			end
-		end
-		return true
-	end
-end
-
 local function collect_items(player)
 	local pos = player:get_pos()
-	if not valid_pos(pos) then
+	if not minetest.is_valid_pos(pos) then
 		return
 	end
 	local col_pos = vector.add(pos, {x=0, y=player_collect_height, z=0})
