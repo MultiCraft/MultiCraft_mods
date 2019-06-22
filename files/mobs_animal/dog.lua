@@ -146,7 +146,3 @@ mobs:register_mob("mobs_animal:dog", {
 })
 
 mobs:register_egg("mobs_animal:dog", "Dog Egg", "wool_brown.png", 1)
-
--- compatibility
-mobs:alias_mob("mobs:wolf", "mobs_animal:wolf")
-mobs:alias_mob("mobs:dog", "mobs_animal:dog")

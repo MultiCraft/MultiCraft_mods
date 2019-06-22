@@ -29,8 +29,8 @@ mobs:register_mob("mobs_monster:spider", {
 	view_range = 15,
 	floats = 0,
 	drops = {
-		{name = "farming:string", chance = 1, min = 1, max = 1},
-		{name = "farming:string", chance = 2, min = 1, max = 1}
+		{name = "farming:string"},
+		{name = "farming:string", chance = 2}
 	},
 	water_damage = 5,
 	lava_damage = 5,
@@ -47,16 +47,16 @@ mobs:register_mob("mobs_monster:spider", {
 		punch_start = 25,
 		punch_end = 45,
 	},
-		after_activate = function(self, staticdata, def, dtime)
-			-- replace spider using the old directx model
-			if self.mesh == "mobs_spider.x" then
-				local pos = self.object:get_pos()
-				if pos then
-					minetest.add_entity(pos, self.name)
-					self.object:remove()
-				end
+	after_activate = function(self, staticdata, def, dtime)
+		-- replace spider using the old directx model
+		if self.mesh == "mobs_spider.x" then
+			local pos = self.object:get_pos()
+			if pos then
+				minetest.add_entity(pos, self.name)
+				self.object:remove()
 			end
-		end,
+		end
+	end,
 })
 
 mobs:spawn({
@@ -72,8 +72,6 @@ mobs:spawn({
 
 mobs:register_egg("mobs_monster:spider", "Spider egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
 mobs:register_egg("mobs_monster:small_spider", "Small Spider egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
-
-mobs:alias_mob("mobs:spider", "mobs_monster:spider") -- compatibility
 
 -- Small spider
 
@@ -108,7 +106,7 @@ mobs:register_mob("mobs_monster:small_spider", {
 	view_range = 10,
 	floats = 0,
 	drops = {
-		{name = "farming:string", chance = 1, min = 1, max = 1}
+		{name = "farming:string"}
 	},
 	water_damage = 5,
 	lava_damage = 5,
@@ -125,16 +123,16 @@ mobs:register_mob("mobs_monster:small_spider", {
 		punch_start = 25,
 		punch_end = 45,
 	},
-		after_activate = function(self, staticdata, def, dtime)
-			-- replace spider using the old directx model
-			if self.mesh == "mobs_spider.x" then
-				local pos = self.object:get_pos()
-				if pos then
-					minetest.add_entity(pos, self.name)
-					self.object:remove()
-				end
+	after_activate = function(self, staticdata, def, dtime)
+		-- replace spider using the old directx model
+		if self.mesh == "mobs_spider.x" then
+			local pos = self.object:get_pos()
+			if pos then
+				minetest.add_entity(pos, self.name)
+				self.object:remove()
 			end
-		end,
+		end
+	end,
 })
 
 mobs:spawn({
@@ -146,26 +144,6 @@ mobs:spawn({
 	chance = 10000,
 	min_height = -50,
 	max_height = 31000,
-})
-
--- cobweb
-minetest.register_node(":mobs:cobweb", {
-	description = "Cobweb",
-	drawtype = "plantlike",
-	visual_scale = 1.2,
-	tiles = {"mobs_cobweb.png"},
-	inventory_image = "mobs_cobweb.png",
-	paramtype = "light",
-	sunlight_propagates = true,
-	liquid_viscosity = 7,
-	liquidtype = "source",
-	liquid_alternative_flowing = "mobs:cobweb",
-	liquid_alternative_source = "mobs:cobweb",
-	liquid_renewable = false,
-	liquid_range = 0,
-	walkable = false,
-	groups = {snappy = 1, disable_jump = 1, speed = -30},
-	sounds = default.node_sound_leaves_defaults(),
 })
 
 minetest.register_craft({

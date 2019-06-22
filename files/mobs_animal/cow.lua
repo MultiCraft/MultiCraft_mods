@@ -24,11 +24,11 @@ mobs:register_mob("mobs_animal:cow", {
 	jump = true,
 	jump_height = 4,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
-		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-		{name = "mobs:leather", chance = 2, min = 1, max = 1},
-		{name = "mobs:leather", chance = 2, min = 1, max = 1}
+		{name = "mobs:meat_raw"},
+		{name = "mobs:meat_raw", chance = 2},
+		{name = "mobs:meat_raw", chance = 2},
+		{name = "mobs:leather", chance = 2},
+		{name = "mobs:leather", chance = 2}
 	},
 	water_damage = 0,
 	lava_damage = 5,
@@ -87,7 +87,6 @@ mobs:register_mob("mobs_animal:cow", {
 			end
 
 			local inv = clicker:get_inventory()
-
 			tool:take_item()
 			clicker:set_wielded_item(tool)
 
@@ -98,12 +97,11 @@ mobs:register_mob("mobs_animal:cow", {
 				pos.y = pos.y + 0.5
 				minetest.add_item(pos, {name = "mobs:bucket_milk"})
 			end
-
 			self.gotten = true -- milked
-
 			return
 		end
 	end,
+
 	on_replace = function(self, pos, oldnode, newnode)
 
 		self.food = (self.food or 0) + 1
@@ -125,7 +123,7 @@ mobs:register_mob("mobs_animal:cow", {
 			end
 		end
 	end,
-	})
+})
 
 mobs:spawn({
 	name = "mobs_animal:cow",
@@ -139,56 +137,3 @@ mobs:spawn({
 })
 
 mobs:register_egg("mobs_animal:cow", "Cow", "mobs_cow_egg.png", 1)
-
-mobs:alias_mob("mobs:cow", "mobs_animal:cow") -- compatibility
-
-
--- bucket of milk
-minetest.register_craftitem(":mobs:bucket_milk", {
-	description = "Bucket of Milk",
-	inventory_image = "mobs_bucket_milk.png",
-	stack_max = 1,
-	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
-	groups = {food_milk = 1, flammable = 3},
-})
-
--- cheese wedge
-minetest.register_craftitem(":mobs:cheese", {
-	description = "Cheese",
-	inventory_image = "mobs_cheese.png",
-	on_use = minetest.item_eat(4),
-	groups = {food_cheese = 1, flammable = 2},
-})
-
-minetest.register_craft({
-	type = "cooking",
-	output = "mobs:cheese",
-	recipe = "mobs:bucket_milk",
-	cooktime = 5,
-	replacements = {{ "mobs:bucket_milk", "bucket:bucket_empty"}}
-})
-
--- cheese block
-minetest.register_node(":mobs:cheeseblock", {
-	description = "Cheese Block",
-	tiles = {"mobs_cheeseblock.png"},
-	is_ground_content = false,
-	groups = {crumbly = 3},
-	sounds = default.node_sound_dirt_defaults()
-})
-
-minetest.register_craft({
-	output = "mobs:cheeseblock",
-	recipe = {
-		{'mobs:cheese', 'mobs:cheese', 'mobs:cheese'},
-		{'mobs:cheese', 'mobs:cheese', 'mobs:cheese'},
-		{'mobs:cheese', 'mobs:cheese', 'mobs:cheese'},
-	}
-})
-
-minetest.register_craft({
-	output = "mobs:cheese 9",
-	recipe = {
-		{'mobs:cheeseblock'},
-	}
-})

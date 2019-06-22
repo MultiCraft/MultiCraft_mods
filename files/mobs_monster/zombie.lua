@@ -2,9 +2,7 @@ mobs:register_mob("mobs_monster:zombie", {
 	type = "monster",
 	visual = "mesh",
 	mesh = "mobs_zombie.b3d",
-	textures = {
-		{"mobs_zombie.png"},
-	},
+	textures = {"mobs_zombie.png"},
 	collisionbox = {-0.25, -1, -0.3, 0.25, 0.75, 0.3},
 	animation = {
 		speed_normal = 10,	speed_run = 15,
@@ -36,9 +34,9 @@ mobs:register_mob("mobs_monster:zombie", {
 	run_velocity = 0.5,
 	jump = false,
 	drops = {
-		{name = "mobs_monster:rotten_flesh", chance = 1, min = 1, max = 1},
-		{name = "mobs_monster:rotten_flesh", chance = 2, min = 1, max = 1},
-		{name = "mobs_monster:rotten_flesh", chance = 2, min = 1, max = 1}
+		{name = "mobs_monster:rotten_flesh"},
+		{name = "mobs_monster:rotten_flesh", chance = 2},
+		{name = "mobs_monster:rotten_flesh", chance = 2}
 	},
 	after_activate = function(self, staticdata, def, dtime)
 	-- replace zombies using the old directx model
@@ -62,14 +60,3 @@ mobs:spawn({
 })	
 
 mobs:register_egg("mobs_monster:zombie", "Zombie Head", "zombie_head.png", 0)
-
--- compatibility
-mobs:alias_mob("mobs:zombie", "mobs_monster:zombie")
-mobs:alias_mob("mobs:rotten_flesh", "mobs_monster:rotten_flesh")
-
--- rotten flesh
-minetest.register_craftitem("mobs_monster:rotten_flesh", {
-		description = "Rotten Flesh",
-		inventory_image = "mobs_rotten_flesh.png",
-		on_use = minetest.item_eat(1),
-})

@@ -15,7 +15,6 @@ function mobs.is_creative(name)
 	return creative_cache or minetest.check_player_privs(name, {creative = true})
 end
 
-
 -- localize math functions
 local pi = math.pi
 local square = math.sqrt
@@ -687,9 +686,9 @@ function mob_class:item_drop()
 
 	for n = 1, #self.drops do
 
-		if random(1, self.drops[n].chance) == 1 then
+		if random(1, self.drops[n].chance or 1) == 1 then
 
-			num = random(self.drops[n].min or 0, self.drops[n].max or 1)
+			num = random(self.drops[n].min or 1, self.drops[n].max or 1)
 			item = self.drops[n].name
 
 			-- cook items on a hot death
@@ -3797,7 +3796,10 @@ local function throw_spawn_egg(itemstack, user, pointed_thing)
 				textures = {def.inventory_image},
 			})
 		end
-		itemstack:take_item()
+		if not mobs.is_creative(user) or
+		not minetest.is_singleplayer() then
+			itemstack:take_item()
+		end
 	end
 	return itemstack
 end
@@ -3817,7 +3819,6 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 	end
 
 	local invimg = background
-
 	if addegg == 1 then
 		invimg = "(" .. invimg ..
 			"^[mask:mobs_egg_overlay.png)"
@@ -3873,8 +3874,8 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 			if spawn_mob(pos, mob, itemstack:get_metadata(), placer) then
 				-- if not in creative then take item and minimal protection
 				-- against creating a large number of mobs on the server
-				if not mobs.is_creative(placer:get_player_name()) or
-						not minetest.is_singleplayer() then
+				if not mobs.is_creative(placer) or
+				not minetest.is_singleplayer() then
 					itemstack:take_item()
 				end
 			end
@@ -4230,9 +4231,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 		-- if not in creative then take item
 		if not mobs.is_creative(name) then
-
 			mob_sta[name]:take_item()
-
 			player:set_wielded_item(mob_sta[name])
 		end
 
