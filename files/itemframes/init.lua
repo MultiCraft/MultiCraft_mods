@@ -137,14 +137,14 @@ minetest.register_node("itemframes:frame",{
 		local name = clicker and clicker:get_player_name()
 				if name == meta:get_string("owner") or
 				minetest.check_player_privs(name, "protection_bypass") then
-			drop_item(pos,node)
+			drop_item(pos, node)
 			local s = itemstack:take_item()
 			meta:set_string("item",s:to_string())
-			update_item(pos,node)
+			update_item(pos, node)
 		end
 		return itemstack
 	end,
-	on_punch = function(pos,node,puncher)
+	on_punch = function(pos, node, puncher)
 		local meta = minetest.get_meta(pos)
 		local name = puncher and puncher:get_player_name()
 		if name == meta:get_string("owner") or

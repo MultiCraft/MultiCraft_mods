@@ -96,12 +96,6 @@ minetest.register_craftitem("mobs:rabbit_hide", {
 })
 
 minetest.register_craft({
-	type = "fuel",
-	recipe = "mobs:rabbit_hide",
-	burntime = 2,
-})
-
-minetest.register_craft({
 	output = "mobs:leather",
 	type = "shapeless",
 	recipe = {
@@ -110,6 +104,100 @@ minetest.register_craft({
 	}
 })
 
+-- fried egg
+minetest.register_craftitem("mobs:chicken_egg_fried", {
+	description = "Fried Egg",
+	inventory_image = "mobs_chicken_egg_fried.png",
+	on_use = minetest.item_eat(2),
+	groups = {flammable = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	recipe = "mobs:chicken_egg",
+	output = "mobs:chicken_egg_fried",
+})
+
+-- raw chicken
+minetest.register_craftitem("mobs:chicken_raw", {
+	description = "Raw Chicken",
+	inventory_image = "mobs_chicken_raw.png",
+	on_use = minetest.item_eat(2),
+	groups = {food_meat_raw = 1, food_chicken_raw = 1, flammable = 2},
+})
+
+-- cooked chicken
+minetest.register_craftitem("mobs:chicken_cooked", {
+	description = "Cooked Chicken",
+	inventory_image = "mobs_chicken_cooked.png",
+	on_use = minetest.item_eat(6),
+	groups = {food_meat = 1, food_chicken = 1, flammable = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	recipe = "mobs:chicken_raw",
+	output = "mobs:chicken_cooked",
+})
+
+-- bucket of milk
+minetest.register_craftitem("mobs:bucket_milk", {
+	description = "Bucket of Milk",
+	inventory_image = "mobs_bucket_milk.png",
+	stack_max = 1,
+	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
+	groups = {food_milk = 1, flammable = 3},
+})
+
+-- cheese wedge
+minetest.register_craftitem("mobs:cheese", {
+	description = "Cheese",
+	inventory_image = "mobs_cheese.png",
+	on_use = minetest.item_eat(4),
+	groups = {food_cheese = 1, flammable = 2},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "mobs:cheese",
+	recipe = "mobs:bucket_milk",
+	cooktime = 5,
+	replacements = {{ "mobs:bucket_milk", "bucket:bucket_empty"}}
+})
+
+-- cheese block
+minetest.register_node("mobs:cheeseblock", {
+	description = "Cheese Block",
+	tiles = {"mobs_cheeseblock.png"},
+	is_ground_content = false,
+	groups = {crumbly = 3},
+	sounds = default.node_sound_dirt_defaults()
+})
+
+minetest.register_craft({
+	output = "mobs:cheeseblock",
+	recipe = {
+		{"mobs:cheese", "mobs:cheese", "mobs:cheese"},
+		{"mobs:cheese", "mobs:cheese", "mobs:cheese"},
+		{"mobs:cheese", "mobs:cheese", "mobs:cheese"},
+	}
+})
+
+minetest.register_craft({
+	output = "mobs:cheese 9",
+	recipe = {
+		{"mobs:cheeseblock"},
+	}
+})
+
+-- rotten flesh
+minetest.register_craftitem("mobs:rotten_flesh", {
+		description = "Rotten Flesh",
+		inventory_image = "mobs_rotten_flesh.png",
+		on_use = minetest.item_eat(1),
+})
+
+minetest.register_alias("mobs_monster:rotten_flesh", "mobs:rotten_flesh")
 minetest.register_alias("mobs:magic_lasso", "farming:string")
 minetest.register_alias("mobs:lasso", "farming:string")
 
@@ -121,14 +209,34 @@ minetest.register_tool("mobs:shears", {
 })
 
 minetest.register_craft({
-	output = 'mobs:shears',
+	output = "mobs:shears",
 	recipe = {
-		{'', 'default:steel_ingot', ''},
-		{'', 'group:stick', 'default:steel_ingot'},
+		{"", "default:steel_ingot", ""},
+		{"", "group:stick", "default:steel_ingot"},
 	}
 })
 
--- protection rune
+-- cobweb
+minetest.register_node("mobs:cobweb", {
+	description = "Cobweb",
+	drawtype = "plantlike",
+	visual_scale = 1.2,
+	tiles = {"mobs_cobweb.png"},
+	inventory_image = "mobs_cobweb.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	liquid_viscosity = 7,
+	liquidtype = "source",
+	liquid_alternative_flowing = "mobs:cobweb",
+	liquid_alternative_source = "mobs:cobweb",
+	liquid_renewable = false,
+	liquid_range = 0,
+	walkable = false,
+	groups = {snappy = 1, disable_jump = 1, speed = -30},
+	sounds = default.node_sound_leaves_defaults(),
+})
+
+-- protection item
 minetest.register_craftitem("mobs:protector", {
 	description = "Mob Protection Rune",
 	inventory_image = "mobs_protector.png",
@@ -153,12 +261,13 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "mobs:lasso",
-	burntime = 7,
+	recipe = "mobs:leather",
+	burntime = 4,
 })
+
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "mobs:leather",
-	burntime = 4,
+	recipe = "mobs:rabbit_hide",
+	burntime = 2,
 })

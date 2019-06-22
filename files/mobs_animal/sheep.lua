@@ -1,4 +1,3 @@
--- Sheep by PilzAdam
 local dyes = dye.dyes
 
 for i = 1, #dyes do
@@ -15,9 +14,7 @@ for i = 1, #dyes do
 		collisionbox = {-0.4, -1, -0.4, 0.4, 0.3, 0.4},
 		visual = "mesh",
 		mesh = "mobs_sheep.b3d",
-		textures = {
-			{"mobs_sheep_" .. name .. ".png"},
-		},
+		textures = {"mobs_sheep_" .. name .. ".png"},
 		gotten_texture = {"mobs_sheep_shaved.png"},
 		gotten_mesh = "mobs_sheep_shaved.b3d",
 		makes_footstep_sound = true,
@@ -31,9 +28,9 @@ for i = 1, #dyes do
 		jump = true,
 		jump_height = 3,
 		drops = {
-			{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
-			{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-			{name = "wool:" .. name, chance = 1, min = 1, max = 1}
+			{name = "mobs:meat_raw"},
+			{name = "mobs:meat_raw", chance = 2},
+			{name = "wool:" .. name}
 		},
 		water_damage = 0,
 		lava_damage = 5,
@@ -71,21 +68,16 @@ for i = 1, #dyes do
 			end
 		end,
 		on_rightclick = function(self, clicker)
-
 			--are we feeding?
 			if mobs:feed_tame(self, clicker, 8, true, true) then
-
 				--if fed 7x grass or wheat then sheep regrows wool
 				if self.food and self.food > 6 then
-
 					self.gotten = false
-
 					self.object:set_properties({
 						textures = {"mobs_sheep_" .. name .. ".png"},
 						mesh = "mobs_sheep.b3d",
 					})
 				end
-
 				return
 			end
 
@@ -95,95 +87,72 @@ for i = 1, #dyes do
 
 			--are we giving a haircut>
 			if itemname == "mobs:shears" then
-
-				if self.gotten ~= false
-				or self.child ~= false
+				if self.gotten or self.child
 				or player ~= self.owner
 				or not minetest.get_modpath("wool") then
 					return
 				end
-
 				self.gotten = true -- shaved
-
 				local obj = minetest.add_item(
 					self.object:get_pos(),
 					ItemStack( "wool:" .. name .. " " .. math.random(1, 3) )
 				)
-
 				if obj then
-
 					obj:setvelocity({
 						x = math.random(-1, 1),
 						y = 5,
 						z = math.random(-1, 1)
 					})
 				end
-
 				item:add_wear(650) -- 100 uses
-
 				clicker:set_wielded_item(item)
-
 				self.object:set_properties({
 					textures = {"mobs_sheep_shaved.png"},
 					mesh = "mobs_sheep_shaved.b3d",
 				})
-
 				return
 			end
 
 			--are we coloring?
 			if itemname:find("dye:") then
-
 				if self.gotten == false
 				and self.child == false
 				and self.tamed == true
 				and player == self.owner then
-
 					local colr = string.split(itemname, ":")[2]
-
 					for i = 1, #dyes do
 						local name = unpack(dyes[i])
 
 						if name == colr then
-
 							local pos = self.object:get_pos()
-
 							self.object:remove()
-
 							local mob = minetest.add_entity(pos, "mobs_animal:sheep_" .. colr)
 							local ent = mob:get_luaentity()
-
 							ent.owner = player
 							ent.tamed = true
 
 							-- take item
-							if not mobs.is_creative(clicker:get_player_name()) then
+							if not mobs.is_creative(player) or
+							not minetest.is_singleplayer() then
 								item:take_item()
 								clicker:set_wielded_item(item)
 							end
-
 							break
 						end
 					end
 				end
-
 				return
 			end
 
-			-- protect mod with mobs:protector item
 			if mobs:protect(self, clicker) then return end
-
-			--are we capturing?
 			--if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 		end
 	})
 
-	mobs:register_egg("mobs_animal:sheep_" .. name, desc .. " Sheep egg", "wool_" .. name .. ".png", 1)
-
-	-- compatibility
-	mobs:alias_mob("mobs:sheep_" .. name, "mobs_animal:sheep_" .. name)
-
+	minetest.register_alias("mobs_animal:sheep_" .. name, "mobs_animal:sheep_white")
 end
+
+mobs:register_egg("mobs_animal:sheep_white", "White Sheep egg", "wool_white.png", 1)
 
 mobs:spawn({
 	name = "mobs_animal:sheep_white",
@@ -239,5 +208,3 @@ mobs:spawn({
 	max_height = 31000,
 	day_toggle = true,
 })
-
-mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white") -- compatibility

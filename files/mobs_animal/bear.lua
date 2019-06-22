@@ -10,9 +10,7 @@ mobs:register_mob("mobs_animal:bear", {
 		run_start = 105,	run_end = 135,
 		punch_start = 70,	punch_end = 100,
 	},
-	textures = {
-		{"mobs_bear.png"},
-	},
+	textures = {"mobs_bear.png"},
 	sounds = {
 		random = "mobs_bear",
 		attack = "mobs_bear_angry",
@@ -44,12 +42,12 @@ mobs:register_mob("mobs_animal:bear", {
 	fall_damage = 3,
 	fear_height = 4,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
-		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-		{name = "mobs:leather", chance = 1, min = 1, max = 1},
-		{name = "mobs:leather", chance = 2, min = 1, max = 1}
+		{name = "mobs:meat_raw"},
+		{name = "mobs:meat_raw"},
+		{name = "mobs:meat_raw", chance = 2},
+		{name = "mobs:meat_raw", chance = 2},
+		{name = "mobs:leather"},
+		{name = "mobs:leather", chance = 2}
 	},
 	replace_what = {
 		"farming:blueberry_4", "farming:raspberry_4"
@@ -79,7 +77,7 @@ mobs:register_mob("mobs_animal:bear", {
 			return
 		end
 		--mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
-		end,
+	end,
 	after_activate = function(self, staticdata, def, dtime)
 		-- replace bear using the old directx model
 		if self.mesh == "mobs_bear.x" then
@@ -104,6 +102,3 @@ mobs:spawn({
 })
 
 mobs:register_egg("mobs_animal:bear", "Bear egg", "mobs_bear_egg.png", 1)
-
--- compatibility
-mobs:alias_mob("mobs:bear", "mobs_animal:bear")

@@ -66,7 +66,8 @@ local stair_place = function(itemstack, placer, pointed_thing, stair_node)
 
 			minetest.set_node(pos_a, {name = stair_node, param2 = node_u.param2})
 
-			if not is_creative_enabled_for(name) then
+			if not (creative and creative.is_enabled_for and
+					creative.is_enabled_for(name)) then
 				itemstack:take_item()
 			end
 

@@ -472,7 +472,9 @@ if not boost_cart.mtg_compat then
 				return
 			end
 
-			if not minetest.settings:get_bool("creative_mode") or not minetest.is_singleplayer() then
+			if not (creative and creative.is_enabled_for and
+					creative.is_enabled_for(placer)) or
+					not minetest.is_singleplayer() then
 				itemstack:take_item()
 			end
 			return itemstack

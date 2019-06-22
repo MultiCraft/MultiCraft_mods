@@ -1,4 +1,3 @@
--- Kitten by Jordach / BFD
 mobs:register_mob("mobs_animal:kitten", {
 	stepheight = 0.6,
 	type = "animal",
@@ -27,7 +26,7 @@ mobs:register_mob("mobs_animal:kitten", {
 	jump = true,
 	jump_height = 5,
 	drops = {
-		{name = "farming:string", chance = 1, min = 1, max = 1}
+		{name = "farming:string"}
 	},
 	water_damage = 1,
 	lava_damage = 5,
@@ -64,5 +63,3 @@ mobs:spawn({
 })
 
 mobs:register_egg("mobs_animal:kitten", "Cat's egg", "mobs_kitten_egg.png", 1)
-
-mobs:alias_mob("mobs:kitten", "mobs_animal:kitten") -- compatibility

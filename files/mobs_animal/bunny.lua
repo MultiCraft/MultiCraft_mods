@@ -1,4 +1,3 @@
--- Bunny by ExeterDad
 mobs:register_mob("mobs_animal:bunny", {
 	stepheight = 0.6,
 	type = "animal",
@@ -25,8 +24,8 @@ mobs:register_mob("mobs_animal:bunny", {
 	jump = true,
 	jump_height = 5,
 	drops = {
-		{name = "mobs:rabbit_raw", chance = 1, min = 1, max = 1},
-		{name = "mobs:rabbit_hide", chance = 1, min = 0, max = 1},
+		{name = "mobs:rabbit_raw"},
+		{name = "mobs:rabbit_hide", min = 0, max = 1},
 	},
 	water_damage = 1,
 	lava_damage = 4,
@@ -113,6 +112,3 @@ mobs:spawn({
 })
 
 mobs:register_egg("mobs_animal:bunny", "Bunny egg", "mobs_bunny_evil.png", 1)
-
--- compatibility
-mobs:alias_mob("mobs:bunny", "mobs_animal:bunny")

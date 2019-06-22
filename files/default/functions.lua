@@ -539,7 +539,11 @@ local function snowball_impact(thrower, pos)
 end
 
 function default.snow_shoot_snowball(itemstack, player, pointed_thing)
-	itemstack:take_item()
+	if not (creative and creative.is_enabled_for and
+	creative.is_enabled_for(player)) or
+	not minetest.is_singleplayer() then
+		itemstack:take_item()
+	end
 	minetest.item_throw("default:snowball_entity", player, 19, -3,
 		snowball_impact)
 	minetest.sound_play("throwing_sound", {

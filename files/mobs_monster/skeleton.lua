@@ -2,9 +2,7 @@ mobs:register_mob("mobs_monster:skeleton", {
 	type = "monster",
 	visual = "mesh",
 	mesh = "mobs_zombie.b3d",
-	textures = {
-		{"mobs_skeleton.png"},
-	},
+	textures = {"mobs_skeleton.png"},
 	collisionbox = {-0.25, -1, -0.3, 0.25, 0.75, 0.3},
 	animation = {
 		speed_normal = 10,	speed_run = 15,
@@ -36,8 +34,8 @@ mobs:register_mob("mobs_monster:skeleton", {
 	run_velocity = 0.5,
 	jump = false,
 	drops = {
-		{name = "default:bone", chance = 2, min = 1, max = 1},
-		{name = "default:bone", chance = 2, min = 1, max = 1}
+		{name = "default:bone", chance = 2},
+		{name = "default:bone", chance = 2}
 	},
 	after_activate = function(self, staticdata, def, dtime)
 		-- replace skeleton using the old directx model
@@ -62,6 +60,3 @@ mobs:spawn({
 })
 
 mobs:register_egg("mobs_monster:skeleton", "Skeleton egg", "mobs_chicken_egg.png^default_bone.png", 1)
-
--- compatibility
-mobs:alias_mob("mobs:skeleton", "mobs_monster:skeleton")
