@@ -1,8 +1,9 @@
 -- Solar Panel
 minetest.register_node("mesecons_solarpanel:solar_panel_on", {
 	drawtype = "nodebox",
-	tiles = { "jeija_solar_panel.png" },	
-	inventor = { "jeija_solar_panel.png" },	
+	tiles = { "jeija_solar_panel.png" },
+	inventory_image = "jeija_solar_panel.png",
+	wield_image = "jeija_solar_panel.png",
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	is_ground_content = true,
@@ -61,7 +62,7 @@ minetest.register_abm(
 
 		if light >= 10 then
 			minetest.set_node(pos, {name="mesecons_solarpanel:solar_panel_on", param2=node.param2})
-			mesecon:receptor_on(pos)
+			mesecon.receptor_on(pos)
 		end
 	end,
 })
@@ -75,7 +76,7 @@ minetest.register_abm(
 
 		if light < 10 then
 			minetest.set_node(pos, {name="mesecons_solarpanel:solar_panel_off", param2=node.param2})
-			mesecon:receptor_off(pos)
+			mesecon.receptor_off(pos)
 		end
 	end,
 })

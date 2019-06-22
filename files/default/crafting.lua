@@ -606,12 +606,6 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "cooking",
-	output = "mesecons:wire_00000000_off 5",
-	recipe = "default:stone_with_bluestone",
-})
-
-minetest.register_craft({
-	type = "cooking",
 	output = "default:diamond",
 	recipe = "default:stone_with_diamond",
 })

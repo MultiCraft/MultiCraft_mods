@@ -773,7 +773,7 @@ minetest.register_node("default:stone_with_bluestone", {
 	description = "Bluestone Ore",
 	tiles = {"default_stone.png^default_mineral_bluestone.png"},
 	groups = {cracky = 2},
-	drop = "mesecons:wire_00000000_off 5",
+	drop = "mesecons:wire_00000000_off 8",
 	sounds = default.node_sound_stone_defaults(),
 })
 
@@ -1402,7 +1402,7 @@ minetest.register_node("default:ladder_wood", {
 default.register_fence("default:fence_wood", {
 	description = "Apple Wood Fence",
 	texture = "default_wood.png",
-    inventory_image = "default_wood_fence.png",
+	inventory_image = "default_wood_fence.png",
 	material = "default:wood",
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
 	sounds = default.node_sound_wood_defaults()
