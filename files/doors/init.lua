@@ -424,7 +424,7 @@ local function punch(pos)
         else
             state = 1
             minetest.sound_play("doors_door_open", {pos = pos, gain = 0.3, max_hear_distance = 10})
-            tmp_node = {name="doors:trapdoors_door_open", param1=me.param1, param2=me.param2}
+            tmp_node = {name="doors:trapdoor_open", param1=me.param1, param2=me.param2}
         end
         update_door(pos, tmp_node)
         meta:set_int("state", state)
@@ -477,7 +477,7 @@ minetest.register_node("doors:trapdoor", {
 })
 
 
-minetest.register_node("doors:trapdoors_door_open", {
+minetest.register_node("doors:trapdoor_open", {
     drawtype = "nodebox",
     tiles = {"default_wood.png", "default_wood.png",  "default_wood.png",  "default_wood.png", "door_trapdoor.png", "door_trapdoor.png"},
     paramtype = "light",
@@ -506,8 +506,7 @@ minetest.register_node("doors:trapdoors_door_open", {
 
 })
 
-
-
+minetest.register_alias("doors:trapdoors_door_open", "doors:trapdoor_open")
 
 minetest.register_craft({
     output = 'doors:trapdoor 2',
@@ -518,7 +517,7 @@ minetest.register_craft({
     }
 })
 
---- Iron Trapdoor ----
+--- Steel  Trapdoor ----
 local me
 local meta
 local state = 0
@@ -537,19 +536,19 @@ local function punch(pos)
         if state == 1 then
             state = 0
             minetest.sound_play("doors_door_close", {pos = pos, gain = 0.3, max_hear_distance = 10})
-            tmp_node = {name="doors:iron_trapdoor", param1=me.param1, param2=me.param2}
+            tmp_node = {name="doors:trapdoor_steel", param1=me.param1, param2=me.param2}
         else
             state = 1
             minetest.sound_play("doors_door_open", {pos = pos, gain = 0.3, max_hear_distance = 10})
-            tmp_node = {name="doors:iron_trapdoors_door_open", param1=me.param1, param2=me.param2}
+            tmp_node = {name="doors:trapdoor_steel_open", param1=me.param1, param2=me.param2}
         end
         update_door(pos, tmp_node)
         meta:set_int("state", state)
 end
 
 
-minetest.register_node("doors:iron_trapdoor", {
-    description = "Trapdoor",
+minetest.register_node("doors:trapdoor_steel", {
+    description = "Steel Trapdoor",
     drawtype = "nodebox",
     tiles = {"iron_trapdoor.png", "iron_trapdoor.png",  "default_steel_block.png",  "default_steel_block.png", "default_steel_block.png", "default_steel_block.png"},
     paramtype = "light",
@@ -557,7 +556,7 @@ minetest.register_node("doors:iron_trapdoor", {
     paramtype2 = "facedir",
     groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2,mesecon_effector_on=1, flammable = 0, door=1},
     sounds = default.node_sound_wood_defaults(),
-    drop = "doors:iron_trapdoor",
+    drop = "doors:trapdoor_steel",
     node_box = {
         type = "fixed",
         fixed = {
@@ -590,8 +589,7 @@ minetest.register_node("doors:iron_trapdoor", {
     end,
 })
 
-
-minetest.register_node("doors:iron_trapdoors_door_open", {
+minetest.register_node("doors:trapdoor_steel_open", {
     drawtype = "nodebox",
     tiles = {"default_steel_block.png", "default_steel_block.png",  "default_steel_block.png",  "default_steel_block.png", "iron_trapdoor.png", "iron_trapdoor.png"},
     paramtype = "light",
@@ -600,7 +598,7 @@ minetest.register_node("doors:iron_trapdoors_door_open", {
     stack_max = 0,
     groups = {snappy = 1, choppy = 2, oddly_breakable_by_hand = 2, flammable = 0,door=1,mesecon_effector_on=1},
     sounds = default.node_sound_wood_defaults(),
-    drop = "doors:iron_trapdoor",
+    drop = "doors:trapdoor_steel",
     node_box = {
         type = "fixed",
         fixed = {-0.5, -0.5, 0.4, 0.5, 0.5, 0.5}
@@ -615,6 +613,9 @@ minetest.register_node("doors:iron_trapdoors_door_open", {
     end),
     }},
 })
+
+minetest.register_alias("doors:iron_trapdoors_door_open", "doors:trapdoor_steel_open")
+minetest.register_alias("doors:iron_trapdoor", "doors:trapdoor_steel")
 
 minetest.register_craft({
     output = 'doors:iron_trapdoor 2',
