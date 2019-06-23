@@ -78,7 +78,6 @@ minetest.register_node("vessels:glass_bottle", {
 	drawtype = "plantlike",
 	tiles = {"vessels_glass_bottle.png"},
 	inventory_image = "vessels_glass_bottle.png",
-	wield_image = "vessels_glass_bottle.png",
 	paramtype = "light",
 	is_ground_content = false,
 	walkable = false,

@@ -511,6 +511,24 @@ minetest.register_abm({
 	end
 })
 
+function default.can_interact_with_node(player, pos)
+	if player then
+		if minetest.check_player_privs(player, "protection_bypass") then
+			return true
+		end
+	else
+		return false
+	end
+
+	local meta = minetest.get_meta(pos)
+	local owner = meta:get_string("owner")
+
+	if not owner or owner == "" or owner == player:get_player_name() then
+		return true
+	end
+	return false
+end
+
 --
 -- Snowballs
 --

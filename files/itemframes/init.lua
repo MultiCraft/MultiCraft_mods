@@ -118,8 +118,7 @@ minetest.register_node("itemframes:frame",{
 		fixed = {-0.5, -0.5, 7/16, 0.5, 0.5, 0.5}
 	},
 	tiles = {"itemframe_background.png"},
-	inventory_image = "itemframes_frame.png",
-	wield_image = "itemframes_frame.png",
+	inventory_image = "itemframe_background.png",
 	paramtype = "light",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,

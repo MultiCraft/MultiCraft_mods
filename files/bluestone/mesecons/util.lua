@@ -6,6 +6,56 @@ function mesecon.move_node(pos, newpos)
 	minetest.get_meta(pos):from_table(meta)
 end
 
+-- Rules rotation Functions:
+function mesecon.rotate_rules_right(rules)
+	local nr = {}
+	for i, rule in ipairs(rules) do
+		table.insert(nr, {
+			x = -rule.z,
+			y =  rule.y,
+			z =  rule.x,
+			name = rule.name})
+	end
+	return nr
+end
+
+function mesecon.rotate_rules_left(rules)
+	local nr = {}
+	for i, rule in ipairs(rules) do
+		table.insert(nr, {
+			x =  rule.z,
+			y =  rule.y,
+			z = -rule.x,
+			name = rule.name})
+	end
+	return nr
+end
+
+function mesecon.rotate_rules_down(rules)
+	local nr = {}
+	for i, rule in ipairs(rules) do
+		table.insert(nr, {
+			x = -rule.y,
+			y =  rule.x,
+			z =  rule.z,
+			name = rule.name})
+	end
+	return nr
+end
+
+function mesecon.rotate_rules_up(rules)
+	local nr = {}
+	for i, rule in ipairs(rules) do
+		table.insert(nr, {
+			x =  rule.y,
+			y = -rule.x,
+			z =  rule.z,
+			name = rule.name})
+	end
+	return nr
+end
+--
+
 function mesecon.flattenrules(allrules)
 --[[
 	{
@@ -178,6 +228,7 @@ end
 
 function mesecon.register_node(name, spec_common, spec_off, spec_on)
 	spec_common.drop = spec_common.drop or name .. "_off"
+	spec_common.on_blast = spec_common.on_blast or mesecon.on_blastnode
 	spec_common.__mesecon_basename = name
 	spec_on.__mesecon_state = "on"
 	spec_off.__mesecon_state = "off"
@@ -219,7 +270,7 @@ function mesecon.table2file(filename, table)
 	f:close()
 end
 
--- Forceloading: Force server to load area if node is nil
+-- Block position "hashing" (convert to integer) functions for voxelmanip cache
 local BLOCKSIZE = 16
 
 -- convert node position --> block hash
@@ -231,45 +282,160 @@ local function hash_blockpos(pos)
 	})
 end
 
--- convert block hash --> node position
-local function unhash_blockpos(hash)
-	return vector.multiply(minetest.get_position_from_hash(hash), BLOCKSIZE)
+-- Maps from a hashed mapblock position (as returned by hash_blockpos) to a
+-- table.
+--
+-- Contents of the table are:
+-- “vm” > the VoxelManipulator
+-- “va” > the VoxelArea
+-- “data” > the data array
+-- “param1” > the param1 array
+-- “param2” > the param2 array
+-- “dirty” > true if data has been modified
+--
+-- Nil if no VM-based transaction is in progress.
+local vm_cache = nil
+
+-- Starts a VoxelManipulator-based transaction.
+--
+-- During a VM transaction, calls to vm_get_node and vm_swap_node operate on a
+-- cached copy of the world loaded via VoxelManipulators. That cache can later
+-- be committed to the real map by means of vm_commit or discarded by means of
+-- vm_abort.
+function mesecon.vm_begin()
+	vm_cache = {}
 end
 
-mesecon.forceloaded_blocks = {}
+-- Finishes a VoxelManipulator-based transaction, freeing the VMs and map data
+-- and writing back any modified areas.
+function mesecon.vm_commit()
+	for hash, tbl in pairs(vm_cache) do
+		if tbl.dirty then
+			local vm = tbl.vm
+			vm:set_data(tbl.data)
+			vm:write_to_map()
+			vm:update_map()
+		end
+	end
+	vm_cache = nil
+end
 
--- get node and force-load area
-function mesecon.get_node_force(pos)
+-- Finishes a VoxelManipulator-based transaction, freeing the VMs and throwing
+-- away any modified areas.
+function mesecon.vm_abort()
+	vm_cache = nil
+end
+
+-- Gets the cache entry covering a position, populating it if necessary.
+local function vm_get_or_create_entry(pos)
 	local hash = hash_blockpos(pos)
-
-	if mesecon.forceloaded_blocks[hash] == nil then
-		-- if no more forceload spaces are available, try again next time
-		if minetest.forceload_block(pos) then
-			mesecon.forceloaded_blocks[hash] = 0
-		end
-	else
-		mesecon.forceloaded_blocks[hash] = 0
+	local tbl = vm_cache[hash]
+	if not tbl then
+		local vm = minetest.get_voxel_manip(pos, pos)
+		local min_pos, max_pos = vm:get_emerged_area()
+		local va = VoxelArea:new{MinEdge = min_pos, MaxEdge = max_pos}
+		tbl = {vm = vm, va = va, data = vm:get_data(), param1 = vm:get_light_data(), param2 = vm:get_param2_data(), dirty = false}
+		vm_cache[hash] = tbl
 	end
-
-	return minetest.get_node_or_nil(pos)
+	return tbl
 end
 
-minetest.register_globalstep(function (dtime)
-	for hash, time in pairs(mesecon.forceloaded_blocks) do
-		-- unload forceloaded blocks after 10 minutes without usage
-		if (time > mesecon.setting("forceload_timeout", 600)) then
-			minetest.forceload_free_block(unhash_blockpos(hash))
-			mesecon.forceloaded_blocks[hash] = nil
+-- Gets the node at a given position during a VoxelManipulator-based
+-- transaction.
+function mesecon.vm_get_node(pos)
+	local tbl = vm_get_or_create_entry(pos)
+	local index = tbl.va:indexp(pos)
+	local node_value = tbl.data[index]
+	if node_value == core.CONTENT_IGNORE then
+		return nil
+	else
+		local node_param1 = tbl.param1[index]
+		local node_param2 = tbl.param2[index]
+		return {name = minetest.get_name_from_content_id(node_value), param1 = node_param1, param2 = node_param2}
+	end
+end
+
+-- Sets a node’s name during a VoxelManipulator-based transaction.
+--
+-- Existing param1, param2, and metadata are left alone.
+function mesecon.vm_swap_node(pos, name)
+	local tbl = vm_get_or_create_entry(pos)
+	local index = tbl.va:indexp(pos)
+	tbl.data[index] = minetest.get_content_id(name)
+	tbl.dirty = true
+		end
+
+-- Gets the node at a given position, regardless of whether it is loaded or
+-- not, respecting a transaction if one is in progress.
+--
+-- Outside a VM transaction, if the mapblock is not loaded, it is pulled into
+-- the server’s main map data cache and then accessed from there.
+--
+-- Inside a VM transaction, the transaction’s VM cache is used.
+function mesecon.get_node_force(pos)
+	if vm_cache then
+		return mesecon.vm_get_node(pos)
+	else
+		local node = minetest.get_node_or_nil(pos)
+		if node == nil then
+			-- Node is not currently loaded; use a VoxelManipulator to prime
+			-- the mapblock cache and try again.
+			minetest.get_voxel_manip(pos, pos)
+			node = minetest.get_node_or_nil(pos)
+		end
+		return node
+	end
+end
+
+-- Swaps the node at a given position, regardless of whether it is loaded or
+-- not, respecting a transaction if one is in progress.
+--
+-- Outside a VM transaction, if the mapblock is not loaded, it is pulled into
+-- the server’s main map data cache and then accessed from there.
+--
+-- Inside a VM transaction, the transaction’s VM cache is used.
+--
+-- This function can only be used to change the node’s name, not its parameters
+-- or metadata.
+function mesecon.swap_node_force(pos, name)
+	if vm_cache then
+		return mesecon.vm_swap_node(pos, name)
 		else
-			mesecon.forceloaded_blocks[hash] = time + dtime
+		-- This serves to both ensure the mapblock is loaded and also hand us
+		-- the old node table so we can preserve param2.
+		local node = mesecon.get_node_force(pos)
+		node.name = name
+		minetest.swap_node(pos, node)
+	end
+end
+
+-- Autoconnect Hooks
+-- Nodes like conductors may change their appearance and their connection rules
+-- right after being placed or after being dug, e.g. the default wires use this
+-- to automatically connect to linking nodes after placement.
+-- After placement, the update function will be executed immediately so that the
+-- possibly changed rules can be taken into account when recalculating the circuit.
+-- After digging, the update function will be queued and executed after
+-- recalculating the circuit. The update function must take care of updating the
+-- node at the given position itself, but also all of the other nodes the given
+-- position may have (had) a linking connection to.
+mesecon.autoconnect_hooks = {}
+
+-- name: A unique name for the hook, e.g. "foowire". Used to name the actionqueue function.
+-- fct: The update function with parameters function(pos, node)
+function mesecon.register_autoconnect_hook(name, fct)
+	mesecon.autoconnect_hooks[name] = fct
+	mesecon.queue:add_function("autoconnect_hook_"..name, fct)
+end
+
+function mesecon.execute_autoconnect_hooks_now(pos, node)
+	for _, fct in pairs(mesecon.autoconnect_hooks) do
+		fct(pos, node)
 		end
 	end
-end)
 
--- Store and read the forceloaded blocks to / from a file
--- so that those blocks are remembered when the game
--- is restarted
-mesecon.forceloaded_blocks = mesecon.file2table("mesecon_forceloaded")
-minetest.register_on_shutdown(function()
-	mesecon.table2file("mesecon_forceloaded", mesecon.forceloaded_blocks)
-end)
+function mesecon.execute_autoconnect_hooks_queue(pos, node)
+	for name in pairs(mesecon.autoconnect_hooks) do
+		mesecon.queue:add_action(pos, "autoconnect_hook_"..name, {node})
+	end
+end

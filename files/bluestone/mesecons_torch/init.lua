@@ -60,10 +60,12 @@ local torch_selectionbox =
 	selection_box = torch_selectionbox,
 	groups = {dig_immediate = 3, not_in_creative_inventory = 1},
 	drop = "mesecons_torch:mesecon_torch_on",
+	sounds = default.node_sound_defaults(),
 	mesecons = {receptor = {
 		state = mesecon.state.off,
 		rules = torch_get_output_rules
-	}}
+	}},
+	on_blast = mesecon.on_blastnode,
 })]]
 
 minetest.register_node("mesecons_torch:mesecon_torch_on", {
@@ -79,43 +81,16 @@ minetest.register_node("mesecons_torch:mesecon_torch_on", {
 	paramtype2 = "wallmounted",
 	selection_box = torch_selectionbox,
 	groups = {dig_immediate = 3, attached_node = 1},
-	light_source = default.LIGHT_MAX-5,
+	light_source = minetest.LIGHT_MAX - 5,
+	sounds = default.node_sound_defaults(),
 	mesecons = {receptor = {
 		state = mesecon.state.on,
 		rules = torch_get_output_rules
 	}},
+	on_blast = mesecon.on_blastnode,
 })
 
 minetest.register_alias("mesecons_torch:mesecon_torch_off", "mesecons_torch:mesecon_torch_on")
-
-minetest.register_node("mesecons_torch:bluestoneblock", {
-	description = "Bluestone Block",
-	tiles = {"bluestone_block.png"},
-	paramtype = "light",
-	groups = {cracky = 1},
-	light_source = default.LIGHT_MAX-5,
-	sounds = default.node_sound_stone_defaults(),
-	mesecons = {receptor = {
-		state = mesecon.state.on,
-		rules = torch_get_output_rules
-	}},
-})
-
-minetest.register_craft({
-	output = "mesecons_torch:bluestoneblock",
-	recipe = {
-		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
-		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
-		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
-	}
-})
-
-minetest.register_craft({
-	output = 'mesecons:wire_00000000_off 9',
-	recipe = {
-		{'mesecons_torch:bluestoneblock'},
-	}
-})
 
 --[[minetest.register_abm({
 	nodenames = {"mesecons_torch:mesecon_torch_off","mesecons_torch:mesecon_torch_on"},
@@ -141,6 +116,37 @@ minetest.register_craft({
 		end
 	end
 })]]
+
+minetest.register_node("mesecons_torch:bluestoneblock", {
+	description = "Bluestone Block",
+	tiles = {"bluestone_block.png"},
+	paramtype = "light",
+	is_ground_content = false,
+	groups = {cracky = 1},
+	light_source = minetest.LIGHT_MAX - 3,
+	sounds = default.node_sound_stone_defaults(),
+	mesecons = {receptor = {
+		state = mesecon.state.on,
+		rules = torch_get_output_rules
+	}},
+	on_blast = mesecon.on_blastnode,
+})
+
+minetest.register_craft({
+	output = "mesecons_torch:bluestoneblock",
+	recipe = {
+		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
+		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
+		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
+	}
+})
+
+minetest.register_craft({
+	output = 'mesecons:wire_00000000_off 9',
+	recipe = {
+		{'mesecons_torch:bluestoneblock'},
+	}
+})
 
 -- Param2 Table (Block Attached To)
 -- 5 = z-1

@@ -55,8 +55,6 @@ end
 
 -- tests if the node can be pushed into, e.g. air, water, grass
 local function node_replaceable(name)
-	if name == "ignore" then return true end
-
 	if minetest.registered_nodes[name] then
 		return minetest.registered_nodes[name].buildable_to or false
 	end
@@ -165,6 +163,10 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 	-- remove all nodes
 	for _, n in ipairs(nodes) do
 		n.meta = minetest.get_meta(n.pos):to_table()
+		local node_timer = minetest.get_node_timer(n.pos)
+		if node_timer:is_started() then
+			n.node_timer = {node_timer:get_timeout(), node_timer:get_elapsed()}
+		end
 		minetest.remove_node(n.pos)
 	end
 
@@ -179,6 +181,9 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 
 		minetest.set_node(np, n.node)
 		minetest.get_meta(np):from_table(n.meta)
+		if n.node_timer then
+			minetest.get_node_timer(np):set(unpack(n.node_timer))
+		end
 	end
 
 	local moved_nodes = {}
@@ -190,6 +195,7 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 		moved_nodes[i].pos = nodes[i].pos
 		moved_nodes[i].node = nodes[i].node
 		moved_nodes[i].meta = nodes[i].meta
+		moved_nodes[i].node_timer = nodes[i].node_timer
 	end
 
 	on_mvps_move(moved_nodes)
@@ -197,53 +203,83 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 	return true, nodes, oldstack
 end
 
-mesecon.register_on_mvps_move(function(moved_nodes)
-	for _, n in ipairs(moved_nodes) do
-		mesecon.on_placenode(n.pos, n.node)
-		mesecon.update_autoconnect(n.pos)
-end
-end)
-
-function mesecon.mvps_move_objects(pos, dir, nodestack)
+function mesecon.mvps_move_objects(pos, dir, nodestack, movefactor)
 	local objects_to_move = {}
-
-	-- Move object at tip of stack, pushpos is position at tip of stack
-	local pushpos = vector.add(pos, vector.multiply(dir, #nodestack))
-
-	local objects = minetest.get_objects_inside_radius(pushpos, 1)
-	for _, obj in ipairs(objects) do
-		table.insert(objects_to_move, obj)
-	end
-
-	-- Move objects lying/standing on the stack (before it was pushed - oldstack)
-	if tonumber(minetest.setting_get("movement_gravity")) > 0 and dir.y == 0 then
-		-- If gravity positive and dir horizontal, push players standing on the stack
-		for _, n in ipairs(nodestack) do
-			local p_above = vector.add(n.pos, {x=0, y=1, z=0})
-			local objects = minetest.get_objects_inside_radius(p_above, 1)
-			for _, obj in ipairs(objects) do
-				table.insert(objects_to_move, obj)
-			end
+	local dir_k
+	local dir_l
+	for k, v in pairs(dir) do
+		if v ~= 0 then
+			dir_k = k
+			dir_l = v
+			break
 		end
 	end
-
-	for _, obj in ipairs(objects_to_move) do
-		local entity = obj:get_luaentity()
-		if not entity or not mesecon.is_mvps_unmov(entity.name) then
-			local np = vector.add(obj:getpos(), dir)
-
-			--move only if destination is not solid
+	movefactor = movefactor or 1
+	dir = vector.multiply(dir, movefactor)
+	for id, obj in pairs(minetest.object_refs) do
+		local obj_pos = obj:get_pos()
+		local cbox = obj:get_properties().collisionbox
+		local min_pos = vector.add(obj_pos, vector.new(cbox[1], cbox[2], cbox[3]))
+		local max_pos = vector.add(obj_pos, vector.new(cbox[4], cbox[5], cbox[6]))
+		local ok = true
+		for k, v in pairs(pos) do
+			local edge1, edge2
+			if k ~= dir_k then
+				edge1 = v - 0.51 -- More than 0.5 to move objects near to the stack.
+				edge2 = v + 0.51
+			else
+				edge1 = v - 0.5 * dir_l
+				edge2 = v + (#nodestack + 0.5 * movefactor) * dir_l
+				-- Make sure, edge1 is bigger than edge2:
+				if edge1 > edge2 then
+					edge1, edge2 = edge2, edge1
+				end
+			end
+			if min_pos[k] > edge2 or max_pos[k] < edge1 then
+				ok = false
+				break
+			end
+		end
+		if ok then
+			local ent = obj:get_luaentity()
+			if obj:is_player() or (ent and not mesecon.is_mvps_unmov(ent.name)) then
+				local np = vector.add(obj_pos, dir)
+				-- Move only if destination is not solid or object is inside stack:
 			local nn = minetest.get_node(np)
-			if not ((not minetest.registered_nodes[nn.name])
-			or minetest.registered_nodes[nn.name].walkable) then
-				obj:setpos(np)
+				local node_def = minetest.registered_nodes[nn.name]
+				local obj_offset = dir_l * (obj_pos[dir_k] - pos[dir_k])
+				if (node_def and not node_def.walkable) or
+						(obj_offset >= 0 and
+						obj_offset <= #nodestack - 0.5) then
+					obj:move_to(np)
 			end
 		end
 	end
 end
+end
+
+-- Never push into unloaded blocks. Don’t try to pull from them, either.
+-- TODO: load blocks instead, as with wires.
+mesecon.register_mvps_stopper("ignore")
 
 mesecon.register_mvps_stopper("doors:door_steel_b_1")
 mesecon.register_mvps_stopper("doors:door_steel_t_1")
 mesecon.register_mvps_stopper("doors:door_steel_b_2")
 mesecon.register_mvps_stopper("doors:door_steel_t_2")
 mesecon.register_mvps_stopper("default:furnace")
+mesecon.register_on_mvps_move(mesecon.move_hot_nodes)
+mesecon.register_on_mvps_move(function(moved_nodes)
+	for i = 1, #moved_nodes do
+		local moved_node = moved_nodes[i]
+		mesecon.on_placenode(moved_node.pos, moved_node.node)
+		minetest.after(0, function()
+			minetest.check_for_falling(moved_node.oldpos)
+			minetest.check_for_falling(moved_node.pos)
+		end)
+		local node_def = minetest.registered_nodes[moved_node.node.name]
+		if node_def and node_def.mesecon and node_def.mesecon.on_mvps_move then
+			node_def.mesecon.on_mvps_move(moved_node.pos, moved_node.node,
+					moved_node.oldpos, moved_node.meta)
+		end
+	end
+end)

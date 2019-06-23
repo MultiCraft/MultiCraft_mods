@@ -1,25 +1,20 @@
 minetest.register_node("mesecons_noteblock:noteblock", {
 	description = "Noteblock",
 	tiles = {"mesecons_noteblock.png"},
+	is_ground_content = false,
 	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 2},
-	drawtype = "allfaces_optional",
-	visual_scale = 1.3,
-	paramtype="light",
-	after_place_node = function(pos)
-		minetest.add_node(pos, {name="mesecons_noteblock:noteblock", param2=0})
-	end,
 	on_punch = function (pos, node) -- change sound when punched
-		local param2 = node.param2+1
-		if param2==12 then param2=0 end
-		minetest.add_node(pos, {name = node.name, param2 = param2})
-		mesecon.noteblock_play(pos, param2)
+		node.param2 = (node.param2+1)%12
+		mesecon.noteblock_play(pos, node.param2)
+		minetest.set_node(pos, node)
 	end,
 	sounds = default.node_sound_wood_defaults(),
 	mesecons = {effector = { -- play sound when activated
 		action_on = function (pos, node)
 			mesecon.noteblock_play(pos, node.param2)
 		end
-	}}
+	}},
+	on_blast = mesecon.on_blastnode,
 })
 
 minetest.register_craft({
@@ -31,49 +26,46 @@ minetest.register_craft({
 	}
 })
 
+local soundnames = {
+	[0] = "mesecons_noteblock_csharp",
+	"mesecons_noteblock_d",
+	"mesecons_noteblock_dsharp",
+	"mesecons_noteblock_e",
+	"mesecons_noteblock_f",
+	"mesecons_noteblock_fsharp",
+	"mesecons_noteblock_g",
+	"mesecons_noteblock_gsharp",
+
+	"mesecons_noteblock_a",
+	"mesecons_noteblock_asharp",
+	"mesecons_noteblock_b",
+	"mesecons_noteblock_c"
+}
+
+local node_sounds = {
+	["default:glass"] = "mesecons_noteblock_hihat",
+	["default:stone"] = "mesecons_noteblock_kick",
+	["default:lava_source"] = "fire_fire",
+	["default:chest"] = "mesecons_noteblock_snare",
+	["default:tree"] = "mesecons_noteblock_crash",
+	["default:wood"] = "mesecons_noteblock_litecrash",
+	["default:coalblock"] = "tnt_explode",
+}
+
 mesecon.noteblock_play = function (pos, param2)
-	local soundname
-	if param2==8 then
-		soundname="mesecons_noteblock_a"
-	elseif param2==9 then
-		soundname="mesecons_noteblock_asharp"
-	elseif param2==10 then
-		soundname="mesecons_noteblock_b"
-	elseif param2==11 then
-		soundname="mesecons_noteblock_c"
-	elseif param2==0 then
-		soundname="mesecons_noteblock_csharp"
-	elseif param2==1 then
-		soundname="mesecons_noteblock_d"
-	elseif param2==2 then
-		soundname="mesecons_noteblock_dsharp"
-	elseif param2==3 then
-		soundname="mesecons_noteblock_e"
-	elseif param2==4 then
-		soundname="mesecons_noteblock_f"
-	elseif param2==5 then
-		soundname="mesecons_noteblock_fsharp"
-	elseif param2==6 then
-		soundname="mesecons_noteblock_g"
-	elseif param2==7 then
-		soundname="mesecons_noteblock_gsharp"
+	pos.y = pos.y-1
+	local nodeunder = minetest.get_node(pos).name
+	local soundname = node_sounds[nodeunder]
+	if not soundname then
+		soundname = soundnames[param2]
+		if not soundname then
+			minetest.log("error", "[mesecons_noteblock] No soundname found, test param2")
+			return
 	end
-	local block_below_name = minetest.get_node({x=pos.x, y=pos.y-1, z=pos.z}).name
-	if block_below_name == "default:glass" then
-		soundname="mesecons_noteblock_hihat"
+		if nodeunder == "default:steelblock" then
+			soundname = soundname.. 2
 	end
-	if block_below_name == "default:stone" then
-		soundname="mesecons_noteblock_kick"
 	end
-	if block_below_name == "default:chest" then
-		soundname="mesecons_noteblock_snare"
-	end
-	if block_below_name == "default:tree" then
-		soundname="mesecons_noteblock_crash"
-	end
-	if block_below_name == "default:wood" then
-		soundname="mesecons_noteblock_litecrash"
-	end
-	minetest.sound_play(soundname,
-	{pos = pos, gain = 1.0, max_hear_distance = 32,})
+	pos.y = pos.y+1
+	minetest.sound_play(soundname, {pos = pos})
 end

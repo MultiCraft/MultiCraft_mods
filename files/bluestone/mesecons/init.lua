@@ -3,7 +3,7 @@
 -- |  \/  | |___ ____  |___ |      |    | | \  | |____
 -- |      | |        | |    |      |    | |  \ |     |
 -- |      | |___ ____| |___ |____  |____| |   \| ____|
--- by Jeija, Uberi (Temperest), sfan5, VanessaE
+-- by Jeija, Uberi (Temperest), sfan5, VanessaE, Hawk777 and contributors
 --
 --
 --
@@ -11,7 +11,7 @@
 -- See the documentation on the forum for additional information, especially about crafting
 --
 --
--- For developer documentation see the Developers' section on mesecons.TK
+-- For basic development resources, see http://mesecons.net/developers.html
 --
 --
 --
@@ -70,19 +70,11 @@ dofile(minetest.get_modpath("mesecons").."/internal.lua");
 -- these are the only functions you need to remember
 
 mesecon.queue:add_function("receptor_on", function (pos, rules)
+	mesecon.vm_begin()
+
 	rules = rules or mesecon.rules.default
 
-	-- if area (any of the rule targets) is not loaded, keep trying and call this again later
-	for _, rule in ipairs(mesecon.flattenrules(rules)) do
-		local np = vector.add(pos, rule)
-		-- if area is not loaded, keep trying
-		if minetest.get_node_or_nil(np) == nil then
-			mesecon.queue:add_action(pos, "receptor_on", {rules}, nil, rules)
-			return
-	end
-end
-
-	-- execute action
+	-- Call turnon on all linking positions
 	for _, rule in ipairs(mesecon.flattenrules(rules)) do
 		local np = vector.add(pos, rule)
 		local rulenames = mesecon.rules_link_rule_all(pos, rule)
@@ -90,6 +82,8 @@ end
 			mesecon.turnon(np, rulename)
 		end
 	end
+
+	mesecon.vm_commit()
 end)
 
 function mesecon.receptor_on(pos, rules)
@@ -99,23 +93,21 @@ end
 mesecon.queue:add_function("receptor_off", function (pos, rules)
 	rules = rules or mesecon.rules.default
 
-	-- if area (any of the rule targets) is not loaded, keep trying and call this again later
-	for _, rule in ipairs(mesecon.flattenrules(rules)) do
-		local np = vector.add(pos, rule)
-		if minetest.get_node_or_nil(np) == nil then
-			mesecon.queue:add_action(pos, "receptor_off", {rules}, nil, rules)
-			return
-			end
-		end
-
+	-- Call turnoff on all linking positions
 	for _, rule in ipairs(mesecon.flattenrules(rules)) do
 		local np = vector.add(pos, rule)
 		local rulenames = mesecon.rules_link_rule_all(pos, rule)
 		for _, rulename in ipairs(rulenames) do
-			if not mesecon.connected_to_receptor(np, mesecon.invertRule(rule)) then
-				mesecon.turnoff(np, rulename)
-	else
+			mesecon.vm_begin()
 				mesecon.changesignal(np, minetest.get_node(np), rulename, mesecon.state.off, 2)
+
+			-- Turnoff returns true if turnoff process was successful, no onstate receptor
+			-- was found along the way. Commit changes that were made in voxelmanip. If turnoff
+			-- returns true, an onstate receptor was found, abort voxelmanip transaction.
+			if (mesecon.turnoff(np, rulename)) then
+				mesecon.vm_commit()
+			else
+				mesecon.vm_abort()
 			end
 	end
 end
@@ -125,8 +117,9 @@ function mesecon.receptor_off(pos, rules)
 	mesecon.queue:add_action(pos, "receptor_off", {rules}, nil, rules)
 end
 
---The actual wires
-dofile(minetest.get_modpath("mesecons").."/wires.lua");
+-- Deprecated stuff
+-- To be removed in future releases
+dofile(minetest.get_modpath("mesecons").."/legacy.lua");
 
 --Services like turnoff receptor on dignode and so on
 dofile(minetest.get_modpath("mesecons").."/services.lua");
