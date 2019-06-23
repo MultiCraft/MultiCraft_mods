@@ -6,8 +6,6 @@
 -- Definitions made by this mod that other mods can use too
 default = {}
 
-default.LIGHT_MAX = 14
-
 default.gui_bg = "bgcolor[#08080880;true]"
 default.listcolors = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"
 

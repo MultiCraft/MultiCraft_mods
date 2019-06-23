@@ -192,9 +192,9 @@ minetest.register_craft({
 
 -- rotten flesh
 minetest.register_craftitem("mobs:rotten_flesh", {
-		description = "Rotten Flesh",
-		inventory_image = "mobs_rotten_flesh.png",
-		on_use = minetest.item_eat(1),
+	description = "Rotten Flesh",
+	inventory_image = "mobs_rotten_flesh.png",
+	on_use = minetest.item_eat(1),
 })
 
 minetest.register_alias("mobs_monster:rotten_flesh", "mobs:rotten_flesh")

@@ -17,9 +17,9 @@ local wire_getconnect = function (from_pos, self_pos)
 		local rules = {}
 		if (minetest.registered_nodes[node.name].mesecon_wire) then
 			rules = mesecon.rules.default
-	else
+		else
 			rules = mesecon.get_any_rules(node)
-	end
+		end
 
 		for _, r in ipairs(mesecon.flattenrules(rules)) do
 			if (vector.equals(vector.add(self_pos, r), from_pos)) then
@@ -28,7 +28,7 @@ local wire_getconnect = function (from_pos, self_pos)
 		end
 	end
 	return false
-	end
+end
 
 -- Update this node
 local wire_updateconnect = function (pos)
@@ -54,8 +54,8 @@ local wire_updateconnect = function (pos)
 			if vec.z ==  1 then nid[5] = "1" end
 			if vec.x == -1 then nid[6] = "1" end
 			if vec.z == -1 then nid[7] = "1" end
-end
-end
+		end
+	end
 
 	local nodeid = 	  (nid[0] or "0")..(nid[1] or "0")..(nid[2] or "0")..(nid[3] or "0")
 			..(nid[4] or "0")..(nid[5] or "0")..(nid[6] or "0")..(nid[7] or "0")
@@ -70,7 +70,7 @@ local update_on_place_dig = function (pos, node)
 	if (minetest.registered_nodes[nn.name])
 	and (minetest.registered_nodes[nn.name].mesecon_wire) then
 		wire_updateconnect(pos)
-end
+	end
 
 	-- Update nodes around it
 	local rules = {}
@@ -79,7 +79,7 @@ end
 		rules = mesecon.rules.default
 	else
 		rules = mesecon.get_any_rules(node)
-end
+	end
 	if (not rules) then return end
 
 	for _, r in ipairs(mesecon.flattenrules(rules)) do
@@ -87,14 +87,11 @@ end
 		if minetest.registered_nodes[minetest.get_node(np).name]
 		and minetest.registered_nodes[minetest.get_node(np).name].mesecon_wire then
 			wire_updateconnect(np)
-end
-end
+		end
+	end
 end
 
-function mesecon.update_autoconnect(pos, node)
-	if (not node) then node = minetest.get_node(pos) end
-	update_on_place_dig(pos, node)
-end
+mesecon.register_autoconnect_hook("wire", update_on_place_dig)
 
 -- ############################
 -- ## Wire node registration ##
@@ -143,7 +140,7 @@ nid_inc = function (nid)
 	return i <= 8
 end
 
-register_wires = function()
+local function register_wires()
 	local nid = {}
 	while true do
 		-- Create group specifiction and nodeid string (see note above for details)
@@ -202,21 +199,24 @@ register_wires = function()
 		local groups_off = {dig_immediate = 3, mesecon_conductor_craftable = 1}
 		if nodeid ~= "00000000" then
 			groups_off["not_in_creative_inventory"] = 1
-end
+		end
 
-		mesecon.register_node("mesecons:wire_"..nodeid, {
+		mesecon.register_node(":mesecons:wire_"..nodeid, {
 			description = "Mesecon",
 			drawtype = "nodebox",
 			inventory_image = "bluestone_dust.png",
 			wield_image = "bluestone_dust.png",
 			paramtype = "light",
 			paramtype2 = "facedir",
+			is_ground_content = false,
 			sunlight_propagates = true,
 			selection_box = selectionbox,
 			node_box = nodebox,
 			walkable = false,
 			drop = "mesecons:wire_00000000_off",
-			mesecon_wire = true
+			mesecon_wire = true,
+			sounds = default.node_sound_defaults(),
+			on_rotate = false,
 		}, {tiles = tiles_off, mesecons = meseconspec_off, groups = groups_off},
 		{tiles = tiles_on, mesecons = meseconspec_on, groups = groups_on})
 
@@ -234,3 +234,4 @@ minetest.register_craft({
 	output = "mesecons:wire_00000000_off 8",
 	recipe = "default:stone_with_bluestone",
 })
+

@@ -37,11 +37,6 @@
 -- HIGH-LEVEL Internals
 -- mesecon.is_power_on(pos)				--> Returns true if pos emits power in any way
 -- mesecon.is_power_off(pos)				--> Returns true if pos does not emit power in any way
--- mesecon.turnon(pos, link) 				--> link is the input rule that caused calling turnon, turns on every connected node, iterative
--- mesecon.turnoff(pos, link)				--> link is the input rule that caused calling turnoff, turns off every connected node, iterative
--- mesecon.connected_to_receptor(pos, link)		--> Returns true if pos is connected to a receptor directly or via conductors, iterative
--- mesecon.rules_link(output, input, dug_outputrules)	--> Returns true if outputposition + outputrules = inputposition and inputposition + inputrules = outputposition (if the two positions connect)
--- mesecon.rules_link_anydir(outp., inp., d_outpr.)	--> Same as rules mesecon.rules_link but also returns true if output and input are swapped
 -- mesecon.is_powered(pos)				--> Returns true if pos is powered by a receptor or a conductor
 
 -- RULES ROTATION helpers
@@ -371,38 +366,32 @@ function mesecon.is_power_off(pos, rulename)
 	return false
 end
 
+-- Turn off an equipotential section starting at `pos`, which outputs in the direction of `link`.
+-- Breadth-first search. Map is abstracted away in a voxelmanip.
+-- Follow all all conductor paths replacing conductors that were already
+-- looked at, activating / changing all effectors along the way.
 function mesecon.turnon(pos, link)
 	local frontiers = {{pos = pos, link = link}}
 
 	local depth = 1
-	while frontiers[depth] do
-		local f = frontiers[depth]
+	while frontiers[1] do
+		local f = table.remove(frontiers, 1)
 		local node = mesecon.get_node_force(f.pos)
 
-		-- area not loaded, postpone action
 		if not node then
-			mesecon.queue:add_action(f.pos, "turnon", {link}, nil, true)
+			-- Area does not exist; do nothing
 		elseif mesecon.is_conductor_off(node, f.link) then
 			local rules = mesecon.conductor_get_rules(node)
 
-			minetest.swap_node(f.pos, {name = mesecon.get_conductor_on(node, f.link),
-				param2 = node.param2})
-
-			-- call turnon on neighbors: normal rules
+			-- Call turnon on neighbors
 			for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
 				local np = vector.add(f.pos, r)
-
-				-- area not loaded, postpone action
-				if not mesecon.get_node_force(np) then
-					mesecon.queue:add_action(np, "turnon", {rulename},
-						nil, true)
-				else
-					local links = mesecon.rules_link_rule_all(f.pos, r)
-					for _, l in ipairs(links) do
+				for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
 						table.insert(frontiers, {pos = np, link = l})
 			end
 		end
-		end
+
+			mesecon.swap_node_force(f.pos, mesecon.get_conductor_on(node, f.link))
 		elseif mesecon.is_effector(node.name) then
 			mesecon.changesignal(f.pos, node, f.link, mesecon.state.on, depth)
 			if mesecon.is_effector_off(node.name) then
@@ -413,137 +402,77 @@ end
 				end
 			end
 
-mesecon.queue:add_function("turnon", function (pos, rulename, recdepth)
-	mesecon.turnon(pos, rulename, recdepth)
-end)
-
+-- Turn on an equipotential section starting at `pos`, which outputs in the direction of `link`.
+-- Breadth-first search. Map is abstracted away in a voxelmanip.
+-- Follow all all conductor paths replacing conductors that were already
+-- looked at, deactivating / changing all effectors along the way.
+-- In case an onstate receptor is discovered, abort the process by returning false, which will
+-- cause `receptor_off` to discard all changes made in the voxelmanip.
+-- Contrary to turnon, turnoff has to cache all change and deactivate signals so that they will only
+-- be called in the very end when we can be sure that no conductor was found along the path.
+--
+-- Signal table entry structure:
+-- {
+--	pos = position of effector,
+--	node = node descriptor (name, param1 and param2),
+--	link = link the effector is connected to,
+--	depth = indicates order in which signals wire fired, higher is later
+-- }
 function mesecon.turnoff(pos, link)
 	local frontiers = {{pos = pos, link = link}}
+	local signals = {}
 
 	local depth = 1
-	while frontiers[depth] do
-		local f = frontiers[depth]
+	while frontiers[1] do
+		local f = table.remove(frontiers, 1)
 		local node = mesecon.get_node_force(f.pos)
 
-		-- area not loaded, postpone action
 		if not node then
-			mesecon.queue:add_action(f.pos, "turnoff", {link}, nil, true)
+			-- Area does not exist; do nothing
 		elseif mesecon.is_conductor_on(node, f.link) then
 			local rules = mesecon.conductor_get_rules(node)
-
-			minetest.swap_node(f.pos, {name = mesecon.get_conductor_off(node, f.link),
-				param2 = node.param2})
-
-			-- call turnoff on neighbors: normal rules
 			for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
 				local np = vector.add(f.pos, r)
 
-				-- area not loaded, postpone action
-				if not mesecon.get_node_force(np) then
-					mesecon.queue:add_action(np, "turnoff", {rulename},
-						nil, true)
-				else
-					local links = mesecon.rules_link_rule_all(f.pos, r)
-					for _, l in ipairs(links) do
-						table.insert(frontiers, {pos = np, link = l})
-					end
-			end
-		end
-		elseif mesecon.is_effector(node.name) then
-			mesecon.changesignal(f.pos, node, f.link, mesecon.state.off, depth)
-			if mesecon.is_effector_on(node.name) and not mesecon.is_powered(f.pos) then
-				mesecon.deactivate(f.pos, node, f.link, depth)
-			end
-		end
-		depth = depth + 1
-	end
-end
-
-mesecon.queue:add_function("turnoff", function (pos, rulename, recdepth)
-	mesecon.turnoff(pos, rulename, recdepth)
-end)
-
-
-function mesecon.connected_to_receptor(pos, link)
-	local node = mesecon.get_node_force(pos)
-	if not node then return false end
-
-	-- Check if conductors around are connected
-	local rules = mesecon.get_any_inputrules(node)
-	if not rules then return false end
-
-	for _, rule in ipairs(mesecon.rule2meta(link, rules)) do
-		local links = mesecon.rules_link_rule_all_inverted(pos, rule)
-		for _, l in ipairs(links) do
-			local np = vector.add(pos, l)
-			if mesecon.find_receptor_on(np, mesecon.invertRule(l)) then
-				return true
-			end
-		end
-	end
-
+				-- Check if an onstate receptor is connected. If that is the case,
+				-- abort this turnoff process by returning false. `receptor_off` will
+				-- discard all the changes that we made in the voxelmanip:
+				for _, l in ipairs(mesecon.rules_link_rule_all_inverted(f.pos, r)) do
+					if mesecon.is_receptor_on(mesecon.get_node_force(np).name) then
 	return false
 end
-
-function mesecon.find_receptor_on(pos, link)
-	local frontiers = {{pos = pos, link = link}}
-	local checked = {}
-
-	-- List of positions that have been searched for onstate receptors
-	local depth = 1
-	while frontiers[depth] do
-		local f = frontiers[depth]
-		local node = mesecon.get_node_force(f.pos)
-
-		if not node then return false end
-		if mesecon.is_receptor_on(node.name) then return true end
-		if mesecon.is_conductor_on(node, f.link) then
-			local rules = mesecon.conductor_get_rules(node)
-
-			-- call turnoff on neighbors: normal rules
-			for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
-				local np = vector.add(f.pos, r)
-
-				local links = mesecon.rules_link_rule_all_inverted(f.pos, r)
-				for _, l in ipairs(links) do
-					local checkedstring = np.x..np.y..np.z..l.x..l.y..l.z
-					if not checked[checkedstring] then
-						table.insert(frontiers, {pos = np, link = l})
-						checked[checkedstring] = true
-			end
-		end
-	end
-
-		end
-		depth = depth + 1
-	end
-end
-
-function mesecon.rules_link(output, input, dug_outputrules) --output/input are positions (outputrules optional, used if node has been dug), second return value: the name of the affected input rule
-	local outputnode = mesecon.get_node_force(output)
-	local inputnode = mesecon.get_node_force(input)
-
-	local outputrules = dug_outputrules or mesecon.get_any_outputrules (outputnode)
-	local inputrules = mesecon.get_any_inputrules (inputnode)
-	if not outputrules or not inputrules then
-		return
-	end
-
-	for _, outputrule in ipairs(mesecon.flattenrules(outputrules)) do
-		-- Check if output sends to input
-		if vector.equals(vector.add(output, outputrule), input) then
-			for _, inputrule in ipairs(mesecon.flattenrules(inputrules)) do
-				-- Check if input accepts from output
-				if  vector.equals(vector.add(input, inputrule), output) then
-					return true, inputrule
 				end
-			end
+
+				-- Call turnoff on neighbors
+				for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
+						table.insert(frontiers, {pos = np, link = l})
 		end
 	end
 
-	return false
+			mesecon.swap_node_force(f.pos, mesecon.get_conductor_off(node, f.link))
+		elseif mesecon.is_effector(node.name) then
+			table.insert(signals, {
+				pos = f.pos,
+				node = node,
+				link = f.link,
+				depth = depth
+			})
+		end
+		depth = depth + 1
+	end
+
+	for _, sig in ipairs(signals) do
+		mesecon.changesignal(sig.pos, sig.node, sig.link, mesecon.state.off, sig.depth)
+		if mesecon.is_effector_on(sig.node.name) and not mesecon.is_powered(sig.pos) then
+			mesecon.deactivate(sig.pos, sig.node, sig.link, sig.depth)
+		end
+	end
+
+	return true
 end
 
+-- Get all linking inputrules of inputnode (effector or conductor) that is connected to
+-- outputnode (receptor or conductor) at position `output` and has an output in direction `rule`
 function mesecon.rules_link_rule_all(output, rule)
 	local input = vector.add(output, rule)
 	local inputnode = mesecon.get_node_force(input)
@@ -563,8 +492,9 @@ end
 	return rules
 end
 
+-- Get all linking outputnodes of outputnode (receptor or conductor) that is connected to
+-- inputnode (effector or conductor) at position `input` and has an input in direction `rule`
 function mesecon.rules_link_rule_all_inverted(input, rule)
-	--local irule = mesecon.invertRule(rule)
 	local output = vector.add(input, rule)
 	local outputnode = mesecon.get_node_force(output)
 	local outputrules = mesecon.get_any_outputrules (outputnode)
@@ -579,10 +509,6 @@ function mesecon.rules_link_rule_all_inverted(input, rule)
 		end
 	end
 	return rules
-end
-
-function mesecon.rules_link_anydir(pos1, pos2)
-	return mesecon.rules_link(pos1, pos2) or mesecon.rules_link(pos2, pos1)
 end
 
 function mesecon.is_powered(pos, rule)
@@ -621,53 +547,4 @@ function mesecon.is_powered(pos, rule)
 	-- Return FALSE if not powered, return list of sources if is powered
 	if (#sourcepos == 0) then return false
 	else return sourcepos end
-end
-
---Rules rotation Functions:
-function mesecon.rotate_rules_right(rules)
-	local nr = {}
-	for i, rule in ipairs(rules) do
-		table.insert(nr, {
-			x = -rule.z,
-			y =  rule.y,
-			z =  rule.x,
-			name = rule.name})
-	end
-	return nr
-end
-
-function mesecon.rotate_rules_left(rules)
-	local nr = {}
-	for i, rule in ipairs(rules) do
-		table.insert(nr, {
-			x =  rule.z,
-			y =  rule.y,
-			z = -rule.x,
-			name = rule.name})
-	end
-	return nr
-end
-
-function mesecon.rotate_rules_down(rules)
-	local nr = {}
-	for i, rule in ipairs(rules) do
-		table.insert(nr, {
-			x = -rule.y,
-			y =  rule.x,
-			z =  rule.z,
-			name = rule.name})
-	end
-	return nr
-end
-
-function mesecon.rotate_rules_up(rules)
-	local nr = {}
-	for i, rule in ipairs(rules) do
-		table.insert(nr, {
-			x =  rule.y,
-			y = -rule.x,
-			z =  rule.z,
-			name = rule.name})
-	end
-	return nr
 end

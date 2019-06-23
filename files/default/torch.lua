@@ -15,7 +15,7 @@ minetest.register_node("default:torch", {
 	sunlight_propagates = true,
 	is_ground_content = false,
 	walkable = false,
-	light_source = default.LIGHT_MAX - 1,
+	light_source = minetest.LIGHT_MAX - 1,
 	groups = {choppy = 2, dig_immediate = 3, flammable = 1, attached_node = 1},
 	legacy_wallmounted = true,
 	sounds = default.node_sound_defaults(),

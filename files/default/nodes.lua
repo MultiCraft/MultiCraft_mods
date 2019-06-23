@@ -1204,7 +1204,7 @@ minetest.register_node("default:lava_source", {
 		},
 	},
 	paramtype = "light",
-	light_source = default.LIGHT_MAX - 1,
+	light_source = minetest.LIGHT_MAX - 1,
 	walkable = false,
 	pointable = false,
 	diggable = false,
@@ -1257,7 +1257,7 @@ minetest.register_node("default:lava_flowing", {
 	},
 	paramtype = "light",
 	paramtype2 = "flowingliquid",
-	light_source = default.LIGHT_MAX - 1,
+	light_source = minetest.LIGHT_MAX - 1,
 	walkable = false,
 	pointable = false,
 	diggable = false,
@@ -1482,7 +1482,7 @@ minetest.register_node("default:glowstone", {
 			{items = {'default:glowdust 2'}},
 		}
 	},]]
-	light_source = default.LIGHT_MAX - 3,
+	light_source = minetest.LIGHT_MAX - 3,
 })
 
 minetest.register_node("default:slimeblock", {
