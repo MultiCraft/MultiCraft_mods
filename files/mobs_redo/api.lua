@@ -3756,6 +3756,51 @@ function mobs:boom(self, pos, radius)
 	end
 end
 
+-- Mob spawning, returns true on successful placement
+
+local function spawn_mob(pos, mob, data, placer)
+	if not pos or not placer or not minetest.registered_entities[mob] or
+			minetest.is_protected(pos, placer:get_player_name()) then
+		return
+	end
+	pos.y = pos.y + 1
+	local obj = minetest.add_entity(pos, mob, data)
+	if obj then
+		local ent = obj:get_luaentity()
+		if ent then
+			-- set owner if not a monster
+			if ent.type ~= "monster" then
+				ent.owner = placer:get_player_name()
+				ent.tamed = true
+			end
+			return true
+		else
+			obj:remove()
+		end
+	end
+end
+
+-- Spawn egg throwing
+
+local function throw_spawn_egg(itemstack, user, pointed_thing)
+	local mob = itemstack:get_name():gsub("_set$", "")
+	local egg_impact = function(thrower, pos)
+		spawn_mob(pos, mob, itemstack:get_metadata(), user)
+	end
+	local obj = minetest.item_throw(mob.."_set", user, 19, -3, egg_impact)
+	if obj then
+		local def = minetest.registered_items[mob.."_set"]
+		if def and def.inventory_image and def.inventory_image ~= "" then
+			obj:set_properties({
+				visual = "sprite",
+				visual_size = {x=1, y=1},
+				textures = {def.inventory_image},
+			})
+		end
+		itemstack:take_item()
+	end
+	return itemstack
+end
 
 -- Register spawn eggs
 
@@ -3785,7 +3830,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 		inventory_image = invimg,
 		groups = {spawn_egg = 2, not_in_creative_inventory = 1},
 		stack_max = 1,
-
+		on_use = throw_spawn_egg,
 		on_place = function(itemstack, placer, pointed_thing)
 
 			local pos = pointed_thing.above
@@ -3797,29 +3842,10 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
 			end
 
-			if pos
-			and not minetest.is_protected(pos, placer:get_player_name()) then
-
-				if not minetest.registered_entities[mob] then
-					return
-				end
-
-				pos.y = pos.y + 1
-
-				local data = itemstack:get_metadata()
-				local mob = minetest.add_entity(pos, mob, data)
-				local ent = mob:get_luaentity()
-
-				-- set owner if not a monster
-				if ent.type ~= "monster" then
-					ent.owner = placer:get_player_name()
-					ent.tamed = true
-				end
-
+			if spawn_mob(pos, mob, itemstack:get_metadata(), placer) then
 				-- since mob is unique we remove egg once spawned
 				itemstack:take_item()
 			end
-
 			return itemstack
 		end,
 	})
@@ -3832,7 +3858,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 		inventory_image = invimg,
 		groups = grp,
 		stack_max = 1,
-
+		on_use = throw_spawn_egg,
 		on_place = function(itemstack, placer, pointed_thing)
 
 			local pos = pointed_thing.above
@@ -3844,31 +3870,14 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
 			end
 
-			if pos
-			and not minetest.is_protected(pos, placer:get_player_name()) then
-
-				if not minetest.registered_entities[mob] then
-					return
-				end
-
-				pos.y = pos.y + 1
-
-				local mob = minetest.add_entity(pos, mob)
-				local ent = mob:get_luaentity()
-
-				-- don't set owner if monster or sneak pressed
-				if ent.type ~= "monster"
-				and not placer:get_player_control().sneak then
-					ent.owner = placer:get_player_name()
-					ent.tamed = true
-				end
-
-				-- if not in creative then take item and minimal protection against creating a large number of mobs on the server
-				if not mobs.is_creative(placer:get_player_name()) or not minetest.is_singleplayer() then
+			if spawn_mob(pos, mob, itemstack:get_metadata(), placer) then
+				-- if not in creative then take item and minimal protection
+				-- against creating a large number of mobs on the server
+				if not mobs.is_creative(placer:get_player_name()) or
+						not minetest.is_singleplayer() then
 					itemstack:take_item()
 				end
 			end
-
 			return itemstack
 		end,
 	})
