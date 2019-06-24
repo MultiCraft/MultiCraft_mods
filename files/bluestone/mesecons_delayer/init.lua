@@ -36,9 +36,9 @@ end
 for i = 1, 4 do
 local groups = {}
 if i == 1 then 
-	groups = {bendy = 2, snappy = 1, dig_immediate = 2}
+	groups = {bendy = 2, snappy = 1, dig_immediate = 2, attached_node = 1}
 else
-	groups = {bendy = 2, snappy = 1, dig_immediate = 2, not_in_creative_inventory = 1}
+	groups = {bendy = 2, snappy = 1, dig_immediate = 2, attached_node = 1, not_in_creative_inventory = 1}
 end
 
 local delaytime

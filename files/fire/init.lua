@@ -43,8 +43,8 @@ minetest.register_node("fire:basic_flame", {
 			name = "fire_basic_flame_animated.png",
 			animation = {
 				type = "vertical_frames",
-				aspect_w = 16,
-				aspect_h = 16,
+				aspect_w = 32,
+				aspect_h = 32,
 				length = 1
 			},
 		},
@@ -103,7 +103,7 @@ minetest.register_node("fire:permanent_flame", {
 	sunlight_propagates = true,
 	floodable = true,
 	damage_per_second = 4,
-	groups = {igniter = 2, dig_immediate = 3},
+	groups = {igniter = 2, dig_immediate = 3, not_in_creative_inventory = 1},
 	drop = "",
 
 	on_flood = flood_flame,

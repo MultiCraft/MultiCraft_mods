@@ -39,7 +39,7 @@ mesecon.register_node("mesecons_walllever:wall_lever", {
 	},
 	node_box = {
 		type = "fixed",
-		fixed = {{ -2/16, -3/16,  8/16, 2/16, 3/16,  4/16 },	-- the base
+		fixed = {{ -2/16, -3/16,  8/16, 2/16, 3/16,  4/16 }, -- the base
 				 { -1/16, -8/16,  7/16, 1/16, 0/16,  5/16 }} -- the lever itself.
 	},
 	mesecons = {receptor = {
@@ -58,8 +58,8 @@ mesecon.register_node("mesecons_walllever:wall_lever", {
 	},
 	node_box = {
 		type = "fixed",
-		fixed = {{ -2/16, -3/16,  8/16, 2/16, 3/16,  4/16 },	-- the base
-				 { -1/16,  0/16,  7/16, 1/16, 8/16,  5/16 }}  -- the lever itself.
+		fixed = {{ -2/16, -3/16,  8/16, 2/16, 3/16,  4/16 }, -- the base
+				 { -1/16,  0/16,  7/16, 1/16, 8/16,  5/16 }} -- the lever itself.
 	},
 	on_rotate = false,
 	mesecons = {receptor = {

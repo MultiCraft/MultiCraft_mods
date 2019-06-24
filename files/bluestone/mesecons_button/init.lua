@@ -42,6 +42,12 @@ minetest.register_node("mesecons_button:button_stone_off", {
 		minetest.sound_play("mesecons_button_push", {pos=pos})
 		minetest.get_node_timer(pos):start(1)
 	end,
+	on_rightclick = function (pos, node)
+		minetest.swap_node(pos, {name = "mesecons_button:button_stone_on", param2=node.param2})
+		mesecon.receptor_on(pos, mesecon.rules.buttonlike_get(node))
+		minetest.sound_play("mesecons_button_push", {pos=pos})
+		minetest.get_node_timer(pos):start(1)
+	end,
 	sounds = default.node_sound_stone_defaults(),
 	mesecons = {receptor = {
 		state = mesecon.state.off,
@@ -100,6 +106,12 @@ minetest.register_node("mesecons_button:button_wood_off", {
 	groups = {dig_immediate = 2},
 	description = "Wood Button",
 	on_punch = function (pos, node)
+		minetest.swap_node(pos, {name = "mesecons_button:button_wood_on", param2=node.param2})
+		mesecon.receptor_on(pos, mesecon.rules.buttonlike_get(node))
+		minetest.sound_play("mesecons_button_push", {pos=pos})
+		minetest.get_node_timer(pos):start(1)
+	end,
+	on_rightclick = function (pos, node)
 		minetest.swap_node(pos, {name = "mesecons_button:button_wood_on", param2=node.param2})
 		mesecon.receptor_on(pos, mesecon.rules.buttonlike_get(node))
 		minetest.sound_play("mesecons_button_push", {pos=pos})

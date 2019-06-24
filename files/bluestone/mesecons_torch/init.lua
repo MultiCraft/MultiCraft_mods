@@ -58,7 +58,7 @@ local torch_selectionbox =
 	walkable = false,
 	paramtype2 = "wallmounted",
 	selection_box = torch_selectionbox,
-	groups = {dig_immediate = 3, not_in_creative_inventory = 1},
+	groups = {dig_immediate = 3, attached_node = 1, not_in_creative_inventory = 1},
 	drop = "mesecons_torch:mesecon_torch_on",
 	sounds = default.node_sound_defaults(),
 	mesecons = {receptor = {

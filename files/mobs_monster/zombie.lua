@@ -52,11 +52,9 @@ mobs:register_mob("mobs_monster:zombie", {
 mobs:spawn({
 	name = "mobs_monster:zombie",
 	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
-	min_light = 0,
 	max_light = 10,
-	chance = 7000,
-	min_height = -50,
-	max_height = 31000,
+	chance = 15000,
+	min_height = -64,
 })	
 
 mobs:register_egg("mobs_monster:zombie", "Zombie Head", "zombie_head.png", 0)

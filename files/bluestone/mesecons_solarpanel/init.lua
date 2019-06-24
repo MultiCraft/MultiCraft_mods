@@ -14,7 +14,7 @@ minetest.register_node("mesecons_solarpanel:solar_panel_on", {
 		wall_side   = { -2/16, -8/16, -8/16, -8/16,  8/16, 8/16 },
 	},
 	drop = "mesecons_solarpanel:solar_panel_off",
-	groups = {dig_immediate=3, not_in_creative_inventory = 1},
+	groups = {dig_immediate = 3, attached_node = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_glass_defaults(),
 	mesecons = {receptor = {
 		state = mesecon.state.on,
@@ -38,7 +38,7 @@ minetest.register_node("mesecons_solarpanel:solar_panel_off", {
 		wall_top	= { -8/16,  2/16, -8/16,  8/16,  8/16, 8/16 },
 		wall_side   = { -2/16, -8/16, -8/16, -8/16,  8/16, 8/16 },
 	},
-	groups = {dig_immediate=3},
+	groups = {dig_immediate = 3, attached_node = 1},
 		description="Solar Panel",
 	sounds = default.node_sound_glass_defaults(),
 	mesecons = {receptor = {

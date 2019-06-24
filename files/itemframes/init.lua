@@ -122,7 +122,7 @@ minetest.register_node("itemframes:frame",{
 	paramtype = "light",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
-	groups = {choppy = 2, dig_immediate = 2},
+	groups = {choppy = 2, dig_immediate = 2, attached_node = 1},
 	legacy_wallmounted = true,
 	sounds = default.node_sound_wood_defaults(),
 	after_place_node = function(pos, placer, itemstack)
