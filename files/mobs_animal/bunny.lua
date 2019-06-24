@@ -104,10 +104,8 @@ mobs:spawn({
 	name = "mobs_animal:bunny",
 	nodes = {"default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass", "default:dirt_with_dry_grass"},
 	min_light = 10,
-	interval = 30,
-	chance = 8000,
+	chance = 20000,
 	min_height = 0,
-	max_height = 31000,
 	day_toggle = true,
 })
 

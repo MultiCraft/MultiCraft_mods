@@ -93,7 +93,7 @@ mesecon.register_pressure_plate(
 	{"default_wood.png"},
 	{"default_wood.png"},
 	{{"default:wood", "default:wood"}},
-	{ choppy = 3, oddly_breakable_by_hand = 3 },
+	{ choppy = 3, oddly_breakable_by_hand = 3, attached_node = 1 },
 	default.node_sound_wood_defaults())
 
 mesecon.register_pressure_plate(
@@ -102,5 +102,5 @@ mesecon.register_pressure_plate(
 	{"default_stone.png"},
 	{"default_stone.png"},
 	{{"default:cobble", "default:cobble"}},
-	{ cracky = 3, oddly_breakable_by_hand = 3 },
+	{ cracky = 3, oddly_breakable_by_hand = 3, attached_node = 1 },
 	default.node_sound_stone_defaults())

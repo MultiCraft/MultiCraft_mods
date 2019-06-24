@@ -65,7 +65,7 @@ local piston_remove_pusher = function (pos, node)
 		return
 	end
 
-		minetest.remove_node(pusherpos)
+	minetest.remove_node(pusherpos)
 	minetest.sound_play("piston_retract", {
 		pos = pos,
 		max_hear_distance = 20,
@@ -174,6 +174,7 @@ minetest.register_node("mesecons_pistons:piston_normal_off", {
 		"mesecons_piston_pusher_front.png"
 		},
 	groups = {cracky = 3},
+	stack_max = 1,
 	paramtype2 = "facedir",
 	after_place_node = piston_orientate,
 	mesecons_piston = pistonspec_normal,
@@ -253,6 +254,7 @@ minetest.register_node("mesecons_pistons:piston_sticky_off", {
 		"mesecons_piston_pusher_front_sticky.png"
 		},
 	groups = {cracky = 3},
+	stack_max = 1,
 	paramtype2 = "facedir",
 	after_place_node = piston_orientate,
 	mesecons_piston = pistonspec_sticky,

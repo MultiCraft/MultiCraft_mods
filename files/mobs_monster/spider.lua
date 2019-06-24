@@ -62,12 +62,9 @@ mobs:register_mob("mobs_monster:spider", {
 mobs:spawn({
 	name = "mobs_monster:spider",
 	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
-	min_light = 0,
 	max_light = 12,
-	interval = 30,
-	chance = 10000,
-	min_height = -50,
-	max_height = 31000,
+	chance = 20000,
+	min_height = -64,
 })
 
 mobs:register_egg("mobs_monster:spider", "Spider egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
@@ -138,12 +135,8 @@ mobs:register_mob("mobs_monster:small_spider", {
 mobs:spawn({
 	name = "mobs_monster:small_spider",
 	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
-	min_light = 0,
-	max_light = 15,
-	interval = 30,
-	chance = 10000,
-	min_height = -50,
-	max_height = 31000,
+	chance = 20000,
+	min_height = -64,
 })
 
 minetest.register_craft({

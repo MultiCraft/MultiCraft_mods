@@ -32,7 +32,7 @@ minetest.register_node("mesecons_lightstone:lightstone_off", {
 minetest.register_node("mesecons_lightstone:lightstone_on", {
 	tiles = {"jeija_lightstone_gray_on.png"},
 	is_ground_content = false,
-	groups = {cracky=2,not_in_creative_inventory=1, mesecon = 2},
+	groups = {cracky=2, not_in_creative_inventory=1, mesecon = 2},
 	drop = "mesecons_lightstone:lightstone_off",
 	light_source = minetest.LIGHT_MAX - 2,
 	sounds = default.node_sound_glass_defaults(),

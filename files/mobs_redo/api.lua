@@ -37,7 +37,6 @@ end
 
 
 -- Load settings
-local damage_enabled = minetest.settings:get_bool("enable_damage")
 local mobs_spawn = minetest.settings:get_bool("mobs_spawn") ~= false
 local peaceful_only = minetest.settings:get_bool("only_peaceful_mobs")
 local disable_blood = minetest.settings:get_bool("mobs_disable_blood") ~= true
@@ -48,8 +47,14 @@ local spawn_protected = minetest.settings:get_bool("mobs_spawn_protected") ~= fa
 local remove_far = minetest.settings:get_bool("remove_far_mobs") ~= false
 local difficulty = tonumber(minetest.settings:get("mob_difficulty")) or 1.0
 local show_health = minetest.settings:get_bool("mob_show_health") ~= true
-local max_per_block = tonumber(minetest.settings:get("max_objects_per_block") or 99)
+local max_per_block = tonumber(minetest.settings:get("max_objects_per_block"))
 local mob_chance_multiplier = tonumber(minetest.settings:get("mob_chance_multiplier") or 1)
+local lifetime = 1200 -- 20 min
+local spawn_interval = 10
+if not minetest.is_singleplayer() then
+	lifetime = 300 -- 5 min
+	spawn_interval = 60
+end
 
 -- Peaceful mode message so players will know there are no monsters
 if peaceful_only then
@@ -74,10 +79,6 @@ local node_ice = "default:ice"
 local node_snowblock = "default:snowblock"
 local node_snow = "default:snow"
 mobs.fallback_node = minetest.registered_aliases["mapgen_dirt"] or "default:dirt"
-local lifetime = 1200 -- 20 min
-if not minetest.is_singleplayer() then
-	lifetime = 300 -- 5 min
-end
 
 local mob_class = {
 	stepheight = 1.1, -- was 0.6
@@ -900,16 +901,15 @@ function mob_class:do_env_damage()
 	if self.light_damage ~= 0 then
 
 		local light = minetest.get_node_light(pos) or 0
-
 		if light >= self.light_damage_min
 		and light <= self.light_damage_max then
-
 			self.health = self.health - self.light_damage
 			pos.y = pos.y + 0.75 -- for particle effect position
 			effect(pos, 5, "heart.png")
-			self.nametag = "Health: " .. self.health .. " / " .. self.hp_max
-			self:update_tag()
-
+			if show_health then
+				self.nametag = "Health: " .. self.health .. " / " .. self.hp_max
+				self:update_tag()
+			end
 			if self:check_for_death({type = "light"}) then return end
 		end
 	end
@@ -2707,22 +2707,6 @@ end
 -- only play hit sound and show blood effects if damage is 1 or over
 if damage >= 1 then
 
-	-- weapon sounds
-	--[[	if weapon_def.sounds then
-
-			local s = random(0, #weapon_def.sounds)
-
-			minetest.sound_play(weapon_def.sounds[s], {
-				object = self.object,
-			max_hear_distance = 8
-		})
-	else
-		minetest.sound_play("default_punch", {
-				object = self.object,
-			max_hear_distance = 5
-		})
-	end ]]
-
 		-- blood_particles
 		if not disable_blood and self.blood_amount > 0 then
 
@@ -3584,7 +3568,7 @@ function mobs:spawn(def)
 		def.neighbors or {"air"},
 		def.min_light or 0,
 		def.max_light or 15,
-		def.interval or 30,
+		def.interval or spawn_interval,
 		def.chance or 5000,
 		def.active_object_count or 1,
 		def.min_height or -31000,
@@ -4166,7 +4150,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 			end
 
 			-- make sound when fed so many times
-			--self:mob_sound(self.sounds.random)
+			self:mob_sound(self.sounds.random)
 		end
 
 		return true

@@ -77,10 +77,8 @@ mobs:spawn({
 	name = "mobs_animal:chicken",
 	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
 	min_light = 5,
-	interval = 30,
-	chance = 8000,
+	chance = 20000,
 	min_height = 0,
-	max_height = 31000,
 	day_toggle = true,
 })
 

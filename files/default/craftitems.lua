@@ -228,14 +228,12 @@ minetest.register_craftitem("default:glowstone_dust", {
 
 minetest.register_craftitem("default:fish_raw", {
 	description = "Raw Fish",
-	groups = {},
 	inventory_image = "default_fish.png",
 	on_use = minetest.item_eat(2),
 })
 
 minetest.register_craftitem("default:fish", {
 	description = "Cooked Fish",
-	groups = {},
 	inventory_image = "default_fish_cooked.png",
 	on_use = minetest.item_eat(4),
 })

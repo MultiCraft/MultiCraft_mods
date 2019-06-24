@@ -872,10 +872,11 @@ minetest.register_node("default:cactus", {
 })
 
 minetest.register_abm({
+	label = "Cactus damage",
 	nodenames = {"default:cactus"},
 	interval = 1,
 	chance = 1,
-	action = function(pos, node, active_object_count, active_object_count_wider)
+	action = function(pos)
 		local players = minetest.get_objects_inside_radius(pos, 1)
 		for i, player in ipairs(players) do
 			player:set_hp(player:get_hp() - 2)
@@ -1393,7 +1394,7 @@ minetest.register_node("default:ladder_wood", {
 		--wall_bottom = = <default>
 		--wall_side = = <default>
 	},
-	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2},
+	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1},
 	legacy_wallmounted = true,
 	sounds = default.node_sound_wood_defaults(),
 })
@@ -1536,18 +1537,6 @@ minetest.register_node("default:quartz_pillar", {
 	tiles = {"default_quartz_pillar_top.png", "default_quartz_pillar_top.png", "default_quartz_pillar_side.png"},
 		groups = {snappy = 1, bendy = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults(),
-})
-
---
--- Misc
---
-
-minetest.register_node("default:cloud", {
-	description = "Cloud",
-	tiles = {"default_cloud.png"},
-	is_ground_content = false,
-	sounds = default.node_sound_defaults(),
-	groups = {not_in_creative_inventory = 1},
 })
 
 --
