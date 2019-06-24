@@ -1,6 +1,7 @@
-local age = 0.5 --How old an item has to be before collecting
-local radius_magnet = 2 --Radius of item magnet
-local player_collect_height = 1.3 --Added to their pos y value
+local age                   = 0.5 -- How old an item has to be before collecting
+local radius_magnet         = 2   -- Radius of item magnet
+local player_collect_height = 1.3 -- Added to their pos y value
+local players_per_step      = 20  -- How many players to process in one server step
 
 local function collect_items(player)
 	local pos = player:get_pos()
@@ -50,8 +51,6 @@ local function table_iter(t)
 end
 
 local player_iter = nil
-local players_per_step = 1
-
 local function get_next_player()
 	if player_iter == nil then
 		local names = {}
@@ -62,7 +61,9 @@ local function get_next_player()
 			end
 		end
 		player_iter = table_iter(names)
-		players_per_step = math.floor(#names / 10) + 1
+		if players_per_step > #names then
+			players_per_step = #names + 1
+		end
 		return
 	end
 	local name = player_iter()
@@ -72,7 +73,7 @@ end
 
 --Item collection
 minetest.register_globalstep(function()
-	-- only deal with 1/10 of total player count on each server step
+	-- only deal with * player count on each server step
 	for i = 1, players_per_step do
 		local name = get_next_player()
 		if name then
