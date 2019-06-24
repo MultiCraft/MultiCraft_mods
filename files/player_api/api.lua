@@ -1,5 +1,8 @@
 player_api = {}
 
+-- How many players to process in one server step
+local players_per_step = 20  
+
 -- Player animation blending
 -- Note: This is currently broken due to a bug in Irrlicht, leave at 0
 local animation_blend = 0
@@ -87,52 +90,89 @@ minetest.register_on_leaveplayer(function(player)
 	player_textures[name] = nil
 end)
 
+local function table_iter(t)
+	local i = 0
+	local n = table.getn(t)
+	return function ()
+		i = i + 1
+		if i <= n then
+			return t[i]
+		end
+	end
+end
+
+local player_iter = nil
+local function get_next_player()
+	if player_iter == nil then
+		local names = {}
+		for player in table_iter(minetest.get_connected_players()) do
+			local name = player:get_player_name()
+			if name then
+				table.insert(names, name)
+			end
+		end
+		player_iter = table_iter(names)
+		if players_per_step > #names then
+			players_per_step = #names + 1
+		end
+		return
+	end
+	local name = player_iter()
+	player_iter = name and player_iter
+	return name or get_next_player()
+end
+
 -- Localize for better performance.
 local player_set_animation = player_api.set_animation
 local player_attached = player_api.player_attached
 
 -- Check each player and apply animations
 minetest.register_globalstep(function(dtime)
-	for _, player in pairs(minetest.get_connected_players()) do
-		local name = player:get_player_name()
-		local model_name = player_model[name]
-		local model = model_name and models[model_name]
-		if model and not player_attached[name] then
-			local controls = player:get_player_control()
-			local walking = false
-			local animation_speed_mod = model.animation_speed or 30
 
-			-- Determine if the player is walking
-			if controls.up or controls.down or controls.left or controls.right then
-				walking = true
-			end
+-- only deal with * player count on each server step
+	for i = 1, players_per_step do
+		local name = get_next_player()
+		if name then
+			local player = minetest.get_player_by_name(name)
+			local model_name = player_model[name]
+			local model = model_name and models[model_name]
+			if model and not player_attached[name] and player and player:is_player() then
+				local controls = player:get_player_control()
+				local walking = false
+				local animation_speed_mod = model.animation_speed or 30
 
-			-- Determine if the player is sneaking, and reduce animation speed if so
-			if controls.sneak then
-				animation_speed_mod = animation_speed_mod / 2
-			end
-
-			-- Apply animations based on what the player is doing
-			if player:get_hp() == 0 then
-				player_set_animation(player, "lay")
-			elseif walking then
-				if player_sneak[name] ~= controls.sneak then
-					player_anim[name] = nil
-					player_sneak[name] = controls.sneak
+				-- Determine if the player is walking
+				if controls.up or controls.down or controls.left or controls.right then
+					walking = true
 				end
-				if controls.LMB then
-					player_set_animation(player, "walk_mine", animation_speed_mod)
+
+				-- Determine if the player is sneaking, and reduce animation speed if so
+				if controls.sneak then
+					animation_speed_mod = animation_speed_mod / 2
+				end
+
+				-- Apply animations based on what the player is doing
+				if player:get_hp() == 0 then
+					player_set_animation(player, "lay")
+				elseif walking then
+					if player_sneak[name] ~= controls.sneak then
+						player_anim[name] = nil
+						player_sneak[name] = controls.sneak
+					end
+					if controls.LMB then
+						player_set_animation(player, "walk_mine", animation_speed_mod)
+					elseif controls.RMB then
+						player_set_animation(player, "walk_mine", animation_speed_mod)
+					else
+						player_set_animation(player, "walk", animation_speed_mod)
+					end
+				elseif controls.LMB then
+					player_set_animation(player, "mine")
 				elseif controls.RMB then
-					player_set_animation(player, "walk_mine", animation_speed_mod)
+					player_set_animation(player, "mine")
 				else
-					player_set_animation(player, "walk", animation_speed_mod)
+					player_set_animation(player, "stand", animation_speed_mod)
 				end
-			elseif controls.LMB then
-				player_set_animation(player, "mine")
-			elseif controls.RMB then
-				player_set_animation(player, "mine")
-			else
-				player_set_animation(player, "stand", animation_speed_mod)
 			end
 		end
 	end
