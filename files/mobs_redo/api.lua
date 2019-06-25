@@ -1,4 +1,3 @@
-
 -- Mobs Api
 
 local use_cmi = minetest.global_exists("cmi")

@@ -1,18 +1,28 @@
 MultiCraft Game mod: doors
-=======================
+==========================
+See license.txt for license information.
 
-License of source code:
------------------------
-Copyright (C) 2012 PilzAdam
-modified by BlockMen (added sounds, glassdoors, trapdoor)
-Copyright (C) 2016 sofar@foo-projects.org
+Authors of source code
+----------------------
+Originally by PilzAdam (MIT)
 
-This program is free software. It comes without any warranty, to
-the extent permitted by applicable law. You can redistribute it
-and/or modify it under the terms of the Do What The Fuck You Want
-To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+Modified by BlockMen (MIT): Added sounds, glass doors (glass, obsidian glass) and trapdoor.
 
+Modified by sofar (sofar@foo-projects.org) (MIT):
+Added Steel trapdoor.
+Re-implemented most of the door algorithms, added meshes, UV wrapped texture.
+Added doors API to facilitate coding mods accessing and operating doors.
+Added Fence Gate model, code, and sounds.
+
+Various Minetest developers and contributors (MIT)
+
+MultiCraft Development Team (MIT)
+
+Authors of media (models)
+-------------------------
+Door 3d models by sofar (CC-BY-SA-3.0)
+ - door_a.obj
+ - door_b.obj
 
 Authors of media (sounds)
 -------------------------
@@ -25,3 +35,9 @@ fencegate_open.ogg:
 fencegate_close.ogg:
   http://www.freesound.org/people/BarkersPinhead/sounds/274807/ - (CC-BY-3.0)
   http://www.freesound.org/people/rivernile7/sounds/249573/ - (CC-BY-3.0)
+Steel door sounds open & close (CC-BY-3.0) by HazMatt
+  - http://www.freesound.org/people/HazMattt/sounds/187283/
+  doors_steel_door_open.ogg
+  doors_steel_door_close.ogg
+doors_glass_door_open.ogg, doors_glass_door_close.ogg:
+  https://www.freesound.org/people/SkeetMasterFunk69/sounds/235546/ (CC0 1.0)

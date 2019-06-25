@@ -1,4 +1,3 @@
-
 local path = minetest.get_modpath("mobs")
 
 -- Mob API
