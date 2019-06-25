@@ -1,16 +1,16 @@
 -- Common rail registrations
 
-boost_cart:register_rail("boost_cart:rail", {
+carts:register_rail("carts:rail", {
 	description = "Rail",
 	tiles = {
 		"carts_rail_straight.png", "carts_rail_curved.png",
 		"carts_rail_t_junction.png", "carts_rail_crossing.png"
 	},
-	groups = boost_cart:get_rail_groups(),
+	groups = carts:get_rail_groups(),
 }, {})
 
 minetest.register_craft({
-	output = "boost_cart:rail 16",
+	output = "carts:rail 16",
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
 		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
@@ -19,13 +19,13 @@ minetest.register_craft({
 })
 
 -- Power rail
-boost_cart:register_rail(":carts:powerrail", {
-	description = "Powered rail",
+carts:register_rail("carts:powerrail", {
+	description = "Powered Rail",
 	tiles = {
 		"carts_rail_straight_pwr.png", "carts_rail_curved_pwr.png",
 		"carts_rail_t_junction_pwr.png", "carts_rail_crossing_pwr.png"
 	},
-	groups = boost_cart:get_rail_groups(),
+	groups = carts:get_rail_groups(),
 	after_place_node = function(pos, placer, itemstack)
 		if not mesecon then
 			minetest.get_meta(pos):set_string("cart_acceleration", "0.5")
@@ -34,7 +34,7 @@ boost_cart:register_rail(":carts:powerrail", {
 	mesecons = {
 		effector = {
 			action_on = function(pos, node)
-				boost_cart:boost_rail(pos, 0.5)
+				carts:boost_rail(pos, 0.5)
 			end,
 			action_off = function(pos, node)
 				minetest.get_meta(pos):set_string("cart_acceleration", "0")
@@ -53,13 +53,13 @@ minetest.register_craft({
 })
 
 -- Brake rail
-boost_cart:register_rail(":carts:brakerail", {
-	description = "Brake rail",
+carts:register_rail("carts:brakerail", {
+	description = "Brake Rail",
 	tiles = {
 		"carts_rail_straight_brk.png", "carts_rail_curved_brk.png",
 		"carts_rail_t_junction_brk.png", "carts_rail_crossing_brk.png"
 	},
-	groups = boost_cart:get_rail_groups(),
+	groups = carts:get_rail_groups(),
 	after_place_node = function(pos, placer, itemstack)
 		if not mesecon then
 			minetest.get_meta(pos):set_string("cart_acceleration", "-0.3")
@@ -86,13 +86,13 @@ minetest.register_craft({
 	}
 })
 
-boost_cart:register_rail("boost_cart:startstoprail", {
+carts:register_rail("carts:startstoprail", {
 	description = "Start-stop rail",
 	tiles = {
 		"carts_rail_straight_ss.png", "carts_rail_curved_ss.png",
 		"carts_rail_t_junction_ss.png", "carts_rail_crossing_ss.png"
 	},
-	groups = boost_cart:get_rail_groups(),
+	groups = carts:get_rail_groups(),
 	after_place_node = function(pos, placer, itemstack)
 		if not mesecon then
 			minetest.get_meta(pos):set_string("cart_acceleration", "halt")
@@ -101,7 +101,7 @@ boost_cart:register_rail("boost_cart:startstoprail", {
 	mesecons = {
 		effector = {
 			action_on = function(pos, node)
-				boost_cart:boost_rail(pos, 0.5)
+				carts:boost_rail(pos, 0.5)
 			end,
 			action_off = function(pos, node)
 				minetest.get_meta(pos):set_string("cart_acceleration", "halt")
@@ -111,7 +111,7 @@ boost_cart:register_rail("boost_cart:startstoprail", {
 })
 
 minetest.register_craft({
-	output = "boost_cart:startstoprail 2",
+	output = "carts:startstoprail 2",
 	recipe = {
 		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
 		{"default:steel_ingot", "mesecons_torch:mesecon_torch_on", "default:steel_ingot"},
