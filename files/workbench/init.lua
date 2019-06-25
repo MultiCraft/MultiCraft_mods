@@ -304,7 +304,7 @@ for i=1, #nodes do
 	local def = minetest.registered_nodes[node]
 
 	if d[3] then
-		local groups = {}
+		local groups = {stairs = 1}
 		local tiles
 		--groups.not_in_creative_inventory = 1
 
@@ -349,7 +349,7 @@ end
 
 -- Craft items
 
-minetest.register_tool("workbench:hammer", {
+minetest.register_craftitem("workbench:hammer", {
 	description = "Hammer",
 	inventory_image = "workbench_hammer.png",
 	on_use = function() do return end end
