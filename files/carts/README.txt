@@ -1,4 +1,4 @@
- Minetest mod: boost_cart
+ MultiCraft Game mod: carts
 ==========================
 Based on (and fully compatible with) the mod "carts" by PilzAdam
 and the one contained in the subgame "minetest_game".
@@ -48,9 +48,6 @@ license).
 
  Authors
 ---------
-Various authors
-	carts_rail_*.png
-
 
 klankbeeld (CC-BY 3.0)
 	http://freesound.org/people/klankbeeld/sounds/174042/

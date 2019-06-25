@@ -1,23 +1,3 @@
-
-local HAVE_MESECONS_ENABLED = minetest.global_exists("mesecon")
-
-function boost_cart:on_rail_step(entity, pos, distance)
-	-- Play rail sound
-	if entity.sound_counter <= 0 then
-		minetest.sound_play("cart_rail", {
-			pos = pos,
-			max_hear_distance = 40,
-			gain = 0.5
-		})
-		entity.sound_counter = math.random(4, 15)
-	end
-	entity.sound_counter = entity.sound_counter - distance
-
-	if HAVE_MESECONS_ENABLED then
-		--boost_cart:signal_detector_rail(pos)
-	end
-end
-
 local cart_entity = {
 	initial_properties = {
 		physical = false,
@@ -34,7 +14,6 @@ local cart_entity = {
 	old_dir = {x=1, y=0, z=0}, -- random value to start the cart on punch
 	old_pos = nil,
 	old_switch = 0,
-	sound_counter = 0,
 	railtype = nil,
 	attached_items = {}
 }
@@ -46,23 +25,19 @@ function cart_entity:on_rightclick(clicker)
 	local player_name = clicker:get_player_name()
 	if self.driver and player_name == self.driver then
 		self.driver = nil
-		boost_cart:manage_attachment(clicker, nil)
+		carts:manage_attachment(clicker, nil)
 	elseif not self.driver then
 		self.driver = player_name
-		boost_cart:manage_attachment(clicker, self.object)
+		carts:manage_attachment(clicker, self.object)
 
-		if default.player_set_animation then
-			-- player_api(/default) does not update the animation
+			-- player_api does not update the animation
 			-- when the player is attached, reset to default animation
-			default.player_set_animation(clicker, "stand")
-		end
+		player_api.set_animation(clicker, "stand")
 	end
 end
 
 function cart_entity:on_activate(staticdata, dtime_s)
 	self.object:set_armor_groups({immortal=1})
-	self.sound_counter = math.random(4, 15)
-
 	if string.sub(staticdata, 1, string.len("return")) ~= "return" then
 		return
 	end
@@ -74,7 +49,7 @@ function cart_entity:on_activate(staticdata, dtime_s)
 	self.old_dir = data.old_dir or self.old_dir
 	self.old_pos = data.old_pos or self.old_pos
 	-- Correct the position when the cart drives further after the last 'step()'
-	if self.old_pos and boost_cart:is_rail(self.old_pos, self.railtype) then
+	if self.old_pos and carts:is_rail(self.old_pos, self.railtype) then
 		self.object:set_pos(self.old_pos)
 	end
 end
@@ -101,9 +76,9 @@ function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities, 
 		local node = minetest.get_node(pos).name
 		self.railtype = minetest.get_item_group(node, "connect_to_raillike")
 	end
-
+	-- Punched by non-player
 	if not puncher or not puncher:is_player() then
-		local cart_dir = boost_cart:get_rail_direction(pos, self.old_dir, nil, nil, self.railtype)
+		local cart_dir = carts:get_rail_direction(pos, self.old_dir, nil, nil, self.railtype)
 		if vector.equals(cart_dir, {x=0, y=0, z=0}) then
 			return
 		end
@@ -111,41 +86,48 @@ function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities, 
 		self.punched = true
 		return
 	end
-
+	-- Player digs cart by sneak-punch
 	if puncher:get_player_control().sneak then
-		-- Pick up cart: Drop all attachments
+		if self.sound_handle then
+			minetest.sound_stop(self.sound_handle)
+		end
+		-- Detach driver and items
 		if self.driver then
 			if self.old_pos then
 				self.object:set_pos(self.old_pos)
 			end
 			local player = minetest.get_player_by_name(self.driver)
-			boost_cart:manage_attachment(player, nil)
+			carts:manage_attachment(player, nil)
 		end
-		for _, obj_ in pairs(self.attached_items) do
+		for _, obj_ in ipairs(self.attached_items) do
 			if obj_ then
 				obj_:set_detach()
 			end
 		end
-
-		local leftover = puncher:get_inventory():add_item("main", "carts:cart")
+		-- Pick up cart
+		local inv = puncher:get_inventory()
+		if not (creative and creative.is_enabled_for
+				and creative.is_enabled_for(puncher:get_player_name()))
+				or not inv:contains_item("main", "carts:cart") then
+			local leftover = inv:add_item("main", "carts:cart")
+			-- If no room in inventory add a replacement cart to the world
 		if not leftover:is_empty() then
-			minetest.add_item(pos, leftover)
+				minetest.add_item(self.object:get_pos(), leftover)
+			end
 		end
-
 		self.object:remove()
 		return
 	end
-
-	-- Driver punches to accelerate the cart
+	-- Player punches cart to alter velocity
 	if puncher:get_player_name() == self.driver then
-		if math.abs(vel.x + vel.z) > boost_cart.punch_speed_max then
+		if math.abs(vel.x + vel.z) > carts.punch_speed_max then
 			return
 		end
 	end
 
-	local punch_dir = boost_cart:velocity_to_dir(puncher:get_look_dir())
+	local punch_dir = carts:velocity_to_dir(puncher:get_look_dir())
 	punch_dir.y = 0
-	local cart_dir = boost_cart:get_rail_direction(pos, punch_dir, nil, nil, self.railtype)
+	local cart_dir = carts:get_rail_direction(pos, punch_dir, nil, nil, self.railtype)
 	if vector.equals(cart_dir, {x=0, y=0, z=0}) then
 		return
 	end
@@ -160,6 +142,12 @@ function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities, 
 	self.velocity = vector.multiply(cart_dir, f)
 	self.old_dir = cart_dir
 	self.punched = true
+end
+
+function carts:on_rail_step(entity, pos, distance)
+	if minetest.global_exists("mesecon") then
+		carts:signal_detector_rail(pos)
+	end
 end
 
 -- sound refresh interval = 1.0sec
@@ -183,14 +171,14 @@ local function rail_sound(self, dtime)
 		self.sound_handle = minetest.sound_play(
 			"carts_cart_moving", {
 			object = self.object,
-			gain = (speed / boost_cart.speed_max) / 2,
+			gain = (speed / carts.speed_max) / 2,
 			loop = true,
 		})
 	end
 end
 
 local v3_len = vector.length
-function cart_entity:on_step(dtime)
+local function rail_on_step(self, dtime)
 
 	-- Drop cart if there is no player or items inside.
 	if not self.driver and #self.attached_items == 0 then
@@ -199,7 +187,6 @@ function cart_entity:on_step(dtime)
 			drop_timer = 60 -- 1 min
 		end
 		self.count = (self.count or 0) + dtime
-
 		if self.count > drop_timer then
 			minetest.add_item(self.object:get_pos(), "carts:cart")
 			if self.sound_handle then
@@ -208,12 +195,10 @@ function cart_entity:on_step(dtime)
 			self.object:remove()
 			return
 		end
-
 	else
 		self.count = 0
 	end
 
-	rail_sound(self, dtime)
 	local vel = self.object:get_velocity()
 	if self.punched then
 		vel = vector.add(vel, self.velocity)
@@ -224,7 +209,7 @@ function cart_entity:on_step(dtime)
 	end
 
 	local pos = self.object:get_pos()
-	local cart_dir = boost_cart:velocity_to_dir(vel)
+	local cart_dir = carts:velocity_to_dir(vel)
 	local same_dir = vector.equals(cart_dir, self.old_dir)
 	local update = {}
 
@@ -238,7 +223,6 @@ function cart_entity:on_step(dtime)
 	end
 
 	local ctrl, player
-	local distance = 1
 
 	-- Get player controls
 	if self.driver then
@@ -253,9 +237,9 @@ function cart_entity:on_step(dtime)
 		-- Detection for "skipping" nodes (perhaps use average dtime?)
 		-- It's sophisticated enough to take the acceleration in account
 		local acc = self.object:get_acceleration()
-		distance = dtime * (v3_len(vel) + 0.5 * dtime * v3_len(acc))
+		local distance = dtime * (v3_len(vel) + 0.5 * dtime * v3_len(acc))
 
-		local new_pos, new_dir = boost_cart:pathfinder(
+		local new_pos, new_dir = carts:pathfinder(
 			pos, self.old_pos, self.old_dir, distance, ctrl,
 			self.old_switch, self.railtype
 		)
@@ -274,7 +258,7 @@ function cart_entity:on_step(dtime)
 	-- dir:			New moving direction of the cart
 	-- switch_keys:	Currently pressed L(1) or R(2) key,
 	--				used to ignore the key on the next rail node
-	local dir, switch_keys = boost_cart:get_rail_direction(
+	local dir, switch_keys = carts:get_rail_direction(
 		pos, cart_dir, ctrl, self.old_switch, self.railtype
 	)
 	local dir_changed = not vector.equals(dir, self.old_dir)
@@ -283,7 +267,7 @@ function cart_entity:on_step(dtime)
 	if stop_wiggle or vector.equals(dir, {x=0, y=0, z=0}) then
 		vel = {x=0, y=0, z=0}
 		local pos_r = vector.round(pos)
-		if not boost_cart:is_rail(pos_r, self.railtype)
+		if not carts:is_rail(pos_r, self.railtype)
 				and self.old_pos then
 			pos = self.old_pos
 		elseif not stop_wiggle then
@@ -333,7 +317,7 @@ function cart_entity:on_step(dtime)
 				acc = speed_mod * 10
 			end
 		end
-		if acc == nil and boost_cart.mtg_compat then
+		if acc == nil and carts.mtg_compat then
 			-- MTG Cart API adaption
 			local rail_node = minetest.get_node(vector.round(pos))
 			local railparam = carts.railparams[rail_node.name]
@@ -360,11 +344,11 @@ function cart_entity:on_step(dtime)
 
 	-- Limit cart speed
 	local vel_len = vector.length(vel)
-	if vel_len > boost_cart.speed_max then
-		vel = vector.multiply(vel, boost_cart.speed_max / vel_len)
+	if vel_len > carts.speed_max then
+		vel = vector.multiply(vel, carts.speed_max / vel_len)
 		update.vel = true
 	end
-	if vel_len >= boost_cart.speed_max and acc > 0 then
+	if vel_len >= carts.speed_max and acc > 0 then
 		acc = 0
 	end
 
@@ -380,7 +364,7 @@ function cart_entity:on_step(dtime)
 	end
 	self.old_switch = switch_keys
 
-	boost_cart:on_rail_step(self, self.old_pos, distance)
+	carts:on_rail_step(self, self.old_pos, distance)
 
 	if self.punched then
 		-- Collect dropped items
@@ -450,42 +434,47 @@ function cart_entity:on_step(dtime)
 	end
 end
 
-minetest.register_entity(":carts:cart", cart_entity)
-
--- Register item to place the entity
-if not boost_cart.mtg_compat then
-	minetest.register_craftitem(":carts:cart", {
-		description = "Cart (Sneak+Click to pick up)",
-		inventory_image = "carts_cart_inv.png",
-		wield_image = "carts_cart_inv.png",
-		stack_max = 1,
-		sounds = default.node_sound_metal_defaults(),
-		on_place = function(itemstack, placer, pointed_thing)
-			if not pointed_thing.type == "node" then
-				return
-			end
-			if boost_cart:is_rail(pointed_thing.under) then
-				minetest.add_entity(pointed_thing.under, "carts:cart")
-			elseif boost_cart:is_rail(pointed_thing.above) then
-				minetest.add_entity(pointed_thing.above, "carts:cart")
-			else
-				return
-			end
-
-			if not (creative and creative.is_enabled_for and
-					creative.is_enabled_for(placer)) or
-					not minetest.is_singleplayer() then
-				itemstack:take_item()
-			end
-			return itemstack
-		end,
-	})
-
-	minetest.register_craft({
-		output = "carts:cart",
-		recipe = {
-			{"default:steel_ingot", "", "default:steel_ingot"},
-			{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
-		},
-	})
+function cart_entity:on_step(dtime)
+	rail_on_step(self, dtime)
+	rail_sound(self, dtime)
 end
+
+minetest.register_entity("carts:cart", cart_entity)
+
+minetest.register_craftitem("carts:cart", {
+	description = "Cart (Sneak+Click to pick up)",
+	inventory_image = "carts_cart_inv.png",
+	wield_image = "carts_cart_inv.png",
+	stack_max = 1,
+	sounds = default.node_sound_metal_defaults(),
+	on_place = function(itemstack, placer, pointed_thing)
+		if not pointed_thing.type == "node" then
+			return
+		end
+		if carts:is_rail(pointed_thing.under) then
+			minetest.add_entity(pointed_thing.under, "carts:cart")
+		elseif carts:is_rail(pointed_thing.above) then
+			minetest.add_entity(pointed_thing.above, "carts:cart")
+		else
+			return
+		end
+
+		minetest.sound_play({name = "default_place_node_metal", gain = 0.5},
+			{pos = pointed_thing.above})
+
+		if not (creative and creative.is_enabled_for and
+				creative.is_enabled_for(placer)) or
+				not minetest.is_singleplayer() then
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})
+
+minetest.register_craft({
+	output = "carts:cart",
+	recipe = {
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+	},
+})

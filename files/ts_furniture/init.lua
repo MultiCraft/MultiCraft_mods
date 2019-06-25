@@ -9,7 +9,7 @@ ts_furniture.enable_sitting = false
 	local players = minetest.get_connected_players()
 	for i = 1, #players do
 		local name = players[i]:get_player_name()
-		if default.player_attached[name] and not players[i]:get_attach() and
+		if player_api.player_attached[name] and not players[i]:get_attach() and
 				(players[i]:get_player_control().up == true or
 						players[i]:get_player_control().down == true or
 						players[i]:get_player_control().left == true or
@@ -17,7 +17,7 @@ ts_furniture.enable_sitting = false
 						players[i]:get_player_control().jump == true) then
 			players[i]:set_eye_offset({ x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 })
 			players[i]:set_physics_override(1, 1, 1)
-			default.player_attached[name] = false
+			player_api.player_attached[name] = false
 			player_api.set_animation(players[i], "stand", 30)
 		end
 	end
@@ -25,16 +25,16 @@ end)
 
 ts_furniture.sit = function(name, pos)
 	local player = minetest.get_player_by_name(name)
-	if default.player_attached[name] then
+	if player_api.player_attached[name] then
 		player:set_eye_offset({ x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 })
 		player:set_physics_override(1, 1, 1)
-		default.player_attached[name] = false
+		player_api.player_attached[name] = false
 		player_api.set_animation(player, "stand", 30)
 	else
 		player:moveto(pos)
 		player:set_eye_offset({ x = 0, y = -7, z = 2 }, { x = 0, y = 0, z = 0 })
 		player:set_physics_override(0, 0, 0)
-		default.player_attached[name] = true
+		player_api.player_attached[name] = true
 		player_api.set_animation(player, "sit", 30)
 	end
 end]]
