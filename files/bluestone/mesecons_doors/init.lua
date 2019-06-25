@@ -20,32 +20,7 @@ local function on_rightclick(pos, dir, check_name, replace, replace_dir, params)
 end
 
 local function meseconify_door(name)
-	if minetest.registered_items[name .. "_b_1"] then
-		-- old style double-node doors
-		local function toggle_state1 (pos, node)
-			on_rightclick(pos, 1, name.."_t_1", name.."_b_2", name.."_t_2", {1,2,3,0})
-		end
-
-		local function toggle_state2 (pos, node)
-			on_rightclick(pos, 1, name.."_t_2", name.."_b_1", name.."_t_1", {3,0,1,2})
-		end
-
-		minetest.override_item(name.."_b_1", {
-			mesecons = {effector = {
-				action_on = toggle_state1,
-				action_off = toggle_state1,
-				rules = mesecon.rules.pplate
-			}}
-		})
-
-		minetest.override_item(name.."_b_2", {
-			mesecons = {effector = {
-				action_on = toggle_state2,
-				action_off = toggle_state2,
-				rules = mesecon.rules.pplate
-			}}
-		})
-	elseif minetest.registered_items[name .. "_a"] then
+	if minetest.registered_items[name .. "_a"] then
 		-- new style mesh node based doors
 		local override = {
 			mesecons = {effector = {
