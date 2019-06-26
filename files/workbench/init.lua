@@ -1,38 +1,24 @@
 local workbench = {}
-WB = {}
 local min, ceil = math.min, math.ceil
 
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
 local nodes = {}
 for node, def in pairs(minetest.registered_nodes) do
-	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass") and
-		--(def.groups.crumbly or def.groups.cracky or def.groups.snappy or def.groups.choppy) and // ToDo!!!
-		(def.groups.cracky or def.groups.snappy or def.groups.choppy) and
+	if 	(def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass" or def.drawtype:sub(1,8) == "allfaces") and
+		(def.tiles and type(def.tiles[1]) == "string") and
 		not def.on_construct and
-		not def.after_place_node and
 		not def.on_rightclick and
 		not def.on_blast and
 		not def.allow_metadata_inventory_take and
 		not (def.groups.not_in_creative_inventory == 1) and
 		not (def.groups.not_cuttable == 1) and
-		--not def.groups.wool and
 		not def.groups.colorglass and
-		(def.tiles and type(def.tiles[1]) == "string" and not
-		def.tiles[1]:find("default_mineral")) and
-		not def.mesecons and
-		def.description and
-		def.description ~= "" and
-		def.light_source == 0
+		not def.mesecons
 	then
 		nodes[#nodes+1] = node
 	end
 end
-
--- Optionally, you can register custom cuttable nodes in the workbench
-WB.custom_nodes_register = {
-	-- "default:leaves",
-}
 
 setmetatable(nodes, {
 	__concat = function(t1, t2)
@@ -43,12 +29,9 @@ setmetatable(nodes, {
 	end
 })
 
-nodes = nodes..WB.custom_nodes_register
-
 -- Nodeboxes definitions
 workbench.defs = {
 	-- Name		  Yield   X  Y   Z  W   H  L
---	{"nanoslab",	8,	{ 0, 0,  0, 8,  1, 8  }},
 	{"micropanel",	8,	{ 0, 0,  0, 16, 1, 8  }},
 	{"microslab",	4,	{ 0, 0,  0, 16, 1, 16 }},
 	{"thinstair",	4,	{ 0, 7,  0, 16, 1, 8   },
@@ -83,8 +66,7 @@ function workbench:get_output(inv, input, name)
 	local output = {}
 	for _, n in pairs(self.defs) do
 		local count = min(n[2] * input:get_count(), input:get_stack_max())
-		local item = name.."_"..n[1]
-		if not n[3] then item = "stairs:"..n[1].."_"..name:match(":(.*)") end
+		local item = "stairs:"..n[1].."_"..name:gsub(":", "_")
 		output[#output+1] = item.." "..count
 	end
 	inv:set_list("forms", output)
@@ -129,19 +111,6 @@ local formspecs = {
 		image[4.04,1.55;1,1;hammer_layout.png]
 		list[context;hammer;4.06,1.50;1,1;]	]],
 }
-
-local split_inv = minetest.create_detached_inventory("split", {
-	allow_move = function(_, _, _, _, _, count, _)
-		return count
-	end,
-	allow_put = function(_, _, _, stack, _)
-		return stack:get_count() / 2
-	end,
-	allow_take = function(_, _, _, stack, _)
-		return stack:get_count()
-	end,
-})
-split_inv:set_size("main", 1)
 
 function workbench:set_formspec(meta, id)
 	meta:set_string("formspec", "size[9,8.75;]"..
@@ -199,12 +168,6 @@ function workbench.fields(pos, _, fields, sender)
 	end
 end
 
-function workbench.dig(pos)
-	local inv = minetest.get_meta(pos):get_inventory()
-	return inv:is_empty("input") and inv:is_empty("hammer") and
-		inv:is_empty("tool") and inv:is_empty("storage")
-end
-
 function workbench.timer(pos)
 	local timer = minetest.get_node_timer(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
@@ -228,10 +191,10 @@ end
 function workbench.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
-		 workbench:repairable(stackname)) or
+		workbench:repairable(stackname)) or
 		(listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
 		(listname == "hammer" and stackname == "workbench:hammer") or
-		 listname == "storage" then
+		listname == "storage" then
 		return stack:get_count()
 	end
 	return 0
@@ -258,8 +221,8 @@ function workbench.on_take(pos, listname, index, stack, player)
 	local inputname = input:get_name()
 	local stackname = stack:get_name()
 
-	if listname == "input" then
-		if stackname == inputname and minetest.registered_nodes[inputname.."_cube"] then
+	if stackname == inputname and minetest.registered_nodes[inputname.."_cube"] then
+		if stackname == inputname then
 			workbench:get_output(inv, input, stackname)
 		else
 			inv:set_list("forms", {})
@@ -288,7 +251,6 @@ minetest.register_node("workbench:workbench", {
 	tiles = {"workbench_top.png", "workbench_top.png",
 		 "workbench_sides.png", "workbench_sides.png",
 		 "workbench_front.png", "workbench_front.png"},
-	can_dig = workbench.dig,
 	on_timer = workbench.timer,
 	on_construct = workbench.construct,
 	on_receive_fields = workbench.fields,
@@ -299,53 +261,114 @@ minetest.register_node("workbench:workbench", {
 })
 
 for _, d in pairs(workbench.defs) do
-for i=1, #nodes do
-	local node = nodes[i]
-	local def = minetest.registered_nodes[node]
+	for i=1, #nodes do
+		local node = nodes[i]
+		local def = minetest.registered_nodes[node]
 
-	if d[3] then
-		local groups = {stairs = 1}
-		local tiles
-		--groups.not_in_creative_inventory = 1
+		if d[3] then
+			local groups = {}
+			local tiles
+			groups.stairs = 1
 
-		for k, v in pairs(def.groups) do
-			if k ~= "wood" and k ~= "stone" and k ~= "level" then
-				groups[k] = v
+			for k, v in pairs(def.groups) do
+				if k ~= "wood" and k ~= "stone" and k ~= "level" then
+					groups[k] = v
+				end
 			end
-		end
 
-		if def.tiles then
-			if #def.tiles > 1 and (def.drawtype:sub(1,5) ~= "glass") then
-				tiles = def.tiles
+			if def.tiles then
+				if #def.tiles > 1 and (def.drawtype:sub(1,5) ~= "glass") then
+					tiles = def.tiles
+				else
+					tiles = {def.tiles[1]}
+				end
 			else
 				tiles = {def.tiles[1]}
 			end
-		else
-			tiles = {def.tile_images[1]}
-		end
 
-		if not minetest.registered_nodes["stairs:slab_"..node:match(":(.*)")] then
-			stairs.register_stair_and_slab(node:match(":(.*)"), node,
-				groups, tiles, def.description.." Stair",
-				def.description, def.sounds)
-		end
+			minetest.register_node(":stairs:"..d[1].."_"..node:gsub(":", "_"), {
+				description = def.description.." "..d[1]:gsub("^%l", string.upper),
+				paramtype = "light",
+				paramtype2 = "facedir",
+				drawtype = "nodebox",
+				sounds = def.sounds,
+				tiles = tiles,
+				groups = groups,
+				light_source = def.light_source / 2,
+				-- `unpack` has been changed to `table.unpack` in newest Lua versions
+				node_box = workbench:pixelbox(16, {unpack(d, 3)}),
+				sunlight_propagates = true,
+				is_ground_content = false,
+				on_place = minetest.rotate_node
+			})
 
-		minetest.register_node(":"..node.."_"..d[1], {
-			description = def.description.." "..d[1]:gsub("^%l", string.upper),
-			paramtype = "light",
-			paramtype2 = "facedir",
-			drawtype = "nodebox",
-			sounds = def.sounds,
-			tiles = tiles,
-			groups = groups,
-			-- `unpack` has been changed to `table.unpack` in newest Lua versions
-			node_box = workbench:pixelbox(16, {unpack(d, 3)}),
-			sunlight_propagates = true,
-			on_place = minetest.rotate_node
-		})
+			minetest.register_node(":stairs:slope_" .. node:gsub(":", "_"), {
+				description = def.description .. " Slope",
+				paramtype = "light",
+				paramtype2 = "facedir",
+				drawtype = "mesh",
+				mesh = "workbench_slope.obj",
+				sounds = def.sounds,
+				tiles = def.tiles,
+				groups = groups,
+				light_source = def.light_source / 2,
+				sunlight_propagates = true,
+				is_ground_content = false,
+				use_texture_alpha = def.use_texture_alpha,
+				on_place = minetest.rotate_node,
+				collision_box = {
+					type = "fixed",
+					fixed = {
+						{-0.5, -0.5, -0.5, 0.5, -0.1875, 0.5},
+						{-0.5, -0.1875, -0.1875, 0.5, 0.1875, 0.5},
+						{-0.5, 0.1875, 0.1875, 0.5, 0.5, 0.5},
+					},
+				},
+			})
+			
+		end
 	end
 end
+
+-- Aliases. A lot of aliases...
+
+local stairs_aliases = {
+	{"corner",		"outerstair"},
+	{"invcorner",	"outerstair"},
+	{"stair_outer",	"innerstair"},
+	{"stair_inner",	"innerstair"}
+}
+
+for i=1, #nodes do
+	local node = nodes[i]
+	for _, d in pairs(workbench.defs) do
+		minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"),	"stairs:"..d[1].."_"..node:gsub(":", "_"))
+	end
+
+	for _, e in pairs(stairs_aliases) do
+		minetest.register_alias("stairs:"..e[1].."_"..node:match(":(.*)"),	"stairs:"..e[2].."_"..node:gsub(":", "_"))
+		minetest.register_alias("stairs:"..e[1].."_"..node:gsub(":", "_"),	"stairs:"..e[2].."_"..node:gsub(":", "_"))
+	end
 end
+
+for _, d in pairs(workbench.defs) do
+	minetest.register_alias("stairs:"..d[1].."_coal",		"stairs:"..d[1].."_default_coalblock")
+end
+
+for _, e in pairs(stairs_aliases) do
+	minetest.register_alias("stairs:"..e[1].."_coal",		"stairs:"..e[2].."_default_coalblock")
+
+end
+
+minetest.register_alias("stairs:stair_steel", "stairs:stair_default_steelblock")
+minetest.register_alias("stairs:slab_steel", "stairs:slab_default_steelblock")
+minetest.register_alias("stairs:corner_steel", "stairs:corner_default_steelblock")
+minetest.register_alias("stairs:stair_gold", "stairs:stair_default_goldblock")
+minetest.register_alias("stairs:slab_gold", "stairs:slab_default_goldblock")
+minetest.register_alias("stairs:corner_gold", "stairs:corner_default_goldblock")
+minetest.register_alias("stairs:stair_diamond", "stairs:stair_default_diamondblock")
+minetest.register_alias("stairs:slab_diamond", "stairs:slab_default_diamondblock")
+minetest.register_alias("stairs:corner_diamond", "stairs:corner_default_diamondblock")
 
 -- Craft items
 

@@ -34,10 +34,10 @@ minetest.register_alias("mapgen_pine_needles", "default:pine_needles")
 -- Dungeons
 
 minetest.register_alias("mapgen_cobble", "default:cobble")
-minetest.register_alias("mapgen_stair_cobble", "stairs:stair_cobble")
+minetest.register_alias("mapgen_stair_cobble", "stairs:stair_default_cobble")
 minetest.register_alias("mapgen_mossycobble", "default:mossycobble")
 minetest.register_alias("mapgen_sandstonebrick", "default:sandstone")
-minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_sandstone")
+minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_default_sandstone")
 
 --
 -- Register bedrock for Mgv6
