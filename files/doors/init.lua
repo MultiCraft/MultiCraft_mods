@@ -440,9 +440,9 @@ doors.register("door_steel", {
 		}
 })
 
--- Aliaces
+-- Aliases
 
-local doors_aliaces = {
+local doors_aliases = {
 	{"acacia_b_1",		"door_wood_a"},
 	{"acacia_b_2",		"door_wood_b"},
 	{"acacia_t_1",		"hidden"},
@@ -469,8 +469,8 @@ local doors_aliaces = {
 	{"steel_t_2",		"hidden"},
 }
 
-for i = 1, #doors_aliaces do
-	local old, new = unpack(doors_aliaces[i])
+for i = 1, #doors_aliases do
+	local old, new = unpack(doors_aliases[i])
 	minetest.register_alias("doors:door_" .. old, "doors:" .. new)
 end
 

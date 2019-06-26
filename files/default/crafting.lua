@@ -121,6 +121,13 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = 'default:diamond 9',
+	recipe = {
+		{'default:diamondblock'},
+	}
+})
+
+minetest.register_craft({
 	output = 'default:pick_diamond',
 	recipe = {
 		{'default:diamond', 'default:diamond', 'default:diamond'},
@@ -288,6 +295,22 @@ minetest.register_craft({
 		{'group:stone', 'group:stone', 'group:stone'},
 		{'group:stone', '', 'group:stone'},
 		{'group:stone', 'group:stone', 'group:stone'},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:coalblock',
+	recipe = {
+		{'default:coal_lump', 'default:coal_lump', 'default:coal_lump'},
+		{'default:coal_lump', 'default:coal_lump', 'default:coal_lump'},
+		{'default:coal_lump', 'default:coal_lump', 'default:coal_lump'},
+	}
+})
+
+minetest.register_craft({
+	output = 'default:coal_lump 9',
+	recipe = {
+		{'default:coalblock'},
 	}
 })
 
@@ -513,14 +536,6 @@ minetest.register_craft({
 	recipe = {
 		{'default:quartz_crystal', 'default:quartz_crystal'},
 		{'default:quartz_crystal', 'default:quartz_crystal'},
-	}
-})
-
-minetest.register_craft({
-	output = 'default:quartz_chiseled 2',
-	recipe = {
-		{'stairs:slab_quartzblock'},
-		{'stairs:slab_quartzblock'},
 	}
 })
 

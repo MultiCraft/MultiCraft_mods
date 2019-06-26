@@ -58,10 +58,10 @@ do
 			if(string ~= nil) then
 				local savetable = minetest.deserialize(string)
 				playereffects.inactive_effects = savetable.inactive_effects
-				minetest.debug("[playereffects] playereffects successfully read.")
-				minetest.debug("[playereffects] inactive_effects = "..dump(playereffects.inactive_effects))
+			--	minetest.debug("[playereffects] playereffects successfully read.")
+			--	minetest.debug("[playereffects] inactive_effects = "..dump(playereffects.inactive_effects))
 				playereffects.last_effect_id = savetable.last_effect_id
-				minetest.debug("[playereffects] last_effect_id = "..dump(playereffects.last_effect_id))
+			--	minetest.debug("[playereffects] last_effect_id = "..dump(playereffects.last_effect_id))
 				
 			end
 		end

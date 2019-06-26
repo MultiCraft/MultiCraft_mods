@@ -1,5 +1,5 @@
-multicraft 0.4 mod: default
-==========================
+MultiCraft Game: default
+========================
 
 License of source code:
 -----------------------

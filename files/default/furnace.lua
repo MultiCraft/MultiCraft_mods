@@ -35,19 +35,6 @@ function default.get_furnace_inactive_formspec()
 		"list[detached:split;main;8,3.14;1,1;]"
 end
 
-local split_inv = minetest.create_detached_inventory("split", {
-	allow_move = function(_, _, _, _, _, count, _)
-		return count
-	end,
-	allow_put = function(_, _, _, stack, _)
-		return stack:get_count() / 2
-	end,
-	allow_take = function(_, _, _, stack, _)
-		return stack:get_count()
-	end,
-})
-split_inv:set_size("main", 1)
-
 --
 -- Node callback functions that are the same for active and inactive furnace
 --

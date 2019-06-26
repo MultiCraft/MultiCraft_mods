@@ -3,21 +3,21 @@ dye = {}
 -- Make dye names and descriptions available globally
 
 dye.dyes = {
-	{"white",		"White"},
-	{"grey",		"Grey"},
-	{"dark_grey",	"Dark grey"},
-	{"black",		"Black"},
-	{"violet",		"Violet"},
-	{"blue",		"Blue"},
-	{"cyan",		"Cyan"},
-	{"dark_green",	"Dark green"},
-	{"green",		"Green"},
-	{"yellow",		"Yellow"},
-	{"brown",		"Brown"},
-	{"orange",		"Orange"},
-	{"red",			"Red"},
-	{"magenta",		"Magenta"},
-	{"pink",		"Pink"},
+	{"black",      "Black"},
+	{"blue",       "Blue"},
+	{"brown",      "Brown"},
+	{"cyan",       "Cyan"},
+	{"dark_green", "Dark Green"},
+	{"dark_grey",  "Dark Grey"},
+	{"green",      "Green"},
+	{"grey",       "Grey"},
+	{"magenta",    "Magenta"},
+	{"orange",     "Orange"},
+	{"pink",       "Pink"},
+	{"red",        "Red"},
+	{"violet",     "Violet"},
+	{"white",      "White"},
+	{"yellow",     "Yellow"},
 }
 
 -- Define items
