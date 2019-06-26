@@ -9,7 +9,7 @@ function default.get_furnace_active_formspec(fuel_percent, item_percent)
 		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]"..
 		default.gui_bg..
 		default.listcolors..
-		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
+		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]"..
 		"list[current_player;main;0,4.5;9,3;9]"..
 		"list[current_player;main;0,7.74;9,1;]"..
 		"list[current_name;src;3,0.5;1,1;]"..
@@ -26,7 +26,7 @@ function default.get_furnace_inactive_formspec()
 		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]"..
 		default.gui_bg..
 		default.listcolors..
-		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]"..
+		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]"..
 		"list[current_player;main;0,4.5;9,3;9]"..
 		"list[current_player;main;0,7.74;9,1;]"..
 		"list[current_name;src;3,0.5;1,1;]"..

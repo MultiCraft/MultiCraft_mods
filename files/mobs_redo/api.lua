@@ -3766,8 +3766,19 @@ end
 
 local function throw_spawn_egg(itemstack, user, pointed_thing)
 	local mob = itemstack:get_name():gsub("_set$", "")
-	local egg_impact = function(thrower, pos)
+	local egg_impact = function(thrower, pos, dir, hit_object)
+		if hit_object then
+			local punch_damage = {
+				full_punch_interval = 1.0,
+				damage_groups = {fleshy=1},
+			}
+			hit_object:punch(thrower, 1.0, punch_damage, dir)
+		end
 		spawn_mob(pos, mob, itemstack:get_metadata(), user)
+	end
+	local playerpos = user:get_pos()
+	if not minetest.is_valid_pos(playerpos) then
+		return
 	end
 	local obj = minetest.item_throw(mob.."_set", user, 19, -3, egg_impact)
 	if obj then
@@ -3779,6 +3790,11 @@ local function throw_spawn_egg(itemstack, user, pointed_thing)
 				textures = {def.inventory_image},
 			})
 		end
+		minetest.sound_play("throwing_sound", {
+			pos = playerpos,
+			gain = 0.7,
+			max_hear_distance = 10,
+		})
 		if not mobs.is_creative(user) or
 		not minetest.is_singleplayer() then
 			itemstack:take_item()

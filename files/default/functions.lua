@@ -536,7 +536,15 @@ end
 
 -- Shoot snowball
 
-local function snowball_impact(thrower, pos)
+local function snowball_impact(thrower, pos, dir, hit_object)
+	if hit_object then
+		local punch_damage = {
+			full_punch_interval = 1.0,
+			damage_groups = {fleshy=1},
+		}
+		hit_object:punch(thrower, 1.0, punch_damage, dir)
+	end
+	local node_pos = nil
 	local node = minetest.get_node(pos)
 	if node.name == "air" then
 		local pos_under = vector.subtract(pos, {x=0, y=1, z=0})
@@ -544,50 +552,45 @@ local function snowball_impact(thrower, pos)
 		if node.name then
 			local def = minetest.registered_items[node.name] or {}
 			if def.buildable_to == true then
-				minetest.add_node(pos_under, {name="default:snow"})
+				node_pos = pos_under
 			elseif def.walkable == true then
-				minetest.add_node(pos, {name="default:snow"})
+				node_pos = pos
 			end
 		elseif node.name then
 			local def = minetest.registered_items[node.name]
 			if def and def.buildable_to == true then
-				minetest.add_node(pos, {name="default:snow"})
+				node_pos = pos
 			end
+		end
+		if node_pos then
+			minetest.add_node(pos, {name="default:snow"})
+			minetest.spawn_falling_node(pos)
 		end
 	end
 end
 
 function default.snow_shoot_snowball(itemstack, player, pointed_thing)
-	if not (creative and creative.is_enabled_for and
-	creative.is_enabled_for(player)) or
-	not minetest.is_singleplayer() then
-		itemstack:take_item()
-	end
-	minetest.item_throw("default:snowball_entity", player, 19, -3,
+	local obj = minetest.item_throw("default:snow", player, 19, -3,
 		snowball_impact)
-	local playerpos = player:get_pos()
-	if not minetest.is_valid_pos(playerpos) then
-		return
+	if obj then
+		obj:set_properties({
+			visual = "sprite",
+			visual_size = {x=1, y=1},
+			textures = {"default_snowball.png"},
+		})
+		if not (creative and creative.is_enabled_for and
+				creative.is_enabled_for(player)) or
+				not minetest.is_singleplayer() then
+			itemstack:take_item()
+		end
+		local playerpos = player:get_pos()
+		if minetest.is_valid_pos(playerpos) then
+			minetest.sound_play("throwing_sound", {
+				pos = playerpos,
+				gain = 0.7,
+				max_hear_distance = 10,
+			})
+		end
 	end
-	minetest.sound_play("throwing_sound", {
-		pos = playerpos,
-		gain = 1.0,
-		max_hear_distance = 5,
-	})
 	return itemstack
 end
-
-minetest.register_entity("default:snowball_entity", {
-	physical = true,
-	textures = {"default_snowball.png",},
-	visual = "sprite",
-	collisionbox = {0,0,0, 0,0,0},
-	on_activate = function(self, staticdata)
-		if staticdata == "expired" then
-			self.object:remove()
-		end
-	end,
-	get_staticdata = function()
-		return "expired"
-	end,
-})
