@@ -153,10 +153,10 @@ local mobs_shoot_egg = function (item, player, pointed_thing)
 
 	local playerpos = player:get_pos()
 
-	minetest.sound_play("default_place_node_hard", {
+	minetest.sound_play("throwing_sound", {
 		pos = playerpos,
-		gain = 1.0,
-		max_hear_distance = 5,
+		gain = 0.7,
+		max_hear_distance = 10,
 	})
 
 	local obj = minetest.add_entity({
