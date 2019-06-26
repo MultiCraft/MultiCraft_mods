@@ -564,8 +564,12 @@ function default.snow_shoot_snowball(itemstack, player, pointed_thing)
 	end
 	minetest.item_throw("default:snowball_entity", player, 19, -3,
 		snowball_impact)
+	local playerpos = player:get_pos()
+	if not minetest.is_valid_pos(playerpos) then
+		return
+	end
 	minetest.sound_play("throwing_sound", {
-		pos = pos,
+		pos = playerpos,
 		gain = 1.0,
 		max_hear_distance = 5,
 	})

@@ -154,8 +154,7 @@ minetest.register_node("default:dirt_with_dry_grass", {
 minetest.register_node("default:dirt_with_snow", {
 	description = "Dirt with Snow",
 	tiles = {"default_snow.png", "default_dirt.png",
-		{name = "default_snow_side.png",
-			tileable_vertical = false}},
+		"default_snow_side.png"},
 	groups = {crumbly = 3, soil = 1, spreading_dirt_type = 1, snowy = 1},
 	drop = 'default:dirt',
 	sounds = default.node_sound_dirt_defaults({
@@ -743,6 +742,14 @@ minetest.register_node("default:stone_with_coal", {
 	tiles = {"default_stone.png^default_mineral_coal.png"},
 	groups = {cracky = 3},
 	drop = 'default:coal_lump',
+	sounds = default.node_sound_stone_defaults(),
+})
+
+minetest.register_node("default:coalblock", {
+	description = "Coal Block",
+	tiles = {"default_coal_block.png"},
+	is_ground_content = false,
+	groups = {cracky = 3},
 	sounds = default.node_sound_stone_defaults(),
 })
 
