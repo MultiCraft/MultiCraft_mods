@@ -49,7 +49,7 @@ mobs:register_mob("mobs_animal:chicken", {
 		self.egg_timer = 0
 
 		if self.child
-		or math.random(1, 100) > 1 then
+		or math.random(1, 100) ~= 1 then
 			return
 		end
 
@@ -84,121 +84,45 @@ mobs:spawn({
 
 mobs:register_egg("mobs_animal:chicken", "Chicken egg", "mobs_chicken_egg_inv.png", 1)
 
--- egg entity
+-- egg throwing
 
-mobs:register_arrow("mobs_animal:egg_entity", {
-	visual = "sprite",
-	visual_size = {x=.5, y=.5},
-	textures = {"mobs_chicken_egg.png"},
-	velocity = 6,
-
-	hit_player = function(self, player)
-		player:punch(minetest.get_player_by_name(self.playername) or self.object, 1.0, {
+function egg_impact(thrower, pos, dir, hit_object)
+	if hit_object then
+		local punch_damage = {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy=1},
-		}, nil)
-	end,
+		}
+		hit_object:punch(thrower, 1.0, punch_damage, dir)
+	end
 
-	hit_mob = function(self, player)
-		player:punch(minetest.get_player_by_name(self.playername) or self.object, 1.0, {
-			full_punch_interval = 1.0,
-			damage_groups = {fleshy=1},
-		}, nil)
-	end,
+	if math.random(1, 8) == 8 then
+		pos.y = pos.y + 1
+		local nod = minetest.get_node_or_nil(pos)
 
-	hit_node = function(self, pos, node)
-
-		if math.random(1, 8) > 1 then
+		if not nod or
+		not minetest.registered_nodes[nod.name] or
+		minetest.registered_nodes[nod.name].walkable == true then
 			return
 		end
 
-			pos.y = pos.y + 1
-
-			local nod = minetest.get_node_or_nil(pos)
-
-			if not nod
-			or not minetest.registered_nodes[nod.name]
-			or minetest.registered_nodes[nod.name].walkable == true then
-				return
-			end
-
-			local mob = minetest.add_entity(pos, "mobs_animal:chicken")
-			local ent2 = mob:get_luaentity()
-
-			mob:set_properties({
-				visual_size = {
-					x = ent2.base_size.x / 2,
-					y = ent2.base_size.y / 2
-				},
-				collisionbox = {
-					ent2.base_colbox[1] / 2,
-					ent2.base_colbox[2] / 2,
-					ent2.base_colbox[3] / 2,
-					ent2.base_colbox[4] / 2,
-					ent2.base_colbox[5] / 2,
-					ent2.base_colbox[6] / 2
-				},
-			})
-
-			ent2.child = true
-			ent2.tamed = true
-			ent2.owner = self.playername
-		end
-})
-
--- egg throwing item
-
--- shoot egg
-local mobs_shoot_egg = function (item, player, pointed_thing)
-
-	local playerpos = player:get_pos()
-
-	minetest.sound_play("throwing_sound", {
-		pos = playerpos,
-		gain = 0.7,
-		max_hear_distance = 10,
-	})
-
-	local obj = minetest.add_entity({
-		x = playerpos.x,
-		y = playerpos.y +1.5,
-		z = playerpos.z
-	}, "mobs_animal:egg_entity")
-
-	local ent = obj:get_luaentity()
-	local dir = player:get_look_dir()
-
-	ent.switch = 1 -- needed so that egg doesn't despawn straight away
-
-	obj:setvelocity({
-		x = dir.x * 19,
-		y = dir.y * 19,
-		z = dir.z * 19
-	})
-
-	obj:set_acceleration({
-		x = dir.x * -3,
-		y = -9.81,
-		z = dir.z * -3
-	})
-
-	-- pass player name to egg for chick ownership
-	local ent2 = obj:get_luaentity()
-	ent2.playername = player:get_player_name()
-	if not mobs.is_creative(player) or
-	not minetest.is_singleplayer() then
-		item:take_item()
+		local mob = minetest.add_entity(pos, "mobs_animal:chicken")
+		local ent2 = mob:get_luaentity()
+		mob:set_properties({
+			visual_size = {
+				x = ent2.base_size.x / 2,
+				y = ent2.base_size.y / 2
+			},
+			collisionbox = {
+				ent2.base_colbox[1] / 2,
+				ent2.base_colbox[2] / 2,
+				ent2.base_colbox[3] / 2,
+				ent2.base_colbox[4] / 2,
+				ent2.base_colbox[5] / 2,
+				ent2.base_colbox[6] / 2
+			},
+		})
+		ent2.child = true
+		ent2.tamed = true
+		ent2.owner = thrower
 	end
-	return item
 end
-
--- egg
-minetest.register_craftitem(":mobs:chicken_egg", {
-	description = "Chicken Egg",
-	inventory_image = "mobs_chicken_egg.png",
-	visual_scale = 0.7,
-	on_use = mobs_shoot_egg,
-	groups = {snappy = 2, dig_immediate = 3}
-})
-
-minetest.register_alias("mobs:egg", "air")
