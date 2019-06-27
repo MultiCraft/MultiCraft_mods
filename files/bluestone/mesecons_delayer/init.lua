@@ -86,7 +86,6 @@ minetest.register_node("mesecons_delayer:delayer_off_"..tostring(i), {
 		"mesecons_delayer_sides_off.png"
 		},
 	wield_image = "mesecons_delayer_off.png",
-	walkable = true,
 	selection_box = {
 		type = "fixed",
 		fixed = { -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },
@@ -142,7 +141,6 @@ minetest.register_node("mesecons_delayer:delayer_on_"..tostring(i), {
 		"mesecons_delayer_sides_on.png",
 		"mesecons_delayer_sides_on.png"
 		},
-	walkable = true,
 	selection_box = {
 		type = "fixed",
 		fixed = { -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },
