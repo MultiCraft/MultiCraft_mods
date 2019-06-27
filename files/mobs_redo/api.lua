@@ -3765,6 +3765,10 @@ end
 -- Spawn egg throwing
 
 local function throw_spawn_egg(itemstack, user, pointed_thing)
+	local playerpos = user:get_pos()
+	if not minetest.is_valid_pos(playerpos) then
+		return
+	end
 	local mob = itemstack:get_name():gsub("_set$", "")
 	local egg_impact = function(thrower, pos, dir, hit_object)
 		if hit_object then
@@ -3776,17 +3780,13 @@ local function throw_spawn_egg(itemstack, user, pointed_thing)
 		end
 		spawn_mob(pos, mob, itemstack:get_metadata(), user)
 	end
-	local playerpos = user:get_pos()
-	if not minetest.is_valid_pos(playerpos) then
-		return
-	end
 	local obj = minetest.item_throw(mob.."_set", user, 19, -3, egg_impact)
 	if obj then
 		local def = minetest.registered_items[mob.."_set"]
 		if def and def.inventory_image and def.inventory_image ~= "" then
 			obj:set_properties({
 				visual = "sprite",
-				visual_size = {x=1, y=1},
+				visual_size = {x=0.5, y=0.5},
 				textures = {def.inventory_image},
 			})
 		end

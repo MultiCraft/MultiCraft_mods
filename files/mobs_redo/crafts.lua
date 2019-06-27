@@ -104,6 +104,42 @@ minetest.register_craft({
 	}
 })
 
+-- chicken egg
+local function mobs_shoot_egg(itemstack, thrower, pointed_thing)
+	local playerpos = thrower:get_pos()
+	if not minetest.is_valid_pos(playerpos) then
+		return
+	end
+	local obj = minetest.item_throw("mobs:chicken_egg", thrower, 19, -3, egg_impact)
+	if obj then
+		obj:set_properties({
+			visual = "sprite",
+			visual_size = {x=0.5, y=0.5},
+			textures = {"mobs_chicken_egg.png"},
+		})
+		minetest.sound_play("throwing_sound", {
+			pos = playerpos,
+			gain = 0.7,
+			max_hear_distance = 10,
+		})
+		if not mobs.is_creative(thrower) or
+		not minetest.is_singleplayer() then
+			itemstack:take_item()
+		end
+	end
+	return itemstack
+end
+
+minetest.register_craftitem(":mobs:chicken_egg", {
+	description = "Chicken Egg",
+	inventory_image = "mobs_chicken_egg.png",
+	visual_scale = 0.7,
+	on_use = mobs_shoot_egg,
+	groups = {snappy = 2, dig_immediate = 3}
+})
+
+minetest.register_alias("mobs:egg", "air")
+
 -- fried egg
 minetest.register_craftitem("mobs:chicken_egg_fried", {
 	description = "Fried Egg",
@@ -142,7 +178,7 @@ minetest.register_craft({
 
 -- bucket of milk
 minetest.register_craftitem("mobs:bucket_milk", {
-	description = "Bucket of Milk",
+	description = "Milk Bucket",
 	inventory_image = "mobs_bucket_milk.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, "bucket:bucket_empty"),

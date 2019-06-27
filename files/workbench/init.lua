@@ -29,6 +29,11 @@ setmetatable(nodes, {
 	end
 })
 
+local valid_block = {}
+for _, v in pairs(nodes) do
+	valid_block[v] = true
+end
+
 -- Nodeboxes definitions
 workbench.defs = {
 	-- Name		  Yield   X  Y   Z  W   H  L
@@ -192,7 +197,7 @@ function workbench.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
 		workbench:repairable(stackname)) or
-		(listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
+		(listname == "input" and valid_block[stackname]) or
 		(listname == "hammer" and stackname == "workbench:hammer") or
 		listname == "storage" then
 		return stack:get_count()
@@ -220,9 +225,8 @@ function workbench.on_take(pos, listname, index, stack, player)
 	local input = inv:get_stack("input", 1)
 	local inputname = input:get_name()
 	local stackname = stack:get_name()
-
-	if stackname == inputname and minetest.registered_nodes[inputname.."_cube"] then
-		if stackname == inputname then
+	if listname == "input" then
+		if stackname == inputname and valid_block[stackname] then
 			workbench:get_output(inv, input, stackname)
 		else
 			inv:set_list("forms", {})
