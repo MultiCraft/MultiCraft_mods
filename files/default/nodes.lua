@@ -878,18 +878,20 @@ minetest.register_node("default:cactus", {
 	},
 })
 
-minetest.register_abm({
-	label = "Cactus damage",
-	nodenames = {"default:cactus"},
-	interval = 1,
-	chance = 1,
-	action = function(pos)
-		local players = minetest.get_objects_inside_radius(pos, 1)
-		for i, player in ipairs(players) do
-			player:set_hp(player:get_hp() - 2)
-		end
-	end,
-})
+if not minetest.settings:get_bool("creative_mode") then
+	minetest.register_abm({
+		label = "Cactus damage",
+		nodenames = {"default:cactus"},
+		interval = 1,
+		chance = 1,
+		action = function(pos)
+			local players = minetest.get_objects_inside_radius(pos, 1)
+			for i, player in ipairs(players) do
+				player:set_hp(player:get_hp() - 2)
+			end
+		end,
+	})
+end
 
 minetest.register_node("default:sugarcane", {
 	description = "Sugarcane",
