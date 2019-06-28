@@ -68,38 +68,6 @@ function doors.get(pos)
 	end
 end
 
--- this hidden node is placed on top of the bottom, and prevents
--- nodes from being placed in the top half of the door.
-minetest.register_node("doors:hidden", {
-	description = "Hidden Door Segment",
-	-- can't use airlike otherwise falling nodes will turn to entities
-	-- and will be forever stuck until door is removed.
-	drawtype = "nodebox",
-	paramtype = "light",
-	paramtype2 = "facedir",
-	sunlight_propagates = true,
-	-- has to be walkable for falling nodes to stop falling.
-	walkable = true,
-	pointable = false,
-	diggable = false,
-	buildable_to = false,
-	floodable = false,
-	drop = "",
-	groups = {not_in_creative_inventory = 1},
-	on_blast = function() end,
-	tiles = {"blank.png"},
-	-- 1px transparent block inside door hinge near node top.
-	node_box = {
-		type = "fixed",
-		fixed = {-15/32, 13/32, -15/32, -13/32, 1/2, -13/32},
-	},
-	-- collision_box needed otherise selection box would be full node size
-	collision_box = {
-		type = "fixed",
-		fixed = {-15/32, 13/32, -15/32, -13/32, 1/2, -13/32},
-	},
-})
-
 -- table used to aid door opening/closing
 local transform = {
 	{
@@ -281,10 +249,8 @@ function doors.register(name, def)
 			if minetest.get_item_group(minetest.get_node(aside).name, "door") == 1 then
 				state = state + 2
 				minetest.set_node(pos, {name = name .. "_b", param2 = dir})
-				minetest.set_node(above, {name = "doors:hidden", param2 = (dir + 3) % 4})
 			else
 				minetest.set_node(pos, {name = name .. "_a", param2 = dir})
-				minetest.set_node(above, {name = "doors:hidden", param2 = dir})
 			end
 
 			local meta = minetest.get_meta(pos)
@@ -382,8 +348,6 @@ function doors.register(name, def)
 	else
 		def.on_blast = function(pos, intensity)
 			minetest.remove_node(pos)
-			-- hidden node doesn't get blasted away.
-			minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
 			return {name}
 		end
 	end
@@ -413,95 +377,72 @@ function doors.register(name, def)
 end
 
 doors.register("door_wood", {
-		tiles = {{ name = "doors_door_wood.png", backface_culling = true }},
-		description = "Wooden Door",
-		inventory_image = "doors_item_wood.png",
-		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
-		recipe = {
-			{"group:wood", "group:wood"},
-			{"group:wood", "group:wood"},
-			{"group:wood", "group:wood"},
-		}
+	tiles = {{ name = "doors_door_wood.png", backface_culling = true }},
+	description = "Wooden Door",
+	inventory_image = "doors_item_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	recipe = {
+		{"group:wood", "group:wood"},
+		{"group:wood", "group:wood"},
+		{"group:wood", "group:wood"},
+	}
 })
 
 doors.register("door_steel", {
-		tiles = {{name = "doors_door_steel.png", backface_culling = true}},
-		description = "Steel Door",
-		inventory_image = "doors_item_steel.png",
-		protected = true,
-		groups = {cracky = 1, level = 2},
-		sounds = default.node_sound_metal_defaults(),
-		sound_open = "doors_steel_door_open",
-		sound_close = "doors_steel_door_close",
-		recipe = {
-			{"default:steel_ingot", "default:steel_ingot"},
-			{"default:steel_ingot", "default:steel_ingot"},
-			{"default:steel_ingot", "default:steel_ingot"},
-		}
+	tiles = {{name = "doors_door_steel.png", backface_culling = true}},
+	description = "Steel Door",
+	inventory_image = "doors_item_steel.png",
+	protected = true,
+	groups = {cracky = 1, level = 2},
+	sounds = default.node_sound_metal_defaults(),
+	sound_open = "doors_steel_door_open",
+	sound_close = "doors_steel_door_close",
+	recipe = {
+		{"default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot"},
+	}
 })
 
 -- Aliases
 
 local doors_aliases = {
-	{"acacia_b_1",		"door_wood_a"},
-	{"acacia_b_2",		"door_wood_b"},
-	{"acacia_t_1",		"hidden"},
-	{"acacia_t_2",		"hidden"},
-	{"birch_b_1",		"door_wood_a"},
-	{"birch_b_2",		"door_wood_b"},
-	{"birch_t_1",		"hidden"},
-	{"birch_t_2",		"hidden"},
-	{"dark_oak_b_1",	"door_wood_a"},
-	{"dark_oak_b_2",	"door_wood_b"},
-	{"dark_oak_t_1",	"hidden"},
-	{"dark_oak_t_2",	"hidden"},
-	{"jungle_b_1",		"door_wood_a"},
-	{"jungle_b_2",		"door_wood_b"},
-	{"jungle_t_1",		"hidden"},
-	{"jungle_t_2",		"hidden"},
-	{"wood_b_1",		"door_wood_a"},
-	{"wood_b_2",		"door_wood_b"},
-	{"wood_t_1",		"hidden"},
-	{"wood_t_2",		"hidden"},
-	{"steel_b_1",		"door_steel_a"},
-	{"steel_b_2",		"door_steel_b"},
-	{"steel_t_1",		"hidden"},
-	{"steel_t_2",		"hidden"},
+	{"acacia_b_1",		"doors:door_wood_a"},
+	{"acacia_b_2",		"doors:door_wood_b"},
+	{"acacia_t_1",		"air"},
+	{"acacia_t_2",		"air"},
+	{"birch_b_1",		"doors:door_wood_a"},
+	{"birch_b_2",		"doors:door_wood_b"},
+	{"birch_t_1",		"air"},
+	{"birch_t_2",		"air"},
+	{"dark_oak_b_1",	"doors:door_wood_a"},
+	{"dark_oak_b_2",	"doors:door_wood_b"},
+	{"dark_oak_t_1",	"air"},
+	{"dark_oak_t_2",	"air"},
+	{"jungle_b_1",		"doors:door_wood_a"},
+	{"jungle_b_2",		"doors:door_wood_b"},
+	{"jungle_t_1",		"air"},
+	{"jungle_t_2",		"air"},
+	{"wood_b_1",		"doors:door_wood_a"},
+	{"wood_b_2",		"doors:door_wood_b"},
+	{"wood_t_1",		"air"},
+	{"wood_t_2",		"air"},
+	{"steel_b_1",		"doors:door_steel_a"},
+	{"steel_b_2",		"doors:door_steel_b"},
+	{"steel_t_1",		"air"},
+	{"steel_t_2",		"air"},
 }
 
 for i = 1, #doors_aliases do
 	local old, new = unpack(doors_aliases[i])
-	minetest.register_alias("doors:door_" .. old, "doors:" .. new)
+	minetest.register_alias("doors:door_" .. old, new)
 end
 
 minetest.register_alias("doors:door_acacia", "doors:door_wood")
 minetest.register_alias("doors:door_birch", "doors:door_wood")
 minetest.register_alias("doors:door_dark_oak", "doors:door_wood")
 minetest.register_alias("doors:door_jungle", "doors:door_wood")
-
--- Capture mods using the old API as best as possible.
-function doors.register_door(name, def)
-	if def.only_placer_can_open then
-		def.protected = true
-	end
-	def.only_placer_can_open = nil
-
-	local i = name:find(":")
-	local modname = name:sub(1, i - 1)
-	if not def.tiles then
-		if def.protected then
-			def.tiles = {{name = "doors_door_steel.png", backface_culling = true}}
-		else
-			def.tiles = {{name = "doors_door_wood.png", backface_culling = true}}
-		end
-		minetest.log("warning", modname .. " registered door \"" .. name .. "\" " ..
-				"using deprecated API method \"doors.register_door()\" but " ..
-				"did not provide the \"tiles\" parameter. A fallback tiledef " ..
-				"will be used instead.")
-	end
-
-	doors.register(name, def)
-end
+minetest.register_alias("doors:hidden", "air")
 
 ---- Trapdoor ----
 

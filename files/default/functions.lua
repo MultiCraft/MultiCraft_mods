@@ -161,8 +161,8 @@ if minetest.settings:get_bool("enable_lavacooling") ~= false then
 		label = "Lava cooling",
 		nodenames = {"default:lava_source", "default:lava_flowing"},
 		neighbors = {"group:cools_lava", "group:water"},
-		interval = 2,
-		chance = 2,
+		interval = 4,
+		chance = 1,
 		catch_up = false,
 		action = function(...)
 			default.cool_lava(...)
@@ -249,8 +249,8 @@ minetest.register_abm({
 	label = "Grow cactus",
 	nodenames = {"default:cactus"},
 	neighbors = {"group:sand"},
-	interval = 12,
-	chance = 83,
+	interval = 15,
+	chance = 75,
 	action = function(...)
 		default.grow_cactus(...)
 	end
@@ -260,8 +260,8 @@ minetest.register_abm({
 	label = "Grow sugarcane",
 	nodenames = {"default:sugarcane"},
 	neighbors = {"default:dirt", "default:dirt_with_grass", "default:sand"},
-	interval = 14,
-	chance = 71,
+	interval = 15,
+	chance = 70,
 	action = function(...)
 		default.grow_papyrus(...)
 	end
@@ -425,8 +425,8 @@ minetest.register_abm({
 		"group:dry_grass",
 		"default:snow",
 	},
-	interval = 6,
-	chance = 50,
+	interval = 10,
+	chance = 25,
 	catch_up = false,
 	action = function(pos, node)
 		-- Check for darkness: night, shadow or under a light-blocking node
@@ -466,8 +466,8 @@ minetest.register_abm({
 minetest.register_abm({
 	label = "Grass covered",
 	nodenames = {"group:spreading_dirt_type"},
-	interval = 8,
-	chance = 50,
+	interval = 10,
+	chance = 40,
 	catch_up = false,
 	action = function(pos, node)
 		local above = {x = pos.x, y = pos.y + 1, z = pos.z}
