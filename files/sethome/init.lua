@@ -27,13 +27,21 @@ sethome.go = function(name)
 	return false
 end
 
+local function green(str)
+	return minetest.colorize("#7CFC00",str)
+end
+
+local function red(str)
+	return minetest.colorize("#FF0000",str)
+end
+
 minetest.register_chatcommand("home", {
 	description = "Teleport you to your home point",
 	func = function(name)
 		if sethome.go(name) then
-			return true, "Teleported to home!"
+			return true, green("Teleported to home!")
 		end
-		return false, "Set a home using /sethome"
+		return false, red("Set a home using /sethome")
 	end,
 })
 
@@ -43,21 +51,9 @@ minetest.register_chatcommand("sethome", {
 		name = name or "" -- fallback to blank name if nil
 		local player = minetest.get_player_by_name(name)
 		if player and sethome.set(name, player:get_pos()) then
-			return true, "Home set!"
+			return true, green("Home set!")
 		end
-		return false, "Player not found!"
-	end,
-})
-
-minetest.register_chatcommand("home set", {
-	description = "Set your home point",
-	func = function(name)
-		name = name or "" -- fallback to blank name if nil
-		local player = minetest.get_player_by_name(name)
-		if player and sethome.set(name, player:get_pos()) then
-			return true, "Home set!"
-		end
-		return false, "Player not found!"
+		return false, red("Player not found!")
 	end,
 })
 
@@ -68,13 +64,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local player_name = player:get_player_name()
 	if fields.sethome_set then
 		sethome.set(player_name, player:get_pos())
-		minetest.chat_send_player(player_name, "Home set!")
+		minetest.chat_send_player(player_name, green("Home set!"))
 	elseif fields.sethome_go then
 		if sethome.go(player_name) then
 			sethome.go(player_name)
-			minetest.chat_send_player(player_name, "Teleported to home!")
+			minetest.chat_send_player(player_name, green("Teleported to home!"))
 		else
-			minetest.chat_send_player(player_name, "Home is not set!")
+			minetest.chat_send_player(player_name, red("Home is not set!"))
 		end
 	end
 end)
