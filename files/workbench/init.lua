@@ -346,32 +346,32 @@ local stairs_aliases = {
 for i=1, #nodes do
 	local node = nodes[i]
 	for _, d in pairs(workbench.defs) do
-		minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"),	"stairs:"..d[1].."_"..node:gsub(":", "_"))
+		minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"), "stairs:"..d[1].."_"..node:gsub(":", "_"))
 	end
 
 	for _, e in pairs(stairs_aliases) do
-		minetest.register_alias("stairs:"..e[1].."_"..node:match(":(.*)"),	"stairs:"..e[2].."_"..node:gsub(":", "_"))
-		minetest.register_alias("stairs:"..e[1].."_"..node:gsub(":", "_"),	"stairs:"..e[2].."_"..node:gsub(":", "_"))
+		minetest.register_alias("stairs:"..e[1].."_"..node:match(":(.*)"), "stairs:"..e[2].."_"..node:gsub(":", "_"))
+		minetest.register_alias("stairs:"..e[1].."_"..node:gsub(":", "_"), "stairs:"..e[2].."_"..node:gsub(":", "_"))
 	end
 end
 
 for _, d in pairs(workbench.defs) do
-	minetest.register_alias("stairs:"..d[1].."_coal",		"stairs:"..d[1].."_default_coalblock")
+	minetest.register_alias("stairs:"..d[1].."_coal", "stairs:"..d[1].."_default_coalblock")
 end
 
 for _, e in pairs(stairs_aliases) do
-	minetest.register_alias("stairs:"..e[1].."_coal",		"stairs:"..e[2].."_default_coalblock")
+	minetest.register_alias("stairs:"..e[1].."_coal", "stairs:"..e[2].."_default_coalblock")
 
 end
 
-minetest.register_alias("stairs:stair_steel", "stairs:stair_default_steelblock")
-minetest.register_alias("stairs:slab_steel", "stairs:slab_default_steelblock")
-minetest.register_alias("stairs:corner_steel", "stairs:corner_default_steelblock")
-minetest.register_alias("stairs:stair_gold", "stairs:stair_default_goldblock")
-minetest.register_alias("stairs:slab_gold", "stairs:slab_default_goldblock")
-minetest.register_alias("stairs:corner_gold", "stairs:corner_default_goldblock")
-minetest.register_alias("stairs:stair_diamond", "stairs:stair_default_diamondblock")
-minetest.register_alias("stairs:slab_diamond", "stairs:slab_default_diamondblock")
+minetest.register_alias("stairs:stair_steel",    "stairs:stair_default_steelblock")
+minetest.register_alias("stairs:slab_steel",     "stairs:slab_default_steelblock")
+minetest.register_alias("stairs:corner_steel",   "stairs:corner_default_steelblock")
+minetest.register_alias("stairs:stair_gold",     "stairs:stair_default_goldblock")
+minetest.register_alias("stairs:slab_gold",      "stairs:slab_default_goldblock")
+minetest.register_alias("stairs:corner_gold",    "stairs:corner_default_goldblock")
+minetest.register_alias("stairs:stair_diamond",  "stairs:stair_default_diamondblock")
+minetest.register_alias("stairs:slab_diamond",   "stairs:slab_default_diamondblock")
 minetest.register_alias("stairs:corner_diamond", "stairs:corner_default_diamondblock")
 
 -- Craft items

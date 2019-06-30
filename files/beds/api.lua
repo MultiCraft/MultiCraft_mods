@@ -61,6 +61,9 @@ function beds.register_bed(name, def)
 			end
 			for _, p in pairs({pos_front, pos}) do
 				local node_def = minetest.registered_nodes[minetest.get_node(p).name]
+				if node_def.buildable_to then
+					minetest.remove_node(pos_front)
+				end
 				if not node_def or not node_def.buildable_to then
 					return itemstack
 				end
