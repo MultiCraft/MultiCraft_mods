@@ -190,20 +190,6 @@ minetest.register_node("default:redsand", {
 	sounds = default.node_sound_sand_defaults(),
 })
 
-if not minetest.is_singleplayer() then
-
-	minetest.override_item("default:sand", {
-		groups = {crumbly = 3, falling_node = 0, sand = 1},
-	})
-	minetest.override_item("default:gravel", {
-		groups = {crumbly = 2, falling_node = 0},
-	})
-	minetest.override_item("default:redsand", {
-		groups = {crumbly = 3, falling_node = 0, redsand = 1},
-	})
-
-end
-
 minetest.register_node("default:clay", {
 	description = "Clay",
 	tiles = {"default_clay.png"},
@@ -262,7 +248,6 @@ minetest.register_node("default:snowblock", {
 	end,
 })
 
--- 'is ground content = false' to avoid tunnels in sea ice or ice rivers
 minetest.register_node("default:ice", {
 	description = "Ice",
 	drawtype = "glasslike",
