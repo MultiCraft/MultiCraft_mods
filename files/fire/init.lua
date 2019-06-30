@@ -274,18 +274,20 @@ if flame_sound then
 
 	-- Cycle for updating players sounds
 
-	minetest.register_globalstep(function(dtime)
-		timer = timer + dtime
-		if timer < cycle then
-			return
+	local cycles = {}
+	minetest.register_playerstep(function(dtime, playernames)
+		for _, name in pairs(playernames) do
+			local player = minetest.get_player_by_name(name)
+			if player and player:is_player() then
+				cycles[name] = cycles[name] or 0
+				cycles[name] = cycles[name] + dtime
+				if cycles[name] >= cycle then
+					fire.update_player_sound(player)
+					cycles[name] = 0
+				end
+			end
 		end
-
-		timer = 0
-		local players = minetest.get_connected_players()
-		for n = 1, #players do
-			fire.update_player_sound(players[n])
-		end
-	end)
+	end, true) -- We can force this since it is already rate-limited
 
 	-- Stop sound and clear handle on player leave
 
@@ -294,6 +296,7 @@ if flame_sound then
 		if handles[player_name] then
 			minetest.sound_stop(handles[player_name])
 			handles[player_name] = nil
+			cycles[player_name] = nil
 		end
 	end)
 end

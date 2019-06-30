@@ -56,33 +56,42 @@ local get_highest_priority = function (actions)
 	return highesti
 end
 
-local m_time = 0
+local m_time, timer = 0, 0
 local resumetime = mesecon.setting("resumetime", 4)
+local delaytime = mesecon.setting("delaytime", core.settings:get("dedicated_server_step") * 3)
+if not minetest.is_singleplayer() then
+	delaytime = delaytime * 3
+end
 minetest.register_globalstep(function (dtime)
 	m_time = m_time + dtime
 	-- don't even try if server has not been running for XY seconds; resumetime = time to wait
 	-- after starting the server before processing the ActionQueue, don't set this too low
 	if (m_time < resumetime) then return end
-	local actions = mesecon.tablecopy(mesecon.queue.actions)
-	local actions_now={}
+	
+	timer = timer + dtime
+	if timer > delaytime then
+		local actions = mesecon.tablecopy(mesecon.queue.actions)
+		local actions_now={}
 
-	mesecon.queue.actions = {}
+		mesecon.queue.actions = {}
 
-	-- sort actions into two categories:
-	-- those toexecute now (actions_now) and those to execute later (mesecon.queue.actions)
-	for i, ac in ipairs(actions) do
-		if ac.time > 0 then
-			ac.time = ac.time - dtime -- executed later
-			table.insert(mesecon.queue.actions, ac)
-		else
-			table.insert(actions_now, ac)
+		-- sort actions into two categories:
+		-- those toexecute now (actions_now) and those to execute later (mesecon.queue.actions)
+		for i, ac in ipairs(actions) do
+			if ac.time > 0 then
+				ac.time = ac.time - dtime -- executed later
+				table.insert(mesecon.queue.actions, ac)
+			else
+				table.insert(actions_now, ac)
+			end
 		end
-	end
 
-	while(#actions_now > 0) do -- execute highest priorities first, until all are executed
-		local hp = get_highest_priority(actions_now)
-		mesecon.queue:execute(actions_now[hp])
-		table.remove(actions_now, hp)
+		while(#actions_now > 0) do -- execute highest priorities first, until all are executed
+			local hp = get_highest_priority(actions_now)
+			mesecon.queue:execute(actions_now[hp])
+			table.remove(actions_now, hp)
+		end
+		timer = 0
 	end
 end)
 

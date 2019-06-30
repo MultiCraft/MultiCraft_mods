@@ -415,20 +415,10 @@ minetest.register_on_joinplayer(function(player)
 	end
 end)
 
-playereffects.globalstep_timer = 0
 playereffects.autosave_timer = 0
 minetest.register_globalstep(function(dtime)
-	playereffects.globalstep_timer = playereffects.globalstep_timer + dtime
 	playereffects.autosave_timer = playereffects.autosave_timer + dtime
-	-- Update HUDs of all players
-	if(playereffects.globalstep_timer >= 1) then
-		playereffects.globalstep_timer = 0
-	
-		local players = minetest.get_connected_players()
-		for p=1,#players do
-			playereffects.hud_update(players[p])
-		end
-	end
+
 	-- Autosave into file
 	if(playereffects.use_autosave == true and playereffects.autosave_timer >= playereffects.autosave_time) then
 		playereffects.autosave_timer = 0
@@ -436,6 +426,13 @@ minetest.register_globalstep(function(dtime)
 		playereffects.save_to_file()
 	end
 end)
+
+minetest.register_playerstep(function(dtime, playernames)
+	-- Update HUDs of all players
+	for _, name in pairs(playernames) do
+		playereffects.hud_update(minetest.get_player_by_name(name))
+	end
+end, minetest.is_singleplayer()) -- Force step in singlplayer mode only
 
 --[=[ HUD ]=]
 function playereffects.hud_update(player)
