@@ -57,11 +57,11 @@ wieldview.get_item_texture = function(self, item)
 	return texture
 end
 
-wieldview.update_wielded_item = function(self, player)
-	if not player or minetest.is_singleplayer() then
+wieldview.update_wielded_item = function(self, name)
+	local player = minetest.get_player_by_name(name)
+	if not player or not player:is_player() then
 		return
 	end
-	local name = player:get_player_name()
 	local stack = player:get_wielded_item()
 	local item = stack:get_name()
 	if not item then
@@ -75,21 +75,17 @@ wieldview.update_wielded_item = function(self, player)
 	end
 	self.wielded_item[name] = item
 end
-
-minetest.register_on_joinplayer(function(player)
-	local name = player:get_player_name()
-	wieldview.wielded_item[name] = ""
-	minetest.after(0, function(player)
-		wieldview:update_wielded_item(player)
-	end, player)
-end)
-
-minetest.register_globalstep(function(dtime)
-	time = time + dtime
-	if time > update_time then
-		for _,player in ipairs(minetest.get_connected_players()) do
-			wieldview:update_wielded_item(player)
+if not minetest.is_singleplayer() then
+	minetest.register_on_joinplayer(function(player)
+		local name = player:get_player_name()
+		wieldview.wielded_item[name] = ""
+		minetest.after(0, function(player)
+			wieldview:update_wielded_item(name)
+		end, player)
+	end)
+	minetest.register_playerstep(function(dtime, playernames)
+		for _, name in pairs(playernames) do
+			wieldview:update_wielded_item(name)
 		end
-		time = 0
-	end
-end)
+	end)
+end

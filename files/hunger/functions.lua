@@ -102,13 +102,31 @@ local hunger_timer = 0
 local health_timer = 0
 local action_timer = 0
 
-local function hunger_globaltimer(dtime)
+local function get_player_refs(playernames)
+	local refs = {}
+	for _, name in pairs(playernames) do
+		local player = minetest.get_player_by_name(name)
+		if player and player:is_player() then
+			refs[#refs + 1] = player
+		end
+	end
+end
+
+local function hunger_globaltimer(dtime, playernames)
 	hunger_timer = hunger_timer + dtime
 	health_timer = health_timer + dtime
 	action_timer = action_timer + dtime
 
+	local players_refs = {}
+	for _, name in pairs(playernames) do
+		local player = minetest.get_player_by_name(name)
+		if player and player:is_player() then
+			players_refs[#players_refs + 1] = player
+		end
+	end
+
 	if action_timer > HUNGER_MOVE_TICK then
-		for _,player in ipairs(minetest.get_connected_players()) do
+		for _, player in ipairs(players_refs) do
 			local controls = player:get_player_control()
 			-- Determine if the player is walking
 			if controls.up or controls.down or controls.left or controls.right then
@@ -120,7 +138,7 @@ local function hunger_globaltimer(dtime)
 
 	-- lower saturation by 1 point after <HUNGER_TICK> second(s)
 	if hunger_timer > HUNGER_TICK then
-		for _,player in ipairs(minetest.get_connected_players()) do
+		for _, player in ipairs(players_refs) do
 			local name = player:get_player_name()
 			local tab = hunger.players[name]
 			if tab then
@@ -135,7 +153,7 @@ local function hunger_globaltimer(dtime)
 
 	-- heal or damage player, depending on saturation
 	if health_timer > HUNGER_HEALTH_TICK then
-		for _,player in ipairs(minetest.get_connected_players()) do
+		for _, player in ipairs(players_refs) do
 			local name = player:get_player_name()
 			local tab = hunger.players[name]
 			if tab then
@@ -158,7 +176,7 @@ local function hunger_globaltimer(dtime)
 	end
 end
 
-minetest.register_globalstep(hunger_globaltimer)
+minetest.register_playerstep(hunger_globaltimer, minetest.is_singleplayer())
 
 -- food functions
 local food = hunger.food

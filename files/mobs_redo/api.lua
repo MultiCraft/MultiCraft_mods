@@ -1833,24 +1833,25 @@ end
 
 -- follow player if owner or holding item, if fish outta water then flop
 function mob_class:follow_flop()
-
 	-- find player to follow
-	if (self.follow ~= ""
-	or self.order == "follow")
-	and not self.following
-	and self.state ~= "attack"
-	and self.state ~= "runaway" then
-
-		local s = self.object:get_pos()
-		local players = minetest.get_connected_players()
-
-		for n = 1, #players do
-
-			if get_distance(players[n]:get_pos(), s) < self.view_range
-			and not mobs.invis[ players[n]:get_player_name() ] then
-
-				self.following = players[n]
-
+	if (self.follow ~= "" or self.order == "follow") and
+			not self.following and
+			self.state ~= "attack" and
+			self.state ~= "runaway" then
+		if self.player_iter == nil then
+			self.player_iter = minetest.get_player_iter()
+		end
+		local pos = self.object:get_pos()
+		for _ = 1, players_per_step do
+			local name = self.player_iter()
+			if not name then
+				self.player_iter = nil
+				break
+			end
+			local player = minetest.get_player_by_name(name)
+			if player and not mobs.invis[name] and
+					get_distance(player:get_pos(), pos) < self.view_range then
+				self.following = player
 				break
 			end
 		end
