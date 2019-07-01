@@ -347,6 +347,7 @@ for i=1, #nodes do
 	local node = nodes[i]
 	for _, d in pairs(workbench.defs) do
 		minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"), "stairs:"..d[1].."_"..node:gsub(":", "_"))
+		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:gsub(":", "_"))
 	end
 
 	for _, e in pairs(stairs_aliases) do
