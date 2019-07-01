@@ -9,7 +9,7 @@ end
 -- Default player appearance
 player_api.register_model("character.b3d", {
 	animation_speed = 30,
-	textures = {"character.png", "blank.png", "blank.png"},
+	textures = {"character.png", "blank.png", "blank.png", "blank.png"},
 	animations = {
 		-- Standard animations.
 		stand     = {x = 0,   y = 0}, -- y = 79
