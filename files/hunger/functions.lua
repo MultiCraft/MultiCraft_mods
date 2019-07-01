@@ -102,16 +102,6 @@ local hunger_timer = 0
 local health_timer = 0
 local action_timer = 0
 
-local function get_player_refs(playernames)
-	local refs = {}
-	for _, name in pairs(playernames) do
-		local player = minetest.get_player_by_name(name)
-		if player and player:is_player() then
-			refs[#refs + 1] = player
-		end
-	end
-end
-
 local function hunger_globaltimer(dtime, playernames)
 	hunger_timer = hunger_timer + dtime
 	health_timer = health_timer + dtime

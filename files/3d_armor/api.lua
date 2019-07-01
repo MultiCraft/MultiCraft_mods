@@ -60,6 +60,7 @@ armor.update_player_visuals = function(self, player)
             self.textures[name].skin,
             self.textures[name].armor,
             self.textures[name].wielditem,
+			self.textures[name].cube,
         })
     end
 end
@@ -379,6 +380,7 @@ minetest.register_on_joinplayer(function(player)
         skin = armor.default_skin..".png",
         armor = "blank.png",
         wielditem = "blank.png",
+        cube = "blank.png",
         preview = armor.default_skin.."_preview.png",
     }
     if minetest.get_modpath("skins") then
