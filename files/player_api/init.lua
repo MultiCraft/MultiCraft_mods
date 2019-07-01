@@ -84,7 +84,7 @@ else
 				crumbly = {times = {[1]=5.0, [2]=3.0, [3]=0.7}, uses = 0, maxlevel = 1},
 				snappy = {times = {[3]=0.4}, uses = 0, maxlevel = 1},
 				choppy = {times = {[1]=6.0, [2]=4.0, [3]=3.0}, uses = 0, maxlevel = 1},
-				cracky = {times = {[1]=7.0, [2]=4.0, [3]=3.0}, uses = 0, maxlevel = 1},
+				cracky = {times = {[1]=7.0, [2]=5.0, [3]=4.0}, uses = 0, maxlevel = 1},
 				oddly_breakable_by_hand = {times = {[1]=3.5 ,[2]=2.0, [3]=0.7}, uses = 0}
 		},
 		damage_groups = {fleshy = 1},
