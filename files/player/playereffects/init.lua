@@ -430,7 +430,7 @@ end)
 minetest.register_playerstep(function(dtime, playernames)
 	-- Update HUDs of all players
 	for _, name in pairs(playernames) do
-		playereffects.hud_update(minetest.get_player_by_name(name))
+		playereffects.hud_update(name)
 	end
 end, minetest.is_singleplayer()) -- Force step in singlplayer mode only
 
@@ -438,8 +438,11 @@ end, minetest.is_singleplayer()) -- Force step in singlplayer mode only
 function playereffects.hud_update(player)
 	if(playereffects.use_hud == true) then
 		local now = os.time()
-		local playername = player:get_player_name()
-		local hudinfos = playereffects.hudinfos[playername]
+		local player = minetest.get_player_by_name(player)
+		if not player or not player:is_player() then
+			return
+		end
+		local hudinfos = playereffects.hudinfos[player]
 		if(hudinfos ~= nil) then
 			for effect_id, hudinfo in pairs(hudinfos) do
 				local effect = playereffects.effects[effect_id]

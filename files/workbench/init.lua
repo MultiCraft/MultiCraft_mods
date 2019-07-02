@@ -7,7 +7,6 @@ local nodes = {}
 for node, def in pairs(minetest.registered_nodes) do
 	if 	(def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass" or def.drawtype:sub(1,8) == "allfaces") and
 		(def.tiles and type(def.tiles[1]) == "string") and
-		not def.on_construct and
 		not def.on_rightclick and
 		not def.on_blast and
 		not def.allow_metadata_inventory_take and
@@ -335,34 +334,36 @@ for _, d in pairs(workbench.defs) do
 end
 
 -- Aliases. A lot of aliases...
-
 local stairs_aliases = {
 	{"corner",		"outerstair"},
 	{"invcorner",	"outerstair"},
 	{"stair_outer",	"innerstair"},
-	{"stair_inner",	"innerstair"}
+	{"stair_inner",	"innerstair"},
+	{"nanoslab",	"microslab"}
 }
 
 for i=1, #nodes do
 	local node = nodes[i]
 	for _, d in pairs(workbench.defs) do
 		minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"), "stairs:"..d[1].."_"..node:gsub(":", "_"))
-		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:gsub(":", "_"))
+		minetest.register_alias(node.."_"..d[1],                           "stairs:"..d[1].."_"..node:gsub(":", "_"))
 	end
 
 	for _, e in pairs(stairs_aliases) do
 		minetest.register_alias("stairs:"..e[1].."_"..node:match(":(.*)"), "stairs:"..e[2].."_"..node:gsub(":", "_"))
 		minetest.register_alias("stairs:"..e[1].."_"..node:gsub(":", "_"), "stairs:"..e[2].."_"..node:gsub(":", "_"))
+		minetest.register_alias(node.."_"..e[1],                           "stairs:"..e[2].."_"..node:gsub(":", "_"))
 	end
 end
 
 for _, d in pairs(workbench.defs) do
-	minetest.register_alias("stairs:"..d[1].."_coal", "stairs:"..d[1].."_default_coalblock")
+	minetest.register_alias("stairs:"..d[1].."_coal",  "stairs:"..d[1].."_default_coalblock")
+	minetest.register_alias("stairs:"..d[1].."_straw", "stairs:"..d[1].."_farming_straw")
 end
 
 for _, e in pairs(stairs_aliases) do
-	minetest.register_alias("stairs:"..e[1].."_coal", "stairs:"..e[2].."_default_coalblock")
-
+	minetest.register_alias("stairs:"..e[1].."_coal",  "stairs:"..e[2].."_default_coalblock")
+	minetest.register_alias("stairs:"..e[1].."_straw", "stairs:"..e[2].."_farming_straw")
 end
 
 minetest.register_alias("stairs:stair_steel",    "stairs:stair_default_steelblock")
