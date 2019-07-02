@@ -569,8 +569,12 @@ local function snowball_impact(thrower, pos, dir, hit_object)
 	end
 end
 
-function default.snow_shoot_snowball(itemstack, player, pointed_thing)
-	local obj = minetest.item_throw("default:snow", player, 19, -3,
+function default.snow_shoot_snowball(itemstack, thrower, pointed_thing)
+	local playerpos = thrower:get_pos()
+	if not minetest.is_valid_pos(playerpos) then
+		return
+	end
+	local obj = minetest.item_throw("default:snow", thrower, 19, -3,
 		snowball_impact)
 	if obj then
 		obj:set_properties({
@@ -578,18 +582,15 @@ function default.snow_shoot_snowball(itemstack, player, pointed_thing)
 			visual_size = {x=1, y=1},
 			textures = {"default_snowball.png"},
 		})
+		minetest.sound_play("throwing_sound", {
+			pos = playerpos,
+			gain = 0.7,
+			max_hear_distance = 10,
+		})
 		if not (creative and creative.is_enabled_for and
-				creative.is_enabled_for(player)) or
+				creative.is_enabled_for(thrower)) or
 				not minetest.is_singleplayer() then
 			itemstack:take_item()
-		end
-		local playerpos = player:get_pos()
-		if minetest.is_valid_pos(playerpos) then
-			minetest.sound_play("throwing_sound", {
-				pos = playerpos,
-				gain = 0.7,
-				max_hear_distance = 10,
-			})
 		end
 	end
 	return itemstack

@@ -144,12 +144,6 @@ function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities, 
 	self.punched = true
 end
 
-function carts:on_rail_step(entity, pos, distance)
-	if minetest.global_exists("mesecon") then
-		carts:signal_detector_rail(pos)
-	end
-end
-
 -- sound refresh interval = 1.0sec
 local function rail_sound(self, dtime)
 	if not self.sound_ttl then
@@ -434,6 +428,12 @@ local function rail_on_step(self, dtime)
 	end
 end
 
+function carts:on_rail_step(entity, pos, distance)
+	if minetest.global_exists("mesecon") then
+		carts:signal_detector_rail(pos)
+	end
+end
+
 function cart_entity:on_step(dtime)
 	rail_on_step(self, dtime)
 	rail_sound(self, dtime)
@@ -444,7 +444,6 @@ minetest.register_entity("carts:cart", cart_entity)
 minetest.register_craftitem("carts:cart", {
 	description = "Cart (Sneak+Click to pick up)",
 	inventory_image = "carts_cart_inv.png",
-	wield_image = "carts_cart_inv.png",
 	stack_max = 1,
 	sounds = default.node_sound_metal_defaults(),
 	on_place = function(itemstack, placer, pointed_thing)

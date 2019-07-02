@@ -1,10 +1,6 @@
+local update_time = 1
 local has_armor = minetest.get_modpath("3d_armor")
 local time = 0
-local update_time = tonumber(minetest.settings:get("wieldview_update_time"))
-if not update_time then
-	update_time = 2
-	minetest.settings:set("wieldview_update_time", tostring(update_time))
-end
 
 local wield_tiles = {}
 local wield_cubes = {}

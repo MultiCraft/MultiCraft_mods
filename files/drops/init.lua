@@ -1,6 +1,5 @@
 local age                   = 0.5 -- How old an item has to be before collecting
 local radius_magnet         = 2   -- Radius of item magnet
-local player_collect_height = 1.3 -- Added to their pos y value
 
 local function collect_items(player)
 	local pos = player:get_pos()
@@ -8,11 +7,12 @@ local function collect_items(player)
 		return
 	end
 	-- Detect
-	local col_pos = vector.add(pos, {x = 0, y = player_collect_height, z = 0})
+	local col_pos = vector.add(pos, {x = 0, y = 1.3, z = 0})
 	local objects = minetest.get_objects_inside_radius(col_pos, radius_magnet)
-	for _,object in ipairs(objects) do
+	for _, object in ipairs(objects) do
 		local entity = object:get_luaentity()
 		if entity and not object:is_player() and
+				not entity.collectioner and
 				entity.name == "__builtin:item" and entity.age > age then
 			local item = ItemStack(entity.itemstring)
 			local inv = player:get_inventory()
@@ -23,15 +23,15 @@ local function collect_items(player)
 				entity.collectioner = true
 				-- Collect
 				if entity.collectioner == true then
-					minetest.after(0.01, function()
+					minetest.after(0.05, function()
 						minetest.sound_play("item_drop_pickup", {
-							pos = pos,
+							pos = col_pos,
 							max_hear_distance = 10,
-							gain = 0.25,
+							gain = 0.2,
 						})
-						inv:add_item("main", item)
 						entity.itemstring = ""
 						object:remove()
+						inv:add_item("main", item)
 					end)
 				end
 			end
