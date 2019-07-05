@@ -21,21 +21,21 @@ farming.register_plant("farming:wheat", {
 	minlight = 13,
 	maxlight = minetest.LIGHT_MAX,
 	fertility = {"grassland"},
-	groups = {food_wheat = 1, flammable = 4},
 	place_param2 = 3,
+	groups = {food_wheat = 1, flammable = 4}
 })
 
 minetest.register_craftitem("farming:flour", {
 	description = "Flour",
 	inventory_image = "farming_flour.png",
-	groups = {food_flour = 1, flammable = 1},
+	groups = {food_flour = 1, flammable = 1}
 })
 
 minetest.register_craftitem("farming:bread", {
 	description = "Bread",
 	inventory_image = "farming_bread.png",
 	on_use = minetest.item_eat(5),
-	groups = {food_bread = 1, flammable = 2},
+	groups = {food_bread = 1, flammable = 2, food = 1}
 })
 
 minetest.register_craft({
@@ -56,7 +56,7 @@ minetest.register_craft({
 minetest.register_craftitem("farming:string",{
 	description = "String",
 	inventory_image = "farming_string.png",
-	groups = {materials = 1},
+	groups = {materials = 1}
 })
 
 -- Cotton
@@ -95,14 +95,14 @@ minetest.register_craft({
 	recipe = {
 		{"farming:wheat", "farming:wheat", "farming:wheat"},
 		{"farming:wheat", "farming:wheat", "farming:wheat"},
-		{"farming:wheat", "farming:wheat", "farming:wheat"},
+		{"farming:wheat", "farming:wheat", "farming:wheat"}
 	}
 })
 
 minetest.register_craft({
 	output = "farming:wheat 3",
 	recipe = {
-		{"farming:straw"},
+		{"farming:straw"}
 	}
 })
 
@@ -112,29 +112,29 @@ minetest.register_craft({
 minetest.register_craft({
 	type = "fuel",
 	recipe = "farming:straw",
-	burntime = 3,
+	burntime = 3
 })
 
 minetest.register_craft({
 	type = "fuel",
 	recipe = "farming:wheat",
-	burntime = 1,
+	burntime = 1
 })
 
 minetest.register_craft({
 	type = "fuel",
 	recipe = "farming:cotton",
-	burntime = 1,
+	burntime = 1
 })
 
 minetest.register_craft({
 	type = "fuel",
 	recipe = "farming:string",
-	burntime = 1,
+	burntime = 1
 })
 
 minetest.register_craft({
 	type = "fuel",
 	recipe = "farming:hoe_wood",
-	burntime = 5,
+	burntime = 5
 })

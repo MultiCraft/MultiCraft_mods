@@ -17,8 +17,6 @@ mobs:register_mob("mobs_animal:bear", {
 	},
 	runaway = false,
 	jump = false,
-	jump_height = 4,
-	fly = false,
 	walk_chance = 75,
 	walk_velocity = 3,
 	run_velocity = 3,
@@ -26,19 +24,12 @@ mobs:register_mob("mobs_animal:bear", {
 	follow = {
 		"farming:blueberries", "farming:raspberries"
 	},
-	passive = false,
-	attack_type = "dogfight",
 	damage = 4,
-	reach = 3,
 	attacks_monsters = true,
 	pathfinding = true,
 	group_attack = true,
 	hp_min = 10,
 	hp_max = 15,
-	armor = 100,
-	knock_back = 2,
-	water_damage = 0,
-	lava_damage = 5,
 	fall_damage = 3,
 	fear_height = 4,
 	drops = {

@@ -4,7 +4,6 @@ mobs:register_mob("mobs_animal:kitten", {
 	passive = true,
 	hp_min = 8,
 	hp_max = 10,
-	armor = 100,
 	collisionbox = {-0.3, -0.3, -0.3, 0.3, 0.1, 0.3},
 	visual = "mesh",
 	visual_size = {x = 0.5, y = 0.5},
@@ -15,7 +14,6 @@ mobs:register_mob("mobs_animal:kitten", {
 		{"mobs_kitten_ginger.png"},
 		{"mobs_kitten_sandy.png"},
 	},
-	makes_footstep_sound = false,
 	sounds = {
 		random = "mobs_kitten",
 	},
@@ -23,13 +21,11 @@ mobs:register_mob("mobs_animal:kitten", {
 	walk_chance = 15,
 	run_velocity = 2,
 	runaway = true,
-	jump = true,
 	jump_height = 5,
 	drops = {
 		{name = "farming:string"}
 	},
 	water_damage = 1,
-	lava_damage = 5,
 	fall_damage = 2,
 	fear_height = 3,
 	animation = {

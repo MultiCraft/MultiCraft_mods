@@ -92,21 +92,10 @@ minetest.register_alias("default:papyrus", "default:sugarcane")
 
 -- Fences
 minetest.register_alias("fences:fence_wood", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_1", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_2", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_3", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_11", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_12", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_13", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_14", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_21", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_22", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_23", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_24", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_32", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_33", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_34", "default:fence_wood")
-minetest.register_alias("fences:fence_wood_35", "default:fence_wood")
+for _, n in pairs({"1", "2", "3", "11", "12", "13", "14",
+		"21", "22", "23", "24", "32", "33", "34", "35"}) do
+	minetest.register_alias("fences:fence_wood_" .. n, "default:fence_wood")
+end
 
 -- Hardened Clay
 minetest.register_alias("hardened_clay:hardened_clay", "default:hardened_clay")

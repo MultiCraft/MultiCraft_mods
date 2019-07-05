@@ -1,12 +1,8 @@
 mobs:register_mob("mobs_animal:cow", {
 	type = "animal",
-	passive = false,
-	attack_type = "dogfight",
-	reach = 2,
 	damage = 2,
 	hp_min = 8,
 	hp_max = 12,
-	armor = 100,
 	collisionbox = {-0.9, -0.01, -0.9, 0.9, 1.65, 0.9},
 	visual = "mesh",
 	mesh = "mobs_cow.b3d",
@@ -19,10 +15,7 @@ mobs:register_mob("mobs_animal:cow", {
 	sounds = {
 		random = "mobs_cow",
 	},
-	walk_velocity = 1,
 	run_velocity = 3,
-	jump = true,
-	jump_height = 4,
 	drops = {
 		{name = "mobs:meat_raw"},
 		{name = "mobs:meat_raw", chance = 2},
@@ -30,9 +23,6 @@ mobs:register_mob("mobs_animal:cow", {
 		{name = "mobs:leather", chance = 2},
 		{name = "mobs:leather", chance = 2}
 	},
-	water_damage = 0,
-	lava_damage = 5,
-	light_damage = 0,
 	animation = {
 		speed_normal = 15,
 		speed_run = 15,
@@ -46,7 +36,7 @@ mobs:register_mob("mobs_animal:cow", {
 		punch_end = 100,
 	},
 	follow = {"farming:wheat", "default:grass"},
-	view_range = 8,
+	view_range = 10,
 	replace_rate = 10,
 	replace_what = {
 		{"group:grass", "air", 0},

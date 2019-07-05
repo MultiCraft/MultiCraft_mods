@@ -9,7 +9,7 @@ for node, def in pairs(minetest.registered_nodes) do
 		(def.tiles and type(def.tiles[1]) == "string") and
 		not def.on_rightclick and
 		not def.on_blast and
-		not def.allow_metadata_inventory_take and
+		not def.on_metadata_inventory_put and
 		not (def.groups.not_in_creative_inventory == 1) and
 		not (def.groups.not_cuttable == 1) and
 		not def.groups.colorglass and
@@ -357,13 +357,13 @@ for i=1, #nodes do
 end
 
 for _, d in pairs(workbench.defs) do
-	minetest.register_alias("stairs:"..d[1].."_coal",  "stairs:"..d[1].."_default_coalblock")
-	minetest.register_alias("stairs:"..d[1].."_straw", "stairs:"..d[1].."_farming_straw")
+	minetest.register_alias("stairs:"..d[1].."_coal",        "stairs:"..d[1].."_default_coalblock")
+	minetest.register_alias("stairs:"..d[1].."_lapis_block", "stairs:"..d[1].."_default_lapisblock")
 end
 
 for _, e in pairs(stairs_aliases) do
-	minetest.register_alias("stairs:"..e[1].."_coal",  "stairs:"..e[2].."_default_coalblock")
-	minetest.register_alias("stairs:"..e[1].."_straw", "stairs:"..e[2].."_farming_straw")
+	minetest.register_alias("stairs:"..e[1].."_coal",        "stairs:"..e[2].."_default_coalblock")
+	minetest.register_alias("stairs:"..e[1].."_lapis_block", "stairs:"..e[2].."_default_lapisblock")
 end
 
 minetest.register_alias("stairs:stair_steel",    "stairs:stair_default_steelblock")

@@ -1,13 +1,9 @@
 mobs:register_mob("mobs_animal:pig", {
 	type = "animal",
-	passive = false,
-	attack_type = "dogfight",
 	group_attack = true,
-	reach = 2,
 	damage = 2,
 	hp_min = 5,
 	hp_max = 15,
-	armor = 100,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 0.1, 0.4},
 	visual = "mesh",
 	mesh = "mobs_pig.x",
@@ -21,9 +17,7 @@ mobs:register_mob("mobs_animal:pig", {
 	},
 	walk_velocity = 2,
 	run_velocity = 3,
-	jump = true,
 	follow = {"default:apple", "farming:potato"},
-	view_range = 5,
 	drops = function(pos)
 		if rawget(_G, "experience") then
 			--experience.add_orb(math.random(1,3), pos) -- random amount between 1 and 3
@@ -36,9 +30,6 @@ mobs:register_mob("mobs_animal:pig", {
 			{name = "mobs:pork_raw", chance = 2}
 		}
 	end,
-	water_damage = 0,
-	lava_damage = 5,
-	light_damage = 0,
 	fear_height = 2,
 	animation = {
 		speed_normal = 20,

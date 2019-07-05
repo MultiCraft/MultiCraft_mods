@@ -3,7 +3,6 @@ mobs:register_mob("mobs_animal:chicken", {
 	passive = true,
 	hp_min = 3,
 	hp_max = 6,
-	armor = 100,
 	collisionbox = {-0.35, -0.01, -0.35, 0.35, 0.75, 0.35},
 	visual = "mesh",
 	mesh = "mobs_chicken.b3d",
@@ -12,15 +11,11 @@ mobs:register_mob("mobs_animal:chicken", {
 	sounds = {
 		random = "mobs_chicken",
 	},
-	walk_velocity = 1,
 	run_velocity = 3,
 	runaway = true,
 	drops = {
 		{name = "mobs:chicken_raw"}
 	},
-	water_damage = 0,
-	lava_damage = 5,
-	light_damage = 0,
 	fall_damage = 0,
 	fall_speed = -8,
 	fear_height = 5,
@@ -33,7 +28,6 @@ mobs:register_mob("mobs_animal:chicken", {
 		run_end = 80,
 	},
 	follow = {"farming:seed_wheat"},
-	view_range = 5,
 
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
