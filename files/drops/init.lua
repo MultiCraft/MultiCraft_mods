@@ -1,5 +1,5 @@
-local age                   = 0.5 -- How old an item has to be before collecting
-local radius_magnet         = 2   -- Radius of item magnet
+local radius	= 2   -- Radius of item magnet
+local age		= 0.5 -- How old an item has to be before collecting
 
 local function collect_items(player)
 	local pos = player:get_pos()
@@ -8,7 +8,7 @@ local function collect_items(player)
 	end
 	-- Detect
 	local col_pos = vector.add(pos, {x = 0, y = 1.3, z = 0})
-	local objects = minetest.get_objects_inside_radius(col_pos, radius_magnet)
+	local objects = minetest.get_objects_inside_radius(col_pos, radius)
 	for _, object in ipairs(objects) do
 		local entity = object:get_luaentity()
 		if entity and not object:is_player() and

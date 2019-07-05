@@ -688,7 +688,7 @@ function doors.register_fencegate(name, def)
 	local fence_closed = table.copy(fence)
 	fence_closed.node_box = {
 		type = "fixed",
-        fixed = {
+		fixed = {
 			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/16},		-- Left completion
 			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},		-- Right completion
 			{-2/16, -1/2+6/16, -1/16, 0, 1/2-1/16, 1/16},		-- Center Left
@@ -711,14 +711,14 @@ function doors.register_fencegate(name, def)
 	fence_closed.sound = "doors_fencegate_open"
 	fence_closed.selection_box = {
 		type = "fixed",
-        fixed = {
+		fixed = {
 			{-1/2, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},			-- Gate
 		}
 	}
 	local fence_open = table.copy(fence)
 	fence_open.node_box = {
-        type = "fixed",
-        fixed = {
+		type = "fixed",
+		fixed = {
 			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/16},		-- Left completion
 			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},		-- Right completion
 			{-1/2, 1/2-4/16, 1/16, -1/2+2/16, 1/2-1/16, 1/2-2/16}, -- Top-left (transverse) x
@@ -734,7 +734,7 @@ function doors.register_fencegate(name, def)
 	fence_open.groups.not_in_creative_inventory = 1
 	fence_open.selection_box = {
 		type = "fixed",
-        fixed = {
+		fixed = {
 			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/2},		-- Left
 			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/2},		-- Right
 		}
@@ -755,8 +755,8 @@ end
 doors.register_fencegate("doors:gate_wood", {
 	description = "Apple Wood Fence Gate",
 	texture = "default_wood.png",
-    inventory_image = "default_wood_fencegate.png",
-    wield_image = "default_wood_fencegate.png",
+	inventory_image = "default_wood_fencegate.png",
+	wield_image = "default_wood_fencegate.png",
 	material = "default:wood",
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2}
 })
