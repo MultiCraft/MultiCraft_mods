@@ -42,7 +42,7 @@ minetest.register_node("farming:soil", {
 	description = "Soil",
 	tiles = {"farming_soil.png", "default_dirt.png"},
 	drop = "default:dirt",
-	groups = {crumbly=3, not_in_creative_inventory=1, soil=2, grassland = 1, field = 1},
+	groups = {crumbly = 3, not_in_creative_inventory = 1, soil = 2, grassland = 1, field = 1},
 	sounds = default.node_sound_dirt_defaults(),
 	soil = {
 		base = "default:dirt",
@@ -55,7 +55,7 @@ minetest.register_node("farming:soil_wet", {
 	description = "Wet Soil",
 	tiles = {"farming_soil_wet.png", "default_dirt.png"},
 	drop = "default:dirt",
-	groups = {crumbly=3, not_in_creative_inventory=1, soil=3, wet = 1, grassland = 1, field = 1},
+	groups = {crumbly = 3, not_in_creative_inventory = 1, soil = 3, wet = 1, grassland = 1, field = 1},
 	sounds = default.node_sound_dirt_defaults(),
 	soil = {
 		base = "default:dirt",
@@ -100,9 +100,9 @@ minetest.register_node("farming:desert_sand_soil_wet", {
 
 minetest.register_node("farming:straw", {
 	description = "Straw",
-	tiles = {"farming_straw_side.png", "farming_straw_top.png"},
+	tiles = {"farming_straw_top.png", "farming_straw_top.png", "farming_straw_side.png"},
 	is_ground_content = false,
-	groups = {snappy=3, flammable=4, fall_damage_add_percent=-30},
+	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30},
 	sounds = default.node_sound_leaves_defaults(),
 })
 

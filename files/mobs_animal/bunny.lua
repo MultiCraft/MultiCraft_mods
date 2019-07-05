@@ -5,7 +5,6 @@ mobs:register_mob("mobs_animal:bunny", {
 	reach = 1,
 	hp_min = 1,
 	hp_max = 4,
-	armor = 100,
 	collisionbox = {-0.268, -0.5, -0.268,  0.268, 0.167, 0.268},
 	visual = "mesh",
 	mesh = "mobs_bunny.b3d",
@@ -15,21 +14,14 @@ mobs:register_mob("mobs_animal:bunny", {
 		{"mobs_bunny_brown.png"},
 		{"mobs_bunny_white.png"},
 	},
-	sounds = {},
-	makes_footstep_sound = false,
-	walk_velocity = 1,
-	run_velocity = 2,
 	runaway = true,
 	runaway_from = {"mobs_animal:pumba", "player"},
-	jump = true,
 	jump_height = 5,
 	drops = {
 		{name = "mobs:rabbit_raw"},
 		{name = "mobs:rabbit_hide", min = 0, max = 1},
 	},
 	water_damage = 1,
-	lava_damage = 4,
-	light_damage = 0,
 	fear_height = 2,
 	animation = {
 		speed_normal = 15,
@@ -41,7 +33,6 @@ mobs:register_mob("mobs_animal:bunny", {
 		punch_end = 24,
 	},
 	follow = {"farming:carrot", "farming_plus:carrot_item", "default:grass"},
-	view_range = 8,
 	replace_rate = 10,
 	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
 	replace_with = "air",
@@ -96,7 +87,6 @@ mobs:register_mob("mobs_animal:bunny", {
 
 		return true -- run only once, false/nil runs every activation
 	end,
-	attack_type = "dogfight",
 	damage = 5,
 })
 

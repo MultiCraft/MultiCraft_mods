@@ -338,7 +338,7 @@ minetest.register_node("default:leaves", {
 	paramtype = "light",
 	walkable = false,
 	is_ground_content = false,
-	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1, speed = -20},
 	drop = {
 		max_items = 1,
 		items = {
@@ -374,7 +374,7 @@ minetest.register_node("default:apple", {
 		fixed = {-3 / 16, -7 / 16, -3 / 16, 3 / 16, 4 / 16, 3 / 16}
 	},
 	groups = {fleshy = 3, dig_immediate = 3, flammable = 2,
-		leafdecay = 3, leafdecay_drop = 1, food_apple = 1},
+		leafdecay = 3, leafdecay_drop = 1, food_apple = 1, food = 1},
 	on_use = minetest.item_eat(2),
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -396,7 +396,7 @@ minetest.register_node("default:apple_gold", {
 		type = "fixed",
 		fixed = {-0.2, -0.5, -0.2, 0.2, 0, 0.2}
 	},
-	groups = {fleshy = 3, dig_immediate = 3, flammable = 2, foodstuffs = 1},
+	groups = {fleshy = 3, dig_immediate = 3, flammable = 2, foodstuffs = 1, food = 1},
 	on_use = minetest.item_eat(8),
 	sounds = default.node_sound_defaults(),
 })
@@ -432,7 +432,7 @@ minetest.register_node("default:jungleleaves", {
 	paramtype = "light",
 	walkable = false,
 	is_ground_content = false,
-	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1, speed = -20},
 	drop = {
 		max_items = 1,
 		items = {
@@ -591,7 +591,7 @@ minetest.register_node("default:acacia_leaves", {
 	paramtype = "light",
 	walkable = false,
 	is_ground_content = false,
-	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1, speed = -20},
 	drop = {
 		max_items = 1,
 		items = {

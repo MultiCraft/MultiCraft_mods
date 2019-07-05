@@ -4,7 +4,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20190520",
+	version = "20190630",
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
 
@@ -80,7 +80,8 @@ local node_snow = "default:snow"
 mobs.fallback_node = minetest.registered_aliases["mapgen_dirt"] or "default:dirt"
 
 local mob_class = {
-	stepheight = 1.1, -- was 0.6
+	attack_type = "dogfight",
+	stepheight = 1.1,
 	fly_in = "air",
 	owner = "",
 	order = "",
@@ -97,12 +98,13 @@ local mob_class = {
 	light_damage_min = 12,
 	light_damage_max = 15,
 	water_damage = 0,
-	lava_damage = 0,
+	lava_damage = 5,
 	suffocation = 2,
 	fall_damage = 1,
 	fall_speed = -10, -- must be lower than -2 (default: -10)
 	drops = {},
 	armor = 100,
+	runaway = false,
 	sounds = {},
 	jump = true,
 	knock_back = true,
@@ -124,7 +126,7 @@ local mob_class = {
 	child = false,
 	gotten = false,
 	health = 0,
-	reach = 3,
+	reach = 2,
 	htimer = 0,
 	docile_by_day = false,
 	time_of_day = 0.5,
@@ -461,7 +463,6 @@ local ray_line_of_sight = function(self, pos1, pos2)
 		and not thing.ref:is_player() then return false end
 
 		if thing.type == "node" then
-
 			local name = minetest.get_node(thing.under).name
 
 			if minetest.registered_items[name]
@@ -474,16 +475,9 @@ local ray_line_of_sight = function(self, pos1, pos2)
 	return true
 end
 
--- detect if using minetest 5.0 by searching for permafrost node
-local is_50 = minetest.registered_nodes["default:permafrost"]
-
 function mob_class:line_of_sight(pos1, pos2, stepsize)
-
-	if is_50 then -- only use if minetest 5.0 is detected
-		return ray_line_of_sight(self, pos1, pos2)
-	end
-
 	return line_of_sight(self, pos1, pos2, stepsize)
+--	return ray_line_of_sight(self, pos1, pos2) -- MT 5.0
 end
 
 -- global function
@@ -593,7 +587,7 @@ function mob_class:do_stay_near()
 		z = target.z - pos.z
 	}
 
-	local yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
+	yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 	if target.x > pos.x then
 		yaw = yaw + pi
@@ -665,7 +659,7 @@ end
 -- drop items
 function mob_class:item_drop()
 	local pos = self.object:get_pos()
-	self.drops = type(self.drops) == "function" and self.drops(pos) or self.drops
+	self.drops = type(self.drops) == "function" and self.drops(pos) or self.drops -- XP
 
 	-- check for nil or no drops
 	if not self.drops or #self.drops == 0 then
@@ -3362,11 +3356,13 @@ end -- END mobs:register_mob function
 
 
 -- count how many mobs of one type are inside an area
+-- will also return true for second value if player is inside area
 local count_mobs = function(pos, type)
 
 	local total = 0
 	local objs = minetest.get_objects_inside_radius(pos, aoc_range * 2)
 	local ent
+	local players
 
 	for n = 1, #objs do
 
@@ -3378,10 +3374,12 @@ local count_mobs = function(pos, type)
 			if ent and ent.name and ent.name == type then
 				total = total + 1
 			end
+		else
+			players = true
 		end
 	end
 
-	return total
+	return total, players
 end
 
 
@@ -3450,7 +3448,12 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			end
 
 			-- get total number of this mob in area
-			local num_mob = count_mobs(pos, name)
+			local num_mob, is_pla = count_mobs(pos, name)
+
+			if not is_pla then
+--print ("--- no players within active area, will not spawn " .. name)
+				return
+			end
 
 			if num_mob >= aoc then
 --print ("--- too many " .. name .. " in area", num_mob .. "/" .. aoc)
@@ -3497,7 +3500,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			end
 
 			-- only spawn away from player
-			local objs = minetest.get_objects_inside_radius(pos, 10)
+			local objs = minetest.get_objects_inside_radius(pos, 8)
 
 			for n = 1, #objs do
 
@@ -3550,18 +3553,8 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 end
 
 
--- compatibility with older mob registration
-function mobs:register_spawn(name, nodes, max_light, min_light, chance,
-		active_object_count, max_height, day_toggle)
-
-	mobs:spawn_specific(name, nodes, {"air"}, min_light, max_light, 30,
-		chance, active_object_count, -31000, max_height, day_toggle)
-end
-
-
 -- MarkBu's spawn function
 function mobs:spawn(def)
-
 	mobs:spawn_specific(
 		def.name,
 		def.nodes or {"group:soil", "group:stone"},
@@ -3579,13 +3572,13 @@ function mobs:spawn(def)
 end
 
 
+--[[
 -- register arrow for shoot attack
 function mobs:register_arrow(name, def)
 
 	if not name or not def then return end -- errorcheck
 
 	minetest.register_entity(name, {
-
 		physical = false,
 		visual = def.visual,
 		visual_size = def.visual_size,
@@ -3602,23 +3595,16 @@ function mobs:register_arrow(name, def)
 		rotate = def.rotate,
 		automatic_face_movement_dir = def.rotate
 			and (def.rotate - (pi / 180)) or false,
-
 		on_activate = def.on_activate,
-
 		on_punch = def.on_punch or function(self, hitter, tflp, tool_capabilities, dir)
 		end,
 
 		on_step = def.on_step or function(self, dtime)
-
 			self.timer = self.timer + 1
-
 			local pos = self.object:get_pos()
-
 			if self.switch == 0
 			or self.timer > 150 then
-
-				self.object:remove() ; -- print ("removed arrow")
-
+				self.object:remove()
 				return
 			end
 
@@ -3644,20 +3630,13 @@ function mobs:register_arrow(name, def)
 				local node = node_ok(pos).name
 
 				if minetest.registered_nodes[node].walkable then
-
 					self:hit_node(pos, node)
-
 					if self.drop == true then
-
 						pos.y = pos.y + 1
-
 						self.lastpos = (self.lastpos or pos)
-
 						minetest.add_item(self.lastpos, self.object:get_luaentity().name)
 					end
-
-					self.object:remove() ; -- print ("hit node")
-
+					self.object:remove()
 					return
 				end
 			end
@@ -3665,12 +3644,10 @@ function mobs:register_arrow(name, def)
 			if self.hit_player or self.hit_mob then
 
 				for _,player in pairs(minetest.get_objects_inside_radius(pos, 1.0)) do
-
 					if self.hit_player
 					and player:is_player() then
-
 						self:hit_player(player)
-						self.object:remove() ; -- print ("hit player")
+						self.object:remove()
 						return
 					end
 
@@ -3681,16 +3658,12 @@ function mobs:register_arrow(name, def)
 					and entity._cmi_is_mob == true
 					and tostring(player) ~= self.owner_id
 					and entity.name ~= self.object:get_luaentity().name then
-
 						self:hit_mob(player)
-
-						self.object:remove() ;  --print ("hit mob")
-
+						self.object:remove()
 						return
 					end
 				end
 			end
-
 			self.lastpos = pos
 		end
 	})
@@ -3699,24 +3672,19 @@ end
 
 -- compatibility function
 function mobs:explosion(pos, radius)
-
 	local self = {sounds = {explode = "tnt_explode"}}
-
 	mobs:boom(self, pos, radius)
-end
+end]]
 
 
 -- no damage to nodes explosion
 function mobs:safe_boom(self, pos, radius)
-
 	minetest.sound_play(self.sounds and self.sounds.explode or "tnt_explode", {
 		pos = pos,
 		gain = 1.0,
 		max_hear_distance = self.sounds and self.sounds.distance or 32
 	})
-
 	entity_physics(pos, radius)
-
 --	effect(pos, 32, "item_smoke.png", radius * 3, radius * 5, radius, 1, 0)
 end
 
@@ -3727,7 +3695,6 @@ function mobs:boom(self, pos, radius)
 	if mobs_griefing
 	and minetest.get_modpath("tnt") and tnt and tnt.boom
 	and not minetest.is_protected(pos, "") then
-
 		tnt.boom(pos, {
 			radius = radius,
 			damage_radius = radius,
@@ -3854,16 +3821,13 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 
 	-- register old stackable mob egg
 	minetest.register_craftitem(mob, {
-
 		description = desc,
 		inventory_image = invimg,
 		groups = grp,
 		stack_max = 1,
 		on_use = throw_spawn_egg,
 		on_place = function(itemstack, placer, pointed_thing)
-
 			local pos = pointed_thing.above
-
 			-- am I clicking on something with existing on_rightclick function?
 			local under = minetest.get_node(pointed_thing.under)
 			local def = minetest.registered_nodes[under.name]
@@ -3916,7 +3880,6 @@ function mobs:force_capture(self, clicker)
 	end
 
 	self.object:remove()
-
 	self:mob_sound("default_place_node_hard")
 end
 
@@ -3952,18 +3915,14 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso,
 		-- is mob tamed?
 		if self.tamed == false
 		and force_take == false then
-
 			minetest.chat_send_player(name, "Not tamed!")
-
 		return false
 		end
 
 		-- cannot pick up if not owner
 		if self.owner ~= name
 		and force_take == false then
-
 			minetest.chat_send_player(name, self.owner.." is owner!")
-
 		return false
 		end
 
@@ -4077,17 +4036,15 @@ function mobs:protect(self, clicker)
 		clicker:set_wielded_item(tool)
 	end
 
-		self.protected = true
+	self.protected = true
 
 	local pos = self.object:get_pos()
 	pos.y = pos.y + self.collisionbox[2] + 0.5
 
 	effect(self.object:get_pos(), 25, "mobs_protect_particle.png", 0.5, 4, 2, 15)
-
 	self:mob_sound("mobs_spell")
-
 		return true
-	end
+end
 
 
 local mob_obj = {}
@@ -4104,9 +4061,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 		if not mobs.is_creative(clicker:get_player_name()) then
 
 			local item = clicker:get_wielded_item()
-
 			item:take_item()
-
 			clicker:set_wielded_item(item)
 		end
 
@@ -4240,26 +4195,3 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		mob_sta[name] = nil
 	end
 end)
-
-
--- compatibility function for old entities to new modpack entities
-function mobs:alias_mob(old_name, new_name)
-
-	-- spawn egg
-	minetest.register_alias(old_name, new_name)
-
-	-- entity
-	minetest.register_entity(":" .. old_name, {
-
-		physical = false,
-
-		on_activate = function(self)
-
-			if minetest.registered_entities[new_name] then
-				minetest.add_entity(self.object:get_pos(), new_name)
-			end
-
-			self.object:remove()
-		end
-	})
-end

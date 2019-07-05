@@ -5,12 +5,10 @@ for i = 1, #dyes do
 
 	mobs:register_mob("mobs_animal:sheep_" .. name, {
 		stay_near = {"farming:straw", 10},
-		stepheight = 1.1,
 		type = "animal",
 		passive = true,
 		hp_min = 6,
 		hp_max = 10,
-		armor = 100,
 		collisionbox = {-0.4, -1, -0.4, 0.4, 0.3, 0.4},
 		visual = "mesh",
 		mesh = "mobs_sheep.b3d",
@@ -22,19 +20,13 @@ for i = 1, #dyes do
 			random = "mobs_sheep",
 			damage = "mobs_sheep_angry",
 		},
-		walk_velocity = 1,
-		run_velocity = 2,
 		runaway = true,
-		jump = true,
 		jump_height = 3,
 		drops = {
 			{name = "mobs:meat_raw"},
 			{name = "mobs:meat_raw", chance = 2},
 			{name = "wool:" .. name}
 		},
-		water_damage = 0,
-		lava_damage = 5,
-		light_damage = 0,
 		animation = {
 			speed_normal = 15,
 			speed_run = 15,
@@ -44,7 +36,6 @@ for i = 1, #dyes do
 			walk_end = 100,
 		},
 		follow = {"farming:wheat", "default:grass"},
-		view_range = 8,
 		replace_rate = 10,
 		replace_what = {
 			{"group:grass", "air", -1},
