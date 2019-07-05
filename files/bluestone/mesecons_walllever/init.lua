@@ -2,7 +2,7 @@
 -- Basically a switch that can be attached to a wall
 -- Powers the block 2 nodes behind (using a receiver)
 mesecon.register_node("mesecons_walllever:wall_lever", {
-	description="Lever",
+	description = "Lever",
 	drawtype = "nodebox",
 	inventory_image = "jeija_wall_lever.png",
 	wield_image = "jeija_wall_lever.png",

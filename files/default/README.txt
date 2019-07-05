@@ -1,10 +1,15 @@
 MultiCraft Game: default
 ========================
+See license.txt for license information.
 
-License of source code:
------------------------
-Copyright (C) 2014-2015 MoNTE48, Maksim D. Gamarnik <MoNTE48@mail.ua>
+Authors of source code
+----------------------
+Originally by celeron55, Perttu Ahola <celeron55@gmail.com> (LGPLv3.0+)
+Various Minetest developers and contributors (LGPLv3.0+)
+MoNTE48, Maksim D. Gamarnik <MoNTE48@mail.ua> (LGPLv3.0+)
 
+The torch code was derived by sofar from the 'torches' mod by
+BlockMen (LGPLv3.0+)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -13,15 +18,11 @@ the Free Software Foundation; either version 3.0 of the License, or
 
 http://www.gnu.org/licenses/lgpl-3.0.html
 
-License of media (sounds)
---------------------------------------
-Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
-http://creativecommons.org/licenses/by-sa/3.0/
 
-Authors of media files
------------------------
-MirceaKitsune (WTFPL):
-  character.x
+Authors of media (textures, sounds, models and schematics)
+----------------------------------------------------------
+Everything not listed in here:
+celeron55, Perttu Ahola <celeron55@gmail.com> (CC BY-SA 3.0)
 
 ------
 Glass breaking sounds (CC BY 3.0):
@@ -116,6 +117,14 @@ wool_coat_movement.ogg from freeSFX.co.uk and has a Creative Commons license
   sonictechtonic (CC BY 3.0):
 https://www.freesound.org/people/sonictechtonic/sounds/241872/
   player_damage.2.ogg
+  
+
+Models
+------
+sofar (CC BY-SA 3.0):
+  torch_ceiling.obj
+  torch_floor.obj
+  torch_wall.obj
 
 Schematics
 ----------
