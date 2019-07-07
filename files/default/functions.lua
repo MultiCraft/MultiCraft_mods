@@ -574,7 +574,7 @@ function default.snow_shoot_snowball(itemstack, thrower, pointed_thing)
 	if not minetest.is_valid_pos(playerpos) then
 		return
 	end
-	local obj = minetest.item_throw("default:snow", thrower, 19, -3,
+	local obj = minetest.item_throw("default:snowball", thrower, 19, -3,
 		snowball_impact)
 	if obj then
 		obj:set_properties({

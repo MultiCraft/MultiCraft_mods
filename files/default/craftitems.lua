@@ -254,3 +254,12 @@ minetest.register_craftitem("default:flint", {
 	description = "Flint",
 	inventory_image = "default_flint.png"
 })
+
+minetest.register_craftitem("default:snowball", {
+	description = "Snowball",
+	inventory_image = "default_snowball.png",
+	stack_max = 16,
+	groups = {flammable = 3},
+	on_use = default.snow_shoot_snowball
+
+})

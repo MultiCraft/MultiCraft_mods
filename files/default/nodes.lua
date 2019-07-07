@@ -210,8 +210,6 @@ minetest.register_node("default:hardened_clay", {
 minetest.register_node("default:snow", {
 	description = "Snow",
 	tiles = {"default_snow.png"},
-	inventory_image = "default_snowball.png",
-	wield_image = "default_snowball.png",
 	paramtype = "light",
 	buildable_to = true,
 	floodable = true,
@@ -223,8 +221,9 @@ minetest.register_node("default:snow", {
 			{-0.5, -0.5, -0.5,  0.5, -0.5+2/16, 0.5},
 		},
 	},
-	groups = {crumbly = 3, falling_node = 1, snowy = 1, puts_out_fire = 1, misc = 1, speed = -30},
+	groups = {crumbly = 3, falling_node = 1, snowy = 1, puts_out_fire = 1, misc = 1, speed = -30, not_in_creative_inventory = 1},
 	sounds = default.node_sound_snow_defaults(),
+	drop = "default:snowball",
 	on_use = default.snow_shoot_snowball,
 	on_construct = function(pos)
 	pos.y = pos.y - 1
@@ -239,7 +238,7 @@ minetest.register_node("default:snowblock", {
 	tiles = {"default_snow.png"},
 	groups = {crumbly = 3, cools_lava = 1, snowy = 1, speed = -30},
 	sounds = default.node_sound_snow_defaults(),
-	drop = "default:snow 4",
+	drop = "default:snowball 4",
 	on_construct = function(pos)
 		pos.y = pos.y - 1
 		if minetest.get_node(pos).name == "default:dirt_with_grass" then
