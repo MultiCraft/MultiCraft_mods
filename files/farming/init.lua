@@ -59,6 +59,11 @@ minetest.register_craftitem("farming:string",{
 	groups = {materials = 1}
 })
 
+minetest.register_craft({
+	output = "farming:string",
+	recipe = {{"default:paper", "default:paper"}},
+})
+
 -- Cotton
 
 --[[farming.register_plant("farming:cotton", {

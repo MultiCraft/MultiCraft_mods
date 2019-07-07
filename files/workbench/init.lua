@@ -399,3 +399,9 @@ minetest.register_craft({
 		{"", "group:stick", ""}
 	}
 })
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "workbench:workbench",
+	burntime = 30,
+})

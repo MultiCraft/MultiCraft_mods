@@ -89,3 +89,26 @@ for _, mix in pairs(dye_recipes) do
 		recipe = {'dye:' .. mix[1], 'dye:' .. mix[2]},
 	})
 end
+
+minetest.register_craft({
+	output = "dye:white 3",
+	recipe = {
+		{"default:bone"},
+	}
+})
+
+minetest.register_craft({
+	output = "dye:blue 9",
+	recipe = {
+		{"default:lapisblock"},
+	}
+})
+
+minetest.register_craft({
+	output = "default:lapisblock",
+	recipe = {
+		{"dye:blue", "dye:blue", "dye:blue"},
+		{"dye:blue", "dye:blue", "dye:blue"},
+		{"dye:blue", "dye:blue", "dye:blue"},
+	}
+})
