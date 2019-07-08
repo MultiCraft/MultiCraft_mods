@@ -1,6 +1,6 @@
 # Player Effects
 ## Summary
-This is an framework for assigning temporary status effects to players. This mod is aimed to modders and maybe interested people. This framework is a work in progress and not finished.
+This is an framework for assigning temporary status effects to players. This mod is aimed to modders and maybe interested people.
 
 ## Profile
 * Name: Player Effects
@@ -65,11 +65,19 @@ Normally you don’t need to read or edit fields of this table. Use `playereffec
 #### Effect group
 An effect group is basically a concept. Any effect type can be member of any number of effect groups. The main point of effect groups is to find effects which affect the same property. For example, an effect which makes you faster and another effect which makes you slower both affect the same property: speed. The group for that then would be the string `"speed"`. See also `examples.lua`, which includes the effects `high_speed` and `low_speed`.
 
-Currently, the main rule of Player Effects requires that there can only be one effect in place. Don’t worry, Player Effects already does that job for you. Back to the example: it is possible to be fast and it is possible to be slow. But it is not possible to be fast `and` slow at the same time. Player Effects ensures that by cancelling all conflicting concepts before applying a new one.
+Currently, the main rule of Player Effects requires that there can only be one effect in place. Player Effects already does that job for you. Back to the example: it is possible to be fast and it is possible to be slow. But it is not possible to be fast *and* slow at the same time. Player Effects ensures that by cancelling all conflicting concepts before applying a new one.
 
 The concept of groups may be changed or extended in the future.
 
-You can invent effect groups (like the groups in Minetest) on the fly. A group is just a string. Practically, you should use groups which other people use.
+The following effect group names have standardized meanings and should solely be used for their intended purpose:
+
+* `speed`: Affects the player speed set by the `speed` value of `set_physics_override`
+* `gravity`: Affects the player gravity set by the `gravity` value of `set_physics_override`
+* `jump`: Affects the player jump strength set by the `jump` value of `set_physics_override`
+* `health`: Affects the player health
+* `breath`: Affects the player breath
+
+You can also invent effect groups (like the groups in Minetest) on the fly. A group is just a string. Practically, you should use groups which other people use.
 
 #### Effect (`effect`)
 An effect is an current change of a player property (like speed, jump height, and so on). It is the realization of an effect type. All effects are temporary. There are currently two types of effects: Repeating and non-repeating. Non-repeating effects call their `apply` callback once when they are created. Repeating effects call their apply callback multiple times with a specified interval. By default, effects are non-repeating.
