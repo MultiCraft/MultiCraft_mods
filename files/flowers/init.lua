@@ -180,7 +180,7 @@ minetest.register_node("flowers:mushroom_red", {
 	selection_box = {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
-	},	
+	},
 })
 
 minetest.register_node("flowers:mushroom_brown", {

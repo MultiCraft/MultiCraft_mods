@@ -1,20 +1,10 @@
 local world_path = minetest.get_worldpath()
-local org_file = world_path .. "/beds_spawns"
 local file = world_path .. "/beds_spawns"
-local bkwd = false
-
--- check for PA's beds mod spawns
-local cf = io.open(world_path .. "/beds_player_spawns", "r")
-if cf ~= nil then
-	io.close(cf)
-	file = world_path .. "/beds_player_spawns"
-	bkwd = true
-end
 
 function beds.read_spawns()
 	local spawns = beds.spawn
 	local input = io.open(file, "r")
-	if input and not bkwd then
+	if input then
 		repeat
 			local x = input:read("*n")
 			if x == nil then
@@ -26,12 +16,6 @@ function beds.read_spawns()
 			spawns[name:sub(2)] = {x = x, y = y, z = z}
 		until input:read(0) == nil
 		io.close(input)
-	elseif input and bkwd then
-		beds.spawn = minetest.deserialize(input:read("*all"))
-		input:close()
-		beds.save_spawns()
-		os.rename(file, file .. ".backup")
-		file = org_file
 	end
 end
 
@@ -42,7 +26,7 @@ function beds.save_spawns()
 		return
 	end
 	local data = {}
-	local output = io.open(org_file, "w")
+	local output = io.open(file, "w")
 	for k, v in pairs(beds.spawn) do
 		table.insert(data, string.format("%.1f %.1f %.1f %s\n", v.x, v.y, v.z, k))
 	end
