@@ -102,7 +102,7 @@ http://freesound.org/people/Ryding/sounds/94337/
 
 Ferk (CC0 1.0):
   default_item_smoke.ogg, based on a sound by http://opengameart.org/users/bart
-  
+
 wool_coat_movement.ogg from freeSFX.co.uk and has a Creative Commons license
 
   player_damage.1.ogg
@@ -111,13 +111,13 @@ wool_coat_movement.ogg from freeSFX.co.uk and has a Creative Commons license
   http://www.freesound.org/people/thecheeseman/sounds/44428/
   http://www.freesound.org/people/thecheeseman/sounds/44429/
   http://www.freesound.org/people/thecheeseman/sounds/44430/
- 
+
   player_damage.1.ogg from TenPlus1 mobs_redo mod (Creative Commons sounds from Freesound.org)
-  
+
   sonictechtonic (CC BY 3.0):
 https://www.freesound.org/people/sonictechtonic/sounds/241872/
   player_damage.2.ogg
-  
+
 
 Models
 ------

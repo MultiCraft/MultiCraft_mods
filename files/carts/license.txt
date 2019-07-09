@@ -38,12 +38,6 @@ if other license is mentioned.
 
 Authors
 ---------
-Originally from PixelBOX (Gambit):
-	carts_cart_side.png
-	carts_cart_top.png
-	carts_cart_front.png*
-	carts_cart.png*
-
 sofar + stujones11:
 	carts_cart.b3d and carts_cart.blend
 

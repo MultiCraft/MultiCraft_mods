@@ -60,7 +60,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				if pointed_thing.type ~= "node" then
 					return
 				end
-				
+
 				local node = minetest.get_node_or_nil(pointed_thing.under)
 				local ndef = node and minetest.registered_nodes[node.name]
 
@@ -223,4 +223,3 @@ minetest.register_craft({
 	burntime = 60,
 	replacements = {{"bucket:bucket_lava", "bucket:bucket_empty"}},
 })
-

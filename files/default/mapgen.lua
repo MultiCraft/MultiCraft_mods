@@ -114,7 +114,7 @@ function default.register_ores()
 			persist = 0.0
 		},
 	})
-	
+
 	-- Red Sand
 
 	minetest.register_ore({
@@ -262,7 +262,7 @@ function default.register_ores()
 		y_max          = -24,
 		y_min          = -48,
 	})
-	
+
 	minetest.register_ore({
 		ore_type       = "scatter",
 		ore            = "default:stone_with_gold",
@@ -424,7 +424,7 @@ function default.register_biomes()
 		heat_point = 0,
 		humidity_point = 73,
 	})
-	
+
 	minetest.register_biome({
 		name = "icesheet_ocean",
 		node_dust = "default:snowblock",
@@ -721,7 +721,7 @@ function default.register_biomes()
 		heat_point = 92,
 		humidity_point = 16,
 	})
-	
+
 	-- Sandstone desert
 
 	minetest.register_biome({

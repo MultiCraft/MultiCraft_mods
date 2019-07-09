@@ -26,8 +26,8 @@ https://github.com/BlockMen/hunger
 
 Code:
 Licensed under the GNU LGPL version 3.0 or higher.
-You can redistribute it and/or modify it under 
-the terms of the GNU Lesser General Public License 
+You can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License
 as published by the Free Software Foundation;
 
 You should have received a copy of the GNU Lesser General Public

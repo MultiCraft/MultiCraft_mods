@@ -50,6 +50,6 @@ mobs:spawn({
 	max_light = 10,
 	chance = 15000,
 	min_height = -64,
-})	
+})
 
 mobs:register_egg("mobs_monster:zombie", "Zombie Head", "zombie_head.png", 0)

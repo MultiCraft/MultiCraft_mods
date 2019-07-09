@@ -232,5 +232,3 @@ These commands apply (or try to) apply an effect to you. You will get a response
 
 #### Testing
 * `stresstest [number]`: Applies `number` dummy effects which don’t do anything to you. Iff omitted, `number` is assumed to be 100. This command is there to test the performance of this mod for absurdly large effect numbers.
-
-
