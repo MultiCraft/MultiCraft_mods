@@ -20,7 +20,7 @@ dungeon_loot.registered_loot = {
 	{name = "default:cactus", chance = 0.4, count = {1, 4}, types = {"sandstone", "desert"}},
 
 	-- trees sappling
-	
+
 	{name = "default:sapling", chance = 0.5, count = {1, 2}},
 	{name = "default:pine_sapling", chance = 0.5, count = {1, 2}},
 	{name = "default:junglesapling", chance = 0.5, count = {1, 2}},
@@ -37,11 +37,11 @@ dungeon_loot.registered_loot = {
 	{name = "default:sword_steel", chance = 0.6},
 	{name = "default:sword_gold", chance = 0.3},
 	{name = "default:sword_diamond", chance = 0.05},
-	
+
 	{name = "default:pick_steel", chance = 0.3},
 	{name = "default:pick_gold", chance = 0.2},
 	{name = "default:pick_diamond", chance = 0.05},
-	
+
 	{name = "default:shovel_steel", chance = 0.3},
 	{name = "default:shovel_gold", chance = 0.2},
 	{name = "default:shovel_diamond", chance = 0.05},

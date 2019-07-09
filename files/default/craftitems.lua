@@ -261,5 +261,4 @@ minetest.register_craftitem("default:snowball", {
 	stack_max = 16,
 	groups = {flammable = 3},
 	on_use = default.snow_shoot_snowball
-
 })

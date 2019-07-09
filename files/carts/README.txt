@@ -48,7 +48,6 @@ license).
 
  Authors
 ---------
-
 klankbeeld (CC-BY 3.0)
 	http://freesound.org/people/klankbeeld/sounds/174042/
 	cart_rail.*.ogg

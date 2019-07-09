@@ -115,9 +115,5 @@ playerphysics.add_physics_factor(player, "jump", "sleeping", 0)
 
 This works regardless of the other factors because 0 times anything equals 0.
 
-
-
-
-
 ## License
 This mod is free software, released under the MIT License.

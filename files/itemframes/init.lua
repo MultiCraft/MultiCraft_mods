@@ -109,7 +109,7 @@ end
 minetest.register_node("itemframes:frame",{
 	description = "Item frame",
 	drawtype = "nodebox",
-	node_box = { 
+	node_box = {
 		type = "fixed",
 		fixed = {-0.5, -0.5, 7/16, 0.5, 0.5, 0.5}
 	},

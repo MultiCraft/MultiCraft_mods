@@ -22,4 +22,3 @@ wieldview.transform = {
 	["vessels:drinking_glass"]="R270",
 	["vessels:steel_bottle"]="R270",
 }
-
