@@ -792,7 +792,6 @@ function default.register_biomes()
 		depth_filler = 3,
 		node_riverbed = "default:sand",
 		depth_riverbed = 2,
-
 		y_max = -2,
 		y_min = -255,
 		heat_point = 89,
@@ -1172,6 +1171,53 @@ function default.register_decorations()
 		spawn_by = "default:dirt_with_dry_grass",
 --		num_spawn_by = 8,
 	})
+
+	-- Birch tree and log
+
+	minetest.register_decoration({
+		name = "default:birch_tree",
+		deco_type = "schematic",
+		place_on = {"default:dirt_with_grass"},
+		sidelen = 16,
+		noise_params = {
+			offset = 0.0,
+			scale = -0.015,
+			spread = {x = 250, y = 250, z = 250},
+			seed = 2,
+			octaves = 3,
+			persist = 0.66
+		},
+		biomes = {"deciduous_forest"},
+		y_max = 31000,
+		y_min = 1,
+		schematic = minetest.get_modpath("default") .. "/schematics/birch_tree.mts",
+		flags = "place_center_x, place_center_z",
+	})
+
+	minetest.register_decoration({
+		name = "default:birch_log",
+		deco_type = "schematic",
+		place_on = {"default:dirt_with_grass"},
+		place_offset_y = 1,
+		sidelen = 16,
+		noise_params = {
+			offset = 0.0,
+			scale = -0.0008,
+			spread = {x = 250, y = 250, z = 250},
+			seed = 2,
+			octaves = 3,
+			persist = 0.66
+		},
+		biomes = {"deciduous_forest"},
+		y_max = 31000,
+		y_min = 1,
+		schematic = minetest.get_modpath("default") .. "/schematics/birch_log.mts",
+		flags = "place_center_x",
+		rotation = "random",
+		spawn_by = "default:dirt_with_grass",
+	--	num_spawn_by = 8,
+	})
+
 
 	-- Large cactus
 

@@ -41,8 +41,8 @@ mobs:register_mob("mobs_animal:pig", {
 		punch_end = 110,
 	},
 	on_rightclick = function (self, clicker)
-	mobs:feed_tame(self, clicker, 8, true, true)
-	--mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
+		mobs:feed_tame(self, clicker, 8, true, true)
+		--mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
 	end,
 })
 

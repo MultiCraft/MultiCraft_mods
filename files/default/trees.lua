@@ -73,6 +73,10 @@ function default.grow_sapling(pos)
 			minetest.log("action", "An acacia sapling grows into a tree at "..
 				minetest.pos_to_string(pos))
 			default.grow_new_acacia_tree(pos)
+		elseif node.name == "default:birch_sapling" then
+			minetest.log("action", "An birch sapling grows into a tree at "..
+				minetest.pos_to_string(pos))
+			default.grow_new_birch_tree(pos)
 --[[	elseif node.name == "default:emergent_jungle_sapling" then
 		minetest.log("action", "An emergent jungle sapling grows into a tree at "..
 			minetest.pos_to_string(pos))
@@ -437,11 +441,11 @@ function default.grow_new_acacia_tree(pos)
 end
 
 
--- New aspen tree
+-- New birch tree
 
-function default.grow_new_aspen_tree(pos)
+function default.grow_new_birch_tree(pos)
 	local path = minetest.get_modpath("default") ..
-		"/schematics/aspen_tree_from_sapling.mts"
+		"/schematics/birch_tree_from_sapling.mts"
 	minetest.place_schematic({x = pos.x - 2, y = pos.y - 1, z = pos.z - 2},
 		path, "0", nil, false)
 end

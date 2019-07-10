@@ -7,6 +7,7 @@ Authors of source code
 Originally by celeron55, Perttu Ahola <celeron55@gmail.com> (LGPLv3.0+)
 Various Minetest developers and contributors (LGPLv3.0+)
 MoNTE48, Maksim D. Gamarnik <MoNTE48@mail.ua> (LGPLv3.0+)
+MultiCraft Development Team (LGPLv3.0+)
 
 The torch code was derived by sofar from the 'torches' mod by
 BlockMen (LGPLv3.0+)
@@ -134,8 +135,8 @@ paramat (CC BY-SA 3.0):
   acacia_tree_from_sapling.mts
   apple_tree.mts
   apple_tree_from_sapling.mts
-  aspen_tree.mts
-  aspen_tree_from_sapling.mts
+  birch_tree.mts
+  birch_tree_from_sapling.mts
   bush.mts
   emergent_jungle_tree.mts
   emergent_jungle_tree_from_sapling.mts
@@ -153,7 +154,7 @@ paramat (CC BY-SA 3.0):
 Shara RedCat (CC BY-SA 3.0):
   acacia_log.mts
   apple_log.mts
-  aspen_log.mts
+  birch_log.mts
   jungle_log.mts
   pine_log.mts
 
