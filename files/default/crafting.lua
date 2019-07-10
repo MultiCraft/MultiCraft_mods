@@ -29,6 +29,13 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "default:birch_wood 4",
+	recipe = {
+		{"default:birch_tree"},
+	}
+})
+
+minetest.register_craft({
 	output = "default:mossycobble",
 	recipe = {
 		{"default:cobble", "default:vine"},

@@ -14,6 +14,7 @@ mobs:register_mob("mobs_animal:cow", {
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_cow",
+		attack = "mobs_cow",
 	},
 	run_velocity = 3,
 	drops = {
@@ -44,15 +45,12 @@ mobs:register_mob("mobs_animal:cow", {
 	},
 	fear_height = 2,
 	on_rightclick = function(self, clicker)
-
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 8, true, true) then
-
 			-- if fed 7x wheat or grass then cow can be milked again
 			if self.food and self.food > 6 then
 				self.gotten = false
 			end
-
 			return
 		end
 
