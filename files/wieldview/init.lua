@@ -7,21 +7,19 @@ local wield_cubes = {}
 local wield_items = {}
 local wield_cycle = {}
 
-wieldview = {
-	transform = {},
-}
-
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/transform.lua")
-
 local function init_wield_items()
 	for name, def in pairs(minetest.registered_items) do
 		if def.inventory_image and def.inventory_image ~= "" then
 			wield_tiles[name] = def.inventory_image
 		elseif def.tiles and type(def.tiles[1]) == "string" and
 				def.tiles[1] ~= "" and def.drawtype and
-				(def.drawtype == "normal" or def.drawtype == "allfaces" or
-				def.drawtype == "glasslike" or def.drawtype == "liquid") then
-			wield_cubes[name] = def.tiles[1]
+				(def.drawtype == "normal" or def.drawtype:sub(1,8) == "allfaces" or
+				def.drawtype:sub(1,5) == "glass" or def.drawtype == "liquid") then
+			if not (def.tiles[3] ~= "" and type(def.tiles[3]) == "string") then
+				wield_cubes[name] = def.tiles[1]
+			else
+				wield_cubes[name] = def.tiles[3]
+			end
 		end
 	end
 end
@@ -31,20 +29,9 @@ local function update_player_visuals(player, item)
 	local animation = player_api.get_animation(player) or {}
 	local textures = animation.textures or {}
 	local skin = textures[1] and textures[1] or "character.png"
-	local wield_tile = wield_tiles[item]
-	if wield_tile then
-		-- Get item image transformation, first from group, then from transform.lua
-		local transform = minetest.get_item_group(item, "wieldview_transform")
-		if transform == 0 then
-			transform = wieldview.transform[item]
-		end
-		if transform then
-			-- This actually works with groups ratings because transform1, transform2, etc.
-			-- have meaning and transform0 is used for identidy, so it can be ignored
-			wield_tile = wield_tile.."^[transform"..tostring(transform)
-		end
-	else
-		wield_tile = "blank.png"
+	local wield_tile = wield_tiles[item] or "blank.png"
+	if not minetest.registered_tools[item] then
+		wield_tile = wield_tile.."^[transformR270"
 	end
 	local wield_cube = wield_cubes[item] or "blank.png"
 	if has_armor then
@@ -80,7 +67,7 @@ local function update_wielded_item(dtime, name)
 	wield_cycle[name] = 0
 end
 
-if not minetest.is_singleplayer() then
+if PLATFORM ~= "Android" or PLATFORM ~= "iOS" then
 	minetest.register_on_joinplayer(function(player)
 		local name = player:get_player_name()
 		if name then
