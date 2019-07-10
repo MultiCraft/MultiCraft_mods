@@ -3,16 +3,16 @@ mesecon.state = {}
 
 mesecon.rules.default = {
 	{x =  0, y =  0, z = -1},
- {x=1,  y=0,  z=0},
- {x=-1, y=0,  z=0},
- {x=0,  y=0,  z=1},
- {x=1,  y=1,  z=0},
- {x=1,  y=-1, z=0},
- {x=-1, y=1,  z=0},
- {x=-1, y=-1, z=0},
- {x=0,  y=1,  z=1},
- {x=0,  y=-1, z=1},
- {x=0,  y=1,  z=-1},
+	{x =  1, y =  0, z =  0},
+	{x = -1, y =  0, z =  0},
+	{x =  0, y =  0, z =  1},
+	{x =  1, y =  1, z =  0},
+	{x =  1, y = -1, z =  0},
+	{x = -1, y =  1, z =  0},
+	{x = -1, y = -1, z =  0},
+	{x =  0, y =  1, z =  1},
+	{x =  0, y = -1, z =  1},
+	{x =  0, y =  1, z = -1},
 	{x =  0, y = -1, z = -1},
 }
 
@@ -22,26 +22,26 @@ mesecon.rules.pplate = mesecon.mergetable(mesecon.rules.floor, {{x = 0, y = -2, 
 
 mesecon.rules.buttonlike = {
 	{x = 1,  y =  0, z =  0},
- {x = 1,  y = 1, z = 0},
- {x = 1,  y =-1, z = 0},
- {x = 1,  y =-1, z = 1}, 
- {x = 1,  y =-1, z =-1},
+	{x = 1,  y =  1, z =  0},
+	{x = 1,  y = -1, z =  0},
+	{x = 1,  y = -1, z =  1},
+	{x = 1,  y = -1, z = -1},
 	{x = 2,  y =  0, z =  0},
 }
 
 mesecon.rules.flat = {
 	{x =  1, y = 0, z =  0},
- {x =-1, y = 0, z = 0},
- {x = 0, y = 0, z = 1},
+	{x = -1, y = 0, z =  0},
+	{x =  0, y = 0, z =  1},
 	{x =  0, y = 0, z = -1},
 }
- 
+
 mesecon.rules.alldirs = {
 	{x =  1, y =  0,  z =  0},
- {x=-1, y= 0,  z= 0},
- {x= 0, y= 1,  z= 0},
- {x= 0, y=-1,  z= 0},
- {x= 0, y= 0,  z= 1},
+	{x = -1, y =  0,  z =  0},
+	{x =  0, y =  1,  z =  0},
+	{x =  0, y = -1,  z =  0},
+	{x =  0, y =  0,  z =  1},
 	{x =  0, y =  0,  z = -1},
 }
 
@@ -75,7 +75,7 @@ end
 mesecon.rules.wallmounted_get = function(node)
 	local dir = minetest.wallmounted_to_dir(node.param2)
 	return rules_from_dir(rules_wallmounted, dir)
-	end
+end
 
 mesecon.rules.buttonlike_get = function(node)
 	local dir = minetest.facedir_to_dir(node.param2)

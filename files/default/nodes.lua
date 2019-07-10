@@ -639,32 +639,31 @@ minetest.register_node("default:acacia_sapling", {
 	end,
 })
 
---[[minetest.register_node("default:aspen_tree", {
-	description = "Aspen Tree",
-	tiles = {"default_aspen_tree_top.png", "default_aspen_tree_top.png",
-		"default_aspen_tree.png"},
+minetest.register_node("default:birch_tree", {
+	description = "Birch Tree",
+	tiles = {"default_birch_tree_top.png", "default_birch_tree_top.png",
+		"default_birch_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 3, oddly_breakable_by_hand = 1, flammable = 3},
 	sounds = default.node_sound_wood_defaults(),
-
 	on_place = minetest.rotate_node
 })
 
-minetest.register_node("default:aspen_wood", {
-	description = "Aspen Wood Planks",
+minetest.register_node("default:birch_wood", {
+	description = "Birch Wood Planks",
 	paramtype2 = "facedir",
 	place_param2 = 0,
-	tiles = {"default_aspen_wood.png"},
+	tiles = {"default_birch_wood.png"},
 	is_ground_content = false,
 	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 3, wood = 1},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
-minetest.register_node("default:aspen_leaves", {
-	description = "Aspen Tree Leaves",
+minetest.register_node("default:birch_leaves", {
+	description = "Birch Tree Leaves",
 	drawtype = "allfaces_optional",
-	tiles = {"default_aspen_leaves.png"},
+	tiles = {"default_birch_leaves.png"},
 	waving = 1,
 	paramtype = "light",
 	is_ground_content = false,
@@ -672,21 +671,20 @@ minetest.register_node("default:aspen_leaves", {
 	drop = {
 		max_items = 1,
 		items = {
-			{items = {"default:aspen_sapling"}, rarity = 20},
-			{items = {"default:aspen_leaves"}}
+			{items = {"default:birch_sapling"}, rarity = 20},
+			{items = {"default:birch_leaves"}}
 		}
 	},
 	sounds = default.node_sound_leaves_defaults(),
-
-	after_place_node = default.after_place_leaves,
+	after_place_node = default.after_place_leaves
 })
 
-minetest.register_node("default:aspen_sapling", {
-	description = "Aspen Tree Sapling",
+minetest.register_node("default:birch_sapling", {
+	description = "Birch Tree Sapling",
 	drawtype = "plantlike",
-	tiles = {"default_aspen_sapling.png"},
-	inventory_image = "default_aspen_sapling.png",
-	wield_image = "default_aspen_sapling.png",
+	tiles = {"default_birch_sapling.png"},
+	inventory_image = "default_birch_sapling.png",
+	wield_image = "default_birch_sapling.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -705,7 +703,7 @@ minetest.register_node("default:aspen_sapling", {
 
 	on_place = function(itemstack, placer, pointed_thing)
 		itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
-			"default:aspen_sapling",
+			"default:birch_sapling",
 			-- minp, maxp to be checked, relative to sapling pos
 			-- minp_relative.y = 1 because sapling pos has been checked
 			{x = -2, y = 1, z = -2},
@@ -714,8 +712,8 @@ minetest.register_node("default:aspen_sapling", {
 			4)
 
 		return itemstack
-	end,
-})]]
+	end
+})
 
 --
 -- Ores
@@ -828,7 +826,7 @@ minetest.register_node("default:stone_with_diamond", {
 minetest.register_node("default:diamondblock", {
 	description = "Diamond Block",
 	tiles = {"default_diamond_block.png"},
-   	is_ground_content = false,
+	is_ground_content = false,
 	groups = {cracky = 1, level = 3},
 	sounds = default.node_sound_stone_defaults(),
 })
@@ -1213,14 +1211,7 @@ minetest.register_node("default:lava_source", {
 	liquid_renewable = false,
 	damage_per_second = 4,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1},
-	on_construct = function(pos)
-		if not minetest.is_singleplayer() then
-			if pos.y >= 1 then
-				minetest.env:remove_node(pos)
-			end
-		end
-	end,
+	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1}
 })
 
 minetest.register_node("default:lava_flowing", {
@@ -1266,8 +1257,7 @@ minetest.register_node("default:lava_flowing", {
 	liquid_renewable = false,
 	damage_per_second = 4,
 	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
-	groups = {lava = 3, liquid = 2, igniter = 1,
-		not_in_creative_inventory = 1},
+	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1}
 })
 
 --
@@ -1572,4 +1562,10 @@ default.register_leafdecay({
 	trunks = {"default:acacia_tree"},
 	leaves = {"default:acacia_leaves"},
 	radius = 2,
+})
+
+default.register_leafdecay({
+	trunks = {"default:birch_tree"},
+	leaves = {"default:birch_leaves"},
+	radius = 3,
 })
