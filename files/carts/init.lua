@@ -2,7 +2,7 @@ carts = {}
 carts.modpath = minetest.get_modpath("carts")
 
 -- Maximal speed of the cart in m/s
-carts.speed_max =  12
+carts.speed_max = 12
 -- Set to -1 to disable punching the cart from inside
 carts.punch_speed_max = 8
 -- Maximal distance for the path correction (for dtime peaks)

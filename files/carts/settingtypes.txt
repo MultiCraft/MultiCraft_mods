@@ -1,6 +1,0 @@
-#    Maximal speed of the cart in m/s (min=1, max=100)
-boost_cart.speed_max (Maximal speed) int 10 1 100
-
-#    Maximal speed to which the driving player can accelerate the cart by punching
-#    from inside the cart. -1 will disable this feature. (min=-1, max=100)
-boost_cart.punch_speed_max (Maximal punch speed) int 7 -1 100
