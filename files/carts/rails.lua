@@ -7,7 +7,7 @@ carts:register_rail("carts:rail", {
 		"carts_rail_t_junction.png", "carts_rail_crossing.png"
 	},
 	groups = carts:get_rail_groups(),
-}, {})
+})
 
 minetest.register_craft({
 	output = "carts:rail 16",

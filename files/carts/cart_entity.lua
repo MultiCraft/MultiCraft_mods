@@ -118,6 +118,7 @@ function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities, 
 		self.object:remove()
 		return
 	end
+
 	-- Player punches cart to alter velocity
 	if puncher:get_player_name() == self.driver then
 		if math.abs(vel.x + vel.z) > carts.punch_speed_max then
@@ -217,6 +218,7 @@ local function rail_on_step(self, dtime)
 	end
 
 	local ctrl, player
+	local distance = 1
 
 	-- Get player controls
 	if self.driver then
@@ -231,7 +233,7 @@ local function rail_on_step(self, dtime)
 		-- Detection for "skipping" nodes (perhaps use average dtime?)
 		-- It's sophisticated enough to take the acceleration in account
 		local acc = self.object:get_acceleration()
-		local distance = dtime * (v3_len(vel) + 0.5 * dtime * v3_len(acc))
+		distance = dtime * (v3_len(vel) + 0.5 * dtime * v3_len(acc))
 
 		local new_pos, new_dir = carts:pathfinder(
 			pos, self.old_pos, self.old_dir, distance, ctrl,
@@ -309,14 +311,6 @@ local function rail_on_step(self, dtime)
 			if speed_mod and speed_mod ~= 0 then
 				-- Try to make it similar to the original carts mod
 				acc = speed_mod * 10
-			end
-		end
-		if acc == nil and carts.mtg_compat then
-			-- MTG Cart API adaption
-			local rail_node = minetest.get_node(vector.round(pos))
-			local railparam = carts.railparams[rail_node.name]
-			if railparam and railparam.acceleration then
-				acc = railparam.acceleration
 			end
 		end
 		if acc ~= false then
