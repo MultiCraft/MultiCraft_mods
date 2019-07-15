@@ -99,7 +99,7 @@ minetest.register_node("default:obsidian", {
 	description = "Obsidian",
 	tiles = {"default_obsidian.png"},
 	sounds = default.node_sound_stone_defaults(),
-	groups = {cracky = 4, level = 2, oddly_breakable_by_hand = 3},
+	groups = {cracky = 3, level = 2, oddly_breakable_by_hand = 3},
 })
 
 minetest.register_node("default:bedrock", {

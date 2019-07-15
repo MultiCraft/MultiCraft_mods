@@ -29,10 +29,15 @@ mobs:register_mob("mobs_monster:skeleton", {
 	walk_velocity = 0.5,
 	run_velocity = 0.5,
 	jump = false,
-	drops = {
-		{name = "default:bone", chance = 2},
-		{name = "default:bone", chance = 2}
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			experience.add_orb(math.random(2, 4), pos)
+		end
+		return {
+			{name = "default:bone", chance = 2},
+			{name = "default:bone", chance = 2}
+		}
+	end,
 	after_activate = function(self, staticdata, def, dtime)
 		-- replace skeleton using the old directx model
 		if self.mesh == "mobs_zombie.x" then
