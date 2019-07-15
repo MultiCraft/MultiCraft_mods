@@ -17,13 +17,18 @@ mobs:register_mob("mobs_animal:cow", {
 		attack = "mobs_cow",
 	},
 	run_velocity = 3,
-	drops = {
-		{name = "mobs:meat_raw"},
-		{name = "mobs:meat_raw", chance = 2},
-		{name = "mobs:meat_raw", chance = 2},
-		{name = "mobs:leather", chance = 2},
-		{name = "mobs:leather", chance = 2}
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			experience.add_orb(math.random(3, 5), pos)
+		end
+		return {
+			{name = "mobs:meat_raw"},
+			{name = "mobs:meat_raw", chance = 2},
+			{name = "mobs:meat_raw", chance = 2},
+			{name = "mobs:leather", chance = 2},
+			{name = "mobs:leather", chance = 2}
+		}
+	end,
 	animation = {
 		speed_normal = 15,
 		speed_run = 15,
