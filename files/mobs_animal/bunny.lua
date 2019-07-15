@@ -17,10 +17,15 @@ mobs:register_mob("mobs_animal:bunny", {
 	runaway = true,
 	runaway_from = {"mobs_animal:pumba", "player"},
 	jump_height = 5,
-	drops = {
-		{name = "mobs:rabbit_raw"},
-		{name = "mobs:rabbit_hide", min = 0, max = 1},
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			experience.add_orb(math.random(1, 2), pos)
+		end
+		return {
+			{name = "mobs:rabbit_raw"},
+			{name = "mobs:rabbit_hide", min = 0, max = 1}
+		}
+	end,
 	water_damage = 1,
 	fear_height = 2,
 	animation = {

@@ -22,11 +22,16 @@ for i = 1, #dyes do
 		},
 		runaway = true,
 		jump_height = 3,
-		drops = {
-			{name = "mobs:meat_raw"},
-			{name = "mobs:meat_raw", chance = 2},
-			{name = "wool:" .. name}
-		},
+		drops = function(pos)
+			if rawget(_G, "experience") then
+				experience.add_orb(math.random(2, 4), pos)
+			end
+			return {
+				{name = "mobs:meat_raw"},
+				{name = "mobs:meat_raw", chance = 2},
+				{name = "wool:" .. name}
+			}
+		end,
 		animation = {
 			speed_normal = 15,
 			speed_run = 15,

@@ -250,7 +250,7 @@ function carts:get_rail_groups(additional_groups)
 	-- Get the default rail groups and add more when a table is given
 	local groups = {
 		dig_immediate = 2,
-		attached_node = 1,
+		falling_node = 1,
 		rail = 1,
 		connect_to_raillike = minetest.raillike_group("rail")
 	}

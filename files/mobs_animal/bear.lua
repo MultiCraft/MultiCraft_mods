@@ -32,14 +32,19 @@ mobs:register_mob("mobs_animal:bear", {
 	hp_max = 15,
 	fall_damage = 3,
 	fear_height = 4,
-	drops = {
-		{name = "mobs:meat_raw"},
-		{name = "mobs:meat_raw"},
-		{name = "mobs:meat_raw", chance = 2},
-		{name = "mobs:meat_raw", chance = 2},
-		{name = "mobs:leather"},
-		{name = "mobs:leather", chance = 2}
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			experience.add_orb(math.random(4, 6), pos)
+		end
+		return {
+			{name = "mobs:meat_raw"},
+			{name = "mobs:meat_raw"},
+			{name = "mobs:meat_raw", chance = 2},
+			{name = "mobs:meat_raw", chance = 2},
+			{name = "mobs:leather"},
+			{name = "mobs:leather", chance = 2}
+		}
+	end,
 	replace_what = {
 		"farming:blueberry_4", "farming:raspberry_4"
 	},

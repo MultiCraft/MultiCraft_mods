@@ -13,9 +13,14 @@ mobs:register_mob("mobs_animal:chicken", {
 	},
 	run_velocity = 3,
 	runaway = true,
-	drops = {
-		{name = "mobs:chicken_raw"}
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			experience.add_orb(math.random(2, 3), pos)
+		end
+		return {
+			{name = "mobs:chicken_raw"}
+		}
+	end,
 	fall_damage = 0,
 	fall_speed = -8,
 	fear_height = 5,

@@ -28,11 +28,16 @@ mobs:register_mob("mobs_monster:zombie", {
 	walk_velocity = 0.5,
 	run_velocity = 0.5,
 	jump = false,
-	drops = {
-		{name = "mobs_monster:rotten_flesh"},
-		{name = "mobs_monster:rotten_flesh", chance = 2},
-		{name = "mobs_monster:rotten_flesh", chance = 2}
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			experience.add_orb(math.random(3, 5), pos)
+		end
+		return {
+			{name = "mobs_monster:rotten_flesh"},
+			{name = "mobs_monster:rotten_flesh", chance = 2},
+			{name = "mobs_monster:rotten_flesh", chance = 2}
+		}
+	end,
 	after_activate = function(self, staticdata, def, dtime)
 	-- replace zombies using the old directx model
 		if self.mesh == "mobs_zombie.x" then

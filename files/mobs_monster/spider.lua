@@ -22,10 +22,15 @@ mobs:register_mob("mobs_monster:spider", {
 	run_velocity = 3,
 	view_range = 15,
 	floats = 0,
-	drops = {
-		{name = "farming:string"},
-		{name = "farming:string", chance = 2}
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			experience.add_orb(math.random(2, 4), pos)
+		end
+		return {
+			{name = "farming:string"},
+			{name = "farming:string", chance = 2}
+		}
+	end,
 	water_damage = 5,
 	animation = {
 		speed_normal = 15,
@@ -88,9 +93,14 @@ mobs:register_mob("mobs_monster:small_spider", {
 	run_velocity = 3,
 	view_range = 10,
 	floats = 0,
-	drops = {
-		{name = "farming:string"}
-	},
+	drops = function(pos)
+		if rawget(_G, "experience") then
+			experience.add_orb(math.random(1, 2), pos)
+		end
+		return {
+			{name = "farming:string"}
+		}
+	end,
 	water_damage = 5,
 	animation = {
 		speed_normal = 15,
