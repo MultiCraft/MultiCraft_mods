@@ -415,17 +415,19 @@ minetest.register_on_joinplayer(function(player)
 	end
 end)
 
-playereffects.autosave_timer = 0
-minetest.register_globalstep(function(dtime)
-	playereffects.autosave_timer = playereffects.autosave_timer + dtime
+if playereffects.use_autosave then
+	playereffects.autosave_timer = 0
+	minetest.register_globalstep(function(dtime)
+		playereffects.autosave_timer = playereffects.autosave_timer + dtime
 
-	-- Autosave into file
-	if(playereffects.use_autosave == true and playereffects.autosave_timer >= playereffects.autosave_time) then
-		playereffects.autosave_timer = 0
-		minetest.log("action", "[playereffects] Autosaving mod data to playereffects ...")
-		playereffects.save_to_file()
-	end
-end)
+		-- Autosave into file
+		if playereffects.autosave_timer >= playereffects.autosave_time then
+			playereffects.autosave_timer = 0
+			minetest.log("action", "[playereffects] Autosaving mod data to playereffects ...")
+			playereffects.save_to_file()
+		end
+	end)
+end
 
 minetest.register_playerstep(function(dtime, playernames)
 	-- Update HUDs of all players
