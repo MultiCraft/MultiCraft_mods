@@ -9,6 +9,9 @@ local ppa = minetest.get_modpath("playerphysics")
 
 pep = {}
 
+-- Whether to use save (true, false or minetest.is_singleplayer())
+pep.mole = minetest.is_singleplayer()
+
 function return_empty_bottle(potiondef, user, itemstack)
 	local inventory = user:get_inventory()
 	local empty_vessel = "vessels:glass_bottle"
@@ -70,7 +73,11 @@ end
 pep.moles = {}
 
 function pep.enable_mole_mode(playername)
-	pep.moles[playername] = minetest.is_singleplayer()
+	pep.moles[playername] = true
+end
+
+function pep.disable_mole_mode(playername)
+	pep.moles[playername] = false
 end
 
 function pep.yaw_to_vector(yaw)
@@ -135,7 +142,7 @@ function pep.moledig(playername)
 			minetest.dig_node(pos)
 			local inv = player:get_inventory()
 			local leftovers = {}
-			for i=1,#drops do
+			for i=1, #drops do
 				table.insert(leftovers, inv:add_item("main", drops[i]))
 			end
 			for i=1,#leftovers do
@@ -148,19 +155,20 @@ function pep.moledig(playername)
 	dig(digpos2)
 end
 
-pep.timer = 0
-
-minetest.register_globalstep(function(dtime)
-	pep.timer = pep.timer + dtime
-	if pep.timer > 0.5 then
-		for playername, is_mole in pairs(pep.moles) do
-			if is_mole then
-				pep.moledig(playername)
+if pep.mole then
+	pep.timer = 0
+	minetest.register_globalstep(function(dtime)
+		pep.timer = pep.timer + dtime
+		if pep.timer > 0.5 then
+			for playername, is_mole in pairs(pep.moles) do
+				if is_mole then
+					pep.moledig(playername)
+				end
 			end
+			pep.timer = 0
 		end
-		pep.timer = 0
-	end
-end)
+	end)
+end
 
 local add_physic = function(player, attribute, value)
 	if ppa then
@@ -244,6 +252,9 @@ playereffects.register_effect_type("pepbreath", S("Perfect breath"), "pep_breath
 playereffects.register_effect_type("pepmole", S("Mole mode"), "pep_mole.png", {"autodig"},
 	function(player)
 		pep.enable_mole_mode(player:get_player_name())
+	end,
+	function(effect, player)
+		pep.disable_mole_mode(player:get_player_name())
 	end
 )
 
@@ -335,67 +346,65 @@ pep.register_potion({
 
 --[=[ register crafts ]=]
 --[[ normal potions ]]
-if(minetest.get_modpath("vessels")~=nil) then
-if(minetest.get_modpath("default")~=nil) then
+minetest.register_craft({
+	type = "shapeless",
+	output = "pep:breath",
+	recipe = { "default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus",
+			"default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus", "vessels:glass_bottle" }
+})
+minetest.register_craft({
+	type = "shapeless",
+	output = "pep:speedminus",
+	recipe = { "default:dry_grass_1", "default:ice", "vessels:glass_bottle" }
+})
+if(minetest.get_modpath("flowers") ~= nil) then
 	minetest.register_craft({
-		type = "shapeless",
-		output = "pep:breath",
-		recipe = { "default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus",
-				"default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus", "vessels:glass_bottle" }
+	type = "shapeless",
+		output = "pep:jumpplus",
+		recipe = { "flowers:tulip", "default:grass_1", "mesecons:wire_00000000_off_fragment",
+				"mesecons:wire_00000000_off_fragment", "vessels:glass_bottle" }
 	})
 	minetest.register_craft({
 		type = "shapeless",
-		output = "pep:speedminus",
-		recipe = { "default:dry_grass_1", "default:ice", "vessels:glass_bottle" }
+		output = "pep:poisoner",
+		recipe = { "flowers:mushroom_red", "flowers:mushroom_red", "flowers:mushroom_red", "vessels:glass_bottle" }
 	})
-	if(minetest.get_modpath("flowers") ~= nil) then
-		minetest.register_craft({
-			type = "shapeless",
-			output = "pep:jumpplus",
-			recipe = { "flowers:tulip", "default:grass_1", "mesecons:wire_00000000_off_fragment",
-					"mesecons:wire_00000000_off_fragment", "vessels:glass_bottle" }
-		})
-		minetest.register_craft({
-			type = "shapeless",
-			output = "pep:poisoner",
-			recipe = { "flowers:mushroom_red", "flowers:mushroom_red", "flowers:mushroom_red", "vessels:glass_bottle" }
-		})
 
-		if(minetest.get_modpath("farming") ~= nil) then
-			minetest.register_craft({
-				type = "shapeless",
-				output = "pep:regen",
-				recipe = { "default:cactus", "farming:flour", "flowers:mushroom_brown", "vessels:glass_bottle" }
-			})
-		end
-	end
 	if(minetest.get_modpath("farming") ~= nil) then
 		minetest.register_craft({
 			type = "shapeless",
-			output = "pep:regen2",
-			recipe = { "default:gold_lump", "farming:flour", "pep:regen" }
+			output = "pep:regen",
+			recipe = { "default:cactus", "farming:flour", "flowers:mushroom_brown", "vessels:glass_bottle" }
 		})
+	end
+end
+if(minetest.get_modpath("farming") ~= nil) then
+	minetest.register_craft({
+		type = "shapeless",
+		output = "pep:regen2",
+		recipe = { "default:gold_lump", "farming:flour", "pep:regen" }
+	})
 
-	minetest.register_craft({
-		type = "shapeless",
-		output = "pep:jumpminus",
-		recipe = { "default:leaves", "default:jungleleaves", "default:iron_lump", "flowers:oxeye_daisy", "vessels:glass_bottle" }
-	})
-	minetest.register_craft({
-		type = "shapeless",
-		output = "pep:grav0",
-		recipe = { "mesecons:wire_00000000_off", "vessels:glass_bottle" }
-	})
-	minetest.register_craft({
-		type = "shapeless",
-		output = "pep:mole",
-		recipe = { "default:pick_steel", "default:shovel_steel", "vessels:glass_bottle" },
-	})
-	minetest.register_craft({
-		type = "shapeless",
-		output = "pep:gravreset" ,
-		recipe = { "pep:grav0", "default:iron_lump" }
-	})
+minetest.register_craft({
+	type = "shapeless",
+	output = "pep:jumpminus",
+	recipe = { "default:leaves", "default:jungleleaves", "default:iron_lump", "flowers:oxeye_daisy", "vessels:glass_bottle" }
+})
+minetest.register_craft({
+	type = "shapeless",
+	output = "pep:grav0",
+	recipe = { "mesecons:wire_00000000_off", "vessels:glass_bottle" }
+})
+minetest.register_craft({
+	type = "shapeless",
+	output = "pep:mole",
+	recipe = { "default:pick_steel", "default:shovel_steel", "vessels:glass_bottle" },
+})
+minetest.register_craft({
+	type = "shapeless",
+	output = "pep:gravreset" ,
+	recipe = { "pep:grav0", "default:iron_lump" }
+})
 end
 if(minetest.get_modpath("flowers") ~= nil) then
 	minetest.register_craft({
@@ -403,8 +412,6 @@ if(minetest.get_modpath("flowers") ~= nil) then
 		output = "pep:speedplus",
 		recipe = { "default:pine_sapling", "default:cactus", "flowers:oxeye_daisy", "default:junglegrass", "vessels:glass_bottle" }
 	})
-end
-end
 end
 
 --[[ independent crafts ]]
