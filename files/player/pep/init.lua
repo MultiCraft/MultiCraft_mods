@@ -9,7 +9,7 @@ local ppa = minetest.get_modpath("playerphysics")
 
 pep = {}
 
--- Whether to use save (true, false or minetest.is_singleplayer())
+-- Whether to use mole (true, false or minetest.is_singleplayer())
 pep.mole = minetest.is_singleplayer()
 
 function return_empty_bottle(potiondef, user, itemstack)
