@@ -418,12 +418,15 @@ end
 
 minetest.register_abm({
 	label = "Grass spread",
-	nodenames = {"default:dirt"},
+	nodenames = {
+		"default:dirt",
+		"default:dirt_with_snow"
+	},
 	neighbors = {
 		"air",
 		"group:grass",
 		"group:dry_grass",
-		"default:snow",
+		"default:snow"
 	},
 	interval = 10,
 	chance = 25,
