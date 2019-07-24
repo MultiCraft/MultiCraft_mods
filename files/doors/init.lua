@@ -377,14 +377,62 @@ function doors.register(name, def)
 end
 
 doors.register("door_wood", {
-	tiles = {{ name = "doors_door_wood.png", backface_culling = true }},
-	description = "Wooden Door",
+	tiles = {{name = "doors_door_wood.png", backface_culling = true}},
+	description = "Apple Wood Door",
 	inventory_image = "doors_item_wood.png",
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
 	recipe = {
-		{"group:wood", "group:wood"},
-		{"group:wood", "group:wood"},
-		{"group:wood", "group:wood"},
+		{"default:wood", "default:wood"},
+		{"default:wood", "default:wood"},
+		{"default:wood", "default:wood"}
+	}
+})
+
+doors.register("door_acacia_wood", {
+	tiles = {{name = "doors_door_acacia_wood.png", backface_culling = true}},
+	description = "Pine Wood Door",
+	inventory_image = "doors_item_acacia_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	recipe = {
+		{"default:acacia_wood", "default:acacia_wood"},
+		{"default:acacia_wood", "default:acacia_wood"},
+		{"default:acacia_wood", "default:acacia_wood"}
+	}
+})
+
+doors.register("door_birch_wood", {
+	tiles = {{name = "doors_door_birch_wood.png", backface_culling = true}},
+	description = "Birch Wood Door",
+	inventory_image = "doors_item_birch_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	recipe = {
+		{"default:birch_wood", "default:birch_wood"},
+		{"default:birch_wood", "default:birch_wood"},
+		{"default:birch_wood", "default:birch_wood"}
+	}
+})
+
+doors.register("door_jungle_wood", {
+	tiles = {{name = "doors_door_jungle_wood.png", backface_culling = true}},
+	description = "Jungle Wood Door",
+	inventory_image = "doors_item_jungle_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	recipe = {
+		{"default:junglewood", "default:junglewood"},
+		{"default:junglewood", "default:junglewood"},
+		{"default:junglewood", "default:junglewood"}
+	}
+})
+
+doors.register("door_pine_wood", {
+	tiles = {{name = "doors_door_pine_wood.png", backface_culling = true}},
+	description = "Pine Wood Door",
+	inventory_image = "doors_item_pine_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	recipe = {
+		{"default:pine_wood", "default:pine_wood"},
+		{"default:pine_wood", "default:pine_wood"},
+		{"default:pine_wood", "default:pine_wood"}
 	}
 })
 
@@ -400,27 +448,27 @@ doors.register("door_steel", {
 	recipe = {
 		{"default:steel_ingot", "default:steel_ingot"},
 		{"default:steel_ingot", "default:steel_ingot"},
-		{"default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot"}
 	}
 })
 
 -- Aliases
 
 local doors_aliases = {
-	{"acacia_b_1",		"doors:door_wood_a"},
-	{"acacia_b_2",		"doors:door_wood_b"},
+	{"acacia_b_1",		"doors:door_acacia_wood_a"},
+	{"acacia_b_2",		"doors:door_acacia_wood_b"},
 	{"acacia_t_1",		"air"},
 	{"acacia_t_2",		"air"},
-	{"birch_b_1",		"doors:door_wood_a"},
-	{"birch_b_2",		"doors:door_wood_b"},
+	{"birch_b_1",		"doors:door_birch_wood_a"},
+	{"birch_b_2",		"doors:door_birch_wood_b"},
 	{"birch_t_1",		"air"},
 	{"birch_t_2",		"air"},
-	{"dark_oak_b_1",	"doors:door_wood_a"},
-	{"dark_oak_b_2",	"doors:door_wood_b"},
+	{"dark_oak_b_1",	"doors:door_pine_wood_a"},
+	{"dark_oak_b_2",	"doors:door_pine_wood_b"},
 	{"dark_oak_t_1",	"air"},
 	{"dark_oak_t_2",	"air"},
-	{"jungle_b_1",		"doors:door_wood_a"},
-	{"jungle_b_2",		"doors:door_wood_b"},
+	{"jungle_b_1",		"doors:door_jungle_wood_a"},
+	{"jungle_b_2",		"doors:door_jungle_wood_a"},
 	{"jungle_t_1",		"air"},
 	{"jungle_t_2",		"air"},
 	{"wood_b_1",		"doors:door_wood_a"},
