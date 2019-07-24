@@ -666,6 +666,7 @@ minetest.register_node("default:birch_leaves", {
 	tiles = {"default_birch_leaves.png"},
 	waving = 1,
 	paramtype = "light",
+	walkable = false,
 	is_ground_content = false,
 	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
 	drop = {
