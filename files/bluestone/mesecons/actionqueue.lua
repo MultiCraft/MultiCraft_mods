@@ -71,7 +71,7 @@ minetest.register_globalstep(function (dtime)
 	timer = timer + dtime
 	if timer > delaytime then
 		local actions = mesecon.tablecopy(mesecon.queue.actions)
-		local actions_now={}
+		local actions_now = {}
 
 		mesecon.queue.actions = {}
 
