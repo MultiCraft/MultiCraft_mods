@@ -94,8 +94,9 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 					end
 				end
 
+				local player_name = user:get_player_name()
+
 				if minetest.is_singleplayer() ~= true then
-					local player_name = user:get_player_name()
 					if pointed_thing.under.y > 8 then
 						minetest.chat_send_player(player_name, "Too much liquid is bad, right?", true)
 					return itemstack
@@ -109,7 +110,13 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				end
 
 				minetest.set_node(lpos, {name = source})
-				return ItemStack("bucket:bucket_empty")
+				if not (creative and creative.is_enabled_for
+						and creative.is_enabled_for(player_name)) or
+						not minetest.is_singleplayer() then
+					return ItemStack("bucket:bucket_empty")
+				else
+					return itemstack
+				end
 			end
 		})
 	end
@@ -216,6 +223,17 @@ bucket.register_liquid(
 	"bucket_lava.png",
 	"Lava Bucket"
 )
+
+-- Milk Bucket
+minetest.register_craftitem("bucket:bucket_milk", {
+	description = "Milk Bucket",
+	inventory_image = "bucket_milk.png",
+	stack_max = 1,
+	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
+	groups = {food_milk = 1, flammable = 3, food = 1}
+})
+
+minetest.register_alias("mobs:bucket_milk", "bucket:bucket_milk")
 
 minetest.register_craft({
 	type = "fuel",

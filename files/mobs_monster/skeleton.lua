@@ -24,6 +24,7 @@ mobs:register_mob("mobs_monster:skeleton", {
 	lava_damage = 5,
 	damage = 1,
 	group_attack = true,
+	attack_npcs = true,
 	view_range = 15,
 	walk_chance = 75,
 	walk_velocity = 0.5,
