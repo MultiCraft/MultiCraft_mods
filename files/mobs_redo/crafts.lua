@@ -176,15 +176,6 @@ minetest.register_craft({
 	output = "mobs:chicken_cooked"
 })
 
--- bucket of milk
-minetest.register_craftitem("mobs:bucket_milk", {
-	description = "Milk Bucket",
-	inventory_image = "mobs_bucket_milk.png",
-	stack_max = 1,
-	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
-	groups = {food_milk = 1, flammable = 3, food = 1}
-})
-
 -- cheese wedge
 minetest.register_craftitem("mobs:cheese", {
 	description = "Cheese",
@@ -198,7 +189,7 @@ minetest.register_craft({
 	output = "mobs:cheese",
 	recipe = "mobs:bucket_milk",
 	cooktime = 5,
-	replacements = {{ "mobs:bucket_milk", "bucket:bucket_empty"}}
+	replacements = {{"mobs:bucket_milk", "bucket:bucket_empty"}}
 })
 
 -- cheese block

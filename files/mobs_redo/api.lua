@@ -143,7 +143,7 @@ local mob_class = {
 	attack_monsters = false,
 	attack_animals = false,
 	attack_players = true,
-	attack_npcs = true,
+	attack_npcs = false,
 	facing_fence = false,
 	_cmi_is_mob = true,
 }
