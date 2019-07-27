@@ -137,8 +137,8 @@ minetest.register_node("itemframes:frame",{
 				if name == meta:get_string("owner") or
 				minetest.check_player_privs(name, "protection_bypass") then
 			drop_item(pos, node)
-			local s = itemstack:take_item()
-			meta:set_string("item",s:to_string())
+			local string = itemstack:take_item()
+			meta:set_string("item", string:to_string())
 			update_item(pos, node)
 		end
 		return itemstack
