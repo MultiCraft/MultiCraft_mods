@@ -1,6 +1,6 @@
 local update_time = 1
+local show_time = 2
 local has_armor = minetest.get_modpath("3d_armor")
-local time = 0
 
 local wield_tiles = {}
 local wield_cubes = {}
@@ -22,6 +22,28 @@ local function init_wield_items()
 			end
 		end
 	end
+end
+
+hud.register("itemname", {
+	hud_elem_type = "text",
+	position      = {x = 0.5, y =  1},
+	alignment     = {x = 0,   y = -10},
+	offset        = {x = 0,   y = -25},
+	number        = 0xFFFFFF,
+	text          = ""
+})
+
+local function update_statbar_text(player, stack, item)
+	local meta = stack:get_meta()
+	local meta_desc = meta:get_string("description")
+	meta_desc = meta_desc:gsub("\27", ""):gsub("%(c@#%w%w%w%w%w%w%)", "")
+	local def = core.registered_items[item]
+	local description = meta_desc ~= "" and meta_desc or
+		(def and (def.description:match("(.-)\n") or def.description) or "")
+	hud.change_item(player, "itemname", {text = description})
+	minetest.after(show_time, function()
+		hud.change_item(player, "itemname", {text = ""})
+	end)
 end
 
 local function update_player_visuals(player, item)
@@ -61,34 +83,35 @@ local function update_wielded_item(dtime, name)
 	if wield_items[name] and wield_items[name] == item then
 		return
 	else
-		update_player_visuals(player, item)
+		update_statbar_text(player, stack, item)
+		if PLATFORM ~= "Android" or PLATFORM ~= "iOS" then
+			update_player_visuals(player, item)
+		end
 	end
 	wield_items[name] = item
 	wield_cycle[name] = 0
 end
 
+
+minetest.register_on_joinplayer(function(player)
+	local name = player:get_player_name()
+	if name then
+		wield_items[name] = ""
+		wield_cycle[name] = 0
+	end
+end)
+minetest.register_on_leaveplayer(function(player)
+	local name = player:get_player_name()
+	if name then
+		wield_items[name] = ""
+		wield_cycle[name] = 0
+	end
+end)
+minetest.register_playerstep(function(dtime, playernames)
+	for _, name in pairs(playernames) do
+		update_wielded_item(dtime, name)
+	end
+end, minetest.is_singleplayer()) -- Force step in singlplayer mode only
 if PLATFORM ~= "Android" or PLATFORM ~= "iOS" then
-	minetest.register_on_joinplayer(function(player)
-		local name = player:get_player_name()
-		if name then
-			wield_items[name] = ""
-			wield_cycle[name] = 0
-			minetest.after(0, function()
-				update_wielded_item(0, name)
-			end)
-		end
-	end)
-	minetest.register_on_leaveplayer(function(player)
-		local name = player:get_player_name()
-		if name then
-			wield_items[name] = ""
-			wield_cycle[name] = 0
-		end
-	end)
-	minetest.register_playerstep(function(dtime, playernames)
-		for _, name in pairs(playernames) do
-			update_wielded_item(dtime, name)
-		end
-	end)
 	minetest.after(0, init_wield_items)
 end
