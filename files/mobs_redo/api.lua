@@ -9,9 +9,8 @@ mobs = {
 }
 
 -- creative check
-local creative_cache = minetest.settings:get_bool("creative_mode")
 function mobs.is_creative(name)
-	return creative_cache or minetest.check_player_privs(name, {creative = true})
+	return creative or minetest.check_player_privs(name, {creative = true})
 end
 
 -- localize math functions
