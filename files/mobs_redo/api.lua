@@ -8,6 +8,9 @@ mobs = {
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
 
+-- Intllib
+local S = intllib.make_gettext_pair()
+
 -- creative check
 function mobs.is_creative(name)
 	return creative or minetest.check_player_privs(name, {creative = true})
@@ -3793,7 +3796,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 	-- register new spawn egg containing mob information
 	minetest.register_craftitem(mob .. "_set", {
 
-		description = desc.." (Tamed)",
+		description = Sl(desc) .. " " .. Sl("(Tamed)"),
 		inventory_image = invimg,
 		groups = {spawn_egg = 2, not_in_creative_inventory = 1},
 		stack_max = 1,
@@ -3820,7 +3823,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 
 	-- register old stackable mob egg
 	minetest.register_craftitem(mob, {
-		description = desc,
+		description = Sl(desc),
 		inventory_image = invimg,
 		groups = grp,
 		stack_max = 1,

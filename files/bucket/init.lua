@@ -13,6 +13,9 @@ minetest.register_craft({
 bucket = {}
 bucket.liquids = {}
 
+-- Intllib
+local S = intllib.make_gettext_pair()
+
 local function check_protection(pos, name, text)
 	if minetest.is_protected(pos, name) then
 		minetest.log("action", (name ~= "" and name or "A mod")
@@ -98,7 +101,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 
 				if minetest.is_singleplayer() ~= true then
 					if pointed_thing.under.y > 8 then
-						minetest.chat_send_player(player_name, "Too much liquid is bad, right?", true)
+						minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"), true)
 					return itemstack
 					end
 				end

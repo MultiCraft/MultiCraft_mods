@@ -7,6 +7,9 @@ end
 
 -- Helper functions
 
+-- Intllib
+local S = intllib.make_gettext_pair()
+
 local function get_look_yaw(pos)
 	local rotation = minetest.get_node(pos).param2
 	if rotation > 3 then
@@ -150,7 +153,7 @@ function beds.on_rightclick(pos, player)
 		if beds.player[name] then
 			lay_down(player, nil, nil, false)
 		end
-		minetest.chat_send_player(name, "You can only sleep at night.")
+		minetest.chat_send_player(name, S("You can only sleep at night."))
 		return
 	end
 

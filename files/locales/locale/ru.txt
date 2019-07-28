@@ -1,0 +1,331 @@
+#3d_armor
+
+
+
+#beds
+Bed = Кровать
+
+
+#bluestone
+Bluestone Torch = Синий Факел
+Stone Button = Каменная Кнопка
+Wood Button = Деревянная Кнопка
+Delayer = Делайер
+Lamp = Лампа
+Glue = Клей
+Bluestone Block = Блюстоун Блок
+Noteblock = Звуковой Блок
+Piston = Поршень
+Sticky Piston = Липкий Поршень
+Solar Panel = Солнечная Панель
+Lever = Рычаг
+Bluestone = Блюстоун
+
+
+#boats
+Boat = Лодка
+
+
+#bonemeal
+Bone Meal = Костная Мука
+
+
+#bucket
+Empty Bucket = Пустое Ведро
+Water Bucket = Ведро Воды
+River Water Bucket = Ведро Речной Воды
+Lava Bucket = Ведро Лавы
+Milk Bucket = Ведро Молока
+
+
+#carts
+Cart (Sneak+Click to pick up) = Вагонетка (Приседание+Нажатие чтобы взять)
+Rail = Рельсы
+Powered Rail = Электрические Рельсы
+Brake Rail = Рельсы Торможеня
+Start-stop rail = Старт-стоп Рельсы
+Detector rail = Рельсы с Датчиком
+
+
+#colored
+Hardened Clay = Обожжённая Глина
+
+
+#creative || inventory
+Set Home = Установить Дом
+Go Home = Идти Домой
+
+
+#default
+Chest = Сундук
+Furnace = Печка
+Torch = Факел
+
+Stick = Палка
+Paper = Бумага
+Book = Книга
+Book With Text = Книга с Текстом
+Coal Lump = Уголь
+Charcoal Lump = Древесный Уголь
+Diamond = Алмаз
+Clay Lump = Кусок Глины
+Steel Ingot = Стальной Слиток
+Gold Ingot = Золотой Слиток
+Emerald = Изумруд
+Clay Brick = Глинянный Кирпич
+Gunpowder = Порох
+Bone = Кость
+Glowstone Dust = Светящаяся Пыль
+Raw Fish = Сырая Рыба
+Cooked Fish = Приготовленная Рыба
+Sugar = Сахар
+Quartz Crystal = Кварцевый Кристалл
+Flint = Кремень
+Snowball = Снежка
+
+Stone = Камень
+Cobblestone = Булыжник
+Stone Brick = Каменный Кирпич
+Mossy Cobblestone = Мшистый булыжник
+Stone Brick Carved = Нарезной Каменный Кирпич
+Stone Brick Cracked = Треснувший Каменный Кирпич
+Mossy Stone Brick = Мшистый Каменный Кирпич
+Sandstone = Песчанник
+Smooth Sandstone = Гладкий Песчанник
+Red Sandstone = Красный Песчанник
+Red Sandstone Smooth = Красный Гладкий Песчанник
+Red Sandstone Carved = Красный Нарезной Песчанник
+Obsidian = Обсидиан
+Bedrock = Коренная Порода
+Dirt = Земля
+Dirt with Grass = Земля с Травой
+Dirt with Grass and Footsteps = Земля с Травой и Шагами
+Dirt with Dry Grass = Земля с Сухой Травой
+Dirt with Snow = Земля со Снегом
+Sand = Песок
+Gravel = Гравий
+Red Sand = Красный Песок
+Clay = Глина
+Hardened Clay = Твёрдая Глина
+Snow = Снег
+Snow Block = Снежный Блок
+Ice = Лёд
+Packed Ice = Упакованный Лёд
+Apple Tree = Яблочное Дерево
+Apple Wood Planks = Доски Яблока
+Apple Tree Sapling = Деревце Яблони
+Apple Tree Leaves = Яблочные Листья
+Apple = Яблоко
+Golden Apple = Золотое Яблоко
+Jungle Tree = Джунгли-дерево
+Jungle Wood Planks = Доски из Джунгли-дерева
+Jungle Tree Leaves = Листья Джунгли-дерева
+Jungle Tree Sapling = Деревце Джунгли-дерева
+Pine Tree = Дерево Сосны
+Pine Wood Planks = Доски из Сосны
+Pine Needles = Сосновые Иголки
+Pine Tree Sapling = Деревце Сосны
+Acacia Tree = Дерево Акации
+Acacia Wood Planks = Доски из Акации
+Acacia Tree Leaves = Листья Акации
+Acacia Tree Sapling = Деревце Акации
+Birch Tree = Дерево Берёзы
+Birch Wood Planks = Доски из Берёзы
+Birch Tree Leaves = Листья Берёзы
+Birch Tree Sapling = Деревце Берёзы
+Coal Ore = Угольная Руда
+Coal Block = Блок Угля
+Iron Ore = Железная Руда
+Steel Block = Стальной Блок
+Lapis Lazuli Block = Блок Лазурита
+Bluestone Ore = Блюстоун Руда
+Lapis Lazuli Ore = Лазуритовая Руда
+Gold Ore = Золотая Руда
+Gold Block = Золотой Блок
+Emerald Ore = Изумрудная Руда
+Emerald Block = Изумрудный Блок
+Diamonds in Stone = Алмаз в Камне
+Diamond Block = Алмазный Блок
+Cactus = Кактус
+Sugarcane = Сахарный Тростник
+Dry Shrub = Сухой Куст
+Jungle Grass = Джунгли-трава
+Grass = Трава
+Dry Grass = Сухая Трава
+Bookshelf = Книжный Шкаф
+Wooden Ladder = Деревянная Лестница
+Apple Wood Fence = Яблочный Деревянный Забор
+Vines = Лоза
+Glass = Стекло
+Brick Block = Кирпичный Блок
+Glowstone = Светящийся Камень
+Slime Block = Блок Слизи
+Quartz Ore = Кварцевая руда
+Quartz Block = Кварцевый Блок
+Chiseled Quartz = Высеченный Кварц
+Quartz Pillar = Кварцевый Столб
+
+Wooden Pickaxe = Деревянная Кирка
+Stone Pickaxe = Каменный Кирка
+Steel Pickaxe = Стальная Кирка
+Gold Pickaxe = Золотая Кирка
+Diamond Pickaxe = Алмазная Кирка
+Wooden Shovel = Деревянная Лопата
+Stone Shovel = Каменный Лопата
+Steel Shovel = Стальная Лопата
+Gold Shovel = Золотая Лопата
+Diamond Shovel = Алмазная Лопата
+Wooden Axe = Деревянный Топор
+Stone Axe = Каменный Топор
+Steel Axe = Стальной Топор
+Gold Axe = Золотой Топор
+Diamond Axe = Алмазный Топор
+Wooden Sword = Деревянный Меч
+Stone Sword = Каменный Меч
+Steel Sword = Стальной Меч
+Gold Sword = Золотой Меч
+Diamond Sword = Алмазный Меч
+Fishing Pole = Удочка
+
+
+#doors
+Apple Wood Door = Дверь из Дерева Яблока
+Acacia Wood Door = Дверь из Дерева Акации
+Birch Wood Door = Дверь из Дерева Берёзы
+Jungle Wood Door = Дверь из Джунгли-Дерева
+Pine Wood Door = Дверь из Дерева Сосны
+Steel Door = Стальная Дверь
+Wooden Trapdoor = Деревянный Люк
+Steel Trapdoor = Стальной Люк
+Owned by = Владелец
+
+
+#farming
+Wheat Seed = Семена Пшеницы
+Flour = Мука
+Bread = Хлеб
+String = Нить
+Straw = Солома
+Wooden Hoe = Деревянная Мотыга
+Stone Hoe = Каменная Мотыга
+Steel Hoe = Стальная Мотыга
+Gold Hoe = Золотая Мотыга
+Diamond Hoe = Алмазная Мотыга
+
+
+#fire
+Flint and Steel = Огниво
+
+
+#flowers
+
+
+#flowerpot
+Flowerpot = Цветочный Горшок
+
+
+#furniture
+Chair = Стул
+Table = Стол
+Small Table = Маленький Стол
+Tiny Table = Столик
+Bench = Скамейка
+Bedside Table = Прикроватный Стол
+End Table = Тумбочка
+Coffee Table = Кофейный Столик
+
+
+#itemframe
+Item frame = Рамка
+
+
+#mobs_redo
+(Tamed) = (Прирученн.)
+Name Tag = Именная Метка
+Leather = Кожа
+Raw Meat = Сырое Мясо
+Cooked Meat = Приготовленное Мясо
+Raw Pork = Сырая Свинина
+Cooked Pork = Приготовленная Свинина
+Raw Rabbit = Сырая Крольчатина
+Cooked Rabbit = Приготовленный Кролик
+Rabbit Hide = Кролик
+Chicken Egg = Куриное Яйцо
+Fried Egg = Жаренное Яйцо
+Raw Chicken = Сырая Курица
+Cooked Chicken = Приготовленная Курица
+Cheese = Сыр
+Cheese Block = Блок Сыра
+Rotten Flesh = Гнилая Плоть
+Steel Shears = Стальные Ножницы
+Cobweb = Паутина
+Mob Protection Rune = Защита Моба
+
+Bear Egg = Яйцо Спавна Медведя
+Bunny Egg = Яйцо Спавна Кролика
+Chicken Egg = Яйцо Спавна Курицы
+Cow Egg = Яйцо Спавна Коровы
+Wolf's Egg = Яйцо Спавна Волка
+Dog Egg = Яйцо Спавна Собаки
+Cat's Egg = Яйцо Спавна Кошки
+Pig Egg = Яйцо Спавна Свиньи
+Sheep Egg = Яйцо Спавна Овцы
+Skeleton Egg = Яйцо Спавна Скелета
+Spider Egg = Яйцо Спавна Паука
+Small Spider Egg = Яйцо Спавна Маленького Паука
+Zombie Head = Голова Зомби
+
+#vessels
+Potion Shelf = Шкаф с Зельями
+Empty Glass Bottle = Пустой Стеклянный Бутыль
+
+
+#signs
+Sign = Табличка
+
+
+#sponge
+Sponge = Губка
+Wet Sponge = Влажная Губка
+
+
+#throwing
+Bow = Лук
+Bow with arrow = Лук со Стрелой
+Arrow = Стрела
+
+
+#walls
+Cobblestone Wall = Стена из Булыжника
+Mossy Cobblestone Wall = Стена из Мшистого Булыжника
+
+
+#watch
+Watch = Часы
+
+
+#wool
+Wool = Шерсть
+
+
+#workbench
+Workbench = Верстак
+Hammer = Молот
+
+Micropanel = (Половина Мини-панели)
+Microslab = (Мини-панель)
+Thinstair = (Тонкая Лестница)
+Cube = (Кубик)
+Panel = (Половина Панели)
+Slab = (Панель)
+Doublepanel = (Двойная Панель)
+Halfstair = (Половина Ступенек)
+Outerstair = (Внешние Ступеньки)
+Stair = (Ступеньки)
+Slope = (Уклон)
+Innerstair = (Внутренние Ступеньки)
+
+
+#xpanes
+Glass Pane = Стеклянная Панель
+Steel Bars = Стальная Решётка
