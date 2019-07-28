@@ -45,6 +45,8 @@ playereffects.use_autosave = false
 -- The time interval between autosaves, in seconds (only used when use_autosave is true)
 playereffects.autosave_time = 10
 
+-- Intllib
+local S = intllib.make_gettext_pair()
 
 --[=[ Load inactive_effects and last_effect_id from playereffects, if this file exists  ]=]
 if playereffects.save then
@@ -452,10 +454,10 @@ function playereffects.hud_update(player)
 					local repeat_interval = playereffects.effect_types[effect.effect_type_id].repeat_interval
 					if(repeat_interval ~= nil) then
 						local repeat_interval_time_left = os.difftime(effect.repeat_interval_start_time + effect.repeat_interval_time_left, now)
-						player:hud_change(hudinfo.text_id, "text", description .. " ("..tostring(effect.time_left).."/"..tostring(repeat_interval_time_left) .. "s)")
+						player:hud_change(hudinfo.text_id, "text", description .. " ("..tostring(effect.time_left).."/"..tostring(repeat_interval_time_left) .. " " .. S("s") .. ")")
 					else
 						local time_left = os.difftime(effect.start_time + effect.time_left, now)
-						player:hud_change(hudinfo.text_id, "text", description .. " ("..tostring(time_left).." s)")
+						player:hud_change(hudinfo.text_id, "text", description .. " ("..tostring(time_left).. " " .. S("s") .. ")")
 					end
 				end
 			end
@@ -495,9 +497,9 @@ function playereffects.hud_effect(effect_type_id, player, pos, time_left, repeat
 		local description = playereffects.effect_types[effect_type_id].description
 		local text
 		if(repeat_interval_time_left ~= nil) then
-			text =  description .. " ("..tostring(time_left).."/"..tostring(repeat_interval_time_left) .. "s )"
+			text =  description .. " ("..tostring(time_left).."/"..tostring(repeat_interval_time_left) .. " " .. S("s") .. ")"
 		else
-			text = description .. " ("..tostring(time_left).." s)"
+			text = description .. " ("..tostring(time_left).." " .. S("s") .. ")"
 		end
 		text_id = player:hud_add({
 			hud_elem_type = "text",
@@ -519,7 +521,7 @@ function playereffects.hud_effect(effect_type_id, player, pos, time_left, repeat
 				text = playereffects.effect_types[effect_type_id].icon,
 				alignment = { x = -1, y=0 },
 				direction = 0,
-				offset = { x = -200, y = pos*30 },
+				offset = { x = -230, y = pos*30 },
 			})
 		end
 	else

@@ -1,0 +1,5 @@
+Teleported to home! = Телепортировано домой!
+Set a home using /sethome = Установите дом используя /sethome
+Home set! = Дом установлен!
+Player not found! = Игрок не найден!
+Home is not set! = Дом не установлен!

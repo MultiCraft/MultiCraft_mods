@@ -1,0 +1,2 @@
+Leave Bed = Покинуть Кровать
+You can only sleep at night. = Вы можете спать только ночью.
