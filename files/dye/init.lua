@@ -48,7 +48,7 @@ minetest.register_craft({
 	output = "dye:black 4",
 	recipe = {
 		{"group:coal"}
-	},
+	}
 })
 
 -- Mix recipes
@@ -79,28 +79,28 @@ local dye_recipes = {
 	-- mixes with white
 	{"white", "red", "pink"},
 	{"white", "dark_grey", "grey"},
-	{"white", "dark_green", "green"},
+	{"white", "dark_green", "green"}
 }
 
 for _, mix in pairs(dye_recipes) do
 	minetest.register_craft({
 		type = "shapeless",
-		output = 'dye:' .. mix[3] .. ' 2',
-		recipe = {'dye:' .. mix[1], 'dye:' .. mix[2]},
+		output = "dye:" .. mix[3] .. " 2",
+		recipe = {"dye:" .. mix[1], "dye:" .. mix[2]}
 	})
 end
 
 minetest.register_craft({
 	output = "dye:white 3",
 	recipe = {
-		{"default:bone"},
+		{"default:bone"}
 	}
 })
 
 minetest.register_craft({
 	output = "dye:blue 9",
 	recipe = {
-		{"default:lapisblock"},
+		{"default:lapisblock"}
 	}
 })
 
@@ -109,6 +109,6 @@ minetest.register_craft({
 	recipe = {
 		{"dye:blue", "dye:blue", "dye:blue"},
 		{"dye:blue", "dye:blue", "dye:blue"},
-		{"dye:blue", "dye:blue", "dye:blue"},
+		{"dye:blue", "dye:blue", "dye:blue"}
 	}
 })
