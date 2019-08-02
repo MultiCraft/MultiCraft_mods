@@ -868,21 +868,6 @@ minetest.register_node("default:cactus", {
 	},
 })
 
-if not minetest.settings:get_bool("creative_mode") then
-	minetest.register_abm({
-		label = "Cactus damage",
-		nodenames = {"default:cactus"},
-		interval = 1,
-		chance = 1,
-		action = function(pos)
-			local players = minetest.get_objects_inside_radius(pos, 1)
-			for i, player in ipairs(players) do
-				player:set_hp(player:get_hp() - 2)
-			end
-		end,
-	})
-end
-
 minetest.register_node("default:sugarcane", {
 	description = "Sugarcane",
 	drawtype = "plantlike",
@@ -1481,6 +1466,7 @@ minetest.register_node("default:slimeblock", {
 	description = "Slime Block",
 	drawtype = "nodebox",
 	tiles = {"default_slimeblock.png"},
+	walkable = false,
 	paramtype = "light",
 	node_box = {
 		type = "fixed",
@@ -1491,7 +1477,7 @@ minetest.register_node("default:slimeblock", {
 	},
 	use_texture_alpha = true,
 	sunlight_propagates = true,
-	groups = {oddly_breakable_by_hand = 3, disable_jump = 1, fall_damage_add_percent = -100, speed = -30},
+	groups = {oddly_breakable_by_hand = 3, disable_jump = 1, fall_damage_add_percent = -100, speed = -60},
 })
 
 
