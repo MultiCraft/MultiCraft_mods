@@ -9,9 +9,9 @@ minetest.register_node("mesecons_solarpanel:solar_panel_on", {
 	is_ground_content = false,
 	node_box = {
 		type = "wallmounted",
-		wall_bottom = { -8/16, -8/16, -8/16,  8/16, -2/16, 8/16 },
+		wall_bottom	= { -8/16, -8/16, -8/16,  8/16, -2/16, 8/16 },
 		wall_top	= { -8/16,  2/16, -8/16,  8/16,  8/16, 8/16 },
-		wall_side   = { -2/16, -8/16, -8/16, -8/16,  8/16, 8/16 },
+		wall_side	= { -2/16, -8/16, -8/16, -8/16,  8/16, 8/16 }
 	},
 	drop = "mesecons_solarpanel:solar_panel_off",
 	groups = {dig_immediate = 3, attached_node = 1, not_in_creative_inventory = 1},
@@ -20,11 +20,12 @@ minetest.register_node("mesecons_solarpanel:solar_panel_on", {
 		state = mesecon.state.on,
 		rules = mesecon.rules.wallmounted_get,
 	}},
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 
 -- Solar Panel
 minetest.register_node("mesecons_solarpanel:solar_panel_off", {
+	description = "Solar Panel",
 	drawtype = "nodebox",
 	tiles = { "jeija_solar_panel.png" },
 	inventory_image = "jeija_solar_panel.png",
@@ -34,26 +35,25 @@ minetest.register_node("mesecons_solarpanel:solar_panel_off", {
 	is_ground_content = false,
 	node_box = {
 		type = "wallmounted",
-		wall_bottom = { -8/16, -8/16, -8/16,  8/16, -2/16, 8/16 },
+		wall_bottom	= { -8/16, -8/16, -8/16,  8/16, -2/16, 8/16 },
 		wall_top	= { -8/16,  2/16, -8/16,  8/16,  8/16, 8/16 },
-		wall_side   = { -2/16, -8/16, -8/16, -8/16,  8/16, 8/16 },
+		wall_side	= { -2/16, -8/16, -8/16, -8/16,  8/16, 8/16 }
 	},
 	groups = {dig_immediate = 3, attached_node = 1},
-		description="Solar Panel",
 	sounds = default.node_sound_glass_defaults(),
 	mesecons = {receptor = {
 		state = mesecon.state.off,
-		rules = mesecon.rules.wallmounted_get,
+		rules = mesecon.rules.wallmounted_get
 	}},
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 
 minetest.register_craft({
-	output = "mesecons_solarpanel:solar_panel_off 1",
+	output = "mesecons_solarpanel:solar_panel_off",
 	recipe = {
-		{'default:glass', 'default:glass', 'default:glass'},
-		{'default:glass', 'default:glass', 'default:glass'},
-		{'default:restone_dust', 'default:restone_dust', 'default:restone_dust'},
+		{"default:glass", "default:glass", "default:glass"},
+		{"default:glass", "default:glass", "default:glass"},
+		{"default:restone_dust", "default:restone_dust", "default:restone_dust"}
 	}
 })
 
@@ -69,7 +69,7 @@ minetest.register_abm(
 			minetest.swap_node(pos, node)
 			mesecon.receptor_on(pos, mesecon.rules.wallmounted_get(node))
 		end
-	end,
+	end
 })
 
 minetest.register_abm(
@@ -84,7 +84,7 @@ minetest.register_abm(
 			minetest.swap_node(pos, node)
 			mesecon.receptor_off(pos, mesecon.rules.wallmounted_get(node))
 		end
-	end,
+	end
 })
 
 -- Solar panel

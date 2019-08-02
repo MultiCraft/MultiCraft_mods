@@ -45,7 +45,7 @@ minetest.register_node("fire:basic_flame", {
 	sunlight_propagates = true,
 	floodable = true,
 	damage_per_second = 4,
-	groups = {igniter = 2, dig_immediate = 3, not_in_creative_inventory = 1},
+	groups = {igniter = 2, dig_immediate = 3, fire = 1, not_in_creative_inventory = 1},
 	drop = "",
 
 	on_timer = function(pos)
@@ -70,7 +70,6 @@ minetest.register_node("fire:basic_flame", {
 })
 
 minetest.register_node("fire:permanent_flame", {
-	description = "Permanent Flame",
 	drawtype = "firelike",
 	tiles = {
 		{
@@ -91,22 +90,21 @@ minetest.register_node("fire:permanent_flame", {
 	sunlight_propagates = true,
 	floodable = true,
 	damage_per_second = 4,
-	groups = {igniter = 2, dig_immediate = 3, not_in_creative_inventory = 1},
+	groups = {igniter = 2, dig_immediate = 3, fire = 1, not_in_creative_inventory = 1},
 	drop = "",
 
 	on_flood = flood_flame
 })
 
+-- Flint and Steel
 
--- Flint and steel
+minetest.register_tool("fire:flint_and_steel", {
+	description = "Flint and Steel",
+	inventory_image = "fire_flint_steel.png",
+	sound = {breaks = "default_tool_breaks"},
 
-if fire_enabled then
-	minetest.register_tool("fire:flint_and_steel", {
-		description = "Flint and Steel",
-		inventory_image = "fire_flint_steel.png",
-		sound = {breaks = "default_tool_breaks"},
-
-		on_use = function(itemstack, user, pointed_thing)
+	on_use = function(itemstack, user, pointed_thing)
+		if fire_enabled then
 			local sound_pos = pointed_thing.above or user:get_pos()
 			minetest.sound_play("fire_flint_and_steel",
 				{pos = sound_pos, gain = 0.5, max_hear_distance = 8})
@@ -140,15 +138,15 @@ if fire_enabled then
 				return itemstack
 			end
 		end
-	})
+	end
+})
 
-	minetest.register_craft({
-		output = "fire:flint_and_steel",
-		recipe = {
-			{"default:flint", "default:steel_ingot"}
-		}
-	})
-end
+minetest.register_craft({
+	output = "fire:flint_and_steel",
+	recipe = {
+		{"default:flint", "default:steel_ingot"}
+	}
+})
 
 -- Override coalblock to enable permanent flame above
 -- Coalblock is non-flammable to avoid unwanted basic_flame nodes
@@ -285,7 +283,6 @@ end
 --
 
 if fire_enabled then
-
 	-- Ignite neighboring nodes, add basic flames
 	minetest.register_abm({
 		label = "Ignite flame",

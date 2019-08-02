@@ -81,7 +81,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:chicken", "Chicken egg", "mobs_chicken_egg_inv.png", 1)
+mobs:register_egg("mobs_animal:chicken", "Chicken Egg", "mobs_chicken_egg_inv.png", 1)
 
 -- egg throwing
 

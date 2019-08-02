@@ -74,26 +74,26 @@ local transform = {
 		{v = "_a", param2 = 3},
 		{v = "_a", param2 = 0},
 		{v = "_a", param2 = 1},
-		{v = "_a", param2 = 2},
+		{v = "_a", param2 = 2}
 	},
 	{
 		{v = "_b", param2 = 1},
 		{v = "_b", param2 = 2},
 		{v = "_b", param2 = 3},
-		{v = "_b", param2 = 0},
+		{v = "_b", param2 = 0}
 	},
 	{
 		{v = "_b", param2 = 1},
 		{v = "_b", param2 = 2},
 		{v = "_b", param2 = 3},
-		{v = "_b", param2 = 0},
+		{v = "_b", param2 = 0}
 	},
 	{
 		{v = "_a", param2 = 3},
 		{v = "_a", param2 = 0},
 		{v = "_a", param2 = 1},
-		{v = "_a", param2 = 2},
-	},
+		{v = "_a", param2 = 2}
+	}
 }
 
 function doors.door_toggle(pos, node, clicker)
@@ -258,7 +258,7 @@ function doors.register(name, def)
 
 			if def.protected then
 				meta:set_string("owner", pn)
-				meta:set_string("infotext", "Owned by " .. pn)
+				meta:set_string("infotext", Sl("Owned by") .. " " .. pn)
 			end
 
 			if not (creative and creative.is_enabled_for and creative.is_enabled_for(pn)) then
@@ -390,7 +390,7 @@ doors.register("door_wood", {
 
 doors.register("door_acacia_wood", {
 	tiles = {{name = "doors_door_acacia_wood.png", backface_culling = true}},
-	description = "Pine Wood Door",
+	description = "Acacia Wood Door",
 	inventory_image = "doors_item_acacia_wood.png",
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
 	recipe = {
@@ -543,7 +543,7 @@ function doors.register_trapdoor(name, def)
 			local pn = placer:get_player_name()
 			local meta = minetest.get_meta(pos)
 			meta:set_string("owner", pn)
-			meta:set_string("infotext", "Owned by "..pn)
+			meta:set_string("infotext", Sl("Owned by") .. " " .. pn)
 
 			return (creative and creative.is_enabled_for and creative.is_enabled_for(pn))
 		end
@@ -607,7 +607,7 @@ function doors.register_trapdoor(name, def)
 	}
 	def_closed.tiles = {
 		def.tile_front,
-		def.tile_front .. '^[transformFY',
+		def.tile_front .. "^[transformFY",
 		def.tile_side,
 		def.tile_side,
 		def.tile_side,
@@ -624,11 +624,11 @@ function doors.register_trapdoor(name, def)
 	}
 	def_opened.tiles = {
 		def.tile_side,
-		def.tile_side .. '^[transform2',
-		def.tile_side .. '^[transform3',
-		def.tile_side .. '^[transform1',
-		def.tile_front .. '^[transform46',
-		def.tile_front .. '^[transform6'
+		def.tile_side .. "^[transform2",
+		def.tile_side .. "^[transform3",
+		def.tile_side .. "^[transform1",
+		def.tile_front .. "^[transform46",
+		def.tile_front .. "^[transform6"
 	}
 
 	def_opened.drop = name_closed
@@ -664,19 +664,18 @@ doors.register_trapdoor("doors:trapdoor_steel", {
 })
 
 minetest.register_craft({
-	output = 'doors:trapdoor 2',
+	output = "doors:trapdoor 2",
 	recipe = {
-		{'group:wood', 'group:wood', 'group:wood'},
-		{'group:wood', 'group:wood', 'group:wood'},
-		{'', '', ''},
+		{"group:wood", "group:wood", "group:wood"},
+		{"group:wood", "group:wood", "group:wood"}
 	}
 })
 
 minetest.register_craft({
-	output = 'doors:trapdoor_steel',
+	output = "doors:trapdoor_steel",
 	recipe = {
-		{'default:steel_ingot', 'default:steel_ingot'},
-		{'default:steel_ingot', 'default:steel_ingot'},
+		{"default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot"},
 	}
 })
 
@@ -752,7 +751,7 @@ function doors.register_fencegate(name, def)
 			{-6/16, 1/2-1/16, 1/16, -6/16, 1/2+8/16, 1/16},		-- Top block (cross) -x 1 side
 			{-6/16, 1/2-1/16, -1/16, -6/16, 1/2+8/16, -1/16},	-- Top block (cross) -x 2 side
 			{5/16, 1/2-1/16, 1/16, 5/16, 1/2+8/16, 1/16},		-- Top block (cross) x 1 side
-			{5/16, 1/2-1/16, -1/16, 5/16, 1/2+8/16, -1/16},		-- Top block (cross) x 2 side
+			{5/16, 1/2-1/16, -1/16, 5/16, 1/2+8/16, -1/16}		-- Top block (cross) x 2 side
 		}
 	}
 	fence_closed.gate = name .. "_open"
@@ -760,7 +759,7 @@ function doors.register_fencegate(name, def)
 	fence_closed.selection_box = {
 		type = "fixed",
 		fixed = {
-			{-1/2, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},			-- Gate
+			{-1/2, -1/2+5/16, -1/16, 1/2, 1/2, 1/16}			-- Gate
 		}
 	}
 	local fence_open = table.copy(fence)
@@ -774,7 +773,7 @@ function doors.register_fencegate(name, def)
 			{1/2-2/16, 1/2-4/16, 1/16, 1/2, 1/2-1/16, 1/2},		-- Top-right (transverse) x
 			{1/2-2/16, -1/2+6/16, 1/16, 1/2, -1/2+9/16, 1/2},	-- Bottom-right (transverse) x
 			{-1/2, -1/2+6/16, 6/16, -1/2+2/16, 1/2-1/16, 1/2},	-- Center Left
-			{1/2-2/16, 1/2-4/16, 1/2, 1/2, -1/2+9/16, 6/16},	-- Center Right
+			{1/2-2/16, 1/2-4/16, 1/2, 1/2, -1/2+9/16, 6/16}		-- Center Right
 		},
 	}
 	fence_open.gate = name .. "_closed"
@@ -784,7 +783,7 @@ function doors.register_fencegate(name, def)
 		type = "fixed",
 		fixed = {
 			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/2},		-- Left
-			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/2},		-- Right
+			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/2}			-- Right
 		}
 	}
 

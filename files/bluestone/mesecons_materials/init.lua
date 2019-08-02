@@ -2,7 +2,7 @@
 minetest.register_craftitem("mesecons_materials:glue", {
 	image = "mesecons_glue.png",
 	on_place_on_ground = minetest.craftitem_place_item,
-	description="Glue",
+	description = "Glue",
 })
 
 minetest.register_craft({
@@ -31,16 +31,16 @@ minetest.register_node("mesecons_materials:bluestoneblock", {
 minetest.register_craft({
 	output = "mesecons_materials:bluestoneblock",
 	recipe = {
-		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
-		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
-		{'mesecons:wire_00000000_off','mesecons:wire_00000000_off','mesecons:wire_00000000_off'},
+		{"mesecons:wire_00000000_off","mesecons:wire_00000000_off","mesecons:wire_00000000_off"},
+		{"mesecons:wire_00000000_off","mesecons:wire_00000000_off","mesecons:wire_00000000_off"},
+		{"mesecons:wire_00000000_off","mesecons:wire_00000000_off","mesecons:wire_00000000_off"},
 	}
 })
 
 minetest.register_craft({
-	output = 'mesecons:wire_00000000_off 9',
+	output = "mesecons:wire_00000000_off 9",
 	recipe = {
-		{'mesecons_materials:bluestoneblock'},
+		{"mesecons_materials:bluestoneblock"},
 	}
 })
 

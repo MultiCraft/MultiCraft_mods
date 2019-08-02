@@ -61,4 +61,4 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:kitten", "Cat's egg", "mobs_kitten_egg.png", 1)
+mobs:register_egg("mobs_animal:kitten", "Cat's Egg", "mobs_kitten_egg.png", 1)

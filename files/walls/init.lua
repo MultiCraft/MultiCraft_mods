@@ -15,7 +15,7 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 			connect_front = {{-3/16, -1/2, -1/2,   3/16, 3/8, -1/4}},
 			connect_left =  {{-1/2,  -1/2, -3/16, -1/4,  3/8,  3/16}},
 			connect_back =  {{-3/16, -1/2,  1/4,   3/16, 3/8,  1/2}},
-			connect_right = {{ 1/4,  -1/2, -3/16,  1/2,  3/8,  3/16}},
+			connect_right = {{ 1/4,  -1/2, -3/16,  1/2,  3/8,  3/16}}
 		},
 		connects_to = {"group:wall", "group:stone", "group:fence"},
 		paramtype = "light",
@@ -23,16 +23,16 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 		tiles = wall_texture_table,
 		walkable = true,
 		groups = {cracky = 3, wall = 1, stone = 2, not_in_creative_inventory = 1},
-		sounds = wall_sounds,
+		sounds = wall_sounds
 	})
 
 	-- crafting recipe
 	minetest.register_craft({
 		output = wall_name .. " 6",
 		recipe = {
-			{ '', '', '' },
+			{ "", "", "" },
 			{ wall_mat, wall_mat, wall_mat},
-			{ wall_mat, wall_mat, wall_mat},
+			{ wall_mat, wall_mat, wall_mat}
 		}
 	})
 

@@ -71,7 +71,7 @@ end
 
 local function populate_chest(pos, rand, dungeontype)
 	--minetest.chat_send_all("chest placed at " .. minetest.pos_to_string(pos) .. " [" .. dungeontype .. "]")
-	--minetest.add_node(vector.add(pos, {x=0, y=1, z=0}), {name="default:torch", param2=1})
+	--minetest.add_node(vector.add(pos, {x=0, y=1, z=0}), {name="default:torch", param2 = 1})
 
 	local item_list = dungeon_loot._internal_get_loot(pos.y, dungeontype)
 	-- take random (partial) sample of all possible items

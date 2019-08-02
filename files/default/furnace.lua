@@ -270,9 +270,9 @@ minetest.register_node("default:furnace", {
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec", default.get_furnace_inactive_formspec())
 		local inv = meta:get_inventory()
-		inv:set_size('src', 1)
-		inv:set_size('fuel', 1)
-		inv:set_size('dst', 4)
+		inv:set_size("src", 1)
+		inv:set_size("fuel", 1)
+		inv:set_size("dst", 4)
 	end,
 
 	on_metadata_inventory_move = function(pos)
@@ -294,11 +294,10 @@ minetest.register_node("default:furnace", {
 
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_move = allow_metadata_inventory_move,
-	allow_metadata_inventory_take = allow_metadata_inventory_take,
+	allow_metadata_inventory_take = allow_metadata_inventory_take
 })
 
 minetest.register_node("default:furnace_active", {
-	description = "Furnace",
 	tiles = {
 		"default_furnace_top.png", "default_furnace_top.png",
 		"default_furnace_side.png", "default_furnace_side.png",
@@ -327,5 +326,5 @@ minetest.register_node("default:furnace_active", {
 
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_move = allow_metadata_inventory_move,
-	allow_metadata_inventory_take = allow_metadata_inventory_take,
+	allow_metadata_inventory_take = allow_metadata_inventory_take
 })

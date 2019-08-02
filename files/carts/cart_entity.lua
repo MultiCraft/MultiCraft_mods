@@ -52,13 +52,15 @@ function cart_entity:on_activate(staticdata, dtime_s)
 	if self.old_pos and carts:is_rail(self.old_pos, self.railtype) then
 		self.object:set_pos(self.old_pos)
 	end
+	self.age = (data.age or 0) + dtime_s
 end
 
 function cart_entity:get_staticdata()
 	return minetest.serialize({
 		railtype = self.railtype,
 		old_dir = self.old_dir,
-		old_pos = self.old_pos
+		old_pos = self.old_pos,
+		age = self.age
 	})
 end
 
@@ -181,8 +183,8 @@ local function rail_on_step(self, dtime)
 		if not minetest.is_singleplayer() then
 			drop_timer = 60 -- 1 min
 		end
-		self.count = (self.count or 0) + dtime
-		if self.count > drop_timer then
+		self.age = (self.age or 0) + dtime
+		if self.age > drop_timer then
 			minetest.add_item(self.object:get_pos(), "carts:cart")
 			if self.sound_handle then
 				minetest.sound_stop(self.sound_handle)
@@ -191,7 +193,7 @@ local function rail_on_step(self, dtime)
 			return
 		end
 	else
-		self.count = 0
+		self.age = 0
 	end
 
 	local vel = self.object:get_velocity()

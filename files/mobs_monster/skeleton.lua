@@ -59,4 +59,4 @@ mobs:spawn({
 	min_height = -64,
 })
 
-mobs:register_egg("mobs_monster:skeleton", "Skeleton egg", "mobs_chicken_egg.png^default_bone.png", 1)
+mobs:register_egg("mobs_monster:skeleton", "Skeleton Egg", "mobs_chicken_egg.png^default_bone.png", 1)
