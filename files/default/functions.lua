@@ -256,6 +256,21 @@ minetest.register_abm({
 	end
 })
 
+if not minetest.settings:get_bool("creative_mode") then
+	minetest.register_abm({
+		label = "Cactus damage",
+		nodenames = {"default:cactus"},
+		interval = 1,
+		chance = 1,
+		action = function(pos)
+			local players = minetest.get_objects_inside_radius(pos, 1)
+			for i, player in pairs(players) do
+				player:set_hp(player:get_hp() - 2)
+			end
+		end,
+	})
+end
+
 minetest.register_abm({
 	label = "Grow sugarcane",
 	nodenames = {"default:sugarcane"},
@@ -597,6 +612,111 @@ function default.snow_shoot_snowball(itemstack, thrower, pointed_thing)
 		end
 	end
 	return itemstack
+end
+
+--
+-- Liquid particles
+--
+if core.is_singleplayer() then
+	minetest.register_abm({
+		label = "Water particles",
+		nodenames = {
+			"default:water_source",
+			"default:water_flowing"
+		},
+		interval = 3,
+		chance = 3,
+		action = function(pos, node)
+			pos.y = pos.y - 2
+			if minetest.get_node(pos).name == "air" then
+				pos.y = pos.y + 1
+				minetest.add_particlespawner({
+					amount = 1,
+					time = 0.1,
+					minpos = {x = pos.x - 0.5, y = pos.y, z = pos.z - 0.5},
+					maxpos = {x = pos.x + 0.5, y = pos.y, z = pos.z + 0.5},
+					minvel = {x = 0, y = -1, z = 0},
+					maxvel = {x = 0, y = -2, z = 0},
+					minexptime = 2,
+					maxexptime = 4,
+					vertical = true,
+					texture = "default_water.png^[resize:17x16^[mask:default_liquid_drop.png",
+				})
+			end
+		end
+	})
+
+	minetest.register_abm({
+		label = "River water particles",
+		nodenames = {
+			"default:river_water_source",
+			"default:river_water_flowing"
+		},
+		interval = 3,
+		chance = 3,
+		action = function(pos, node)
+			pos.y = pos.y - 2
+			if minetest.get_node(pos).name == "air" then
+				pos.y = pos.y + 1
+				minetest.add_particlespawner({
+					amount = 1,
+					time = 0.1,
+					minpos = {x = pos.x - 0.5, y = pos.y, z = pos.z - 0.5},
+					maxpos = {x = pos.x + 0.5, y = pos.y, z = pos.z + 0.5},
+					minvel = {x = 0, y = -1, z = 0},
+					maxvel = {x = 0, y = -2, z = 0},
+					minexptime = 2,
+					maxexptime = 4,
+					vertical = true,
+					texture = "default_river_water.png^[resize:17x16^[mask:default_liquid_drop.png",
+				})
+			end
+		end
+	})
+
+	minetest.register_abm({
+		label = "Lava particles",
+		nodenames = {
+			"default:lava_source",
+			"default:lava_flowing"
+		},
+		interval = 3,
+		chance = 3,
+		action = function(pos, node)
+			pos.y = pos.y + 1
+			if minetest.get_node(pos).name == "air" then
+				pos.y = pos.y - 1
+				minetest.add_particlespawner({
+					amount = 1,
+					time = 0.1,
+					minpos = {x = pos.x - 0.5, y = pos.y, z = pos.z - 0.5},
+					maxpos = {x = pos.x + 0.5, y = pos.y, z = pos.z + 0.5},
+					minvel = {x = 0, y = 1, z = 0},
+					maxvel = {x = 0, y = 2, z = 0},
+					minexptime = 1,
+					maxexptime = 2,
+					vertical = true,
+					texture = "default_lava.png",
+				})
+			end
+			pos.y = pos.y - 3
+			if minetest.get_node(pos).name == "air" then
+				pos.y = pos.y + 1
+				minetest.add_particlespawner({
+					amount = 1,
+					time = 0.1,
+					minpos = {x = pos.x - 0.5, y = pos.y, z = pos.z - 0.5},
+					maxpos = {x = pos.x + 0.5, y = pos.y, z = pos.z + 0.5},
+					minvel = {x = 0, y = -1, z = 0},
+					maxvel = {x = 0, y = -2, z = 0},
+					minexptime = 2,
+					maxexptime = 4,
+					vertical = true,
+					texture = "default_lava.png^[resize:17x16^[mask:default_liquid_drop.png",
+				})
+			end
+		end
+	})
 end
 
 --
