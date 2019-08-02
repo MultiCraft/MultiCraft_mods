@@ -97,23 +97,25 @@ end
 local formspecs = {
 	--	Workbench formspec
 	[[	background[-0.2,-0.26;9.41,9.49;formspec_workbench_crafting.png]
-		button[0,0;2,1;creating;Creating]
-		button[0,1;2,1;anvil;Repairing]
+		button[0,0;2,1;creating;]
+		image[0.5,0;1,1;workbench_saw.png]
+		button[0,1;2,1;anvil;]
+		image[0.5,1;1,1;workbench_anvil.png]
 		list[current_player;craft;2,0.5;3,3;]
 		list[current_player;craftpreview;6.055,1.505;1,1;] ]],
 	--	Creating formspec
 	[[ 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_creating.png]
 		button[0,0;1.5,1;back;< Back]
 		image[0,1.52;1,1;workbench_saw.png]
-		list[context;input;1.195,1.505;1,1;]
+		list[context;craft;1.195,1.505;1,1;]
 		list[context;forms;4.01,0.51;4,3;] ]],
 	--	Repair formspec
 	[[ 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_anvil.png]
 		button[0,0;1.5,1;back;< Back]
 		image[0,1.52;1,1;workbench_anvil.png]
 		list[context;tool;1.195,1.505;1,1;]
-		image[4.04,1.55;1,1;hammer_layout.png]
-		list[context;hammer;4.06,1.50;1,1;]	]],
+		list[context;hammer;4.06,1.50;1,1;]
+		image[4.04,1.55;1,1;hammer_layout.png] ]],
 }
 
 function workbench:set_formspec(meta, id)
@@ -133,7 +135,7 @@ function workbench.construct(pos)
 	local inv = meta:get_inventory()
 
 	inv:set_size("tool", 1)
-	inv:set_size("input", 1)
+	inv:set_size("craft", 1)
 	inv:set_size("hammer", 1)
 	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 9*3)
@@ -158,7 +160,7 @@ function workbench.fields(pos, _, fields, sender)
 		end
 		inv = meta:get_inventory()
 		if inv then
-			for _, name in pairs({"input", "tool", "hammer"}) do
+			for _, name in ipairs({"craft", "tool", "hammer"}) do
 				local stack = inv:get_stack(name, 1)
 				minetest.item_drop(stack, nil, pos)
 				stack:clear()
@@ -196,7 +198,7 @@ function workbench.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
 		workbench:repairable(stackname)) or
-		(listname == "input" and valid_block[stackname]) or
+		(listname == "craft" and valid_block[stackname]) or
 		(listname == "hammer" and stackname == "workbench:hammer") or
 		listname == "storage" then
 		return stack:get_count()
@@ -210,8 +212,8 @@ end
 
 function workbench.on_put(pos, listname, _, stack)
 	local inv = minetest.get_meta(pos):get_inventory()
-	if listname == "input" then
-		local input = inv:get_stack("input", 1)
+	if listname == "craft" then
+		local input = inv:get_stack("craft", 1)
 		workbench:get_output(inv, input, stack:get_name())
 	elseif listname == "tool" or listname == "hammer" then
 		local timer = minetest.get_node_timer(pos)
@@ -221,10 +223,10 @@ end
 
 function workbench.on_take(pos, listname, index, stack, player)
 	local inv = minetest.get_meta(pos):get_inventory()
-	local input = inv:get_stack("input", 1)
+	local input = inv:get_stack("craft", 1)
 	local inputname = input:get_name()
 	local stackname = stack:get_name()
-	if listname == "input" then
+	if listname == "craft" then
 		if stackname == inputname and valid_block[stackname] then
 			workbench:get_output(inv, input, stackname)
 		else
@@ -240,7 +242,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 		end
 
 		input:take_item(ceil(stack:get_count() / workbench.defs[index][2]))
-		inv:set_stack("input", 1, input)
+		inv:set_stack("craft", 1, input)
 		workbench:get_output(inv, input, inputname)
 	end
 end
@@ -298,7 +300,6 @@ for _, d in pairs(workbench.defs) do
 				tiles = tiles,
 				groups = groups,
 				light_source = def.light_source / 2,
-				-- `unpack` has been changed to `table.unpack` in newest Lua versions
 				node_box = workbench:pixelbox(16, {unpack(d, 3)}),
 				sunlight_propagates = true,
 				is_ground_content = false,
