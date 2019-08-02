@@ -20,14 +20,14 @@ end
 local delayer_activate = function(pos, node)
 	local def = minetest.registered_nodes[node.name]
 	local time = def.delayer_time
-	minetest.swap_node(pos, {name = def.delayer_onstate, param2=node.param2})
+	minetest.swap_node(pos, {name = def.delayer_onstate, param2 = node.param2})
 	mesecon.queue:add_action(pos, "receptor_on", {delayer_get_output_rules(node)}, time, nil)
 end
 
 local delayer_deactivate = function(pos, node)
 	local def = minetest.registered_nodes[node.name]
 	local time = def.delayer_time
-	minetest.swap_node(pos, {name = def.delayer_offstate, param2=node.param2})
+	minetest.swap_node(pos, {name = def.delayer_offstate, param2 = node.param2})
 	mesecon.queue:add_action(pos, "receptor_off", {delayer_get_output_rules(node)}, time, nil)
 end
 
@@ -42,35 +42,35 @@ else
 end
 
 local delaytime
-if	  i == 1 then delaytime = 0.1
-elseif  i == 2 then delaytime = 0.3
-elseif  i == 3 then delaytime = 0.5
-elseif  i == 4 then delaytime = 1.0 end
+if		i == 1 then delaytime = 0.1
+elseif	i == 2 then delaytime = 0.3
+elseif	i == 3 then delaytime = 0.5
+elseif	i == 4 then delaytime = 1.0 end
 
 local boxes
 if i == 1 then
 boxes = {
 	{ -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },	 -- the main slab
 	{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	 -- still torch
-	{ 0/16, -6/16, -1/16, 2/16, -1/16, 1/16},	 -- moved torch
+	{ 0/16, -6/16, -1/16, 2/16, -1/16, 1/16}	 -- moved torch
 }
 elseif i == 2 then
 boxes = {
 	{ -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },	 -- the main slab
 	{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	 -- still torch
-	{ -2/16, -6/16, -1/16, 0/16, -1/16, 1/16},	 -- moved torch
+	{ -2/16, -6/16, -1/16, 0/16, -1/16, 1/16}	 -- moved torch
 }
 elseif i == 3 then
 boxes = {
 	{ -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },	 -- the main slab
 	{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	 -- still torch
-	{ -4/16, -6/16, -1/16, -2/16, -1/16, 1/16},	 -- moved torch
+	{ -4/16, -6/16, -1/16, -2/16, -1/16, 1/16}	 -- moved torch
 }
 elseif i == 4 then
 boxes = {
 	{ -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },	 -- the main slab
 	{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	 -- still torch
-	{ -6/16, -6/16, -1/16, -4/16, -1/16, 1/16},	 -- moved torch
+	{ -6/16, -6/16, -1/16, -4/16, -1/16, 1/16}	 -- moved torch
 }
 end
 
@@ -84,11 +84,11 @@ minetest.register_node("mesecons_delayer:delayer_off_"..tostring(i), {
 		"mesecons_delayer_ends_off.png",
 		"mesecons_delayer_sides_off.png",
 		"mesecons_delayer_sides_off.png"
-		},
+	},
 	wield_image = "mesecons_delayer_off.png",
 	selection_box = {
 		type = "fixed",
-		fixed = { -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },
+		fixed = { -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 }
 	},
 	node_box = {
 		type = "fixed",
@@ -99,16 +99,16 @@ minetest.register_node("mesecons_delayer:delayer_off_"..tostring(i), {
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
 	is_ground_content = false,
-	drop = 'mesecons_delayer:delayer_off_1',
+	drop = "mesecons_delayer:delayer_off_1",
 	on_punch = function (pos, node)
 		if node.name=="mesecons_delayer:delayer_off_1" then
-			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_2", param2=node.param2})
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_2", param2 = node.param2})
 		elseif node.name=="mesecons_delayer:delayer_off_2" then
-			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_3", param2=node.param2})
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_3", param2 = node.param2})
 		elseif node.name=="mesecons_delayer:delayer_off_3" then
-			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_4", param2=node.param2})
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_4", param2 = node.param2})
 		elseif node.name=="mesecons_delayer:delayer_off_4" then
-			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_1", param2=node.param2})
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_off_1", param2 = node.param2})
 		end
 	end,
 	delayer_time = delaytime,
@@ -126,12 +126,11 @@ minetest.register_node("mesecons_delayer:delayer_off_"..tostring(i), {
 			action_on = delayer_activate
 		}
 	},
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 
 
 minetest.register_node("mesecons_delayer:delayer_on_"..tostring(i), {
-	description = "You hacker you",
 	drawtype = "nodebox",
 	tiles = {
 		"mesecons_delayer_on.png",
@@ -140,10 +139,10 @@ minetest.register_node("mesecons_delayer:delayer_on_"..tostring(i), {
 		"mesecons_delayer_ends_on.png",
 		"mesecons_delayer_sides_on.png",
 		"mesecons_delayer_sides_on.png"
-		},
+	},
 	selection_box = {
 		type = "fixed",
-		fixed = { -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },
+		fixed = { -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 }
 	},
 	node_box = {
 		type = "fixed",
@@ -154,16 +153,16 @@ minetest.register_node("mesecons_delayer:delayer_on_"..tostring(i), {
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
 	is_ground_content = false,
-	drop = 'mesecons_delayer:delayer_off_1',
+	drop = "mesecons_delayer:delayer_off_1",
 	on_punch = function (pos, node)
 		if node.name=="mesecons_delayer:delayer_on_1" then
-			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_2", param2=node.param2})
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_2", param2 = node.param2})
 		elseif node.name=="mesecons_delayer:delayer_on_2" then
-			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_3", param2=node.param2})
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_3", param2 = node.param2})
 		elseif node.name=="mesecons_delayer:delayer_on_3" then
-			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_4", param2=node.param2})
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_4", param2 = node.param2})
 		elseif node.name=="mesecons_delayer:delayer_on_4" then
-			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_1", param2=node.param2})
+			minetest.swap_node(pos, {name = "mesecons_delayer:delayer_on_1", param2 = node.param2})
 		end
 	end,
 	delayer_time = delaytime,
@@ -181,7 +180,7 @@ minetest.register_node("mesecons_delayer:delayer_on_"..tostring(i), {
 			action_off = delayer_deactivate
 		}
 	},
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 end
 
@@ -189,6 +188,6 @@ minetest.register_craft({
 	output = "mesecons_delayer:delayer_off_1",
 	recipe = {
 		{"mesecons_torch:mesecon_torch_on", "", "mesecons_torch:mesecon_torch_on"},
-		{"default:cobble","default:cobble", "default:cobble"},
+		{"default:cobble","default:cobble", "default:cobble"}
 	}
 })

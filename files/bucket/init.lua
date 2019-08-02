@@ -3,10 +3,10 @@ minetest.register_alias("bucket_water", "bucket:bucket_water")
 minetest.register_alias("bucket_lava", "bucket:bucket_lava")
 
 minetest.register_craft({
-	output = 'bucket:bucket_empty 1',
+	output = "bucket:bucket_empty",
 	recipe = {
-		{'default:steel_ingot', '', 'default:steel_ingot'},
-		{'', 'default:steel_ingot', ''},
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"", "default:steel_ingot", ""}
 	}
 })
 
@@ -99,16 +99,16 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 
 				local player_name = user:get_player_name()
 
-				if minetest.is_singleplayer() ~= true then
-					if pointed_thing.under.y > 8 then
+				if not minetest.is_singleplayer() then
+					if pointed_thing.under.y >= 8 then
 						minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"), true)
-					return itemstack
+					return
 					end
 				end
 
 				if check_protection(lpos, user
 						and user:get_player_name()
-						or "", "place "..source) then
+						or "", "place " .. source) then
 					return
 				end
 
@@ -131,7 +131,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 	liquids_pointable = true,
 	on_use = function(itemstack, user, pointed_thing)
 		if pointed_thing.type == "object" then
-			pointed_thing.ref:punch(user, 1.0, { full_punch_interval=1.0 }, nil)
+			pointed_thing.ref:punch(user, 1.0, {full_punch_interval = 1.0}, nil)
 			return user:get_wielded_item()
 		elseif pointed_thing.type ~= "node" then
 			-- do nothing if it's neither object nor node
@@ -147,7 +147,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 		and node.name == liquiddef.source then
 			if check_protection(pointed_thing.under,
 					user:get_player_name(),
-					"take ".. node.name) then
+					"take " .. node.name) then
 				return
 			end
 
@@ -168,7 +168,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 				end
 
 				-- set to return empty buckets minus 1
-				giving_back = "bucket:bucket_empty "..tostring(item_count-1)
+				giving_back = "bucket:bucket_empty " .. tostring(item_count - 1)
 
 			end
 
@@ -179,7 +179,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 					minetest.find_node_near(pointed_thing.under, 1, liquiddef.source)
 			end
 			if not (source_neighbor and liquiddef.force_renew) then
-			minetest.add_node(pointed_thing.under, {name="air"})
+			minetest.add_node(pointed_thing.under, {name = "air"})
 			end
 
 			return ItemStack(giving_back)
@@ -191,7 +191,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 			end
 			return user:get_wielded_item()
 		end
-	end,
+	end
 })
 
 bucket.register_liquid(
@@ -242,5 +242,5 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "bucket:bucket_lava",
 	burntime = 60,
-	replacements = {{"bucket:bucket_lava", "bucket:bucket_empty"}},
+	replacements = {{"bucket:bucket_lava", "bucket:bucket_empty"}}
 })

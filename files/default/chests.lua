@@ -38,7 +38,7 @@ minetest.register_node("default:chest", {
 		local param2 = minetest.get_node(pos).param2
 		local meta = minetest.get_meta(pos)
 		if minetest.get_node(get_chest_neighborpos(pos, param2, "right")).name == "default:chest" then
-			minetest.set_node(pos, {name="default:chest_right",param2=param2})
+			minetest.set_node(pos, {name="default:chest_right",param2 = param2})
 			local p = get_chest_neighborpos(pos, param2, "right")
 			meta:set_string("formspec",
 					"size[9,11.5]"..
@@ -51,7 +51,7 @@ minetest.register_node("default:chest", {
 					"list[current_player;main;0.01,7.4;9,3;9]"..
 					"list[current_player;main;0,10.61;9,1;]")
 			meta:set_string("infotext", "Large Chest")
-			minetest.swap_node(p, {name="default:chest_left", param2=param2})
+			minetest.swap_node(p, {name="default:chest_left", param2 = param2})
 			local m = minetest.get_meta(p)
 			m:set_string("formspec",
 					"size[9,11.5]"..
@@ -65,7 +65,7 @@ minetest.register_node("default:chest", {
 					"list[current_player;main;0,10.61;9,1;]")
 			m:set_string("infotext", "Large Chest")
 		elseif minetest.get_node(get_chest_neighborpos(pos, param2, "left")).name == "default:chest" then
-			minetest.set_node(pos, {name="default:chest_left",param2=param2})
+			minetest.set_node(pos, {name="default:chest_left",param2 = param2})
 			local p = get_chest_neighborpos(pos, param2, "left")
 			meta:set_string("formspec",
 					"size[9,11.5]"..
@@ -78,7 +78,7 @@ minetest.register_node("default:chest", {
 					"list[current_player;main;0.01,7.4;9,3;9]"..
 					"list[current_player;main;0,10.61;9,1;]")
 			meta:set_string("infotext", "Large Chest")
-			minetest.swap_node(p, {name="default:chest_right", param2=param2})
+			minetest.swap_node(p, {name="default:chest_right", param2 = param2})
 			local m = minetest.get_meta(p)
 			m:set_string("formspec",
 					"size[9,11.5]"..
@@ -135,7 +135,6 @@ minetest.register_node("default:chest", {
 	on_receive_fields = function(pos, formname, fields, sender)
 		if fields.exit then
 		  fields.quit = true
-	  --	minetest.show_formspec(sender:get_player_name(), 'quit', "")
 		end
 	end
 })
@@ -168,7 +167,7 @@ minetest.register_node("default:chest_left", {
 					"list[current_player;main;0,4.5;9,3;9]" ..
 					"list[current_player;main;0,7.74;9,1;]")
 		meta:set_string("infotext", "Chest")
-		minetest.swap_node(p, {name="default:chest", param2=param2})
+		minetest.swap_node(p, {name="default:chest", param2 = param2})
 	end,
 	after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
@@ -226,7 +225,7 @@ minetest.register_node("default:chest_right", {
 					"list[current_player;main;0,4.5;9,3;9]" ..
 					"list[current_player;main;0,7.74;9,1;]")
 		meta:set_string("infotext", "Chest")
-		minetest.swap_node(p, {name="default:chest", param2=param2})
+		minetest.swap_node(p, {name="default:chest", param2 = param2})
 	end,
 	after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)

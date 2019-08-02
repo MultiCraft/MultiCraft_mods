@@ -9,7 +9,7 @@ local function collect_items(player)
 	-- Detect
 	local col_pos = vector.add(pos, {x = 0, y = 1.3, z = 0})
 	local objects = minetest.get_objects_inside_radius(col_pos, radius)
-	for _, object in ipairs(objects) do
+	for _, object in pairs(objects) do
 		local entity = object:get_luaentity()
 		if entity and not object:is_player() and
 				not entity.collectioner and

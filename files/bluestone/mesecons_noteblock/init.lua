@@ -5,7 +5,7 @@ minetest.register_node("mesecons_noteblock:noteblock", {
 	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 2},
 	stack_max = 1,
 	on_punch = function (pos, node) -- change sound when punched
-		node.param2 = (node.param2+1)%12
+		node.param2 = (node.param2 + 1) % 12
 		mesecon.noteblock_play(pos, node.param2)
 		minetest.set_node(pos, node)
 	end,
@@ -15,15 +15,15 @@ minetest.register_node("mesecons_noteblock:noteblock", {
 			mesecon.noteblock_play(pos, node.param2)
 		end
 	}},
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 
 minetest.register_craft({
-	output = "mesecons_noteblock:noteblock 1",
+	output = "mesecons_noteblock:noteblock",
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},
 		{"default:steel_ingot", "mesecons:wire_00000000_off", "default:steel_ingot"},
-		{"group:wood", "group:wood", "group:wood"},
+		{"group:wood", "group:wood", "group:wood"}
 	}
 })
 
@@ -50,7 +50,7 @@ local node_sounds = {
 	["default:chest"] = "mesecons_noteblock_snare",
 	["default:tree"] = "mesecons_noteblock_crash",
 	["default:wood"] = "mesecons_noteblock_litecrash",
-	["default:coalblock"] = "tnt_explode",
+	["default:coalblock"] = "tnt_explode"
 }
 
 mesecon.noteblock_play = function (pos, param2)
