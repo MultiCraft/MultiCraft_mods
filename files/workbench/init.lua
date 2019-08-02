@@ -160,13 +160,13 @@ function workbench.fields(pos, _, fields, sender)
 		end
 		inv = meta:get_inventory()
 		if inv then
-			for _, name in ipairs({"craft", "tool", "hammer"}) do
+			for _, name in pairs({"craft", "tool", "hammer"}) do
 				local stack = inv:get_stack(name, 1)
 				minetest.item_drop(stack, nil, pos)
 				stack:clear()
 				inv:set_stack(name, 1, stack)
 			end
-			for i, stack in ipairs(inv:get_list("forms")) do
+			for i, stack in pairs(inv:get_list("forms")) do
 				stack:clear()
 				inv:set_stack("forms", i, stack)
 			end

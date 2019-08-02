@@ -20,12 +20,12 @@ dye.dyes = {
 	{"red",        S("Red"),        S("Red2"),        S("Red3")},
 	{"violet",     S("Violet"),     S("Violet2"),     S("Violet3")},
 	{"white",      S("White"),      S("White2"),      S("White3")},
-	{"yellow",     S("Yellow"),     S("Yellow2"),     S("Yellow3")},
+	{"yellow",     S("Yellow"),     S("Yellow2"),     S("Yellow3")}
 }
 
 -- Define items
 
-for _, row in ipairs(dye.dyes) do
+for _, row in pairs(dye.dyes) do
 	local name = row[1]
 	local description = row[2]
 	local groups = {dye = 1}
@@ -41,7 +41,7 @@ for _, row in ipairs(dye.dyes) do
 		output = "dye:" .. name .. " 4",
 		recipe = {
 			{"group:flower,color_" .. name}
-		},
+		}
 	})
 end
 

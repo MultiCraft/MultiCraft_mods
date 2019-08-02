@@ -122,8 +122,7 @@ local function mobs_shoot_egg(itemstack, thrower, pointed_thing)
 			gain = 0.7,
 			max_hear_distance = 10,
 		})
-		if not (creative and creative.is_enabled_for
-		and creative.is_enabled_for(thrower)) or
+		if not mobs.is_creative(thrower) or
 		not minetest.is_singleplayer() then
 			itemstack:take_item()
 		end

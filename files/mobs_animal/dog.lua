@@ -13,7 +13,6 @@ mobs:register_mob("mobs_animal:wolf", {
 	textures = {
 		{"mobs_wolf.png"},
 	},
-	jump = false,
 	walk_chance = 75,
 	walk_velocity = 2,
 	run_velocity = 3,
@@ -56,7 +55,7 @@ mobs:spawn({
 	day_toggle = true,
 })
 
-mobs:register_egg("mobs_animal:wolf", "Wolf's egg", "wool_grey.png", 1)
+mobs:register_egg("mobs_animal:wolf", "Wolf's Egg", "wool_grey.png", 1)
 
 -- Dog
 mobs:register_mob("mobs_animal:dog", {
@@ -75,7 +74,6 @@ mobs:register_mob("mobs_animal:dog", {
 		{"mobs_dog.png"}
 	},
 	fear_height = 4,
-	jump = false,
 	walk_chance = 75,
 	walk_velocity = 2,
 	run_velocity = 4,

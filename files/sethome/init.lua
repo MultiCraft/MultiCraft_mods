@@ -23,7 +23,7 @@ end
 sethome.go = function(name)
 	local pos = sethome.get(name)
 	local player = minetest.get_player_by_name(name)
-	if player and pos then
+	if player and minetest.is_valid_pos(pos) then
 		player:set_pos(pos)
 		return true
 	end

@@ -21,6 +21,10 @@ mobs:register_mob("mobs_monster:spider", {
 	},
 	run_velocity = 3,
 	view_range = 15,
+	replace_rate = 64,
+	replace_what = {
+		{"air", "mobs:cobweb"},
+	},
 	floats = 0,
 	drops = function(pos)
 		if rawget(_G, "experience") then
@@ -64,8 +68,8 @@ mobs:spawn({
 	min_height = -64,
 })
 
-mobs:register_egg("mobs_monster:spider", "Spider egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
-mobs:register_egg("mobs_monster:small_spider", "Small Spider egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
+mobs:register_egg("mobs_monster:spider", "Spider Egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
+mobs:register_egg("mobs_monster:small_spider", "Small Spider Egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
 
 -- Small spider
 

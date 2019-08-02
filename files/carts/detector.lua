@@ -4,7 +4,7 @@ function carts:turnoff_detector_rail(pos)
 	local node = minetest.get_node(pos)
 	if minetest.get_item_group(node.name, "detector_rail") == 1 then
 		if node.name == "carts:detectorrail_on" then --has not been dug
-			minetest.swap_node(pos, {name = "carts:detectorrail", param2=node.param2})
+			minetest.swap_node(pos, {name = "carts:detectorrail", param2 = node.param2})
 		end
 		mesecon.receptor_off(pos, mesecons_rules)
 	end
@@ -17,14 +17,14 @@ function carts:signal_detector_rail(pos)
 	end
 
 	if node.name == "carts:detectorrail" then
-		minetest.swap_node(pos, {name = "carts:detectorrail_on", param2=node.param2})
+		minetest.swap_node(pos, {name = "carts:detectorrail_on", param2 = node.param2})
 	end
 	mesecon.receptor_on(pos, mesecons_rules)
 	minetest.after(0.5, carts.turnoff_detector_rail, carts, pos)
 end
 
 carts:register_rail("carts:detectorrail", {
-	description = "Detector rail",
+	description = "Detector Rail",
 	tiles = {
 		"carts_rail_straight_dtc.png", "carts_rail_curved_dtc.png",
 		"carts_rail_t_junction_dtc.png", "carts_rail_crossing_dtc.png"

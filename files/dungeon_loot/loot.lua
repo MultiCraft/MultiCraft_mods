@@ -10,7 +10,7 @@ dungeon_loot.registered_loot = {
 	{name = "default:stick", chance = 0.6, count = {3, 6}},
 	{name = "default:flint", chance = 0.4, count = {1, 3}},
 	{name = "vessels:glass_bottle", chance = 0.35, count = {1, 4}},
---	{name = "carts:rail", chance = 0.35, count = {1, 6}},
+	{name = "carts:rail", chance = 0.35, count = {1, 6}},
 
 	-- farming / consumable
 	{name = "farming:string", chance = 0.5, count = {1, 8}},
@@ -55,7 +55,7 @@ dungeon_loot.registered_loot = {
 	{name = "default:sandstonesmooth", chance = 0.8, count = {4, 32}, y = {-64, 256}, types = {"sandstone"}},
 	{name = "default:mossycobble", chance = 0.8, count = {4, 32}, types = {"desert"}},
 	{name = "default:dirt", chance = 0.6, count = {2, 16}, y = {-64, 256}},
-	{name = "default:obsidian", chance = 0.25, count = {1, 3}, y = {-64, -512}},
+	{name = "default:obsidian", chance = 0.25, count = {1, 3}, y = {-64, -512}}
 }
 
 function dungeon_loot.register(t)

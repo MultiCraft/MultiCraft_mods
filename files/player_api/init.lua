@@ -82,10 +82,10 @@ else
 			max_drop_level = 0,
 			groupcaps = {
 				crumbly = {times = {[1]=5.0, [2]=3.0, [3]=0.7}, uses = 0, maxlevel = 1},
-				snappy = {times = {[3]=0.4}, uses = 0, maxlevel = 1},
-				choppy = {times = {[1]=6.0, [2]=4.0, [3]=3.0}, uses = 0, maxlevel = 1},
-				cracky = {times = {[1]=7.0, [2]=5.0, [3]=4.0}, uses = 0, maxlevel = 1},
-				oddly_breakable_by_hand = {times = {[1]=3.5 ,[2]=2.0, [3]=0.7}, uses = 0}
+				snappy  = {times = {[1]=0.5, [2]=0.5, [3]=0.5}, uses = 0, maxlevel = 1},
+				choppy  = {times = {[1]=6.0, [2]=4.0, [3]=3.0}, uses = 0, maxlevel = 1},
+				cracky  = {times = {[1]=7.0, [2]=5.0, [3]=4.0}, uses = 0, maxlevel = 1},
+				oddly_breakable_by_hand = {times = {[1]=3.5, [2]=2.0, [3]=0.7}, uses = 0}
 		},
 		damage_groups = {fleshy = 1},
 	}
@@ -126,13 +126,13 @@ minetest.register_on_joinplayer(function(player)
 end)
 
 -- Items for the new player
-minetest.register_on_newplayer(function (player)
-	if not creative_mode_cache or not minetest.is_singleplayer() then
-		player:get_inventory():add_item("main", "default:sword_steel")
-		player:get_inventory():add_item("main", "default:torch 8")
-		player:get_inventory():add_item("main", "default:wood 64")
-	end
-end)
+if not creative_mode_cache and minetest.is_singleplayer() then
+	minetest.register_on_newplayer(function (player)
+			player:get_inventory():add_item("main", "default:sword_steel")
+			player:get_inventory():add_item("main", "default:torch 8")
+			player:get_inventory():add_item("main", "default:wood 64")
+	end)
+end
 
 -- Drop items at death
 minetest.register_on_dieplayer(function(player)

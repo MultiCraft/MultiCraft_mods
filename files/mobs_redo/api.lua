@@ -11,11 +11,6 @@ mobs = {
 -- Intllib
 local S = intllib.make_gettext_pair()
 
--- creative check
-function mobs.is_creative(name)
-	return creative or minetest.check_player_privs(name, {creative = true})
-end
-
 -- localize math functions
 local pi = math.pi
 local square = math.sqrt
@@ -55,6 +50,11 @@ local spawn_interval = 10
 if not minetest.is_singleplayer() then
 	lifetime = 300 -- 5 min
 	spawn_interval = 60
+end
+
+-- creative check
+function mobs.is_creative(name)
+	return creative or minetest.check_player_privs(name, {creative = true})
 end
 
 -- Peaceful mode message so players will know there are no monsters

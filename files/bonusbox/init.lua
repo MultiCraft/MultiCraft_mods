@@ -5,21 +5,21 @@ local items_ore = {
 	{"default:diamond", 1, 1},
 	{"default:emerald", 1, 2},
 	{"default:gold_ingot", 2, 3},
-	{"default:steel_ingot", 2, 4},
+	{"default:steel_ingot", 2, 4}
 }
 
 local items_food = {
 	{"default:apple", 2, 8},
 	{"mobs:pork", 1, 4},
 	{"mobs:meat", 1, 4},
-	{"mobs:chicken_cooked", 1, 4},
+	{"mobs:chicken_cooked", 1, 4}
 }
 
 local items_material = {
 	{"default:wood", 8, 64},
 	{"default:cobble", 8, 64},
 	{"default:obsidian", 2, 8},
-	{"default:tree", 4, 16},
+	{"default:tree", 4, 16}
 }
 
 local item_spawn = function (pos, node)
@@ -48,18 +48,20 @@ minetest.register_node("bonusbox:chest", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	drop = "",
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, -0.438627, 0.187361}, -- NodeBox1
-			{-0.483652, -0.441532, -0.483652, 0.483652, 0.110383, 0.172837}, -- NodeBox2
-			{-0.5, 0.110383, -0.5, 0.5, 0.249814, 0.187361}, -- NodeBox3
-			{-0.483652, 0.246909, -0.483652, 0.483652, 0.5, 0.169932}, -- NodeBox4
+			{-0.5, -0.5, -0.5, 0.5, -0.43863, 0.18736},
+			{-0.48365, -0.44153, -0.48365, 0.48365, 0.11038, 0.17284},
+			{-0.5, 0.11038, -0.5, 0.5, 0.24981, 0.18736},
+			{-0.48365, 0.24691, -0.48365, 0.48365, 0.5, 0.16993}
 		}
 	},
 	groups = {choppy = 2, not_in_creative_inventory = 1},
 	sounds = default.node_sound_wood_defaults(),
-	on_rightclick = item_spawn,
+
+	on_rightclick = item_spawn
 })
 
 minetest.register_node("bonusbox:chest_open", {
@@ -77,15 +79,23 @@ minetest.register_node("bonusbox:chest_open", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, -0.438627, 0.187361}, -- NodeBox1
-			{-0.483652, -0.444437, -0.483652, 0.483652, 0.110383, 0.169932}, -- NodeBox2
-			{-0.5, 0.110383, -0.5, 0.5, 0.188813, 0.187361}, -- NodeBox3
-			{-0.5, 0.188813, 0.172837, 0.5, 0.5, 0.248362}, -- NodeBox4
-			{-0.484478, 0.206242, 0.242552, 0.484478, 0.5, 0.5}, -- NodeBox5
+			{-0.5, -0.5, -0.5, 0.5, -0.43863, 0.18736},
+			{-0.48365, -0.44444, -0.48365, 0.48365, 0.11038, 0.16993},
+			{-0.5, 0.11038, -0.5, 0.5, 0.18881, 0.18736},
+			{-0.5, 0.18881, 0.17284, 0.5, 0.5, 0.24836},
+			{-0.48448, 0.20624, 0.24255, 0.48448, 0.5, 0.5}
+		}
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5, -0.5, -0.5, 0.5, -0.43863, 0.18736},
+			{-0.48365, -0.44444, -0.48365, 0.48365, 0.11038, 0.16993},
+			{-0.5, 0.11038, -0.5, 0.5, 0.18881, 0.18736}
 		}
 	},
 	groups = {choppy = 2, not_in_creative_inventory = 1},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 minetest.register_node("bonusbox:chest_cap", {
@@ -103,12 +113,15 @@ minetest.register_node("bonusbox:chest_cap", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, 0.172236, 0.5, -0.128775, 0.249501}, -- NodeBox1
-			{-0.485183, -0.5, 0.249501, 0.485183, -0.144871, 0.5}, -- NodeBox2
+			{-0.5, -0.5, 0.17224, 0.5, -0.12878, 0.2495},
+			{-0.48518, -0.5, 0.2495, 0.48518, -0.14487, 0.5}
 		}
 	},
+	selection_box = {
+		type = "fixed"
+	},
 	groups = {attached_node = 1, not_in_creative_inventory = 1},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 minetest.register_decoration({
@@ -120,5 +133,5 @@ minetest.register_decoration({
 	fill_ratio = 0.0002,
 	y_max = 31000,
 	y_min = 1,
-	decoration = {"bonusbox:chest"},
+	decoration = {"bonusbox:chest"}
 })
