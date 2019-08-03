@@ -23,7 +23,7 @@ minetest.register_craftitem("mobs:leather", {
 minetest.register_craftitem("mobs:meat_raw", {
 	description = "Raw Meat",
 	inventory_image = "mobs_meat_raw.png",
-	on_use = minetest.item_eat(3),
+	on_use = minetest.item_eat(-3),
 	groups = {food_meat_raw = 1, flammable = 2, food = 1}
 })
 
@@ -46,7 +46,7 @@ minetest.register_craft({
 minetest.register_craftitem("mobs:pork_raw", {
 	description = "Raw Pork",
 	inventory_image = "mobs_pork_raw.png",
-	on_use = minetest.item_eat(3),
+	on_use = minetest.item_eat(-3),
 	groups = {food_meat_raw = 1, flammable = 2, food = 1}
 })
 
@@ -69,7 +69,7 @@ minetest.register_craft({
 minetest.register_craftitem("mobs:rabbit_raw", {
 	description = "Raw Rabbit",
 	inventory_image = "mobs_rabbit_raw.png",
-	on_use = minetest.item_eat(3),
+	on_use = minetest.item_eat(-3),
 	groups = {food_meat_raw = 1, food_rabbit_raw = 1, flammable = 2, food = 1}
 })
 
@@ -158,7 +158,7 @@ minetest.register_craft({
 minetest.register_craftitem("mobs:chicken_raw", {
 	description = "Raw Chicken",
 	inventory_image = "mobs_chicken_raw.png",
-	on_use = minetest.item_eat(2),
+	on_use = minetest.item_eat(-2),
 	groups = {food_meat_raw = 1, food_chicken_raw = 1, flammable = 2, food = 1}
 })
 
@@ -221,7 +221,7 @@ minetest.register_craft({
 minetest.register_craftitem("mobs:rotten_flesh", {
 	description = "Rotten Flesh",
 	inventory_image = "mobs_rotten_flesh.png",
-	on_use = minetest.item_eat(1),
+	on_use = minetest.item_eat(-4),
 	groups = {flammable = 2, food = 1}
 })
 
