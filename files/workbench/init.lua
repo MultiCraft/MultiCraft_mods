@@ -5,8 +5,8 @@ local min, ceil = math.min, math.ceil
 -- Only the regular, solid blocks without metas or explosivity can be cut
 local nodes = {}
 for node, def in pairs(minetest.registered_nodes) do
-	if 	(def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass" or def.drawtype:sub(1,8) == "allfaces") and
-		(def.tiles and type(def.tiles[1]) == "string") and
+	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass" or def.drawtype:sub(1,8) == "allfaces") and
+	   (def.tiles and type(def.tiles[1]) == "string") and
 		not def.on_rightclick and
 		not def.on_blast and
 		not def.on_metadata_inventory_put and
@@ -49,29 +49,32 @@ workbench.defs = {
 						{ 0, 8,  8, 8,  8, 8  }},
 	{"outerstair",	1,	{ 0, 0,  0, 16, 8, 16  },
 						{ 0, 8,  8, 8,  8, 8  }},
-	{"stair",		1,	{ 0, 0,  0, 16, 8, 16  },
-						{ 0, 8,  8, 16, 8, 8  }},
-	{"slope",		2,	nil					   },
 	{"innerstair",	1,	{ 0, 0,  0, 16, 8, 16  },
 						{ 0, 8,  8, 16, 8, 8   },
-						{ 0, 8,  0, 8,  8, 8  }}
+						{ 0, 8,  0, 8,  8, 8  }},
+	{"stair",		1,	{ 0, 0,  0, 16, 8, 16  },
+						{ 0, 8,  8, 16, 8, 8  }},
+	{"slope",		2,	nil					   }
 }
+
+local repairable_tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
 
 -- Tools allowed to be repaired
 function workbench:repairable(stack)
-	local tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
-	for _, t in pairs(tools) do
-		if stack:find(t) then return true end
+	for _, t in pairs(repairable_tools) do
+		if stack:find(t) then
+			return true
+		end
 	end
-	return false
 end
 
 function workbench:get_output(inv, input, name)
 	local output = {}
-	for _, n in pairs(self.defs) do
-		local count = min(n[2] * input:get_count(), input:get_stack_max())
-		local item = "stairs:"..n[1].."_"..name:gsub(":", "_")
-		output[#output+1] = item.." "..count
+	for i = 1, #self.defs do
+		local nbox = self.defs[i]
+		local count = min(nbox[2] * input:get_count(), input:get_stack_max())
+		local item = "stairs:" .. nbox[1] .. "_" .. name:gsub(":", "_")
+		output[#output+1] = item .. " " .. count
 	end
 	inv:set_list("forms", output)
 end
@@ -94,39 +97,56 @@ function workbench:pixelbox(size, boxes)
 	return {type="fixed", fixed=fixed}
 end
 
+-- Workbench formspec
+local workbench_fs = [[
+	background[-0.2,-0.26;9.41,9.49;formspec_workbench_crafting.png]
+	button[0,0;2,1;creating;]
+	image[0.5,0;1,1;workbench_saw.png]
+	button[0,1;2,1;anvil;]
+	image[0.5,1;1,1;workbench_anvil.png]
+	list[current_player;craft;2,0.5;3,3;]
+	list[current_player;craftpreview;6.055,1.505;1,1;]
+]]
+-- Creating formspec
+local creating_fs = [[
+	background[-0.2,-0.26;9.41,9.49;formspec_workbench_creating.png]
+	button[0,0;1.5,1;back;< Back]
+	image[0,1.52;1,1;workbench_saw.png]
+	list[context;craft;1.195,1.505;1,1;]
+	list[context;forms;4.01,0.51;4,3;]
+]]
+
+-- Repair formspec
+local repair_fs = [[
+	background[-0.2,-0.26;9.41,9.49;formspec_workbench_anvil.png]
+	button[0,0;1.5,1;back;< Back]
+	image[0,1.52;1,1;workbench_anvil.png]
+	list[context;tool;1.195,1.505;1,1;]
+	list[context;hammer;4.06,1.50;1,1;]
+	image[4.04,1.55;1,1;hammer_layout.png]
+]]
+
 local formspecs = {
-	--	Workbench formspec
-	[[	background[-0.2,-0.26;9.41,9.49;formspec_workbench_crafting.png]
-		button[0,0;2,1;creating;]
-		image[0.5,0;1,1;workbench_saw.png]
-		button[0,1;2,1;anvil;]
-		image[0.5,1;1,1;workbench_anvil.png]
-		list[current_player;craft;2,0.5;3,3;]
-		list[current_player;craftpreview;6.055,1.505;1,1;] ]],
-	--	Creating formspec
-	[[ 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_creating.png]
-		button[0,0;1.5,1;back;< Back]
-		image[0,1.52;1,1;workbench_saw.png]
-		list[context;craft;1.195,1.505;1,1;]
-		list[context;forms;4.01,0.51;4,3;] ]],
-	--	Repair formspec
-	[[ 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_anvil.png]
-		button[0,0;1.5,1;back;< Back]
-		image[0,1.52;1,1;workbench_anvil.png]
-		list[context;tool;1.195,1.505;1,1;]
-		list[context;hammer;4.06,1.50;1,1;]
-		image[4.04,1.55;1,1;hammer_layout.png] ]],
+	-- Workbench formspec
+	workbench_fs,
+
+	-- Crafting formspec
+	creating_fs,
+
+	-- Repair formspec
+	repair_fs,
 }
 
 function workbench:set_formspec(meta, id)
-	meta:set_string("formspec", "size[9,8.75;]"..
+	meta:set_string("formspec",
+		"size[9,8.75;]" ..
 		"background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]" ..
-		default.gui_bg..
-		default.listcolors..
-		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;true;]" ..
-		"list[detached:split;main;8,3.14;1,1;]"..
-		"list[current_player;main;0.01,4.51;9,3;9]"..
-		"list[current_player;main;0.01,7.75;9,1;]"..
+		default.gui_bg ..
+		default.listcolors ..
+		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]"..
+		"list[detached:split;main;8,3.14;1,1;]" ..
+		"list[current_player;main;0.01,4.51;9,3;9]" ..
+		"list[current_player;main;0.01,7.75;9,1;]" ..
 		formspecs[id])
 end
 
@@ -145,33 +165,36 @@ function workbench.construct(pos)
 end
 
 function workbench.fields(pos, _, fields, sender)
-	local meta = minetest.get_meta(pos)
-	if		fields.back		then workbench:set_formspec(meta, 1)
-	elseif	fields.creating	then workbench:set_formspec(meta, 2)
-	elseif	fields.anvil	then workbench:set_formspec(meta, 3)
-	elseif	fields.quit and pos and sender then
-		local inv = sender:get_inventory()
-		if inv then
-			for i, stack in ipairs(inv:get_list("craft")) do
-				minetest.item_drop(stack, nil, pos)
-				stack:clear()
-				inv:set_stack("craft", i, stack)
+	local meta = minetest.get_meta(pos)	
+	local id = fields.back and 1 or fields.creating and 2 or fields.anvil and 3
+	if not id then
+		if pos and sender then
+			local inv = sender:get_inventory()
+			if inv then
+				for i, stack in ipairs(inv:get_list("craft")) do
+					minetest.item_drop(stack, nil, pos)
+					stack:clear()
+					inv:set_stack("craft", i, stack)
+				end
+			end
+			inv = meta:get_inventory()
+			if inv then
+				for _, name in pairs({"craft", "tool", "hammer"}) do
+					local stack = inv:get_stack(name, 1)
+					minetest.item_drop(stack, nil, pos)
+					stack:clear()
+					inv:set_stack(name, 1, stack)
+				end
+				for i, stack in pairs(inv:get_list("forms")) do
+					stack:clear()
+					inv:set_stack("forms", i, stack)
+				end
 			end
 		end
-		inv = meta:get_inventory()
-		if inv then
-			for _, name in pairs({"craft", "tool", "hammer"}) do
-				local stack = inv:get_stack(name, 1)
-				minetest.item_drop(stack, nil, pos)
-				stack:clear()
-				inv:set_stack(name, 1, stack)
-			end
-			for i, stack in pairs(inv:get_list("forms")) do
-				stack:clear()
-				inv:set_stack("forms", i, stack)
-			end
-		end
+		return
 	end
+
+	workbench:set_formspec(meta, id)
 end
 
 function workbench.timer(pos)
@@ -185,7 +208,7 @@ function workbench.timer(pos)
 		return
 	end
 
-	-- Tool's wearing range: 0-65535 | 0 = new condition
+	-- Tool's wearing range: 0-65535; 0 = new condition
 	tool:add_wear(-500)
 	hammer:add_wear(700)
 
@@ -269,68 +292,65 @@ for _, d in pairs(workbench.defs) do
 	for i=1, #nodes do
 		local node = nodes[i]
 		local def = minetest.registered_nodes[node]
+		local groups, tiles, mesh, collision_box = {}, {}, {}, {}
+		local drawtype = "nodebox"
 
-		if d[3] then
-			local groups = {}
-			local tiles
-			groups.stairs = 1
+		if not d[3] then
+			drawtype = "mesh"
+			mesh = "workbench_slope.obj"
+			collision_box = {
+				type = "fixed",
+				fixed = {
+					{-0.5, -0.5,    -0.5,    0.5, -0.1875, 0.5},
+					{-0.5, -0.1875, -0.1875, 0.5,  0.1875, 0.5},
+					{-0.5,  0.1875,  0.1875, 0.5,  0.5,    0.5}
+				},
+			}
+		end
 
-			for k, v in pairs(def.groups) do
-				if k ~= "wood" and k ~= "stone" and k ~= "level" then
-					groups[k] = v
-				end
+		groups.stairs = 1
+
+		for k, v in pairs(def.groups) do
+			if k ~= "wood" and k ~= "stone" and k ~= "wool" and k ~= "level" then
+				groups[k] = v
 			end
+		end
 
-			if def.tiles then
-				if #def.tiles > 1 and (def.drawtype:sub(1,5) ~= "glass") then
-					tiles = def.tiles
-				else
-					tiles = {def.tiles[1]}
-				end
+		if def.tiles then
+			if #def.tiles > 1 and (def.drawtype:sub(1,5) ~= "glass") then
+				tiles = def.tiles
 			else
 				tiles = {def.tiles[1]}
 			end
-
-			minetest.register_node(":stairs:"..d[1].."_"..node:gsub(":", "_"), {
-				description = def.description.." "..d[1]:gsub("^%l", string.upper),
-				paramtype = "light",
-				paramtype2 = "facedir",
-				drawtype = "nodebox",
-				sounds = def.sounds,
-				tiles = tiles,
-				groups = groups,
-				light_source = def.light_source / 2,
-				node_box = workbench:pixelbox(16, {unpack(d, 3)}),
-				sunlight_propagates = true,
-				is_ground_content = false,
-				on_place = minetest.rotate_node
-			})
-
-			minetest.register_node(":stairs:slope_" .. node:gsub(":", "_"), {
-				description = def.description .. " Slope",
-				paramtype = "light",
-				paramtype2 = "facedir",
-				drawtype = "mesh",
-				mesh = "workbench_slope.obj",
-				sounds = def.sounds,
-				tiles = def.tiles,
-				groups = groups,
-				light_source = def.light_source / 2,
-				sunlight_propagates = true,
-				is_ground_content = false,
-				use_texture_alpha = def.use_texture_alpha,
-				on_place = minetest.rotate_node,
-				collision_box = {
-					type = "fixed",
-					fixed = {
-						{-0.5, -0.5, -0.5, 0.5, -0.1875, 0.5},
-						{-0.5, -0.1875, -0.1875, 0.5, 0.1875, 0.5},
-						{-0.5, 0.1875, 0.1875, 0.5, 0.5, 0.5},
-					},
-				},
-			})
-
+		else
+			tiles = {def.tiles[1]}
 		end
+		
+		if def.drop ~= "" then
+			drop = "stairs:"..d[1].."_"..node:gsub(":", "_")
+		else
+			drop = ""
+		end
+
+		minetest.register_node(":stairs:"..d[1].."_"..node:gsub(":", "_"), {
+			description = def.description.." " ..Sl(d[1]:gsub("^%l", string.upper)),
+			drawtype = drawtype,
+			tiles = tiles,
+			mesh = mesh,
+			paramtype = "light",
+			paramtype2 = "facedir",
+			drop = drop,
+			groups = groups,
+			light_source = def.light_source / 2,
+			sunlight_propagates = true,
+			walkable = def.walkable,
+			is_ground_content = false,
+			sounds = def.sounds,
+			use_texture_alpha = def.use_texture_alpha,
+			on_place = minetest.rotate_node,
+			node_box = workbench:pixelbox(16, {unpack(d, 3)}),
+			collision_box = collision_box
+		})
 	end
 end
 
@@ -404,5 +424,5 @@ minetest.register_craft({
 minetest.register_craft({
 	type = "fuel",
 	recipe = "workbench:workbench",
-	burntime = 30,
+	burntime = 30
 })
