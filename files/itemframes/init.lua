@@ -2,11 +2,12 @@ local tmp = {}
 
 minetest.register_entity("itemframes:item",{
 	hp_max = 1,
-	visual="wielditem",
-	visual_size={x = 0.33, y = 0.33},
-	collisionbox = {0,0,0,0,0,0},
-	physical=false,
-	textures={"air"},
+	visual = "wielditem",
+	visual_size = {x = 0.33, y = 0.33},
+	collisionbox = {0, 0, 0, 0, 0, 0},
+	physical = false,
+	textures = {"air"},
+
 	on_activate = function(self, staticdata)
 		if tmp.nodename ~= nil and tmp.texture ~= nil then
 			self.nodename = tmp.nodename
@@ -15,7 +16,7 @@ minetest.register_entity("itemframes:item",{
 			tmp.texture = nil
 		else
 			if staticdata ~= nil and staticdata ~= "" then
-				local data = staticdata:split(';')
+				local data = staticdata:split(";")
 				if data and data[1] and data[2] then
 					self.nodename = data[1]
 					self.texture = data[2]
@@ -23,7 +24,7 @@ minetest.register_entity("itemframes:item",{
 			end
 		end
 		if self.texture ~= nil then
-			self.object:set_properties({textures={self.texture}})
+			self.object:set_properties({textures = {self.texture}})
 		end
 		if self.texture ~= nil and self.nodename ~= nil then
 			local entity_pos = vector.round(self.object:get_pos())
@@ -45,25 +46,25 @@ minetest.register_entity("itemframes:item",{
 			end
 		end
 	end,
+
 	get_staticdata = function(self)
 		if self.nodename ~= nil and self.texture ~= nil then
-			return self.nodename .. ';' .. self.texture
+			return self.nodename .. ";" .. self.texture
 		end
 		return ""
-	end,
+	end
 })
 
 local facedir = {}
-
-facedir[0] = {x=0,y=0,z=1}
-facedir[1] = {x=1,y=0,z=0}
-facedir[2] = {x=0,y=0,z=-1}
-facedir[3] = {x=-1,y=0,z=0}
+facedir[2] = {x =  1, y = 0, z =  0}
+facedir[3] = {x = -1, y = 0, z =  0}
+facedir[4] = {x =  0, y = 0, z =  1}
+facedir[5] = {x =  0, y = 0, z = -1}
 
 local remove_item = function(pos, node)
 	local objs = nil
 	if node.name == "itemframes:frame" then
-		objs = minetest.get_objects_inside_radius(pos, .5)
+		objs = minetest.get_objects_inside_radius(pos, 0.5)
 	end
 	if objs then
 		for _, obj in ipairs(objs) do
@@ -78,18 +79,16 @@ local update_item = function(pos, node)
 	remove_item(pos, node)
 	local meta = minetest.get_meta(pos)
 	if meta:get_string("item") ~= "" then
-		if node.name == "itemframes:frame" then
-			local posad = facedir[node.param2]
-			if not posad then return end
-			pos.x = pos.x + posad.x*6.5/16
-			pos.y = pos.y + posad.y*6.5/16
-			pos.z = pos.z + posad.z*6.5/16
-		end
+		local posad = facedir[node.param2]
+		if not posad then return end
+		pos.x = pos.x + posad.x * 6.5 / 16
+		pos.y = pos.y + posad.y * 6.5 / 16
+		pos.z = pos.z + posad.z * 6.5 / 16
 		tmp.nodename = node.name
 		tmp.texture = ItemStack(meta:get_string("item")):get_name()
-		local e = minetest.add_entity(pos,"itemframes:item")
-		if node.name == "itemframes:frame" then
-			local yaw = math.pi*2 - node.param2 * math.pi/2
+		local e = minetest.add_entity(pos, "itemframes:item")
+		if node.param2 == 2 or node.param2 == 3 then
+			local yaw = math.pi / 2 - node.param2 * math.pi * 2
 			e:setyaw(yaw)
 		end
 	end
@@ -101,7 +100,7 @@ local drop_item = function(pos, node)
 		if node.name == "itemframes:frame" then
 			minetest.add_item(pos, meta:get_string("item"))
 		end
-		meta:set_string("item","")
+		meta:set_string("item", "")
 	end
 	remove_item(pos, node)
 end
@@ -110,31 +109,42 @@ minetest.register_node("itemframes:frame",{
 	description = "Item frame",
 	drawtype = "nodebox",
 	node_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, 7/16, 0.5, 0.5, 0.5}
-	},
-	selection_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, 7/16, 0.5, 0.5, 0.5}
+		type = "wallmounted"
 	},
 	tiles = {"itemframe_background.png"},
 	inventory_image = "itemframe_background.png",
 	paramtype = "light",
-	paramtype2 = "facedir",
+	paramtype2 = "wallmounted",
 	sunlight_propagates = true,
 	groups = {choppy = 2, dig_immediate = 2, attached_node = 1},
-	legacy_wallmounted = true,
+	legacy_wallmounted = false,
 	sounds = default.node_sound_wood_defaults(),
+
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.type == "node" then
+			local undery = pointed_thing.under.y
+			local posy = pointed_thing.above.y
+			if undery > posy then -- Place on celling, not allowed
+				return itemstack
+			elseif undery < posy then -- Place on bottom, not allowed
+				return itemstack
+			else
+				return minetest.item_place(itemstack, placer, pointed_thing)
+			end
+		end
+	end,
+
 	after_place_node = function(pos, placer, itemstack)
 		local meta = minetest.get_meta(pos)
 		meta:set_string("owner",placer:get_player_name())
-		meta:set_string("infotext","Item frame (owned by "..placer:get_player_name()..")")
+		meta:set_string("infotext","Item frame (owned by " .. placer:get_player_name() .. ")")
 	end,
+
 	on_rightclick = function(pos, node, clicker, itemstack)
 		if not itemstack then return end
 		local meta = minetest.get_meta(pos)
 		local name = clicker and clicker:get_player_name()
-				if name == meta:get_string("owner") or
+		if name == meta:get_string("owner") or
 				minetest.check_player_privs(name, "protection_bypass") then
 			drop_item(pos, node)
 			local string = itemstack:take_item()
@@ -143,6 +153,7 @@ minetest.register_node("itemframes:frame",{
 		end
 		return itemstack
 	end,
+
 	on_punch = function(pos, node, puncher)
 		local meta = minetest.get_meta(pos)
 		local name = puncher and puncher:get_player_name()
@@ -151,29 +162,30 @@ minetest.register_node("itemframes:frame",{
 			drop_item(pos, node)
 		end
 	end,
+
 	can_dig = function(pos,player)
 		if not player then return end
 		local name = player and player:get_player_name()
 		local meta = minetest.get_meta(pos)
-return name == meta:get_string("owner") or
+		return name == meta:get_string("owner") or
 				minetest.check_player_privs(name, "protection_bypass")
 	end,
+
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
 		local node = minetest.get_node(pos)
 		if meta:get_string("item") ~= "" then
 			drop_item(pos, node)
 		end
-	end,
+	end
 })
 
--- crafts
-
+-- Craft
 minetest.register_craft({
-	output = 'itemframes:frame',
+	output = "itemframes:frame",
 	recipe = {
-		{'group:stick', 'group:stick', 'group:stick'},
-		{'group:stick', 'default:paper', 'group:stick'},
-		{'group:stick', 'group:stick', 'group:stick'},
+		{"group:stick", "group:stick", "group:stick"},
+		{"group:stick", "default:paper", "group:stick"},
+		{"group:stick", "group:stick", "group:stick"}
 	}
 })
