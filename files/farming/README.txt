@@ -1,5 +1,5 @@
 MultiCraft Game mod: farming
-==========================
+============================
 See license.txt for license information.
 
 Authors of source code

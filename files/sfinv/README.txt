@@ -1,12 +1,12 @@
 Simple Fast Inventory
 ====================
 
-![SFINV Screeny](https://cdn.pbrd.co/images/1yQhd1TI.png)
-
 A cleaner, simpler, solution to having an advanced inventory in Minetest.
 
 Written by rubenwardy.  
 License: MIT
+
+Modified by MultiCraft Development Team
 
 See game_api.txt for this mod's API
 

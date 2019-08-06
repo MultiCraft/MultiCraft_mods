@@ -1,15 +1,14 @@
 MultiCraft Game mod: workbench
 ==============================
 
-##### A mod adding a Workbench and Stairs to MultiCraft. #####
-##### The Workbench can cut up to 12 shapes, repair your tools, craft items and store. #####
+Adding a Workbench and Stairs to MultiCraft.
+The Workbench can cut up to 12 shapes, repair your tools, craft items and store.
 
-##### This mod is originating from [X-Decor](https://github.com/kilbith/xdecor). #####
+This mod is originating from [X-Decor](https://github.com/kilbith/xdecor).
 
 License of source code:
 -----------------------
 Copyright (C) 2015-2017 kilbith <jeanpatrick.guerrero@gmail.com>
-
 Copyright (C) 2019 MultiCraft Development Team
 
 This program is free software; you can redistribute it and/or modify

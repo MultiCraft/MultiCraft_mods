@@ -63,15 +63,6 @@ Craft: 1 dry grass, 1 ice, 1 glass bottle.
 Clears all running speed effects.
 Craft: 1 running potion, 1 slug potion.
 
-### Mana (needs Mana mod)
-#### Weak mana potion
-Increases mana regeneration rate by 0.5 for 10 seconds.
-Craft: 2 dry shrubs, 1 cotton seed, 1 mese crystal fragment, 1 glass bottle.
-
-#### Strong mana potion
-Increases mana regeneration rate by 1 for 10 seconds.
-Craft: 4 dry shrubs, 1 jungle sapling, 1 acacia tree sapling, 1 mese crystal fragment, 1 weak mana potion.
-
 ### Other potions
 #### Mole potion
 Digs out two blocks directly in front of you, for 18 seconds.

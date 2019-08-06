@@ -1,5 +1,5 @@
 MultiCraft Game mod: wieldview
-===========================
+==============================
 
 Makes hand wielded items visible to other players.
 
