@@ -1,8 +1,12 @@
 MultiCraft Game mod: itemframes
-=========================
-This Mod Is by Zeg9
+===============================
 
-Based on VanessaE fork:
+License of source code:
+-----------------------
+Copyright (C) Zeg9
+Copyright (C) VanessaE
+Copyright (C) 2019 MultiCraft Development Team
+
 https://gitlab.com/VanessaE/homedecor_modpack/tree/master/itemframes
 
 This program is free software; you can redistribute it and/or modify

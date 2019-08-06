@@ -1,7 +1,6 @@
 MultiCraft Game mod: dye
-======================
+========================
 See license.txt for license information.
-See init.lua for documentation.
 
 Authors of source code
 ----------------------

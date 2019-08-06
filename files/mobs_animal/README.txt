@@ -1,9 +1,4 @@
-
 ANIMAL MOBS
-
-Bee
-
-- Tends to buzz around flowers and gives honey when killed, you can also right-click a bee to pick it up and place in inventory. 3x bee's in a row can craft a beehive.
 
 Bunny
 
@@ -20,10 +15,6 @@ Cow
 Kitten
 
 - Found on green grass these cute cats walk around and can be picked up and placed in inventory as pets or right-clicked with 4x raw fish (found in ethereal) and tamed.
-
-Rat
-
-- Typically found around stone they can be picked up and cooked for eating.
 
 Sheep
 

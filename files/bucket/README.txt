@@ -12,8 +12,3 @@ the Free Software Foundation; either version 3.0 of the License, or
 (at your option) any later version.
 
 http://www.gnu.org/licenses/lgpl-3.0.html
-
-License of media (textures and sounds)
---------------------------------------
-Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
-http://creativecommons.org/licenses/by-sa/3.0/
