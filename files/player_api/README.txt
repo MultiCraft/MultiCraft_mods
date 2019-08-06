@@ -1,5 +1,5 @@
 MultiCraft Game mod: player_api
-=============================
+===============================
 See license.txt for license information.
 
 Provides an API to allow multiple mods to set player models and textures.
@@ -9,6 +9,7 @@ Authors of source code
 ----------------------
 Originally by celeron55, Perttu Ahola <celeron55@gmail.com> (LGPLv3.0+)
 Various Minetest developers and contributors (LGPLv3.0+)
+Copyright (C) 2018-2019 MultiCraft Development Team
 
 Authors of media (textures, models and sounds)
 ----------------------------------------------
