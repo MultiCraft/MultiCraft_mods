@@ -723,20 +723,19 @@ end
 -- Crafting functions 
 --
 
-split_inv = minetest.create_detached_inventory("split", {
-	allow_move = function(_, _, _, _, _, count, _)
-		return count
-	end,
-	allow_put = function(_, _, _, stack, _)
-		return stack:get_count() / 2
-	end,
-	allow_take = function(_, _, _, stack, _)
-		return stack:get_count()
-	end,
-})
 
 minetest.register_on_joinplayer(function(player)
-	if split_inv then
-		split_inv:set_size("main", 1)
-	end
+	split_inv = minetest.create_detached_inventory("split", {
+		allow_move = function(_, _, _, _, _, count, _)
+			return count
+		end,
+		allow_put = function(_, _, _, stack, _)
+			return stack:get_count() / 2
+		end,
+		allow_take = function(_, _, _, stack, _)
+			return stack:get_count()
+		end,
+	})
+
+	split_inv:set_size("main", 1)
 end)
