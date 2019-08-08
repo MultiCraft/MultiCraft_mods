@@ -17,7 +17,7 @@ player_api.register_model("character.b3d", {
 		walk      = {x = 168, y = 187},
 		mine      = {x = 189, y = 198},
 		walk_mine = {x = 200, y = 219},
-		sit       = {x = 81,  y = 160},
+		sit       = {x = 81,  y = 160}
 	},
 	stepheight = 0.6,
 	eye_height = 1.47,
@@ -63,7 +63,7 @@ else
 		type = "none",
 		wield_image = "blank.png",
 		tool_capabilities = {
-			full_punch_interval = 0.9,
+			full_punch_interval = 0.5,
 			damage_groups = {fleshy = 1},
 		}
 	})
@@ -78,7 +78,7 @@ else
 		drop = "",
 		node_placement_prediction = "",
 		tool_capabilities = {
-			full_punch_interval = 0.9,
+			full_punch_interval = 0.5,
 			max_drop_level = 0,
 			groupcaps = {
 				crumbly = {times = {[1]=5.0, [2]=3.0, [3]=0.7}, uses = 0, maxlevel = 1},
