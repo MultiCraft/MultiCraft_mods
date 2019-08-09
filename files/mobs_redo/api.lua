@@ -3790,7 +3790,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 	local invimg = background
 	if addegg == 1 then
 		invimg = "(" .. invimg ..
-			"^[mask:mobs_egg_overlay.png)"
+			"^[resize:64x64^[mask:mobs_egg_overlay.png)"
 	end
 
 	-- register new spawn egg containing mob information
