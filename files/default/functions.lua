@@ -725,7 +725,7 @@ end
 
 
 minetest.register_on_joinplayer(function(player)
-	split_inv = minetest.create_detached_inventory("split", {
+	local split_inv = minetest.create_detached_inventory("split", {
 		allow_move = function(_, _, _, _, _, count, _)
 			return count
 		end,

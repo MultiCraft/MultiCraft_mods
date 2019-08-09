@@ -112,6 +112,10 @@ minetest.register_craft({
 })
 
 
+-- Aliases
+minetest.register_alias("default:string", "farming:string")
+minetest.register_alias("default:haybale", "farming:straw")
+
 -- Fuels
 
 minetest.register_craft({

@@ -137,15 +137,6 @@ minetest.register_node("default:dirt_with_grass", {
 	})
 })
 
-minetest.register_node("default:dirt_with_grass_footsteps", {
-	tiles = {"default_grass.png", "default_dirt.png", "default_dirt.png^default_grass_side.png"},
-	groups = {crumbly = 3, soil = 1, not_in_creative_inventory = 1},
-	drop = "default:dirt",
-	sounds = default.node_sound_dirt_defaults({
-		footstep = {name = "default_grass_footstep", gain = 0.25}
-	})
-})
-
 minetest.register_node("default:dirt_with_dry_grass", {
 	description = "Dirt with Dry Grass",
 	tiles = {"default_dry_grass.png", "default_dirt.png",
@@ -728,7 +719,7 @@ minetest.register_node("default:birch_sapling", {
 
 minetest.register_node("default:stone_with_coal", {
 	description = "Coal Ore",
-	tiles = {"default_stone.png^default_mineral_coal.png"},
+	tiles = {"default_mineral_coal.png"},
 	groups = {cracky = 3},
 	drop = "default:coal_lump",
 	sounds = default.node_sound_stone_defaults()
@@ -744,7 +735,7 @@ minetest.register_node("default:coalblock", {
 
 minetest.register_node("default:stone_with_iron", {
 	description = "Iron Ore",
-	tiles = {"default_stone.png^default_mineral_iron.png"},
+	tiles = {"default_mineral_iron.png"},
 	groups = {cracky = 2},
 	drop = "default:stone_with_iron",
 	sounds = default.node_sound_stone_defaults()
@@ -767,7 +758,7 @@ minetest.register_node("default:lapisblock", {
 
 minetest.register_node("default:stone_with_bluestone", {
 	description = "Bluestone Ore",
-	tiles = {"default_stone.png^default_mineral_bluestone.png"},
+	tiles = {"default_mineral_bluestone.png"},
 	groups = {cracky = 2},
 	drop = "mesecons:wire_00000000_off 8",
 	sounds = default.node_sound_stone_defaults()
@@ -775,7 +766,7 @@ minetest.register_node("default:stone_with_bluestone", {
 
 minetest.register_node("default:stone_with_lapis", {
 	description = "Lapis Lazuli Ore",
-	tiles = {"default_stone.png^default_mineral_lapis.png"},
+	tiles = {"default_mineral_lapis.png"},
 	groups = {cracky = 2},
 	drop = {
 		max_items = 2,
@@ -793,7 +784,7 @@ minetest.register_node("default:stone_with_lapis", {
 
 minetest.register_node("default:stone_with_gold", {
 	description = "Gold Ore",
-	tiles = {"default_stone.png^default_mineral_gold.png"},
+	tiles = {"default_mineral_gold.png"},
 	groups = {cracky = 2},
 	drop = "default:stone_with_gold",
 	sounds = default.node_sound_stone_defaults()
@@ -809,7 +800,7 @@ minetest.register_node("default:goldblock", {
 
 minetest.register_node("default:stone_with_emerald", {
 	description = "Emerald Ore",
-	tiles = {"default_stone.png^default_mineral_emerald.png"},
+	tiles = {"default_mineral_emerald.png"},
 	groups = {cracky = 2},
 	drop = "default:emerald",
 	sounds = default.node_sound_stone_defaults()
@@ -824,7 +815,7 @@ minetest.register_node("default:emeraldblock", {
 
 minetest.register_node("default:stone_with_diamond", {
 	description = "Diamonds in Stone",
-	tiles = {"default_stone.png^default_mineral_diamond.png"},
+	tiles = {"default_mineral_diamond.png"},
 	groups = {cracky = 1},
 	drop = "default:diamond",
 	sounds = default.node_sound_stone_defaults()
@@ -856,7 +847,7 @@ minetest.register_node("default:cactus", {
 			{-8/16, -8/16, -7/16,  8/16, 8/16, -7/16}, -- Spikes
 			{-8/16, -8/16,  7/16,  8/16, 8/16,  7/16}, -- Spikes
 			{-7/16, -8/16, -8/16, -7/16, 8/16,  8/16}, -- Spikes
-			{7/16,  -8/16,  8/16,  7/16, 8/16, -8/16}  -- Spikes
+			{ 7/16, -8/16,  8/16,  7/16, 8/16, -8/16}  -- Spikes
 		}
 	},
 	selection_box = {
@@ -903,7 +894,7 @@ minetest.register_node("default:dry_shrub", {
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
 		type = "fixed",
-		fixed = {-1/3, -1/2, -1/3, 1/3, 1/6, 1/3},
+		fixed = {-1/3, -1/2, -1/3, 1/3, 1/6, 1/3}
 	}
 })
 
@@ -1464,7 +1455,7 @@ minetest.register_node("default:slimeblock", {
 		type = "fixed",
 		fixed = {
 			{-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
-			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}
 		}
 	},
 	use_texture_alpha = true,
