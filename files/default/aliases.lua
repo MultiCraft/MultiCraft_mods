@@ -6,7 +6,8 @@ minetest.register_alias("stone", "default:stone")
 minetest.register_alias("stone_with_coal", "default:stone_with_coal")
 minetest.register_alias("stone_with_iron", "default:stone_with_iron")
 minetest.register_alias("dirt_with_grass", "default:dirt_with_grass")
-minetest.register_alias("dirt_with_grass_footsteps", "default:dirt_with_grass_footsteps")
+minetest.register_alias("dirt_with_grass_footsteps", "default:dirt_with_grass")
+minetest.register_alias("default:dirt_with_grass_footsteps", "default:dirt_with_grass")
 minetest.register_alias("dirt", "default:dirt")
 minetest.register_alias("sand", "default:sand")
 minetest.register_alias("gravel", "default:gravel")
@@ -76,12 +77,6 @@ minetest.register_alias("default:sandstonecarved", "default:sandstonesmooth")
 -- Workbench
 minetest.register_alias("crafting:workbench", "workbench:workbench")
 minetest.register_alias("default:workbench", "workbench:workbench")
-
--- String
-minetest.register_alias("default:string", "farming:string")
-
--- Hay Bale
-minetest.register_alias("default:haybale", "farming:straw")
 
 -- Ladder
 minetest.register_alias("default:ladder", "default:ladder_wood")
