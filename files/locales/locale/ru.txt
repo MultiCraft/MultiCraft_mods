@@ -270,6 +270,7 @@ Dog Egg = Яйцо Спавна Собаки
 Cat's Egg = Яйцо Спавна Кошки
 Pig Egg = Яйцо Спавна Свиньи
 Sheep Egg = Яйцо Спавна Овцы
+Parror Egg = Яйцо Спавна Попугая
 Skeleton Egg = Яйцо Спавна Скелета
 Spider Egg = Яйцо Спавна Паука
 Small Spider Egg = Яйцо Спавна Маленького Паука
