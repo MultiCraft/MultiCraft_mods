@@ -4,8 +4,6 @@
 mesecon.register_node("mesecons_walllever:wall_lever", {
 	description = "Lever",
 	drawtype = "nodebox",
-	inventory_image = "jeija_wall_lever.png",
-	wield_image = "jeija_wall_lever.png",
 	paramtype = "light",
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -30,12 +28,12 @@ mesecon.register_node("mesecons_walllever:wall_lever", {
 	end
 },{
 	tiles = {
-		"jeija_wall_lever_tb.png",
-		"jeija_wall_lever_bottom.png",
-		"jeija_wall_lever_sides.png",
-		"jeija_wall_lever_sides.png",
-		"jeija_wall_lever_back.png",
-		"jeija_wall_lever_off.png",
+		"default_stone.png",
+		"default_stone.png^jeija_wall_lever_top.png^[transformFY",
+		"default_stone.png^jeija_wall_lever_sides.png",
+		"default_stone.png^jeija_wall_lever_sides.png",
+		"default_stone.png^jeija_wall_lever_back.png",
+		"default_stone.png^jeija_wall_lever_on.png^[transformFY"
 	},
 	node_box = {
 		type = "fixed",
@@ -49,12 +47,12 @@ mesecon.register_node("mesecons_walllever:wall_lever", {
 	groups = {dig_immediate = 2},
 },{
 	tiles = {
-		"jeija_wall_lever_top.png",
-		"jeija_wall_lever_tb.png",
-		"jeija_wall_lever_sides.png",
-		"jeija_wall_lever_sides.png",
-		"jeija_wall_lever_back.png",
-		"jeija_wall_lever_on.png",
+		"default_stone.png^jeija_wall_lever_top.png",
+		"default_stone.png",
+		"default_stone.png^jeija_wall_lever_sides.png",
+		"default_stone.png^jeija_wall_lever_sides.png",
+		"default_stone.png^jeija_wall_lever_back.png",
+		"default_stone.png^jeija_wall_lever_on.png"
 	},
 	node_box = {
 		type = "fixed",
