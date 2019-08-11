@@ -1241,10 +1241,11 @@ minetest.register_node("default:lava_flowing", {
 --
 
 local bookshelf_formspec =
-	"size[9,7;]" ..
-	"list[context;books;0,0.3;9,2;]" ..
-	"list[current_player;main;0,2.85;9,1;]" ..
-	"list[current_player;main;0,4.08;9,3;9]" ..
+	default.gui ..
+	"background[-0.2,-0.26;9.41,9.49;formspec_shelf.png]" ..
+	"item_image[0,-0.1;1,1;default:bookshelf]" ..
+	"label[0.9,0.1;" .. Sl("Bookshelf") .. "]" ..
+	"list[context;books;0,1;9,2;]" ..
 	"listring[context;books]" ..
 	"listring[current_player;main]"
 
@@ -1291,7 +1292,7 @@ minetest.register_node("default:bookshelf", {
 		"default_wood.png", "default_bookshelf.png", "default_bookshelf.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
-	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 3},
+	groups = {cracky = 2, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
 	sounds = default.node_sound_wood_defaults(),
 
 	on_construct = function(pos)

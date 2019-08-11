@@ -1,38 +1,28 @@
-
 --
 -- Formspecs
 --
 
 function default.get_furnace_active_formspec(fuel_percent, item_percent)
-	return "size[9,8.75]"..
-		"background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]"..
-		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]"..
-		default.gui_bg..
-		default.listcolors..
-		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]"..
-		"list[current_player;main;0,4.5;9,3;9]"..
-		"list[current_player;main;0,7.74;9,1;]"..
-		"list[current_name;src;3,0.5;1,1;]"..
-		"list[current_name;fuel;3,2.5;1,1;]"..
-		"list[current_name;dst;5,1.5;1,1;]"..
-		"list[detached:split;main;8,3.14;1,1;]"..
-		"image[3,1.5;1,1;default_furnace_fire_bg.png^[lowpart:"..
-		(100-fuel_percent)..":default_furnace_fire_fg.png]"
+	return default.gui ..
+		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]" ..
+		"item_image[0,-0.1;1,1;default:furnace_active]" ..
+		"label[0.9,0.1;" .. Sl("Furnace") .. "]" ..
+		"list[current_name;src;3,0.5;1,1;]" ..
+		"list[current_name;fuel;3,2.5;1,1;]" ..
+		"image[3,1.5;1,1;default_furnace_fire_bg.png^[lowpart:" ..
+		(100 - fuel_percent) .. ":default_furnace_fire_fg.png]" ..
+		"list[current_name;dst;5,1.5;1,1;]"
 end
 
 function default.get_furnace_inactive_formspec()
-	return 	"size[9,8.75]"..
-		"background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]"..
-		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]"..
-		default.gui_bg..
-		default.listcolors..
-		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]"..
-		"list[current_player;main;0,4.5;9,3;9]"..
-		"list[current_player;main;0,7.74;9,1;]"..
-		"list[current_name;src;3,0.5;1,1;]"..
-		"list[current_name;fuel;3,2.5;1,1;]"..
-		"list[current_name;dst;5,1.5;1,1;]"..
-		"list[detached:split;main;8,3.14;1,1;]"
+	return default.gui ..
+		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]" ..
+		"item_image[0,-0.1;1,1;default:furnace]" ..
+		"label[0.9,0.1;" .. Sl("Furnace") .. "]" ..
+		"list[current_name;src;3,0.5;1,1;]" ..
+		"list[current_name;fuel;3,2.5;1,1;]" ..
+		"image[3,1.5;1,1;default_furnace_fire_bg.png]" ..
+		"list[current_name;dst;5,1.5;1,1;]"
 end
 
 --

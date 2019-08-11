@@ -1,8 +1,9 @@
 local vessels_shelf_formspec =
-	"size[9,7;]" ..
-	"list[context;vessels;0,0.3;9,2;]" ..
-	"list[current_player;main;0,2.85;9,1;]" ..
-	"list[current_player;main;0,4.08;9,3;9]" ..
+	default.gui ..
+	"background[-0.2,-0.26;9.41,9.49;formspec_shelf.png]" ..
+	"item_image[0,-0.1;1,1;vessels:shelf]" ..
+	"label[0.9,0.1;" .. Sl("Potion Shelf") .. "]" ..
+	"list[context;vessels;0,1;9,2;]" ..
 	"listring[context;vessels]" ..
 	"listring[current_player;main]"
 
@@ -18,7 +19,7 @@ minetest.register_node("vessels:shelf", {
 		"default_wood.png", "vessels_shelf.png", "vessels_shelf.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
-	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 3},
+	groups = {cracky = 2, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
 	sounds = default.node_sound_wood_defaults(),
 
 	on_construct = function(pos)
@@ -69,7 +70,7 @@ minetest.register_craft({
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},
 		{"group:vessel", "group:vessel", "group:vessel"},
-		{"group:wood", "group:wood", "group:wood"},
+		{"group:wood", "group:wood", "group:wood"}
 	}
 })
 
@@ -86,7 +87,7 @@ minetest.register_node("vessels:glass_bottle", {
 		fixed = {-0.25, -0.5, -0.25, 0.25, 0.3, 0.25}
 	},
 	groups = {vessel = 1, dig_immediate = 3, attached_node = 1},
-	sounds = default.node_sound_glass_defaults(),
+	sounds = default.node_sound_glass_defaults()
 })
 
 minetest.register_alias("potions:glass_bottle", "vessels:glass_bottle")
@@ -103,5 +104,5 @@ minetest.register_craft( {
 minetest.register_craft({
 	type = "fuel",
 	recipe = "vessels:shelf",
-	burntime = 30,
+	burntime = 30
 })
