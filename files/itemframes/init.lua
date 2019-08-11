@@ -113,6 +113,7 @@ minetest.register_node("itemframes:frame",{
 	},
 	tiles = {"itemframe_background.png"},
 	inventory_image = "itemframe_background.png",
+	wield_image = "itemframe_background.png",
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,
