@@ -130,7 +130,7 @@ minetest.register_decoration({
  		"default:snowblock", "default:dirt_with_grass", "default:redsand",
 		"default:redsandstone", "default:dirt_with_dry_grass"},
 	sidelen = 80,
-	fill_ratio = 0.0002,
+	fill_ratio = 0.0001,
 	y_max = 31000,
 	y_min = 1,
 	decoration = {"bonusbox:chest"}
