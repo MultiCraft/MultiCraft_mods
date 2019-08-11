@@ -13,8 +13,11 @@ function default.register_torch(name, def)
 		drop = name,
 		sounds = def.sounds,
 		floodable = true,
+
 		mesecons = def.mesecons,
+
 		on_blast = def.on_blast,
+
 		on_flood = function(pos, oldnode, newnode)
 			local torch = (oldnode.name:gsub("_wall", "") or oldnode.name:gsub("_celling", "")) or oldnode.name
 			minetest.add_item(pos, ItemStack(torch))
@@ -30,27 +33,19 @@ function default.register_torch(name, def)
 			-- Remove the torch node
 			return false
 		end,
+
 		on_place = function(itemstack, placer, pointed_thing)
 			local under = pointed_thing.under
-			local node = minetest.get_node(under)
-			local def = minetest.registered_nodes[node.name]
-			if def and def.on_rightclick and
-				not (placer and placer:is_player() and
-				placer:get_player_control().sneak) then
-				return def.on_rightclick(under, node, placer, itemstack,
-					pointed_thing) or itemstack
-			end
 			local above = pointed_thing.above
 			local wdir = minetest.dir_to_wallmounted(vector.subtract(under, above))
-			local fakestack = itemstack
 			if wdir == 0 then
-				fakestack:set_name(name .. "_ceiling")
+				itemstack:set_name(name .. "_ceiling")
 			elseif wdir == 1 then
-				fakestack:set_name(name)
+				itemstack:set_name(name)
 			else
-				fakestack:set_name(name .. "_wall")
+				itemstack:set_name(name .. "_wall")
 			end
-			itemstack = minetest.item_place(fakestack, placer, pointed_thing, wdir)
+			itemstack = minetest.item_place(itemstack, placer, pointed_thing, wdir)
 			itemstack:set_name(name)
 			return itemstack
 		end

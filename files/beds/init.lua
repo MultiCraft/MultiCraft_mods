@@ -9,7 +9,8 @@ local S = intllib.make_gettext_pair()
 
 beds.formspec = "size[8,11;true]" ..
 	"no_prepend[]" ..
-	default.gui_bg..
+	default.gui_bg ..
+	default.listcolors ..
 	"button_exit[2,10;4,0.75;leave;" .. S("Leave Bed") .. "]"
 
 local modpath = minetest.get_modpath("beds")
