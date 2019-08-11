@@ -1,5 +1,5 @@
 local workbench = {}
-local min, ceil = math.min, math.ceil
+local workbench_label, workbench_back = "", ""
 
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
@@ -11,7 +11,7 @@ for node, def in pairs(minetest.registered_nodes) do
 		not def.on_blast and
 		not def.on_metadata_inventory_put and
 		not (def.groups.not_in_creative_inventory == 1) and
-		not (def.groups.not_cuttable == 1) and
+		not (def.groups.not_cuttable) and
 		not def.groups.colorglass and
 		not def.mesecons
 	then
@@ -72,7 +72,7 @@ function workbench:get_output(inv, input, name)
 	local output = {}
 	for i = 1, #self.defs do
 		local nbox = self.defs[i]
-		local count = min(nbox[2] * input:get_count(), input:get_stack_max())
+		local count = math.min(nbox[2] * input:get_count(), input:get_stack_max())
 		local item = "stairs:" .. nbox[1] .. "_" .. name:gsub(":", "_")
 		output[#output+1] = item .. " " .. count
 	end
@@ -94,36 +94,67 @@ function workbench:pixelbox(size, boxes)
 			((z + l) / size) - 0.5
 		}
 	end
-	return {type="fixed", fixed=fixed}
+	return {type = "fixed", fixed = fixed}
+end
+
+-- You can't place 'image' on top of 'item_image'
+minetest.register_craftitem("workbench:saw", {
+	description = "Hammer",
+	inventory_image = "workbench_saw.png",
+	groups = {not_in_creative_inventory = 1}
+})
+
+if PLATFORM ~= "Android" and PLATFORM ~= "iOS" then
+	workbench_label = "label[0.9,0.1;" .. Sl("Workbench") .. "]"
+	workbench_back  = "label[0.1,0.7;" .. Sl("< Back") .. "]"
 end
 
 -- Workbench formspec
 local workbench_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_crafting.png]
-	button[0,0;2,1;creating;]
-	image[0.5,0;1,1;workbench_saw.png]
-	button[0,1;2,1;anvil;]
-	image[0.5,1;1,1;workbench_anvil.png]
+
+	item_image[0,-0.1;1,1;workbench:workbench]
+	]] .. workbench_label .. [[
+
+	image_button[0.2,0.8;1.5,1.5;blank.png;creating;;true;false;workbench_button_back.png]
+	item_image[0.25,0.85;1.5,1.5;stairs:stair_default_wood]
+	item_image[0.25,0.95;1.4,1.4;workbench:saw]
+	tooltip[creating;]] .. Sl("Сutting") .. [[;#000;#FFF]
+
+	image_button[0.2,2.15;1.5,1.5;blank.png;anvil;;true;false;workbench_button_back.png]
+	image[0.25,2.2;1.5,1.5;workbench_anvil.png]
+	tooltip[anvil;]] .. Sl("Anvil") .. [[;#000;#FFF]
+
 	list[current_player;craft;2,0.5;3,3;]
-	list[current_player;craftpreview;6.055,1.505;1,1;]
+	list[current_player;craftpreview;7,1.505;1,1;]
 ]]
+
 -- Creating formspec
 local creating_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_creating.png]
-	button[0,0;1.5,1;back;< Back]
-	image[0,1.52;1,1;workbench_saw.png]
-	list[context;craft;1.195,1.505;1,1;]
+
+	item_image[0,-0.1;1,1;workbench:workbench]
+	]] .. workbench_back .. [[
+	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;workbench_button_back.png]
+
+	item_image[0.1,1.15;1.75,1.75;workbench:saw]
+	list[context;craft;2,1.505;1,1;]
 	list[context;forms;4.01,0.51;4,3;]
 ]]
 
 -- Repair formspec
 local repair_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_anvil.png]
-	button[0,0;1.5,1;back;< Back]
-	image[0,1.52;1,1;workbench_anvil.png]
-	list[context;tool;1.195,1.505;1,1;]
-	list[context;hammer;4.06,1.50;1,1;]
-	image[4.04,1.55;1,1;hammer_layout.png]
+
+	item_image[0,-0.1;1,1;workbench:workbench]
+	]] .. workbench_back .. [[
+	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;workbench_button_back.png]
+
+	image[0.1,1.15;1.75,1.75;workbench_anvil.png]
+	item_image[2,2.5;1,1;default:pick_stone]
+	list[context;tool;2,1.5;1,1;]
+	item_image[6,2.5;1,1;workbench:hammer]
+	list[context;hammer;6,1.5;1,1;]
 ]]
 
 local formspecs = {
@@ -134,19 +165,12 @@ local formspecs = {
 	creating_fs,
 
 	-- Repair formspec
-	repair_fs,
+	repair_fs
 }
 
 function workbench:set_formspec(meta, id)
 	meta:set_string("formspec",
-		"size[9,8.75;]" ..
-		"background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]" ..
-		default.gui_bg ..
-		default.listcolors ..
-		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]"..
-		"list[detached:split;main;8,3.14;1,1;]" ..
-		"list[current_player;main;0.01,4.51;9,3;9]" ..
-		"list[current_player;main;0.01,7.75;9,1;]" ..
+		default.gui ..
 		formspecs[id])
 end
 
@@ -160,12 +184,13 @@ function workbench.construct(pos)
 	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 9*3)
 
-	meta:set_string("infotext", "Workbench")
+	meta:set_string("infotext", Sl("Workbench"))
+	meta:set_string("version", "2")
 	workbench:set_formspec(meta, 1)
 end
 
 function workbench.fields(pos, _, fields, sender)
-	local meta = minetest.get_meta(pos)	
+	local meta = minetest.get_meta(pos)
 	local id = fields.back and 1 or fields.creating and 2 or fields.anvil and 3
 	if not id then
 		if pos and sender then
@@ -264,7 +289,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 			end
 		end
 
-		input:take_item(ceil(stack:get_count() / workbench.defs[index][2]))
+		input:take_item(math.ceil(stack:get_count() / workbench.defs[index][2]))
 		inv:set_stack("craft", 1, input)
 		workbench:get_output(inv, input, inputname)
 	end
@@ -288,8 +313,19 @@ minetest.register_node("workbench:workbench", {
 	allow_metadata_inventory_move = workbench.move
 })
 
+minetest.register_lbm({
+	label = "Workbench updater",
+	name = "workbench:updater",
+	nodenames = "workbench:workbench",
+	action = function(pos)
+		if minetest.get_meta(pos):get_string("version") ~= "2" then
+			minetest.set_node(pos, {name = "workbench:workbench"})
+		end
+	end
+})
+
 for _, d in pairs(workbench.defs) do
-	for i=1, #nodes do
+	for i = 1, #nodes do
 		local node = nodes[i]
 		local def = minetest.registered_nodes[node]
 		local groups, tiles, mesh, collision_box = {}, {}, {}, {}
@@ -325,7 +361,7 @@ for _, d in pairs(workbench.defs) do
 		else
 			tiles = {def.tiles[1]}
 		end
-		
+
 		if def.drop ~= "" then
 			drop = "stairs:"..d[1].."_"..node:gsub(":", "_")
 		else
@@ -363,7 +399,7 @@ local stairs_aliases = {
 	{"nanoslab",	"microslab"}
 }
 
-for i=1, #nodes do
+for i = 1, #nodes do
 	local node = nodes[i]
 	for _, d in pairs(workbench.defs) do
 		minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"), "stairs:"..d[1].."_"..node:gsub(":", "_"))
@@ -397,12 +433,22 @@ minetest.register_alias("stairs:stair_diamond",  "stairs:stair_default_diamondbl
 minetest.register_alias("stairs:slab_diamond",   "stairs:slab_default_diamondblock")
 minetest.register_alias("stairs:corner_diamond", "stairs:corner_default_diamondblock")
 
+
+-- Workbench
+minetest.register_alias("crafting:workbench", "workbench:workbench")
+minetest.register_alias("default:workbench", "workbench:workbench")
+
 -- Craft items
 
-minetest.register_craftitem("workbench:hammer", {
+minetest.register_tool("workbench:hammer", {
 	description = "Hammer",
 	inventory_image = "workbench_hammer.png",
-	on_use = function() do return end end
+	tool_capabilities = {
+		full_punch_interval = 1.5,
+		max_drop_level = 0,
+		damage_groups = {fleshy = 6}
+	},
+	sound = {breaks = "default_tool_breaks"}
 })
 
 minetest.register_craft({

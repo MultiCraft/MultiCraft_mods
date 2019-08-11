@@ -312,6 +312,9 @@ Wool = Шерсть
 #workbench
 Workbench = Верстак
 Hammer = Молот
+Сutting = Нарезка
+Anvil = Наковальня
+< Back = < Назад
 
 Micropanel = (Половина Мини-панели)
 Microslab = (Мини-панель)
