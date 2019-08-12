@@ -1,4 +1,3 @@
-
 -- name tag
 minetest.register_craftitem("mobs:nametag", {
 	description = "Name Tag",
@@ -256,6 +255,15 @@ minetest.register_node("mobs:cobweb", {
 	walkable = false,
 	groups = {snappy = 1, disable_jump = 1, speed = -30},
 	sounds = default.node_sound_leaves_defaults()
+})
+
+minetest.register_craft({
+	output = "mobs:cobweb",
+	recipe = {
+		{"farming:string", "farming:string", "farming:string"},
+		{"farming:string", "farming:string", "farming:string"},
+		{"farming:string", "farming:string", "farming:string"}
+	}
 })
 
 -- protection item

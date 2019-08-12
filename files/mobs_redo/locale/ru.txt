@@ -1,0 +1,9 @@
+Not tamed! = Не приручен!
+@1 is owner! = @1 является владельцем!
+Missed! = Потерян!
+Not tamed! = Не приручен!
+Already protected! = Уже защищён!
+@1 at full health (@2) = Моб @1 имеет полное здоровье (@2)
+@1 has been tamed! = Моб @1 был приручен!
+Enter name: = Введите имя:
+Rename = Переименовать

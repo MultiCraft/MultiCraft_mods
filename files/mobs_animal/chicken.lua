@@ -25,12 +25,9 @@ mobs:register_mob("mobs_animal:chicken", {
 	fall_speed = -8,
 	fear_height = 5,
 	animation = {
-		stand_start = 0,
-		stand_end = 20,
-		walk_start = 20,
-		walk_end = 40,
-		run_start = 60,
-		run_end = 80,
+		stand_start = 0,	stand_end = 20,
+		walk_start = 20,	walk_end = 40,
+		run_start = 60,		run_end = 80
 	},
 	follow = {"farming:seed_wheat"},
 
@@ -60,6 +57,7 @@ mobs:register_mob("mobs_animal:chicken", {
 			max_hear_distance = 5,
 		})
 	end,
+
 	after_activate = function(self, staticdata, def, dtime)
 		-- replace chicken using the old directx model
 		if self.mesh == "mobs_chicken.x" then
@@ -69,8 +67,8 @@ mobs:register_mob("mobs_animal:chicken", {
 				self.object:remove()
 			end
 		end
-	end,
-	})
+	end
+})
 
 mobs:spawn({
 	name = "mobs_animal:chicken",
@@ -78,7 +76,7 @@ mobs:spawn({
 	min_light = 5,
 	chance = 20000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:register_egg("mobs_animal:chicken", "Chicken Egg", "mobs_chicken_egg_inv.png", 1)
