@@ -8,7 +8,7 @@ mobs:register_mob("mobs_animal:bear", {
 		stand_start = 0,	stand_end = 30,
 		walk_start = 35,	walk_end = 65,
 		run_start = 105,	run_end = 135,
-		punch_start = 70,	punch_end = 100,
+		punch_start = 70,	punch_end = 100
 	},
 	textures = {"mobs_bear.png"},
 	sounds = {
@@ -50,6 +50,7 @@ mobs:register_mob("mobs_animal:bear", {
 	},
 	replace_with = "air",
 	replace_rate = 20,
+
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 10, true, true) then
 			return
@@ -74,6 +75,7 @@ mobs:register_mob("mobs_animal:bear", {
 		end
 		--mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
 	end,
+
 	after_activate = function(self, staticdata, def, dtime)
 		-- replace bear using the old directx model
 		if self.mesh == "mobs_bear.x" then
@@ -83,7 +85,7 @@ mobs:register_mob("mobs_animal:bear", {
 			self.object:remove()
 		end
 		end
-	end,
+	end
 })
 
 mobs:spawn({
@@ -92,7 +94,7 @@ mobs:spawn({
 	min_light = 0,
 	chance = 30000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:register_egg("mobs_animal:bear", "Bear Egg", "mobs_bear_egg.png", 1)

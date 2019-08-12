@@ -16,7 +16,7 @@ mobs:register_mob("mobs_monster:zombie", {
 		war_cry = "mobs_zombie.3",
 		attack = "mobs_zombie.2",
 		damage = "mobs_zombie_hit",
-		death = "mobs_zombie_death",
+		death = "mobs_zombie_death"
 	},
 	hp_min = 15,
 	hp_max = 25,
@@ -39,6 +39,7 @@ mobs:register_mob("mobs_monster:zombie", {
 			{name = "mobs_monster:rotten_flesh", chance = 2}
 		}
 	end,
+
 	after_activate = function(self, staticdata, def, dtime)
 	-- replace zombies using the old directx model
 		if self.mesh == "mobs_zombie.x" then
@@ -48,14 +49,14 @@ mobs:register_mob("mobs_monster:zombie", {
 				self.object:remove()
 			end
 		end
-	end,	})
+	end	
+})
 
 mobs:spawn({
 	name = "mobs_monster:zombie",
 	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
-	max_light = 10,
-	chance = 15000,
-	min_height = -64,
+	max_light = 8,
+	chance = 15000
 })
 
 mobs:register_egg("mobs_monster:zombie", "Zombie Head", "zombie_head.png", 0)

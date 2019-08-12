@@ -8,7 +8,7 @@ mobs:register_mob("mobs_animal:wolf", {
 		stand_start = 10,	stand_end = 20,
 		walk_start = 75,	walk_end = 100,
 		run_start = 100,	run_end = 130,
-		punch_start = 135,	punch_end = 155,
+		punch_start = 135,	punch_end = 155
 	},
 	textures = {
 		{"mobs_wolf.png"},
@@ -30,6 +30,7 @@ mobs:register_mob("mobs_animal:wolf", {
 		war_cry = "mobs_wolf_attack",
 		death = "mobs_wolf_attack"
 	},
+
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 2, false, true) then
 			if self.food == 0 then
@@ -52,7 +53,7 @@ mobs:spawn({
 	min_light = 0,
 	chance = 20000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:register_egg("mobs_animal:wolf", "Wolf's Egg", "wool_grey.png", 1)
@@ -68,7 +69,7 @@ mobs:register_mob("mobs_animal:dog", {
 		stand_start = 10,	stand_end = 20,
 		walk_start = 75,	walk_end = 100,
 		run_start = 100,	run_end = 130,
-		punch_start = 135,	punch_end = 155,
+		punch_start = 135,	punch_end = 155
 	},
 	textures = {
 		{"mobs_dog.png"}
@@ -91,6 +92,7 @@ mobs:register_mob("mobs_animal:dog", {
 		war_cry = "mobs_wolf_attack",
 		death = "mobs_wolf_attack"
 	},
+
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 6, true, true) then
 			return
@@ -116,8 +118,8 @@ mobs:register_mob("mobs_animal:dog", {
 		end
 			return
 		end
-		--mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
-		end
+	--	mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
+	end
 })
 
 mobs:register_egg("mobs_animal:dog", "Dog Egg", "wool_brown.png", 1)

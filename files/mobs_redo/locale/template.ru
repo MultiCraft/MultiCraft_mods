@@ -1,0 +1,9 @@
+Not tamed! = 
+@1 is owner! = 
+Missed! = 
+Not tamed! = 
+Already protected! = 
+@1 at full health (@2) = 
+@1 has been tamed! = 
+Enter name: = 
+Rename = 

@@ -12,7 +12,7 @@ mobs:register_mob("mobs_animal:kitten", {
 		{"mobs_kitten_striped.png"},
 		{"mobs_kitten_splotchy.png"},
 		{"mobs_kitten_ginger.png"},
-		{"mobs_kitten_sandy.png"},
+		{"mobs_kitten_sandy.png"}
 	},
 	sounds = {
 		random = "mobs_kitten",
@@ -35,21 +35,18 @@ mobs:register_mob("mobs_animal:kitten", {
 	fear_height = 3,
 	animation = {
 		speed_normal = 42,
-		stand_start = 97,
-		stand_end = 192,
-		walk_start = 0,
-		walk_end = 96,
-		stoodup_start = 0,
-		stoodup_end = 0,
+		stand_start = 97,	stand_end = 192,
+		walk_start = 0,		walk_end = 96,
+		stoodup_start = 0,	stoodup_end = 0
 	},
 	follow = {"mobs_animal:rat", "default:fish_raw"},
 	view_range = 8,
-	on_rightclick = function(self, clicker)
 
+	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 4, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		--if mobs:capture_mob(self, clicker, 50, 50, 90, false, nil) then return end
-		end
+	--	if mobs:capture_mob(self, clicker, 50, 50, 90, false, nil) then return end
+	end
 })
 
 mobs:spawn({
@@ -58,7 +55,7 @@ mobs:spawn({
 	min_light = 10,
 	chance = 20000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:register_egg("mobs_animal:kitten", "Cat's Egg", "mobs_kitten_egg.png", 1)
