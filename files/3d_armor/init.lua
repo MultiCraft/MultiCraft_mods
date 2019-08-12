@@ -23,29 +23,30 @@ minetest.register_on_joinplayer(function(player)
 	local armor_inv = minetest.create_detached_inventory(name.."_armor",{
 		allow_put = function(inv, listname, index, stack, player)
 			local item = stack:get_name()
-			if not minetest.registered_items[item] then return end
-			if not minetest.registered_items[item].groups then return end
+			if not minetest.registered_items[item] and minetest.registered_items[item].groups then return 0 end
 			if  minetest.registered_items[item].groups['armor_head']
-			and index == 1
-			then
+			and index == 1 then
 				return 1
 			end
 			if  minetest.registered_items[item].groups['armor_torso']
-			and index == 2
-			then
+			and index == 2 then
 				return 1
 			end
 			if  minetest.registered_items[item].groups['armor_legs']
-			and index == 3
-			then
+			and index == 3 then
 				return 1
 			end
 			if  minetest.registered_items[item].groups['armor_feet']
-			and index == 4
-			then
+			and index == 4 then
 				return 1
 			end
 			return 0
+		end,
+		allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
+			return 0
+		end,
+		allow_take = function(inv, listname, index, stack, player)
+			return stack:get_count()
 		end,
 		on_put = function(inv, listname, index, stack, player)
 			armor:save_armor_inventory(player)
@@ -61,12 +62,6 @@ minetest.register_on_joinplayer(function(player)
 			armor:save_armor_inventory(player)
 			armor:set_player_armor(player)
 			--armor:update_inventory(player)
-		end,
-		allow_take = function(inv, listname, index, stack, player)
-			return stack:get_count()
-		end,
-		allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
-			return 0
 		end,
 	}, name)
 
@@ -92,7 +87,7 @@ minetest.register_on_joinplayer(function(player)
 		heal = 0,
 		jump = 1,
 		speed = 1,
-		gravity = 1,
+		gravity = 1
 	}
 	armor.textures[name] = {
 		skin = armor.default_skin..".png",
