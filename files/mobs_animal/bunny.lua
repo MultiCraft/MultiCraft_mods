@@ -1,6 +1,7 @@
 mobs:register_mob("mobs_animal:bunny", {
 	stepheight = 0.6,
 	type = "animal",
+	damage = 5,
 	passive = true,
 	reach = 1,
 	hp_min = 1,
@@ -30,19 +31,16 @@ mobs:register_mob("mobs_animal:bunny", {
 	fear_height = 2,
 	animation = {
 		speed_normal = 15,
-		stand_start = 1,
-		stand_end = 15,
-		walk_start = 16,
-		walk_end = 24,
-		punch_start = 16,
-		punch_end = 24,
+		stand_start = 1,	stand_end = 15,
+		walk_start = 16,	walk_end = 24,
+		punch_start = 16,	punch_end = 24
 	},
 	follow = {"farming:carrot", "farming_plus:carrot_item", "default:grass"},
 	replace_rate = 10,
 	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
 	replace_with = "air",
-	on_rightclick = function(self, clicker)
 
+	on_rightclick = function(self, clicker)
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, true, true) then return end
 		if mobs:protect(self, clicker) then return end
@@ -52,7 +50,6 @@ mobs:register_mob("mobs_animal:bunny", {
 		local item = clicker:get_wielded_item()
 
 		if item:get_name() == "mobs:lava_orb" then
-
 			if not mobs.is_creative(clicker:get_player_name()) then
 				item:take_item()
 				clicker:set_wielded_item(item)
@@ -69,10 +66,10 @@ mobs:register_mob("mobs_animal:bunny", {
 			return
 		end
 	end,
+
 	on_spawn = function(self)
-
-		local pos = self.object:get_pos() ; pos.y = pos.y - 1
-
+		local pos = self.object:get_pos()
+		pos.y = pos.y - 1
 		-- white snowy bunny
 		if minetest.find_node_near(pos, 1,
 				{"default:snow", "default:snowblock", "default:dirt_with_snow"}) then
@@ -89,10 +86,8 @@ mobs:register_mob("mobs_animal:bunny", {
 			self.base_texture = {"mobs_bunny_grey.png"}
 			self.object:set_properties({textures = self.base_texture})
 		end
-
 		return true -- run only once, false/nil runs every activation
-	end,
-	damage = 5,
+	end
 })
 
 mobs:spawn({
@@ -101,7 +96,7 @@ mobs:spawn({
 	min_light = 10,
 	chance = 20000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:register_egg("mobs_animal:bunny", "Bunny Egg", "mobs_bunny_evil.png", 1)

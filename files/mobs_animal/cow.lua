@@ -30,16 +30,11 @@ mobs:register_mob("mobs_animal:cow", {
 		}
 	end,
 	animation = {
-		speed_normal = 15,
-		speed_run = 15,
-		stand_start = 0,
-		stand_end = 30,
-		walk_start = 35,
-		walk_end = 65,
-		run_start = 105,
-		run_end = 135,
-		punch_start = 70,
-		punch_end = 100,
+		speed_normal = 15,	speed_run = 15,
+		stand_start = 0,	stand_end = 30,
+		walk_start = 35,	walk_end = 65,
+		run_start = 105,	run_end = 135,
+		punch_start = 70,	punch_end = 100
 	},
 	follow = {"farming:wheat", "default:grass"},
 	view_range = 10,
@@ -49,6 +44,7 @@ mobs:register_mob("mobs_animal:cow", {
 		{"default:dirt_with_grass", "default:dirt", -1}
 	},
 	fear_height = 2,
+
 	on_rightclick = function(self, clicker)
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 8, true, true) then
@@ -60,15 +56,13 @@ mobs:register_mob("mobs_animal:cow", {
 		end
 
 		if mobs:protect(self, clicker) then return end
-		--if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
+	--	if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 
 		local tool = clicker:get_wielded_item()
 		local name = clicker:get_player_name()
 
 		-- milk cow with empty bucket
 		if tool:get_name() == "bucket:bucket_empty" then
-
-			--if self.gotten == true
 			if self.child == true then
 				return
 			end
@@ -96,7 +90,6 @@ mobs:register_mob("mobs_animal:cow", {
 	end,
 
 	on_replace = function(self, pos, oldnode, newnode)
-
 		self.food = (self.food or 0) + 1
 
 		-- if cow replaces 8x grass then it can be milked again
@@ -115,7 +108,7 @@ mobs:register_mob("mobs_animal:cow", {
 				self.object:remove()
 			end
 		end
-	end,
+	end
 })
 
 mobs:spawn({
@@ -124,7 +117,7 @@ mobs:spawn({
 	min_light = 5,
 	chance = 20000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:register_egg("mobs_animal:cow", "Cow Egg", "mobs_cow_egg.png", 1)
