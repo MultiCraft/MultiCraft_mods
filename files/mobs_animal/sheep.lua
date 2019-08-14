@@ -12,8 +12,8 @@ for i = 1, #dyes do
 		collisionbox = {-0.4, -1, -0.4, 0.4, 0.3, 0.4},
 		visual = "mesh",
 		mesh = "mobs_sheep.b3d",
-		textures = {"mobs_sheep_" .. name .. ".png"},
-		gotten_texture = {"mobs_sheep_shaved.png"},
+		textures = {"mobs_sheep.png^mobs_sheep_" .. name .. ".png"},
+		gotten_texture = {"mobs_sheep.png^mobs_sheep_shaved.png"},
 		gotten_mesh = "mobs_sheep_shaved.b3d",
 		makes_footstep_sound = true,
 		sounds = {
@@ -33,36 +33,33 @@ for i = 1, #dyes do
 			}
 		end,
 		animation = {
-			speed_normal = 15,
-			speed_run = 15,
-			stand_start = 0,
-			stand_end = 80,
-			walk_start = 81,
-			walk_end = 100,
+			speed_normal = 15,	speed_run = 15,
+			stand_start = 0,	stand_end = 80,
+			walk_start = 81,	walk_end = 100
 		},
-		follow = {"farming:wheat", "default:grass"},
+		follow = {"farming:wheat", "default:grass", "default:dry_grass"},
 		replace_rate = 10,
 		replace_what = {
 			{"group:grass", "air", -1},
 			{"default:dirt_with_grass", "default:dirt", -2}
 		},
 		fear_height = 3,
-		on_replace = function(self, pos, oldnode, newnode)
 
+		on_replace = function(self, pos, oldnode, newnode)
 			self.food = (self.food or 0) + 1
 
 			-- if sheep replaces 8x grass then it regrows wool
 			if self.food >= 8 then
-
 				self.food = 0
 				self.gotten = false
 
-					self.object:set_properties({
-						textures = {"mobs_sheep_" .. name .. ".png"},
-						mesh = "mobs_sheep.b3d",
-					})
+				self.object:set_properties({
+					textures = {"mobs_sheep.png^mobs_sheep_" .. name .. ".png"},
+					mesh = "mobs_sheep.b3d",
+				})
 			end
 		end,
+
 		on_rightclick = function(self, clicker)
 			--are we feeding?
 			if mobs:feed_tame(self, clicker, 8, true, true) then
@@ -70,7 +67,7 @@ for i = 1, #dyes do
 				if self.food and self.food > 6 then
 					self.gotten = false
 					self.object:set_properties({
-						textures = {"mobs_sheep_" .. name .. ".png"},
+						textures = {"mobs_sheep.png^mobs_sheep_" .. name .. ".png"},
 						mesh = "mobs_sheep.b3d",
 					})
 				end
@@ -103,7 +100,7 @@ for i = 1, #dyes do
 				item:add_wear(650) -- 100 uses
 				clicker:set_wielded_item(item)
 				self.object:set_properties({
-					textures = {"mobs_sheep_shaved.png"},
+					textures = {"mobs_sheep.png^mobs_sheep_shaved.png"},
 					mesh = "mobs_sheep_shaved.b3d",
 				})
 				return
@@ -115,14 +112,14 @@ for i = 1, #dyes do
 				and self.child == false
 				and self.tamed == true
 				and player == self.owner then
-					local colr = string.split(itemname, ":")[2]
+					local color = string.split(itemname, ":")[2]
 					for i = 1, #dyes do
 						local name = unpack(dyes[i])
 
-						if name == colr then
+						if name == color then
 							local pos = self.object:get_pos()
 							self.object:remove()
-							local mob = minetest.add_entity(pos, "mobs_animal:sheep_" .. colr)
+							local mob = minetest.add_entity(pos, "mobs_animal:sheep_" .. color)
 							local ent = mob:get_luaentity()
 							ent.owner = player
 							ent.tamed = true
@@ -141,7 +138,7 @@ for i = 1, #dyes do
 			end
 
 			if mobs:protect(self, clicker) then return end
-			--if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
+		--	if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 		end
 	})
 
@@ -156,7 +153,7 @@ mobs:spawn({
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:spawn({
@@ -165,7 +162,7 @@ mobs:spawn({
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:spawn({
@@ -174,7 +171,7 @@ mobs:spawn({
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:spawn({
@@ -183,7 +180,7 @@ mobs:spawn({
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:spawn({
@@ -192,5 +189,5 @@ mobs:spawn({
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })

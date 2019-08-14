@@ -35,7 +35,7 @@ mobs:register_mob("mobs_animal:bunny", {
 		walk_start = 16,	walk_end = 24,
 		punch_start = 16,	punch_end = 24
 	},
-	follow = {"farming:carrot", "farming_plus:carrot_item", "default:grass"},
+	follow = {"farming:carrot", "farming_plus:carrot_item", "default:grass", "default:dry_grass"},
 	replace_rate = 10,
 	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
 	replace_with = "air",

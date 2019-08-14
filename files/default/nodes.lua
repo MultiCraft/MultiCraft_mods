@@ -838,7 +838,7 @@ minetest.register_node("default:cactus", {
 	drawtype = "nodebox",
 	tiles = {"default_cactus_top.png", "default_cactus_bottom.png", "default_cactus_side.png"},
 	paramtype2 = "facedir",
-	groups = {choppy = 3, flammable = 2, attached_node = 1, flora = 1},
+	groups = {choppy = 3, flammable = 2, attached_node = 1, flora = 2},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = {
 		type = "fixed",
