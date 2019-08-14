@@ -1,12 +1,12 @@
 mobs:register_mob("mobs_animal:pig", {
 	type = "animal",
 	group_attack = true,
-	damage = 2,
+	damage = 1,
 	hp_min = 5,
 	hp_max = 15,
-	collisionbox = {-0.4, -1, -0.4, 0.4, 0.1, 0.4},
+	collisionbox = {-0.5, -0.01, -0.5, 0.5, 1.1, 0.5},
 	visual = "mesh",
-	mesh = "mobs_pig.x",
+	mesh = "mobs_pig.b3d",
 	textures = {
 		{"mobs_pig.png"},
 	},
@@ -32,17 +32,26 @@ mobs:register_mob("mobs_animal:pig", {
 	fear_height = 2,
 	animation = {
 		speed_normal = 20,
-		stand_start = 0,
-		stand_end = 60,
-		walk_start = 61,
-		walk_end = 80,
-		punch_start = 90,
-		punch_end = 110,
+		stand_start = 0,	stand_end = 60,
+		walk_start = 61,	walk_end = 80,
+		punch_start = 90,	punch_end = 110
 	},
+
 	on_rightclick = function (self, clicker)
 		mobs:feed_tame(self, clicker, 8, true, true)
-		--mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
+	--	mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
 	end,
+
+	after_activate = function(self, staticdata, def, dtime)
+		-- replace cow using the old directx model
+		if self.mesh == "mobs_pig.x" then
+			local pos = self.object:get_pos()
+			if pos then
+				minetest.add_entity(pos, self.name)
+				self.object:remove()
+			end
+		end
+	end
 })
 
 mobs:spawn({
@@ -51,7 +60,7 @@ mobs:spawn({
 	min_light = 5,
 	chance = 20000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:pig", "Pig Egg", "mobs_pig_egg.png", 1)
+mobs:register_egg("mobs_animal:pig", "Pig Egg", "mobs_pig_egg.png", 0)

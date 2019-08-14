@@ -14,7 +14,7 @@ mobs:register_mob("mobs_animal:cow", {
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_cow",
-		attack = "mobs_cow",
+		attack = "mobs_cow"
 	},
 	run_velocity = 3,
 	drops = function(pos)
@@ -36,7 +36,7 @@ mobs:register_mob("mobs_animal:cow", {
 		run_start = 105,	run_end = 135,
 		punch_start = 70,	punch_end = 100
 	},
-	follow = {"farming:wheat", "default:grass"},
+	follow = {"farming:wheat", "default:grass", "default:dry_grass"},
 	view_range = 10,
 	replace_rate = 10,
 	replace_what = {

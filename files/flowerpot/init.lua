@@ -152,7 +152,7 @@ minetest.register_craft({
 
 local nodes = {}
 for node, def in pairs(minetest.registered_nodes) do
-	if def.groups.flora == 1 or def.groups.sapling == 1 then
+	if def.groups.flora or def.groups.sapling then
 		nodes[#nodes+1] = node
 	end
 end

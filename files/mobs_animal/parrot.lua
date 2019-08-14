@@ -43,7 +43,7 @@ mobs:spawn({
 	name = "mobs_animal:parrot",
 	nodes = {"default:leaves", "default:jungleleaves", "default:acacia_leaves", "default:birch_leaves", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:grass", "default:junglegrass"},
 	min_light = 10,
-	chance = 15000,
+	chance = 20000,
 	min_height = 0,
 	day_toggle = true
 })
