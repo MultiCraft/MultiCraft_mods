@@ -49,7 +49,7 @@ mobs:register_mob("mobs_monster:zombie", {
 				self.object:remove()
 			end
 		end
-	end	
+	end
 })
 
 mobs:spawn({
