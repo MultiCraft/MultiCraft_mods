@@ -185,7 +185,7 @@ function boat.on_step(self, dtime)
 			elseif ctrl.up or self.auto then
 				self.v = self.v + dtime * 2.0
 			end
-		if ctrl.left then
+			if ctrl.left then
 				if self.v < -0.001 then
 					self.object:set_yaw(self.object:get_yaw() - dtime * 0.9)
 				else
@@ -197,6 +197,16 @@ function boat.on_step(self, dtime)
 				else
 					self.object:set_yaw(self.object:get_yaw() - dtime * 0.9)
 				end
+			end
+			if ctrl.jump then
+				player_api.player_attached[self.driver] = false
+				driver_objref:set_detach()
+				player_api.set_animation(driver_objref, "stand" , 30)
+				local pos = driver_objref:get_pos()
+				pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
+				minetest.after(0.1, after_detach, self.driver, pos)
+				self.driver = nil
+				self.auto = false
 			end
 		else
 			-- If driver leaves server while driving 'driver' is present
@@ -265,7 +275,7 @@ function boat.on_step(self, dtime)
 	self.object:set_velocity(new_velo)
 	self.object:set_acceleration(new_acce)
 
-	-- if boat comes to sudden stop then destroy boat and drop 3x wood
+	-- if boat comes to sudden stop, drop it
 	if (self.v2 or 0) - self.v >= 3 then
 
 		if self.driver then
@@ -278,7 +288,7 @@ function boat.on_step(self, dtime)
 --print ("Crash! no driver")
 		end
 
-		minetest.add_item(self.object:get_pos(), "default:wood 3")
+		minetest.add_item(self.object:get_pos(), "boats:boat")
 		self.object:remove()
 		return
 	end
@@ -337,12 +347,12 @@ minetest.register_craft({
 	recipe = {
 		{"", "", ""},
 		{"group:wood", "", "group:wood"},
-		{"group:wood", "group:wood", "group:wood"},
-	},
+		{"group:wood", "group:wood", "group:wood"}
+	}
 })
 
 minetest.register_craft({
 	type = "fuel",
 	recipe = "boats:boat",
-	burntime = 20,
+	burntime = 20
 })
