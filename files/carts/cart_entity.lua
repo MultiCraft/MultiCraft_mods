@@ -176,7 +176,6 @@ end
 
 local v3_len = vector.length
 local function rail_on_step(self, dtime)
-
 	-- Drop cart if there is no player or items inside.
 	if not self.driver and #self.attached_items == 0 then
 		local drop_timer = 300 -- 5 min
@@ -194,6 +193,21 @@ local function rail_on_step(self, dtime)
 		end
 	else
 		self.age = 0
+	end
+	
+	local ctrl, player
+
+	-- Get player controls
+	if self.driver then
+		player = minetest.get_player_by_name(self.driver)
+		if player then
+			ctrl = player:get_player_control()
+		end
+	end
+
+	if ctrl and ctrl.jump then
+		self.driver = nil
+		carts:manage_attachment(player, nil)
 	end
 
 	local vel = self.object:get_velocity()
@@ -219,16 +233,7 @@ local function rail_on_step(self, dtime)
 		end
 	end
 
-	local ctrl, player
 	local distance = 1
-
-	-- Get player controls
-	if self.driver then
-		player = minetest.get_player_by_name(self.driver)
-		if player then
-			ctrl = player:get_player_control()
-		end
-	end
 
 	local stop_wiggle = false
 	if self.old_pos and same_dir then
@@ -470,6 +475,6 @@ minetest.register_craft({
 	output = "carts:cart",
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
-	},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
+	}
 })
