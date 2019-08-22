@@ -88,7 +88,7 @@ end
 
 local function furnace_node_timer(pos, elapsed)
 	--
-	-- Inizialize metadata
+	-- Initialize metadata
 	--
 	local meta = minetest.get_meta(pos)
 	local fuel_time = meta:get_float("fuel_time") or 0
@@ -97,6 +97,7 @@ local function furnace_node_timer(pos, elapsed)
 
 	local inv = meta:get_inventory()
 	local srclist, fuellist
+	local dst_full = false
 
 	local cookable, cooked
 	local fuel
@@ -136,6 +137,8 @@ local function furnace_node_timer(pos, elapsed)
 						inv:set_stack("src", 1, aftercooked.items[1])
 						src_time = src_time - cooked.time
 						update = true
+					else
+						dst_full = true
 					end
 				else
 					-- Item could not be cooked: probably missing fuel
@@ -156,6 +159,16 @@ local function furnace_node_timer(pos, elapsed)
 				else
 					-- Take fuel from fuel list
 					inv:set_stack("fuel", 1, afterfuel.items[1])
+					-- Put replacements in dst list or drop them on the furnace.
+					local replacements = fuel.replacements
+					if replacements[1] then
+						local leftover = inv:add_item("dst", replacements[1])
+						if not leftover:is_empty() then
+							local above = vector.new(pos.x, pos.y + 1, pos.z)
+							local drop_pos = minetest.find_node_near(above, 1, {"air"}) or above
+							minetest.item_drop(replacements[1], nil, drop_pos)
+						end
+					end
 					update = true
 					fuel_totaltime = fuel.time + (fuel_totaltime - fuel_time)
 				end
@@ -185,7 +198,7 @@ local function furnace_node_timer(pos, elapsed)
 	local item_percent = 0
 	if cookable then
 		item_percent =  math.floor(src_time / cooked.time * 100)
-		if item_percent > 100 then
+		if dst_full then
 			item_state = "100% (output full)"
 		else
 		item_state = item_percent .. "%"
