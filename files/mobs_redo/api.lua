@@ -1,7 +1,7 @@
 -- Mobs API
 mobs = {
 	mod = "redo",
-	version = "20190630",
+	version = "20190813",
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
 
@@ -2032,7 +2032,7 @@ function mob_class:do_states(dtime)
 				self.timer = 0
 				self.blinktimer = 0
 				self.blinkstatus = false
-				self.object:settexturemod("")
+				self.object:set_texture_mod("")
 			end
 
 			-- walk right up to player unless the timer is active
@@ -2056,9 +2056,9 @@ function mob_class:do_states(dtime)
 					self.blinktimer = 0
 
 					if self.blinkstatus then
-						self.object:settexturemod("")
+						self.object:set_texture_mod("")
 					else
-						self.object:settexturemod("^[brighten")
+						self.object:set_texture_mod("^[brighten")
 					end
 					self.blinkstatus = not self.blinkstatus
 				end
@@ -2520,9 +2520,9 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir)
 		minetest.after(0.1, function()
 			if not self.object:get_luaentity() then return end
 
-			self.object:settexturemod("^[colorize:#ff000085")
+			self.object:set_texture_mod("^[colorize:#ff000085")
 			minetest.after(0.5, function()
-				self.object:settexturemod("")
+				self.object:set_texture_mod("")
 			end)
 	end)
 

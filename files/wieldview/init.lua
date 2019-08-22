@@ -81,7 +81,7 @@ local function update_wielded_item(dtime, name)
 	else
 		update_statbar_text(player, stack, item)
 		item_cycle[name] = 0
-		if PLATFORM ~= "Android" or PLATFORM ~= "iOS" then
+		if PLATFORM ~= "Android" and PLATFORM ~= "iOS" then
 			update_player_visuals(player, item)
 		end
 	end
@@ -108,6 +108,6 @@ minetest.register_playerstep(function(dtime, playernames)
 		update_wielded_item(dtime, name)
 	end
 end, minetest.is_singleplayer()) -- Force step in singlplayer mode only
-if PLATFORM ~= "Android" or PLATFORM ~= "iOS" then
+if PLATFORM ~= "Android" and PLATFORM ~= "iOS" then
 	minetest.after(0, init_wield_items)
 end
