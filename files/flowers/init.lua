@@ -176,7 +176,7 @@ minetest.register_node("flowers:mushroom_red", {
 	buildable_to = true,
 	groups = {snappy = 3, attached_node = 1, flammable = 1, food = 1, flora = 1},
 	sounds = default.node_sound_leaves_defaults(),
-	on_use = minetest.item_eat(-5),
+	on_use = minetest.item_eat(2, nil, -5),
 	selection_box = {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
@@ -263,7 +263,7 @@ minetest.register_node("flowers:waterlily", {
 	walkable = false,
 	buildable_to = true,
 	floodable = true,
-	groups = {snappy = 3, flower = 1, flammable = 1},
+	groups = {snappy = 3, flammable = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	node_placement_prediction = "",
 	node_box = {
