@@ -234,6 +234,11 @@ Bedside Table = Прикроватный Стол
 End Table = Тумбочка
 Coffee Table = Кофейный Столик
 
+Birch = Берёзов.
+Pine = Соснов.
+Acacia = Акациев.
+Wooden = Яблочн.
+Jungle Wood = Джунгли
 
 #itemframe
 Item frame = Рамка
@@ -288,6 +293,10 @@ Sign = Табличка
 #sponge
 Sponge = Губка
 Wet Sponge = Влажная Губка
+
+
+#player_api
+Your last coordinates: = Ваши последние координаты:
 
 
 #throwing

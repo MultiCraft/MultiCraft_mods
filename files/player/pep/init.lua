@@ -17,7 +17,7 @@ function return_empty_bottle(potiondef, user, itemstack)
 		if inventory:room_for_item("main", "vessels:glass_bottle") then
 			inventory:add_item("main", "vessels:glass_bottle")
 		else
-			minetest.add_item(user:getpos(), empty_vessel)
+			minetest.add_item(user:get_pos(), empty_vessel)
 		end
 	end
 	return itemstack
@@ -101,7 +101,7 @@ function pep.moledig(playername)
 	-- TODO: Remove this code as soon as Minetest fixes this.
 	yaw = yaw - math.pi/2
 
-	local pos = vector.round(player:getpos())
+	local pos = vector.round(player:get_pos())
 
 	local v = pep.yaw_to_vector(yaw)
 
