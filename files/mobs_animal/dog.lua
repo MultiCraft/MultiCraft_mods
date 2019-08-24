@@ -34,7 +34,7 @@ mobs:register_mob("mobs_animal:wolf", {
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 2, false, true) then
 			if self.food == 0 then
-			local mob = minetest.add_entity(self.object:getpos(), "mobs_animal:dog")
+			local mob = minetest.add_entity(self.object:get_pos(), "mobs_animal:dog")
 			local ent = mob:get_luaentity()
 			ent.owner = clicker:get_player_name()
 			ent.following = clicker
