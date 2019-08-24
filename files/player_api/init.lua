@@ -20,7 +20,7 @@ player_api.register_model("character.b3d", {
 		sit       = {x = 81,  y = 160}
 	},
 	stepheight = 0.6,
-	eye_height = 1.47,
+	eye_height = 1.47
 })
 
 if creative_mode_cache then
@@ -53,9 +53,9 @@ if creative_mode_cache then
 				cracky  = caps,
 				snappy  = caps,
 				choppy  = caps,
-				oddly_breakable_by_hand = caps,
+				oddly_breakable_by_hand = caps
 			},
-			damage_groups = {fleshy = 5},
+			damage_groups = {fleshy = 5}
 		}
 })
 else
@@ -64,7 +64,7 @@ else
 		wield_image = "blank.png",
 		tool_capabilities = {
 			full_punch_interval = 0.5,
-			damage_groups = {fleshy = 1},
+			damage_groups = {fleshy = 1}
 		}
 	})
 
@@ -87,19 +87,13 @@ else
 				cracky  = {times = {[1]=7.0, [2]=5.0, [3]=4.0}, uses = 0, maxlevel = 1},
 				oddly_breakable_by_hand = {times = {[1]=3.5, [2]=2.0, [3]=0.7}, uses = 0}
 		},
-		damage_groups = {fleshy = 1},
+		damage_groups = {fleshy = 1}
 	}
 })
 end
 
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)
-
-	-- Temporary solution to the problem of loading yaw 'nul' on iOS
-	if (player:get_look_horizontal() == 0) then
-		player:set_look_horizontal(0.01)
-	end
-
 	player_api.player_attached[player:get_player_name()] = false
 	player_api.set_model(player, "character.b3d")
 	player:set_local_animation(
@@ -114,16 +108,23 @@ minetest.register_on_joinplayer(function(player)
 	player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
 
 	player:get_inventory():set_stack("hand", 1, "player_api:hand")
+end)
 
-	-- Temporary solution to the problem of loading yaw 'nul' on iOS
-	if PLATFORM == "iOS" then
+-- Temporary solution to the problem of loading yaw 'nul' on iOS
+if PLATFORM == "iOS" then
+	minetest.register_on_joinplayer(function(player)
+
+		if (player:get_look_horizontal() == 0) then
+			player:set_look_horizontal(0.01)
+		end
+
 		minetest.after(5, function()
 			if (player:get_look_horizontal() == 0) then
 				minetest.request_shutdown()
 			end
 		end)
-	end
-end)
+	end)
+end
 
 -- Items for the new player
 if not creative_mode_cache and minetest.is_singleplayer() then
@@ -147,6 +148,6 @@ minetest.register_on_dieplayer(function(player)
 	end
 
 	-- Display death coordinates
-	minetest.chat_send_player(player:get_player_name(), "Your last coordinates: "
+	minetest.chat_send_player(player:get_player_name(), Sl("Your last coordinates:") .. " "
 		.. minetest.pos_to_string(vector.round(pos)))
 end)
