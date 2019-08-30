@@ -2,14 +2,14 @@ local specs = {
 	normal = {
 		offname = "mesecons_pistons:piston_normal_off",
 		onname = "mesecons_pistons:piston_normal_on",
-		pusher = "mesecons_pistons:piston_pusher_normal",
+		pusher = "mesecons_pistons:piston_pusher_normal"
 	},
 	sticky = {
 		offname = "mesecons_pistons:piston_sticky_off",
 		onname = "mesecons_pistons:piston_sticky_on",
 		pusher = "mesecons_pistons:piston_pusher_sticky",
-		sticky = true,
-	},
+		sticky = true
+	}
 }
 
 local function get_pistonspec_name(name, part)
@@ -95,7 +95,7 @@ local piston_on = function(pos, node)
 		minetest.sound_play("piston_extend", {
 			pos = pos,
 			max_hear_distance = 20,
-			gain = 0.3,
+			gain = 0.3
 		})
 		mesecon.mvps_process_stack(stack)
 	mesecon.mvps_move_objects(pusher_pos, dir, oldstack)
@@ -121,7 +121,7 @@ local orientations = {
 	[0] = { 4,  8},
 	      {13, 17},
 	      {10,  6},
-	      {20, 15},
+	      {20, 15}
 }
 
 local function piston_orientate(pos, placer)
@@ -148,7 +148,7 @@ local rotations = {
 	{1,  5, 23,  9},
 	{3, 11, 21,  7},
 	{4, 13, 10, 19},
-	{6, 15,  8, 17},
+	{6, 15,  8, 17}
 }
 
 local function get_rotation(param2)
@@ -246,16 +246,16 @@ local piston_pusher_box = {
 	type = "fixed",
 	fixed = {
 		{-2/16, -2/16, -.5 + pt, 2/16, 2/16,  .5 + pt},
-		{-.5  , -.5  , -.5	 , .5  , .5  , -.5 + pt},
-	},
+		{-.5  , -.5  , -.5	 , .5  , .5  , -.5 + pt}
+	}
 }
 
 local piston_on_box = {
 	type = "fixed",
 	fixed = {
 		{-.5, -.5, -.5 + pt, .5, .5, .5}
-	},
 	}
+}
 
 
 -- Normal (non-sticky) Pistons:
@@ -269,7 +269,7 @@ minetest.register_node("mesecons_pistons:piston_normal_off", {
 		"mesecons_piston_right.png",
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front.png"
-		},
+	},
 	groups = {cracky = 3},
 	stack_max = 1,
 	paramtype2 = "facedir",
@@ -281,7 +281,7 @@ minetest.register_node("mesecons_pistons:piston_normal_off", {
 		rules = piston_get_rules,
 	}},
 	on_rotate = piston_rotate,
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 
 -- onstate
@@ -294,7 +294,7 @@ minetest.register_node("mesecons_pistons:piston_normal_on", {
 		"mesecons_piston_right.png",
 		"mesecons_piston_back.png",
 		"mesecons_piston_on_front.png"
-		},
+	},
 	groups = {cracky = 3, not_in_creative_inventory = 1},
 	paramtype = "light",
 	paramtype2 = "facedir",
@@ -309,7 +309,7 @@ minetest.register_node("mesecons_pistons:piston_normal_on", {
 		rules = piston_get_rules,
 	}},
 	on_rotate = piston_rotate_on,
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 
 -- pusher
@@ -322,7 +322,7 @@ minetest.register_node("mesecons_pistons:piston_pusher_normal", {
 		"mesecons_piston_right.png",
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front.png"
-		},
+	},
 	groups = {not_in_creative_inventory = 1},
 	paramtype = "light",
 	paramtype2 = "facedir",
@@ -332,7 +332,7 @@ minetest.register_node("mesecons_pistons:piston_pusher_normal", {
 	node_box = piston_pusher_box,
 	on_rotate = piston_rotate_pusher,
 	drop = "",
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 -- Sticky ones
@@ -346,7 +346,7 @@ minetest.register_node("mesecons_pistons:piston_sticky_off", {
 		"mesecons_piston_right.png",
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front_sticky.png"
-		},
+	},
 	groups = {cracky = 3},
 	stack_max = 1,
 	paramtype2 = "facedir",
@@ -358,7 +358,7 @@ minetest.register_node("mesecons_pistons:piston_sticky_off", {
 		rules = piston_get_rules,
 	}},
 	on_rotate = piston_rotate,
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 
 -- onstate
@@ -371,7 +371,7 @@ minetest.register_node("mesecons_pistons:piston_sticky_on", {
 		"mesecons_piston_right.png",
 		"mesecons_piston_back.png",
 		"mesecons_piston_on_front.png"
-		},
+	},
 	groups = {cracky = 3, not_in_creative_inventory = 1},
 	paramtype = "light",
 	paramtype2 = "facedir",
@@ -386,7 +386,7 @@ minetest.register_node("mesecons_pistons:piston_sticky_on", {
 		rules = piston_get_rules,
 	}},
 	on_rotate = piston_rotate_on,
-	on_blast = mesecon.on_blastnode,
+	on_blast = mesecon.on_blastnode
 })
 
 -- pusher
@@ -399,7 +399,7 @@ minetest.register_node("mesecons_pistons:piston_pusher_sticky", {
 		"mesecons_piston_right.png",
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front_sticky.png"
-		},
+	},
 	groups = {not_in_creative_inventory = 1},
 	paramtype = "light",
 	paramtype2 = "facedir",
@@ -409,7 +409,7 @@ minetest.register_node("mesecons_pistons:piston_pusher_sticky", {
 	node_box = piston_pusher_box,
 	on_rotate = piston_rotate_pusher,
 	drop = "",
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 
@@ -477,7 +477,7 @@ minetest.register_craft({
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},
 		{"default:cobble", "default:steel_ingot", "default:cobble"},
-		{"default:cobble", "mesecons:wire_00000000_off", "default:cobble"},
+		{"default:cobble", "mesecons:wire_00000000_off", "default:cobble"}
 	}
 })
 
@@ -485,10 +485,6 @@ minetest.register_craft({
 	output = "mesecons_pistons:piston_sticky_off",
 	recipe = {
 		{"mesecons_materials:glue"},
-		{"mesecons_pistons:piston_normal_off"},
+		{"mesecons_pistons:piston_normal_off"}
 	}
 })
-
-
--- load legacy code
-dofile(minetest.get_modpath("mesecons_pistons")..DIR_DELIM.."legacy.lua")
