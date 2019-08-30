@@ -554,6 +554,10 @@ local effect = function(pos, amount, texture, min_size, max_size, radius, gravit
 	gravity = gravity or -10
 	glow = glow or 0
 
+	if not minetest.is_valid_pos(pos) then
+		return
+	end
+
 	minetest.add_particlespawner({
 		amount = amount,
 		time = 0.25,
@@ -568,7 +572,7 @@ local effect = function(pos, amount, texture, min_size, max_size, radius, gravit
 		minsize = min_size,
 		maxsize = max_size,
 		texture = texture,
-		glow = glow,
+		glow = glow
 	})
 end
 
@@ -823,9 +827,7 @@ function mob_class:do_env_damage()
 	and nodef.groups.water then
 
 		if self.water_damage ~= 0 then
-
 			self.health = self.health - self.water_damage
-
 			effect(pos, 5, "bubble.png", nil, nil, 1, nil)
 
 			if self:check_for_death({type = "environment",
@@ -851,9 +853,7 @@ function mob_class:do_env_damage()
 
 	-- damage_per_second node check
 	elseif nodef.damage_per_second ~= 0 then
-
 		self.health = self.health - nodef.damage_per_second
-
 		effect(pos, 5, "item_smoke.png")
 
 		if self:check_for_death({type = "environment",
@@ -1304,14 +1304,11 @@ function mob_class:smart_mobs(s, p, dist, dtime)
 	end
 
 	if (self.path.stuck_timer > stuck_path_timeout and self.path.following) then
-
 		use_pathfind = true
 		self.path.stuck_timer = 0
 
 		minetest.after(1, function(self)
-
 			if self.object:get_luaentity() then
-
 				if has_lineofsight then
 					self.path.following = false
 				end
@@ -2811,7 +2808,6 @@ end
 
 -- handle mob lifetimer and expiration
 function mob_class:mob_expire(pos, dtime)
-
 	-- when lifetimer expires remove mob (except npc and tamed)
 	if self.type ~= "npc"
 	and not self.tamed
@@ -3884,9 +3880,7 @@ end
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	-- right-clicked with nametag and name entered?
 	if formname == "mobs_nametag"
-	and fields.name
-	and fields.name ~= "" then
-
+	and fields.name and fields.name ~= "" then
 		local name = player:get_player_name()
 
 		if not mob_obj[name]
@@ -3908,7 +3902,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 		-- update nametag
 		mob_obj[name].nametag = fields.name
-
 		mob_obj[name]:update_tag()
 
 		-- if not in creative then take item
