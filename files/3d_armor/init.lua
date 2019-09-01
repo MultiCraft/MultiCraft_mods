@@ -23,7 +23,7 @@ minetest.register_on_joinplayer(function(player)
 	local armor_inv = minetest.create_detached_inventory(name.."_armor",{
 		allow_put = function(inv, listname, index, stack, player)
 			local item = stack:get_name()
-			if not minetest.registered_items[item] and minetest.registered_items[item].groups then return 0 end
+			if not minetest.registered_items[item] and not minetest.registered_items[item].groups then return 0 end
 			if  minetest.registered_items[item].groups['armor_head']
 			and index == 1 then
 				return 1
