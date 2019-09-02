@@ -351,14 +351,14 @@ minetest.register_craft({
 minetest.register_craft({
 	type = "shapeless",
 	output = "pep:speedminus",
-	recipe = { "default:dry_grass_1", "default:ice", "vessels:glass_bottle" }
+	recipe = { "default:dry_grass", "default:ice", "vessels:glass_bottle" }
 })
 if(minetest.get_modpath("flowers") ~= nil) then
 	minetest.register_craft({
 	type = "shapeless",
 		output = "pep:jumpplus",
-		recipe = { "flowers:tulip", "default:grass_1", "mesecons:wire_00000000_off_fragment",
-				"mesecons:wire_00000000_off_fragment", "vessels:glass_bottle" }
+		recipe = { "flowers:tulip", "default:grass", "mesecons:wire_00000000_off",
+				"mesecons:wire_00000000_off", "vessels:glass_bottle" }
 	})
 	minetest.register_craft({
 		type = "shapeless",
@@ -378,13 +378,13 @@ if(minetest.get_modpath("farming") ~= nil) then
 	minetest.register_craft({
 		type = "shapeless",
 		output = "pep:regen2",
-		recipe = { "default:gold_lump", "farming:flour", "pep:regen" }
+		recipe = { "default:gold_ingot", "farming:flour", "pep:regen" }
 	})
 
 minetest.register_craft({
 	type = "shapeless",
 	output = "pep:jumpminus",
-	recipe = { "default:leaves", "default:jungleleaves", "default:iron_lump", "flowers:oxeye_daisy", "vessels:glass_bottle" }
+	recipe = { "default:leaves", "default:jungleleaves", "default:steel_ingot", "flowers:oxeye_daisy", "vessels:glass_bottle" }
 })
 minetest.register_craft({
 	type = "shapeless",
@@ -399,7 +399,7 @@ minetest.register_craft({
 minetest.register_craft({
 	type = "shapeless",
 	output = "pep:gravreset" ,
-	recipe = { "pep:grav0", "default:iron_lump" }
+	recipe = { "pep:grav0", "default:steel_ingot" }
 })
 end
 if(minetest.get_modpath("flowers") ~= nil) then
