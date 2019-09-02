@@ -6,6 +6,8 @@ NPC dropped you an item for gold! =
 NPC stands still. = 
 NPC will follow you. = 
 Npc = 
+NPC Man = 
+NPC Woman = 
 
 #trader.lua
 Trader @1 = 

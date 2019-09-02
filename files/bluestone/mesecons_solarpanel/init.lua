@@ -52,8 +52,8 @@ minetest.register_craft({
 	output = "mesecons_solarpanel:solar_panel_off",
 	recipe = {
 		{"default:glass", "default:glass", "default:glass"},
-		{"default:glass", "default:glass", "default:glass"},
-		{"default:restone_dust", "default:restone_dust", "default:restone_dust"}
+		{"mesecons:wire_00000000_off", "mesecons:wire_00000000_off", "mesecons:wire_00000000_off"},
+		{"group:wood", "group:wood", "group:wood"}
 	}
 })
 
