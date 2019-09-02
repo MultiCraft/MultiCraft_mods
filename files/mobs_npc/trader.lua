@@ -23,23 +23,19 @@ mobs:register_mob("mobs_npc:trader", {
 	jump = false,
 	drops = {},
 	lava_damage = 3,
---	follow = {"default:diamond"},
 	view_range = 10,
---	owner = "",
 	order = "stand",
 	fear_height = 3,
 	animation = {
-		speed_normal = 30,
-		speed_run = 30,
-		stand_start = 0,
-		stand_end = 79,
-		walk_start = 168,
-		walk_end = 187,
-		run_start = 168,
-		run_end = 187,
-		punch_start = 200,
-		punch_end = 219
+		speed_normal = 30, speed_run = 30,
+		stand_start = 0, stand_end = 79,
+		walk_start = 168, walk_end = 187,
+		run_start = 168, run_end = 187,
+		punch_start = 200, punch_end = 219
 	},
+	on_punch = function(self, clicker)
+		mobs_trader(self, clicker, nil, mobs.human)
+	end,
 	on_rightclick = function(self, clicker)
 		mobs_trader(self, clicker, nil, mobs.human)
 	end,
@@ -268,8 +264,7 @@ end)
 mobs:spawn({
 	name = "mobs_npc:trader",
 	nodes = {"villages:junglewood"},
-	chance = 100,
-	min_height = 1
+	chance = 100
 })
 
-mobs:register_egg("mobs_npc:trader", S("Trader"), "default_wood.png", 1)
+mobs:register_egg("mobs_npc:trader", S("Trader"), "mobs_trader_egg.png", 2)

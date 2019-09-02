@@ -12,7 +12,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 	type = "npc",
 	damage = 1,
 	attacks_monsters = true,
---	attack_players = false,
+	attack_players = false,
 	owner_loyal = true,
 	pathfinding = true,
 	armor = 0,
@@ -68,7 +68,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 	lava_damage = 3,
 --	follow = {"farming:bread", "mobs:meat", "default:diamond"},
 	view_range = 10,
---	owner = "",
+	owner = "",
 --	order = "follow",
 	fear_height = 3,
 	animation = {
@@ -128,7 +128,7 @@ mobs:register_mob("mobs_npc:npc_woman", {
 	type = "npc",
 	damage = 1,
 	attacks_monsters = true,
---	attack_players = false,
+	attack_players = false,
 	owner_loyal = true,
 	pathfinding = true,
 	armor = 0,
@@ -185,7 +185,7 @@ mobs:register_mob("mobs_npc:npc_woman", {
 	follow = {"farming:bread", "mobs:meat", "default:diamond"},
 	view_range = 10,
 	owner = "",
-	order = "follow",
+--	order = "follow",
 	fear_height = 3,
 	animation = {
 		speed_normal = 30, speed_run = 30,
@@ -243,16 +243,14 @@ mobs:register_mob("mobs_npc:npc_woman", {
 mobs:spawn({
 	name = "mobs_npc:npc_man",
 	nodes = {"villages:junglewood"},
-	chance = 100,
-	min_height = 1
+	chance = 100
 })
 
 mobs:spawn({
 	name = "mobs_npc:npc_woman",
 	nodes = {"villages:junglewood"},
-	chance = 100,
-	min_height = 1
+	chance = 100
 })
 
-mobs:register_egg("mobs_npc:npc_man", S("NPC man"), "default_brick.png", 1)
-mobs:register_egg("mobs_npc:npc_woman", S("NPC woman"), "default_brick.png", 1)
+mobs:register_egg("mobs_npc:npc_man", S("NPC Man"), "mobs_npc_man_egg.png", 2)
+mobs:register_egg("mobs_npc:npc_woman", S("NPC Woman"), "mobs_npc_woman_egg.png", 2)

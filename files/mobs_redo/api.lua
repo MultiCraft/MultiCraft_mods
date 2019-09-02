@@ -1,7 +1,7 @@
 -- Mobs API
 mobs = {
 	mod = "redo",
-	version = "20190813",
+	version = "20190823",
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
 
@@ -2862,6 +2862,16 @@ function mob_class:on_step(dtime)
 			x = pos.x, y = pos.y + y_level + 0.25, z = pos.z}, "air").name
 --		print ("standing in " .. self.standing_in)
 
+		-- if standing inside solid block then jump to escape
+		if minetest.registered_nodes[self.standing_in].walkable and
+			minetest.registered_nodes[self.standing_in].drawtype == "normal" then
+				self.object:set_velocity({
+					x = 0,
+					y = self.jump_height,
+					z = 0
+				})
+		end
+
 		-- check for mob expiration (0.25 instead of dtime since were in a timer)
 		self:mob_expire(pos, 0.25)
 	end
@@ -3030,6 +3040,7 @@ minetest.register_entity(name, setmetatable({
 	drops = def.drops,
 	armor = def.armor,
 	on_rightclick = def.on_rightclick,
+	on_punch = def.on_punch,
 	arrow = def.arrow,
 	shoot_interval = def.shoot_interval,
 	sounds = def.sounds,

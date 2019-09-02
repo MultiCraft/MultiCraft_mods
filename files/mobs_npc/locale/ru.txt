@@ -5,6 +5,8 @@
 NPC dropped you an item for gold! = NPC дал вам золотой слиток.
 NPC stands still. = NPC остаётся на месте.
 NPC will follow you. = NPC будет следовать за тобой.
+NPC Man = NPC Крестьянин
+NPC Woman = NPC Крестьянка
 
 #trader.lua
 Trader @1 = Торговец @1

@@ -1,3 +1,8 @@
+local spider_replace = {"air", "mobs:cobweb"}
+if not minetest.is_singleplayer() then
+	spider_replace = {}
+end
+
 -- Spider by AspireMint (fishyWET (CC-BY-SA 3.0 license for texture)
 mobs:register_mob("mobs_monster:spider", {
 	docile_by_day = true,
@@ -13,17 +18,17 @@ mobs:register_mob("mobs_monster:spider", {
 	textures = {
 		{"mobs_spider.png"},
 		{"mobs_spider_grey.png"},
-		{"mobs_spider_orange.png"},
+		{"mobs_spider_orange.png"}
 	},
 	sounds = {
 		random = "mobs_spider",
-		attack = "mobs_spider",
+		attack = "mobs_spider"
 	},
 	run_velocity = 3,
 	view_range = 15,
 	replace_rate = 64,
 	replace_what = {
-		{"air", "mobs:cobweb"},
+		spider_replace
 	},
 	floats = 0,
 	drops = function(pos)
@@ -56,16 +61,6 @@ mobs:register_mob("mobs_monster:spider", {
 	end
 })
 
-mobs:spawn({
-	name = "mobs_monster:spider",
-	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
-	max_light = 12,
-	chance = 20000
-})
-
-mobs:register_egg("mobs_monster:spider", "Spider Egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
-mobs:register_egg("mobs_monster:small_spider", "Small Spider Egg", "mobs_chicken_egg.png^mobs_cobweb.png", 1)
-
 -- Small spider
 
 mobs:register_mob("mobs_monster:small_spider", {
@@ -82,12 +77,12 @@ mobs:register_mob("mobs_monster:small_spider", {
 	textures = {
 		{"mobs_spider.png"},
 		{"mobs_spider_grey.png"},
-		{"mobs_spider_orange.png"},
+		{"mobs_spider_orange.png"}
 	},
 	visual_size = {x = 0.3, y = 0.3},
 	sounds = {
 		random = "mobs_spider",
-		attack = "mobs_spider",
+		attack = "mobs_spider"
 	},
 	run_velocity = 3,
 	view_range = 10,
@@ -121,8 +116,20 @@ mobs:register_mob("mobs_monster:small_spider", {
 	end
 })
 
+mobs:register_egg("mobs_monster:spider", "Spider Egg", "mobs_monster_egg.png^mobs_spider_egg.png", 2)
+mobs:register_egg("mobs_monster:small_spider", "Small Spider Egg", "mobs_monster_egg.png^mobs_spider_small_egg.png", 2)
+
+local spawn_nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"}
+
+mobs:spawn({
+	name = "mobs_monster:spider",
+	nodes = spawn_nodes,
+	max_light = 12,
+	chance = 20000
+})
+
 mobs:spawn({
 	name = "mobs_monster:small_spider",
-	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
+	nodes = spawn_nodes,
 	chance = 20000
 })
