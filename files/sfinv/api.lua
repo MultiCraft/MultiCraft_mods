@@ -2,11 +2,7 @@ sfinv = {
 	pages = {},
 	pages_unordered = {},
 	contexts = {},
-	enabled = true,
-	gui_bg = default.gui_bg,
-	listcolors = default.listcolors,
-	gui_bg_img = "",
-	gui_slots = ""
+	enabled = true
 }
 
 function sfinv.register_page(name, def)
@@ -31,21 +27,16 @@ function sfinv.override_page(name, def)
 end
 
 function sfinv.get_nav_fs(player, context, nav, current_idx)
-	--[[ Only show tabs if there is more than one page
+	-- Only show tabs if there is more than one page
 	if #nav > 1 then
 		return "tabheader[0,0;sfinv_nav_tabs;" .. table.concat(nav, ",") ..
 				";" .. current_idx .. ";true;false]"
 	else
 		return ""
 	end
-	]]--
-	return ""
 end
 
-local theme_main = sfinv.gui_bg ..
-		sfinv.gui_bg_img
-
-local theme_inv = sfinv.gui_slots .. [[
+local theme_inv = [[
 		list[current_player;main;0.01,4.51;9,3;9]
 		list[current_player;main;0.01,7.74;9,1;]
 	]]
@@ -53,13 +44,12 @@ local theme_inv = sfinv.gui_slots .. [[
 function sfinv.make_formspec(player, context, content, show_inv, size)
 	local tmp = {
 		size or "size[9,8.75]",
-		theme_main,
-		sfinv.get_nav_fs(player, context, context.nav_titles, context.nav_idx),
+		default.gui_bg,
+		default.listcolors,
+	--	sfinv.get_nav_fs(player, context, context.nav_titles, context.nav_idx),
+		show_inv and theme_inv or "",
 		content
 	}
-	if show_inv then
-		tmp[#tmp + 1] = theme_inv
-	end
 	return table.concat(tmp, "")
 end
 
@@ -131,6 +121,12 @@ function sfinv.set_player_inventory_formspec(player, context)
 	player:set_inventory_formspec(fs)
 end
 
+function sfinv.open_formspec(player, context)
+	local fs = sfinv.get_formspec(player,
+			context or sfinv.get_or_create_context(player))
+	minetest.show_formspec(player:get_player_name(), "sfinv", fs)
+end
+
 function sfinv.set_page(player, pagename)
 	local context = sfinv.get_or_create_context(player)
 	local oldpage = sfinv.pages[context.page]
@@ -145,6 +141,25 @@ function sfinv.set_page(player, pagename)
 	sfinv.set_player_inventory_formspec(player, context)
 end
 
+function sfinv.get_page(player)
+	local context = sfinv.contexts[player:get_player_name()]
+	return context and context.page or sfinv.get_homepage_name(player)
+end
+
+function sfinv.open_page(player, pagename)
+	local context = sfinv.get_or_create_context(player)
+	local oldpage = sfinv.pages[context.page]
+	if oldpage and oldpage.on_leave then
+		oldpage:on_leave(player, context)
+	end
+	context.page = pagename
+	local page = sfinv.pages[pagename]
+	if page.on_enter then
+		page:on_enter(player, context)
+	end
+	sfinv.open_formspec(player, context)
+end
+
 minetest.register_on_joinplayer(function(player)
 	if sfinv.enabled then
 		sfinv.set_player_inventory_formspec(player)
@@ -156,7 +171,7 @@ minetest.register_on_leaveplayer(function(player)
 end)
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname ~= "" or not sfinv.enabled then
+	if --[[formname ~= "" or]] not sfinv.enabled then
 		return false
 	end
 
