@@ -127,6 +127,10 @@ local workbench_fs = [[
 
 	list[current_player;craft;2,0.5;3,3;]
 	list[current_player;craftpreview;7,1.505;1,1;]
+
+	image_button[7,3.14;1,1;blank.png;craftguide;;true;false;workbench_button_back.png]
+	image[7,3.14;1,1;craftguide_book.png]
+	tooltip[craftguide;]] .. Sl("Crafting Guide") .. [[;#000;#FFF]
 ]]
 
 -- Creating formspec
@@ -192,6 +196,10 @@ end
 function workbench.fields(pos, _, fields, sender)
 	local meta = minetest.get_meta(pos)
 	local id = fields.back and 1 or fields.creating and 2 or fields.anvil and 3
+	if fields.craftguide then
+		sfinv.open_page(sender, "craftguide:craftguide")
+		return
+	end
 	if not id then
 		if pos and sender then
 			local inv = sender:get_inventory()

@@ -56,6 +56,18 @@ Set Home = Установить Дом
 Go Home = Идти Домой
 
 
+#craftguide
+Crafting Guide = Руководство Крафта
+Usage = Примен.
+Recipe = Рецепты
+of = из
+Any item belonging to the groups: = Любые предметы из групп:
+Burning time: = Время горения:
+Cooking time: = Время приготовления:
+No usages.\nClick again to show recipes. = Нет применений.\nНажмите снова для рецептов.
+No recipes.\nClick again to show usages. = Невозможно скрафтить.\nНажмите снова для применений.
+
+
 #default
 Chest = Сундук
 Furnace = Печка
