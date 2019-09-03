@@ -70,6 +70,7 @@ No recipes.\nClick again to show usages. = Невозможно скрафтит
 
 #default
 Chest = Сундук
+Large Chest = Большой Сундук
 Furnace = Печка
 Torch = Факел
 
