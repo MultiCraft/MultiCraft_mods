@@ -195,10 +195,10 @@ function mobs_trader(self, clicker, entity, race)
 
 			formspec_trade_list = formspec_trade_list ..
 				"item_image[" .. x .. "," .. y .. ";1,1;" .. self.trades[i][2] .. "]" ..
-				"image_button[" .. x .. "," .. y .. ";1,1;blank.png;prices#" .. i .. "#" .. self.id .. ";;;false;button_pressed.png]" ..
+				"image_button[" .. x .. "," .. y .. ";1,1;blank.png;prices#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]" ..
 			--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip..";#000;#FFF]" ..
 				"item_image[" .. x + 2 .. "," .. y ..";1,1;" .. self.trades[i][1] .. "]" ..
-				"image_button[" .. x + 2 .. "," .. y .. ";1,1;blank.png;goods#" .. i .. "#" .. self.id .. ";;;false;button_pressed.png]"
+				"image_button[" .. x + 2 .. "," .. y .. ";1,1;blank.png;goods#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]"
 			--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip..";#000;#FFF]"
 		end
 	end
