@@ -1,6 +1,14 @@
-The MIT License (MIT)
+MultiCraft Game mod: mobs_npc
+=============================
 
-Copyright (c) 2016 TenPlus1
+Adds Villagers (NPCs) and Traders
+
+License of source code:
+-----------------------
+Copyright (C) 2016 TenPlus1
+Copyright (C) 2019 MultiCraft Development Team
+
+The MIT License (MIT)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +27,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+License of textures:
+--------------------
+Copyright (C) 2019 MultiCraft Development Team
+
+Graphics in this mod is NOT free and can only be used as part of the official MultiCraft build.
+Allowed to be used in non-official builds ONLY for personal use.
