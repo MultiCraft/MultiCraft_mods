@@ -122,7 +122,7 @@ local function mobs_shoot_egg(itemstack, thrower, pointed_thing)
 			max_hear_distance = 10,
 		})
 		if not mobs.is_creative(thrower) or
-		not minetest.is_singleplayer() then
+				not minetest.is_singleplayer() then
 			itemstack:take_item()
 		end
 	end
@@ -267,11 +267,13 @@ minetest.register_craft({
 })
 
 -- protection item
-minetest.register_craftitem("mobs:protector", {
-	description = "Mob Protection Rune",
-	inventory_image = "mobs_protector.png",
-	groups = {flammable = 2},
-})
+if not minetest.is_singleplayer() then
+	minetest.register_craftitem("mobs:protector", {
+		description = "Mob Protection Rune",
+		inventory_image = "mobs_protector.png",
+		groups = {flammable = 2},
+	})
+end
 
 minetest.register_craft({
 	output = "mobs:protector",
