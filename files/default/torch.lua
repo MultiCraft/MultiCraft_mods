@@ -19,8 +19,8 @@ function default.register_torch(name, def)
 		on_blast = def.on_blast,
 
 		on_flood = function(pos, oldnode, newnode)
-			local torch = (oldnode.name:gsub("_wall", "") or oldnode.name:gsub("_celling", "")) or oldnode.name
-			minetest.add_item(pos, ItemStack(torch))
+			oldnode.name = name or name .. "_wall" or name .. "_celling"
+			minetest.add_item(pos, ItemStack(oldnode))
 			-- Play flame-extinguish sound if liquid is not an 'igniter'
 			local nodedef = minetest.registered_items[newnode.name]
 			if not (nodedef and nodedef.groups and
@@ -57,14 +57,14 @@ function default.register_torch(name, def)
 	torch_floor.wield_image = def.wield_image
 	torch_floor.selection_box = {
 		type = "wallmounted",
-		wall_bottom = {-1/8, -1/2, -1/8, 1/8, 2/16, 1/8},
+		wall_bottom = {-1/8, -1/2, -1/8, 1/8, 2/16, 1/8}
 	}
 
 	local torch_wall = table.copy(torch)
 	torch_wall.mesh = "torch_wall.obj"
 	torch_wall.selection_box = {
 		type = "wallmounted",
-		wall_side = {-1/2, -1/2, -1/8, -1/8, 1/8, 1/8},
+		wall_side = {-1/2, -1/2, -1/8, -1/8, 1/8, 1/8}
 	}
 	torch_wall.groups.not_in_creative_inventory = 1
 
@@ -72,7 +72,7 @@ function default.register_torch(name, def)
 	torch_ceiling.mesh = "torch_ceiling.obj"
 	torch_ceiling.selection_box = {
 		type = "wallmounted",
-		wall_top = {-1/8, -1/16, -5/16, 1/8, 1/2, 1/8},
+		wall_top = {-1/8, -1/16, -5/16, 1/8, 1/2, 1/8}
 	}
 	torch_ceiling.groups.not_in_creative_inventory = 1
 
@@ -86,7 +86,7 @@ default.register_torch("default:torch", {
 	tiles = {{
 		name = "default_torch.png",
 	--	name = "default_torch_animated.png",
-	--	animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 3.3}
+	--	animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 3}
 	}},
 	inventory_image = "default_torch.png",
 	wield_image = "default_torch.png",
