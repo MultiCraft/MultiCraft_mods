@@ -2405,6 +2405,11 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir)
 		minetest.log("warning", "[mobs] Mod profiling enabled, damage not enabled")
 		return
 	end
+	
+	-- is mob protected?
+	if hitter:is_player() and mobs.is_creative(hitter) and minetest.is_protected_action(self.object:get_pos(), hitter:get_player_name()) then
+		return
+	end
 
 	-- is mob protected?
 	if self.protected and hitter:is_player()
@@ -3452,7 +3457,7 @@ end
 
 local function spawn_mob(pos, mob, data, placer)
 	if not pos or not placer or not minetest.registered_entities[mob] or
-			minetest.is_protected(pos, placer:get_player_name()) then
+			minetest.is_protected_action(pos, placer:get_player_name()) then
 		return
 	end
 	pos.y = pos.y + 1
