@@ -226,7 +226,7 @@ function doors.register(name, def)
 			end
 
 			local pn = placer and placer:get_player_name() or ""
-			if minetest.is_protected(pos, pn) or minetest.is_protected(above, pn) then
+			if minetest.is_protected_action(pos, pn) or minetest.is_protected(above, pn) then
 				return itemstack
 			end
 

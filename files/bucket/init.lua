@@ -17,7 +17,7 @@ bucket.liquids = {}
 local S = intllib.make_gettext_pair()
 
 local function check_protection(pos, name, text)
-	if minetest.is_protected(pos, name) then
+	if minetest.is_protected_action(pos, name) then
 		minetest.log("action", (name ~= "" and name or "A mod")
 			.. " tried to " .. text
 			.. " at protected position "
