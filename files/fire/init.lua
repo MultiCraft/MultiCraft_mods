@@ -1,11 +1,5 @@
 fire = {}
 
-local fire_enabled = minetest.settings:get_bool("enable_fire")
-if fire_enabled == nil then
-	-- Neither setting specified, check whether singleplayer
-	fire_enabled = minetest.is_singleplayer()
-end
-
 --
 -- Items
 --
@@ -23,19 +17,16 @@ local function flood_flame(pos, oldnode, newnode)
 	return false
 end
 
--- Flame nodes
-minetest.register_node("fire:basic_flame", {
+local fire_node = {
 	drawtype = "firelike",
-	tiles = {
-		{
-			name = "fire_basic_flame_animated.png",
-			animation = {
-				type = "vertical_frames",
-				aspect_w = 32,
-				aspect_h = 32,
-				length = 1
-			},
-		},
+	tiles = {{
+		name = "fire_basic_flame_animated.png",
+		animation = {
+			type = "vertical_frames",
+			aspect_w = 32,
+			aspect_h = 32,
+			length = 1
+		}}
 	},
 	inventory_image = "fire_basic_flame.png",
 	paramtype = "light",
@@ -47,64 +38,39 @@ minetest.register_node("fire:basic_flame", {
 	damage_per_second = 4,
 	groups = {igniter = 2, dig_immediate = 3, fire = 1, not_in_creative_inventory = 1},
 	drop = "",
+	on_flood = flood_flame
+}
 
-	on_timer = function(pos)
+-- Flame nodes
+local flame_fire_node = table.copy(fire_node)
+flame_fire_node.on_timer = function(pos)
 		local f = minetest.find_node_near(pos, 1, {"group:flammable"})
-		if not fire_enabled or not f then
+		if not f then
 			minetest.remove_node(pos)
 			return
 		end
 		-- Restart timer
 		return true
-	end,
-
-	on_construct = function(pos)
-		if not fire_enabled then
-			minetest.remove_node(pos)
-		else
+	end
+flame_fire_node.on_construct = function(pos)
+		if minetest.is_singleplayer() then
 			minetest.get_node_timer(pos):start(math.random(30, 60))
+		else
+			minetest.get_node_timer(pos):start(math.random(10, 20))
 		end
-	end,
+	end
+minetest.register_node("fire:basic_flame", flame_fire_node)
 
-	on_flood = flood_flame
-})
-
-minetest.register_node("fire:permanent_flame", {
-	drawtype = "firelike",
-	tiles = {
-		{
-			name = "fire_basic_flame_animated.png",
-			animation = {
-				type = "vertical_frames",
-				aspect_w = 16,
-				aspect_h = 16,
-				length = 1
-			},
-		},
-	},
-	inventory_image = "fire_basic_flame.png",
-	paramtype = "light",
-	light_source = 13,
-	walkable = false,
-	buildable_to = true,
-	sunlight_propagates = true,
-	floodable = true,
-	damage_per_second = 4,
-	groups = {igniter = 2, dig_immediate = 3, fire = 1, not_in_creative_inventory = 1},
-	drop = "",
-
-	on_flood = flood_flame
-})
+-- Permanent flame nodes
+minetest.register_node("fire:permanent_flame", fire_node)
 
 -- Flint and Steel
-
 minetest.register_tool("fire:flint_and_steel", {
 	description = "Flint and Steel",
 	inventory_image = "fire_flint_steel.png",
 	sound = {breaks = "default_tool_breaks"},
 
 	on_use = function(itemstack, user, pointed_thing)
-		if fire_enabled then
 			local sound_pos = pointed_thing.above or user:get_pos()
 			minetest.sound_play("fire_flint_and_steel",
 				{pos = sound_pos, gain = 0.5, max_hear_distance = 8})
@@ -137,7 +103,6 @@ minetest.register_tool("fire:flint_and_steel", {
 				end
 				return itemstack
 			end
-		end
 	end
 })
 
@@ -162,7 +127,7 @@ minetest.override_item("default:coalblock", {
 		if minetest.get_node(flame_pos).name == "air" then
 			minetest.set_node(flame_pos, {name = "fire:permanent_flame"})
 		end
-	end,
+	end
 })
 
 
@@ -282,7 +247,7 @@ end
 -- ABMs
 --
 
-if fire_enabled then
+if minetest.is_singleplayer() then
 	-- Ignite neighboring nodes, add basic flames
 	minetest.register_abm({
 		label = "Ignite flame",
@@ -335,6 +300,6 @@ if fire_enabled then
 				})
 				minetest.check_for_falling(p)
 			end
-		end,
+		end
 	})
 end
