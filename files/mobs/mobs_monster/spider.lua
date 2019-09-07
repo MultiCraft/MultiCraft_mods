@@ -116,20 +116,18 @@ mobs:register_mob("mobs_monster:small_spider", {
 	end
 })
 
-mobs:register_egg("mobs_monster:spider", "Spider Egg", "mobs_monster_egg.png^mobs_spider_egg.png", 2)
-mobs:register_egg("mobs_monster:small_spider", "Small Spider Egg", "mobs_monster_egg.png^mobs_spider_small_egg.png", 2)
-
-local spawn_nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:redsand", "default:stone", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"}
+mobs:register_egg("mobs_monster:spider", "Spider Egg", "mobs_monster_egg.png^mobs_spider_egg.png")
+mobs:register_egg("mobs_monster:small_spider", "Small Spider Egg", "mobs_monster_egg.png^mobs_spider_small_egg.png")
 
 mobs:spawn({
 	name = "mobs_monster:spider",
-	nodes = spawn_nodes,
+	nodes = mobs_monster.spawn_nodes,
 	max_light = 12,
 	chance = 20000
 })
 
 mobs:spawn({
 	name = "mobs_monster:small_spider",
-	nodes = spawn_nodes,
+	nodes = mobs_monster.spawn_nodes,
 	chance = 20000
 })

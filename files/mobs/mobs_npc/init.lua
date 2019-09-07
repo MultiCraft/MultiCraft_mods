@@ -1,5 +1,6 @@
 local path = minetest.get_modpath("mobs_npc")
+local npc = {"npc", "trader"}
 
--- NPC
-dofile(path .. "/npc.lua") -- TenPlus1
-dofile(path .. "/trader.lua")
+for _, name in pairs(npc) do
+	dofile(path .. "/" .. name .. ".lua")
+end

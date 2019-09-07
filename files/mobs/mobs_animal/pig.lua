@@ -7,9 +7,7 @@ mobs:register_mob("mobs_animal:pig", {
 	collisionbox = {-0.5, -0.01, -0.5, 0.5, 1.1, 0.5},
 	visual = "mesh",
 	mesh = "mobs_pig.b3d",
-	textures = {
-		{"mobs_pig.png"},
-	},
+	textures = {"mobs_pig.png"},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_pig",
@@ -20,7 +18,7 @@ mobs:register_mob("mobs_animal:pig", {
 	follow = {"default:apple", "farming:potato"},
 	drops = function(pos)
 		if rawget(_G, "experience") then
-			experience.add_orb(math.random(1,3), pos) -- random amount between 1 and 3
+			experience.add_orb(math.random(1, 3), pos) -- random amount between 1 and 3
 		end
 
 		return {
@@ -37,7 +35,7 @@ mobs:register_mob("mobs_animal:pig", {
 		punch_start = 90,	punch_end = 110
 	},
 
-	on_rightclick = function (self, clicker)
+	on_rightclick = function(self, clicker)
 		mobs:feed_tame(self, clicker, 8, true, true)
 	--	mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
 	end,
@@ -56,7 +54,7 @@ mobs:register_mob("mobs_animal:pig", {
 
 mobs:spawn({
 	name = "mobs_animal:pig",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass"},
+	nodes = mobs_animal.spawn_nodes,
 	min_light = 5,
 	chance = 20000,
 	min_height = 0,

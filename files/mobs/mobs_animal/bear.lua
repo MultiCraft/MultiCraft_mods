@@ -13,7 +13,7 @@ mobs:register_mob("mobs_animal:bear", {
 	textures = {"mobs_bear.png"},
 	sounds = {
 		random = "mobs_bear",
-		attack = "mobs_bear_angry",
+		attack = "mobs_bear_angry"
 	},
 	runaway = false,
 	jump = false,
@@ -52,24 +52,22 @@ mobs:register_mob("mobs_animal:bear", {
 	replace_rate = 20,
 
 	on_rightclick = function(self, clicker)
-		if mobs:feed_tame(self, clicker, 10, true, true) then
-			return
-		end
+		if mobs:feed_tame(self, clicker, 10, true, true) then return end
 		if clicker:get_wielded_item():is_empty() and clicker:get_player_name() == self.owner then
 			if clicker:get_player_control().sneak then
-			self.order = ""
-			self.state = "walk"
-			self.walk_velocity = 1
-			else
-			if self.order == "follow" then
-				self.order = "stand"
-				self.state = "stand"
+				self.order = ""
+				self.state = "walk"
 				self.walk_velocity = 1
 			else
-				self.order = "follow"
-				self.state = "walk"
-				self.walk_velocity = 3
-			end
+				if self.order == "follow" then
+					self.order = "stand"
+					self.state = "stand"
+					self.walk_velocity = 1
+				else
+					self.order = "follow"
+					self.state = "walk"
+					self.walk_velocity = 3
+				end
 			end
 			return
 		end
@@ -79,22 +77,22 @@ mobs:register_mob("mobs_animal:bear", {
 	after_activate = function(self, staticdata, def, dtime)
 		-- replace bear using the old directx model
 		if self.mesh == "mobs_bear.x" then
-		local pos = self.object:get_pos()
-		if pos then
-			minetest.add_entity(pos, self.name)
-			self.object:remove()
-		end
+			local pos = self.object:get_pos()
+			if pos then
+				minetest.add_entity(pos, self.name)
+				self.object:remove()
+			end
 		end
 	end
 })
 
 mobs:spawn({
 	name = "mobs_animal:bear",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass"},
+	mobs_animal.spawn_nodes,
 	min_light = 0,
 	chance = 30000,
 	min_height = 0,
 	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:bear", "Bear Egg", "mobs_bear_egg.png", 1)
+mobs:register_egg("mobs_animal:bear", "Bear Egg", "mobs_bear_egg.png", true)
