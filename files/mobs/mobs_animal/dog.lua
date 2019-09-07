@@ -34,29 +34,29 @@ mobs:register_mob("mobs_animal:wolf", {
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 2, false, true) then
 			if self.food == 0 then
-			local mob = minetest.add_entity(self.object:get_pos(), "mobs_animal:dog")
-			local ent = mob:get_luaentity()
-			ent.owner = clicker:get_player_name()
-			ent.following = clicker
-			ent.order = "follow"
-			self.object:remove()
+				local mob = minetest.add_entity(self.object:get_pos(), "mobs_animal:dog")
+				local ent = mob:get_luaentity()
+				ent.owner = clicker:get_player_name()
+				ent.following = clicker
+				ent.order = "follow"
+				self.object:remove()
 			end
 			return
 		end
-		--mobs:capture_mob(self, clicker, 0, 0, 80, true, nil)
+	--	mobs:capture_mob(self, clicker, 0, 0, 80, true, nil)
 	end
 })
 
 mobs:spawn({
 	name = "mobs_animal:wolf",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass"},
+	mobs_animal.spawn_nodes,
 	min_light = 0,
 	chance = 20000,
 	min_height = 0,
 	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:wolf", "Wolf's Egg", "wool_grey.png", 1)
+mobs:register_egg("mobs_animal:wolf", "Wolf's Egg", "wool_grey.png", true)
 
 -- Dog
 mobs:register_mob("mobs_animal:dog", {
@@ -99,27 +99,27 @@ mobs:register_mob("mobs_animal:dog", {
 		end
 		if clicker:get_wielded_item():is_empty() and clicker:get_player_name() == self.owner then
 			if clicker:get_player_control().sneak then
-			self.order = ""
-			self.state = "walk"
-			self.walk_velocity = 2
-			self.stepheight = 0.6
-			else
-			if self.order == "follow" then
-				self.order = "stand"
-				self.state = "stand"
+				self.order = ""
+				self.state = "walk"
 				self.walk_velocity = 2
 				self.stepheight = 0.6
 			else
-				self.order = "follow"
-				self.state = "walk"
-				self.walk_velocity = 3
-				self.stepheight = 1.1
+				if self.order == "follow" then
+					self.order = "stand"
+					self.state = "stand"
+					self.walk_velocity = 2
+					self.stepheight = 0.6
+				else
+					self.order = "follow"
+					self.state = "walk"
+					self.walk_velocity = 3
+					self.stepheight = 1.1
+				end
 			end
-		end
 			return
 		end
 	--	mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
 	end
 })
 
-mobs:register_egg("mobs_animal:dog", "Dog Egg", "wool_brown.png", 1)
+mobs:register_egg("mobs_animal:dog", "Dog Egg", "wool_brown.png", true)

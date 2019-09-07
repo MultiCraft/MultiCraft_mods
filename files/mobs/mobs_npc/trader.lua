@@ -27,11 +27,11 @@ mobs:register_mob("mobs_npc:trader", {
 	order = "stand",
 	fear_height = 3,
 	animation = {
-		speed_normal = 30, speed_run = 30,
-		stand_start = 0, stand_end = 79,
-		walk_start = 168, walk_end = 187,
-		run_start = 168, run_end = 187,
-		punch_start = 200, punch_end = 219
+		speed_normal = 30,	speed_run = 30,
+		stand_start = 0,	stand_end = 79,
+		walk_start = 168,	walk_end = 187,
+		run_start = 168,	run_end = 187,
+		punch_start = 200,	punch_end = 219
 	},
 	on_punch = function(self, clicker)
 		mobs_trader(self, clicker, nil, mobs.human)
@@ -89,7 +89,8 @@ mobs:register_mob("mobs_npc:trader", {
 mobs.human = {
 	names = {
 		"Bob", "Duncan", "Bill", "Tom", "James", "Ian", "Lenny",
-		"Dylan", "Ethan"},
+		"Dylan", "Ethan"
+	},
 
 	-- Item for sale, price, chance of appearing in trader's inventory
 	items = {
@@ -146,7 +147,8 @@ function mobs.add_goods(self, entity, race)
 		if math.random(0, 100) > race.items[random_trade][3] then
 			self.trades[trade_index] = {
 				race.items[random_trade][1],
-				race.items[random_trade][2]}
+				race.items[random_trade][2]
+			}
 
 			trade_index = trade_index + 1
 		end
@@ -157,7 +159,7 @@ end
 function mobs_trader(self, clicker, entity, race)
 	if not self.id then
 		self.id = (math.random(1, 1000) * math.random(1, 10000))
-			.. self.name .. (math.random(1, 1000) ^ 2)
+				.. self.name .. (math.random(1, 1000) ^ 2)
 	end
 
 	if not self.game_name then
@@ -177,7 +179,7 @@ function mobs_trader(self, clicker, entity, race)
 	local player = clicker:get_player_name()
 	minetest.chat_send_player(player,
 		S("[NPC] <Trader @1> Hello, @2, have a look at my wares.",
-		self.game_name, player))
+			self.game_name, player))
 
 	-- Make formspec trade list
 	local formspec_trade_list = ""
@@ -194,12 +196,12 @@ function mobs_trader(self, clicker, entity, race)
 			end
 
 			formspec_trade_list = formspec_trade_list ..
-				"item_image[" .. x .. "," .. y .. ";1,1;" .. self.trades[i][2] .. "]" ..
-				"image_button[" .. x .. "," .. y .. ";1,1;blank.png;prices#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]" ..
-			--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip..";#000;#FFF]" ..
-				"item_image[" .. x + 2 .. "," .. y ..";1,1;" .. self.trades[i][1] .. "]" ..
-				"image_button[" .. x + 2 .. "," .. y .. ";1,1;blank.png;goods#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]"
-			--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip..";#000;#FFF]"
+					"item_image[" .. x .. "," .. y .. ";1,1;" .. self.trades[i][2] .. "]" ..
+					"image_button[" .. x .. "," .. y .. ";1,1;blank.png;prices#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]" ..
+				--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip..";#000;#FFF]" ..
+					"item_image[" .. x + 2 .. "," .. y .. ";1,1;" .. self.trades[i][1] .. "]" ..
+					"image_button[" .. x + 2 .. "," .. y .. ";1,1;blank.png;goods#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]"
+				--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip..";#000;#FFF]"
 		end
 	end
 
@@ -267,4 +269,4 @@ mobs:spawn({
 	chance = 100
 })
 
-mobs:register_egg("mobs_npc:trader", S("Trader"), "mobs_trader_egg.png", 2)
+mobs:register_egg("mobs_npc:trader", S("Trader"), "mobs_trader_egg.png")

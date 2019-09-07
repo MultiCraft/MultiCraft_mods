@@ -18,7 +18,7 @@ for i = 1, #dyes do
 		makes_footstep_sound = true,
 		sounds = {
 			random = "mobs_sheep",
-			damage = "mobs_sheep_angry",
+			damage = "mobs_sheep_angry"
 		},
 		runaway = true,
 		jump_height = 3,
@@ -81,15 +81,13 @@ for i = 1, #dyes do
 			--are we giving a haircut>
 			if itemname == "mobs:shears" then
 				if self.gotten or self.child
-				or player ~= self.owner
-				or not minetest.get_modpath("wool") then
+						or player ~= self.owner
+						or not minetest.get_modpath("wool") then
 					return
 				end
 				self.gotten = true -- shaved
-				local obj = minetest.add_item(
-					self.object:get_pos(),
-					ItemStack( "wool:" .. name .. " " .. math.random(1, 3) )
-				)
+				local obj = minetest.add_item(self.object:get_pos(),
+					ItemStack("wool:" .. name .. " " .. math.random(1, 3)))
 				if obj then
 					obj:setvelocity({
 						x = math.random(-1, 1),
@@ -108,10 +106,10 @@ for i = 1, #dyes do
 
 			--are we coloring?
 			if itemname:find("dye:") then
-				if self.gotten == false
-				and self.child == false
-				and self.tamed == true
-				and player == self.owner then
+				if not self.gotten
+						and not self.child
+						and self.tamed
+						and player == self.owner then
 					local color = string.split(itemname, ":")[2]
 					for i = 1, #dyes do
 						local name = unpack(dyes[i])
@@ -126,7 +124,7 @@ for i = 1, #dyes do
 
 							-- take item
 							if not mobs.is_creative(player) or
-							not minetest.is_singleplayer() then
+									not minetest.is_singleplayer() then
 								item:take_item()
 								clicker:set_wielded_item(item)
 							end
@@ -145,11 +143,11 @@ for i = 1, #dyes do
 	minetest.register_alias("mobs_animal:sheep_" .. name, "mobs_animal:sheep_white")
 end
 
-mobs:register_egg("mobs_animal:sheep_white", "Sheep Egg", "wool_white.png", 1)
+mobs:register_egg("mobs_animal:sheep_white", "Sheep Egg", "wool_white.png", true)
 
 mobs:spawn({
 	name = "mobs_animal:sheep_white",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	mobs_animal.spawn_nodes,
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
@@ -158,7 +156,7 @@ mobs:spawn({
 
 mobs:spawn({
 	name = "mobs_animal:sheep_grey",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	mobs_animal.spawn_nodes,
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
@@ -167,7 +165,7 @@ mobs:spawn({
 
 mobs:spawn({
 	name = "mobs_animal:sheep_dark_grey",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass"},
+	mobs_animal.spawn_nodes,
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
@@ -176,7 +174,7 @@ mobs:spawn({
 
 mobs:spawn({
 	name = "mobs_animal:sheep_black",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass", "default:dirt_with_grass"},
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
@@ -185,7 +183,7 @@ mobs:spawn({
 
 mobs:spawn({
 	name = "mobs_animal:sheep_brown",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass",  "default:dirt_with_grass"},
+	nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass", "default:dirt_with_grass"},
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,

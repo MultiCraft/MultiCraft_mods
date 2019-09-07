@@ -1,11 +1,18 @@
-local path = minetest.get_modpath("mobs_animal")
+mobs_animal = {}
 
-dofile(path .. "/bear.lua") -- KrupnoPavel
-dofile(path .. "/bunny.lua") -- ExeterDad
-dofile(path .. "/chicken.lua") -- JKmurray
-dofile(path .. "/cow.lua") -- KrupnoPavel
-dofile(path .. "/dog.lua") -- KrupnoPavel
-dofile(path .. "/kitten.lua") -- Jordach/BFD
-dofile(path .. "/pig.lua") -- MultiCraft
-dofile(path .. "/parrot.lua") -- MultiCraft
-dofile(path .. "/sheep.lua") -- PilzAdam
+mobs_animal.spawn_nodes = {
+	"default:dirt", "default:sand", "default:redsand",
+	"default:snow", "default:snowblock",
+	"default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass"
+}
+
+local path = minetest.get_modpath("mobs_animal")
+local animal = {
+	"bear", "bunny", "chicken",
+	"cow", "dog", "kitten",
+	"pig", "parrot", "sheep"
+}
+
+for _, name in pairs(animal) do
+	dofile(path .. "/" .. name .. ".lua")
+end

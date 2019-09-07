@@ -51,11 +51,11 @@ mobs:register_mob("mobs_animal:kitten", {
 
 mobs:spawn({
 	name = "mobs_animal:kitten",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass", "default:dirt_with_dry_grass"},
+	nodes = mobs_animal.spawn_nodes,
 	min_light = 10,
 	chance = 20000,
 	min_height = 0,
 	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:kitten", "Cat's Egg", "mobs_kitten_egg.png", 1)
+mobs:register_egg("mobs_animal:kitten", "Cat's Egg", "mobs_kitten_egg.png", true)
