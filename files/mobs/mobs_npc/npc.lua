@@ -72,11 +72,11 @@ mobs:register_mob("mobs_npc:npc_man", {
 --	order = "follow",
 	fear_height = 3,
 	animation = {
-		speed_normal = 30, speed_run = 30,
-		stand_start = 0, stand_end = 79,
-		walk_start = 168, walk_end = 187,
-		run_start = 168, run_end = 187,
-		punch_start = 200, punch_end = 219
+		speed_normal = 30,	speed_run = 30,
+		stand_start = 0,	stand_end = 79,
+		walk_start = 168,	walk_end = 187,
+		run_start = 168,	run_end = 187,
+		punch_start = 200,	punch_end = 219
 	},
 
 --[[on_rightclick = function(self, clicker)
@@ -188,21 +188,16 @@ mobs:register_mob("mobs_npc:npc_woman", {
 --	order = "follow",
 	fear_height = 3,
 	animation = {
-		speed_normal = 30, speed_run = 30,
-		stand_start = 0, stand_end = 79,
-		walk_start = 168, walk_end = 187,
-		run_start = 168, run_end = 187,
-		punch_start = 200, punch_end = 219
+		speed_normal = 30,	speed_run = 30,
+		stand_start = 0,	stand_end = 79,
+		walk_start = 168,	walk_end = 187,
+		run_start = 168,	run_end = 187,
+		punch_start = 200,	punch_end = 219
 	},
 
 --[[on_rightclick = function(self, clicker)
-		-- feed to heal npc
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
-
-		-- capture npc with net or lasso
 		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
-
-		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
 
 		local item = clicker:get_wielded_item()
@@ -252,5 +247,5 @@ mobs:spawn({
 	chance = 100
 })
 
-mobs:register_egg("mobs_npc:npc_man", S("NPC Man"), "mobs_npc_man_egg.png", 2)
-mobs:register_egg("mobs_npc:npc_woman", S("NPC Woman"), "mobs_npc_woman_egg.png", 2)
+mobs:register_egg("mobs_npc:npc_man", S("NPC Man"), "mobs_npc_man_egg.png")
+mobs:register_egg("mobs_npc:npc_woman", S("NPC Woman"), "mobs_npc_woman_egg.png")

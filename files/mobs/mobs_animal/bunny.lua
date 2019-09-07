@@ -6,14 +6,14 @@ mobs:register_mob("mobs_animal:bunny", {
 	reach = 1,
 	hp_min = 1,
 	hp_max = 4,
-	collisionbox = {-0.268, -0.5, -0.268,  0.268, 0.167, 0.268},
+	collisionbox = {-0.268, -0.5, -0.268, 0.268, 0.167, 0.268},
 	visual = "mesh",
 	mesh = "mobs_bunny.b3d",
 	drawtype = "front",
 	textures = {
 		{"mobs_bunny_grey.png"},
 		{"mobs_bunny_brown.png"},
-		{"mobs_bunny_white.png"},
+		{"mobs_bunny_white.png"}
 	},
 	runaway = true,
 	runaway_from = {"mobs_animal:pumba", "player"},
@@ -44,25 +44,23 @@ mobs:register_mob("mobs_animal:bunny", {
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		--if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
+	--	if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
 
 		-- Monty Python tribute
 		local item = clicker:get_wielded_item()
 
-		if item:get_name() == "mobs:lava_orb" then
+		if item:get_name() == "mobs:rotten_flesh" then
 			if not mobs.is_creative(clicker:get_player_name()) then
 				item:take_item()
 				clicker:set_wielded_item(item)
 			end
 
 			self.object:set_properties({
-				textures = {"mobs_bunny_evil.png"},
+				textures = {"mobs_bunny_evil.png"}
 			})
-
 			self.type = "monster"
 			self.health = 20
 			self.passive = false
-
 			return
 		end
 	end,
@@ -77,7 +75,7 @@ mobs:register_mob("mobs_animal:bunny", {
 			self.object:set_properties({textures = self.base_texture})
 		-- brown desert bunny
 		elseif minetest.find_node_near(pos, 1,
-				{"default:desert_sand", "default:desert_stone"}) then
+				{"group:sand", "default:desert_stone"}) then
 			self.base_texture = {"mobs_bunny_brown.png"}
 			self.object:set_properties({textures = self.base_texture})
 		-- grey stone bunny
@@ -92,11 +90,11 @@ mobs:register_mob("mobs_animal:bunny", {
 
 mobs:spawn({
 	name = "mobs_animal:bunny",
-	nodes = {"default:snow", "default:snowblock", "default:dirt_with_snow",  "default:dirt_with_grass", "default:dirt_with_dry_grass"},
+	nodes = {"default:snow", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass"},
 	min_light = 10,
 	chance = 20000,
 	min_height = 0,
 	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:bunny", "Bunny Egg", "mobs_bunny_evil.png", 1)
+mobs:register_egg("mobs_animal:bunny", "Bunny Egg", "mobs_bunny_evil.png", true)

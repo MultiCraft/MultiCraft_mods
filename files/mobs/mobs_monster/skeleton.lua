@@ -54,9 +54,9 @@ mobs:register_mob("mobs_monster:skeleton", {
 
 mobs:spawn({
 	name = "mobs_monster:skeleton",
-	nodes = {"default:dirt", "default:sandstone", "default:sand", "default:redsand", "default:stone", "default:snowblock", "default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass", "default:cobble", "default:mossycobble"},
+	nodes = mobs_monster.spawn_nodes,
 	max_light = 8,
 	chance = 15000
 })
 
-mobs:register_egg("mobs_monster:skeleton", "Skeleton Egg", "mobs_monster_egg.png^default_bone.png", 2)
+mobs:register_egg("mobs_monster:skeleton", "Skeleton Egg", "mobs_monster_egg.png^default_bone.png")
