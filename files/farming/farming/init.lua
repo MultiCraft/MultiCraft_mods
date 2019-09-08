@@ -18,8 +18,7 @@ farming.register_plant("farming:wheat", {
 	paramtype2 = "meshoptions",
 	inventory_image = "farming_wheat_seed.png",
 	steps = 8,
-	minlight = 13,
-	maxlight = minetest.LIGHT_MAX,
+	minlight = 12,
 	fertility = {"grassland"},
 	place_param2 = 3,
 	groups = {food_wheat = 1, flammable = 4}
@@ -63,35 +62,6 @@ minetest.register_craft({
 	output = "farming:string",
 	recipe = {{"default:paper", "default:paper"}},
 })
-
--- Cotton
-
---[[farming.register_plant("farming:cotton", {
-	description = "Cotton Seed",
-	inventory_image = "farming_cotton_seed.png",
-	steps = 8,
-	minlight = 13,
-	maxlight = minetest.LIGHT_MAX,
-	fertility = {"grassland", "desert"},
-	groups = {flammable = 4},
-})
-
-minetest.register_craft({
-	output = "wool:white",
-	recipe = {
-		{"farming:cotton", "farming:cotton"},
-		{"farming:cotton", "farming:cotton"},
-	}
-})
-
-minetest.register_craft({
-	output = "farming:string 2",
-	recipe = {
-		{"farming:cotton"},
-		{"farming:cotton"},
-	}
-})
-]]
 
 -- Straw
 
