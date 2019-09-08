@@ -80,13 +80,8 @@ mobs:register_mob("mobs_npc:npc_man", {
 	},
 
 --[[on_rightclick = function(self, clicker)
-		-- feed to heal npc
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
-
-		-- capture npc with net or lasso
 		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
-
-		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
 
 		local item = clicker:get_wielded_item()

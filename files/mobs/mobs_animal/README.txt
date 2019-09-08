@@ -1,27 +1,41 @@
-ANIMAL MOBS
+MultiCraft Game mod: mobs_animal
+================================
+See ../license.txt for license information.
 
-Bunny
+Adds Peaceful Mobs
 
-- Bunnies appear in green grass areas (prairie biome in ethereal) and can be tamed with 4 carrots. Can also be picked up and placed in inventory and gives 1-2 meat when killed.
+License of source code:
+-----------------------
+Copyright (C) 2016 TenPlus1
+Copyright (C) 2019 MultiCraft Development Team
 
-Chicken
+Credits:
+--------
+"Bear", "Wolf" - code based on blert2112 mobs_more_animals mod (MIT)
+"Sheep" by PilzAdam (WTFPL)
+"Chicken" by JKmurray (WTFPL)
+"Bear", "Cow", "Wolf" by KrupnovPavel (MIT)
+"Kitten" by Jordach/BFD (probably MIT?)
+"Bunny" by ExeterDad (MIT)
 
-- Found in green areas (bamboo biome in ethereal) and lays eggs on flat ground, Can be picked up and placed in inventory and gives 1-2 raw chicken when killed. Feed 8x wheat seed to breed.
+License of models:
+--------------------
+Copyright (C) 2019 MultiCraft Development Team
 
-Cow
+Models in this mod is NOT free and can be used only as part of the official MultiCraft build.
+Allowed to be used in non-official builds ONLY for personal use.
 
-- Wanders around eating grass/wheat and can be right-clicked with empty bucket to get milk. Cows will defend themselves when hit and can be right-clicked with 8x wheat to tame and breed.
+* Exceptions:
+"Bear", "Wolf", "Kitten" and "Bunny" (MIT)
+"Pig" by MultiCraft Development Team (CC-BY-SA 4.0)
 
-Kitten
+License of textures:
+--------------------
+Copyright (C) 2019 MultiCraft Development Team
 
-- Found on green grass these cute cats walk around and can be picked up and placed in inventory as pets or right-clicked with 4x raw fish (found in ethereal) and tamed.
+Graphics in this mod is NOT free and can be used only as part of the official MultiCraft build.
+Allowed to be used in non-official builds ONLY for personal use.
 
-Sheep
-
-- Green grass and wheat munchers that can be clipped using shears to give 1-3 wool. Feed sheep 8x wheat to regrow wool, tame and breed.  Right-click a tamed sheep with dye to change it's colour.  Will drop 1-3 meat when killed.
-
-Warthog
-
-- Warthogs unlike pigs defend themselves when hit and give 1-3 raw pork when killed, they can also be right-clicked with 8x apples to tame or breed.
-
-Note: After breeding animals need to rest for 4 minutes, baby animals take 4 minutes to grow up and feeding them helps them grow quicker...
+* Exceptions:
+mobs_bunny_*.png by ExeterDad (CC-BY-SA 3.0)
+mobs_pig.png, mobs_pig_egg.png by MultiCraft Development Team (CC-BY-SA 4.0)
