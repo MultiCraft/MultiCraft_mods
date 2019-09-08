@@ -1,22 +1,38 @@
 MultiCraft Game mod: mobs_redo
-===============================
+==============================
+See license.txt for license information.
 
-Credits:
-https://github.com/blert2112/mobs_more_animals/tree/master/mobs_wolf
-https://github.com/blert2112/mobs_more_animals/tree/master/mobs_bear
-https://github.com/blert2112/mobs_more_monsters/tree/master/mobs_zombie
-https://github.com/tenplus1/mobs
-
-Built from PilzAdam's original Simple Mobs with additional mobs by KrupnovPavel, Zeg9, ExeterDad, AspireMint, TenPlus1, kaadmy, blert2112 and MoNTE48.
-
+Adds a API for mobs.
+MultiCraft Game version with special new APIs, fixes and optimizations.
 https://forum.minetest.net/viewtopic.php?f=11&t=9917
 
+Copyright (C) 2016 TenPlus1
+Copyright (C) 2016-2019 MultiCraft Development Team
 
-Crafts:
+Credits:
+"Simple Mobs" by PilzAdam (WTFPL)
+Extra mobs, codes, and patches by KrupnovPavel, Zeg9, ExeterDad, AspireMint.
+If I forgot about someone, contact us.
 
- - Nametag (paper, black dye, string) can be used right-click on a tamed mob to give them a name.
- - Nets can be used to right-click tamed mobs to pick them up and place inside inventory as a spawn egg.
- - Magic Lasso is similar to nets but with a better chance of picking up larger mobs.
- - Shears are used to right-click sheep and return 1-3 wool.
- - Protection Rune lets you protect tamed mobs from harm by other players
- - Mob Fence and Fence Top (to stop mobs escaping/glitching through fences)
+License of textures:
+--------------------
+Copyright (C) 2013 Vattic
+https://github.com/MultiCraft/MultiCraft/blob/master/doc/Other%20License.md#license-of-media-textures
+
+* Exceptions 1:
+mobs_chicken_egg.png, mobs_egg_overlay.png, mobs_cheese.png, mobs_cheese_wield.png, mobs_cheeseblock.png, by MultiCraft Development Team
+Is NOT free and can be used only as part of the official MultiCraft build.
+Allowed to be used in non-official builds ONLY for personal use.
+
+* Exceptions 2:
+mobs_chicken_egg_fried.png, mobs_protector.png from mobs_redo by TenPlus1 
+
+License of sounds:
+--------------------
+Creative Commons sounds from Freesound.org
+
+mobs_swing.ogg by qubodup (CC0)
+http://freesound.org/people/qubodup/sounds/60012/
+ 
+mobs_spell.ogg by littlerobotsoundfactory (CC BY 3.0)
+http://freesound.org/people/LittleRobotSoundFactory/sounds/270396/
