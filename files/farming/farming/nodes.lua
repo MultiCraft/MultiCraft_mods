@@ -22,22 +22,6 @@ minetest.override_item("default:dirt_with_dry_grass", {
 	}
 })
 
---[[minetest.override_item("default:dirt_with_rainforest_litter", {
-	soil = {
-		base = "default:dirt_with_rainforest_litter",
-		dry = "farming:soil",
-		wet = "farming:soil_wet"
-	}
-})
-
-minetest.override_item("default:dirt_with_coniferous_litter", {
-	soil = {
-		base = "default:dirt_with_coniferous_litter",
-		dry = "farming:soil",
-		wet = "farming:soil_wet"
-	}
-})]]
-
 minetest.register_node("farming:soil", {
 	tiles = {"farming_soil.png", "default_dirt.png"},
 	drop = "default:dirt",
@@ -61,38 +45,6 @@ minetest.register_node("farming:soil_wet", {
 		wet = "farming:soil_wet"
 	}
 })
-
---[[minetest.override_item("default:desert_sand", {
-	groups = {crumbly=3, falling_node=1, sand=1, soil = 1},
-	soil = {
-		base = "default:desert_sand",
-		dry = "farming:desert_sand_soil",
-		wet = "farming:desert_sand_soil_wet"
-	}
-})
-minetest.register_node("farming:desert_sand_soil", {
-	drop = "default:desert_sand",
-	tiles = {"farming_desert_sand_soil.png", "default_red_sand.png"},
-	groups = {crumbly=3, not_in_creative_inventory = 1, falling_node=1, sand=1, soil = 2, desert = 1, field = 1},
-	sounds = default.node_sound_sand_defaults(),
-	soil = {
-		base = "default:desert_sand",
-		dry = "farming:desert_sand_soil",
-		wet = "farming:desert_sand_soil_wet"
-	}
-})
-
-minetest.register_node("farming:desert_sand_soil_wet", {
-	drop = "default:desert_sand",
-	tiles = {"farming_desert_sand_soil_wet.png", "farming_desert_sand_soil_wet_side.png"},
-	groups = {crumbly=3, falling_node=1, sand=1, not_in_creative_inventory=1, soil=3, wet = 1, desert = 1, field = 1},
-	sounds = default.node_sound_sand_defaults(),
-	soil = {
-		base = "default:desert_sand",
-		dry = "farming:desert_sand_soil",
-		wet = "farming:desert_sand_soil_wet"
-	}
-})]]
 
 minetest.register_node("farming:straw", {
 	description = "Straw",
@@ -152,5 +104,5 @@ minetest.register_abm({
 				end
 			end
 		end
-	end,
+	end
 })
