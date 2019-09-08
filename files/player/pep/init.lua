@@ -5,9 +5,6 @@ pep = {}
 -- Intllib
 local S = intllib.make_gettext_pair()
 
--- Whether to use mole (true, false or minetest.is_singleplayer())
-pep.mole = minetest.is_singleplayer()
-
 function return_empty_bottle(potiondef, user, itemstack)
 	local inventory = user:get_inventory()
 	local empty_vessel = "vessels:glass_bottle"
@@ -42,7 +39,7 @@ function pep.register_potion(potiondef)
 			maxsize = 2,
 			collisiondetection = false,
 			vertical = false,
-			texture = "pep_"..potiondef.basename.."_particle.png",
+			texture = "pep_"..potiondef.basename.."_particle.png"
 		})
 		if(potiondef.effect_type ~= nil) then
 			playereffects.apply_effect_type(potiondef.effect_type, potiondef.duration, user)
@@ -96,10 +93,7 @@ end
 function pep.moledig(playername)
 	local player = minetest.get_player_by_name(playername)
 
-	local yaw = player:get_look_yaw()
-	-- fix stupid oddity of Minetest, adding pi/2 to the actual player's look yaw...
-	-- TODO: Remove this code as soon as Minetest fixes this.
-	yaw = yaw - math.pi/2
+	local yaw = player:get_look_horizontal()
 
 	local pos = vector.round(player:get_pos())
 
@@ -151,7 +145,7 @@ function pep.moledig(playername)
 	dig(digpos2)
 end
 
-if pep.mole then
+if minetest.is_singleplayer() then
 	pep.timer = 0
 	minetest.register_globalstep(function(dtime)
 		pep.timer = pep.timer + dtime
@@ -402,16 +396,13 @@ minetest.register_craft({
 	recipe = { "pep:grav0", "default:steel_ingot" }
 })
 end
-if(minetest.get_modpath("flowers") ~= nil) then
 	minetest.register_craft({
 		type = "shapeless",
 		output = "pep:speedplus",
 		recipe = { "default:pine_sapling", "default:cactus", "flowers:oxeye_daisy", "default:junglegrass", "vessels:glass_bottle" }
 	})
-end
 
 --[[ independent crafts ]]
-
 minetest.register_craft({
 	type = "shapeless",
 	output = "pep:speedreset",
@@ -425,7 +416,6 @@ minetest.register_craft({
 
 
 --[[ aliases ]]
-
 minetest.register_alias("potionspack:antigravity", "pep:grav0")
 minetest.register_alias("potionspack:antigravityii", "pep:gravreset")
 minetest.register_alias("potionspack:speed", "pep:speedminus")
