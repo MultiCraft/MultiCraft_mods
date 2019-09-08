@@ -15,8 +15,13 @@ dungeon_loot.registered_loot = {
 	-- farming / consumable
 	{name = "farming:string", chance = 0.5, count = {1, 8}},
 	{name = "farming:wheat", chance = 0.5, count = {2, 5}},
+	{name = "farming_addons:seed_carrot", chance = 0.5, count = {2, 4}},
+	{name = "farming_addons:cocoa", chance = 0.5, count = {2, 4}},
+	{name = "farming_addons:corn", chance = 0.5, count = {1, 2}},
+	{name = "farming_addons:melon", chance = 0.5, count = {1, 2}},
+	{name = "farming_addons:seed_potato", chance = 0.5, count = {2, 4}},
+	{name = "farming_addons:pumpkin", chance = 0.5, count = {1, 2}},
 	{name = "default:apple", chance = 0.4, count = {1, 4}},
---	{name = "farming:seed_cotton", chance = 0.4, count = {1, 4}, types = {"normal"}},
 	{name = "default:cactus", chance = 0.4, count = {1, 4}, types = {"sandstone", "desert"}},
 
 	-- trees sappling
@@ -55,7 +60,7 @@ dungeon_loot.registered_loot = {
 	{name = "default:sandstonesmooth", chance = 0.8, count = {4, 32}, y = {-64, 256}, types = {"sandstone"}},
 	{name = "default:mossycobble", chance = 0.8, count = {4, 32}, types = {"desert"}},
 	{name = "default:dirt", chance = 0.6, count = {2, 16}, y = {-64, 256}},
-	{name = "default:obsidian", chance = 0.25, count = {1, 3}, y = {-64, -512}}
+	{name = "default:obsidian", chance = 0.25, count = {1, 3}, y = {-32, -64}}
 }
 
 function dungeon_loot.register(t)
