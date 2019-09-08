@@ -911,14 +911,7 @@ minetest.register_node("default:junglegrass", {
 	walkable = false,
 	buildable_to = true,
 	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1},
-	sounds = default.node_sound_leaves_defaults(),
-	drop = {
-		max_items = 1,
-		items = {
-			--{items = {"farming:seed_cotton"}, rarity = 8},
-			{items = {"default:junglegrass"}}
-		}
-	}
+	sounds = default.node_sound_leaves_defaults()
 })
 
 minetest.register_node("default:grass", {
@@ -932,14 +925,6 @@ minetest.register_node("default:grass", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	drop = {
-		max_items = 1,
-		items = {
-			{items = {"farming:seed_wheat"}, rarity = 5},
-			{items = {"default:grass"}}
-		}
-	},
-
 	groups = {snappy = 3, flora = 1, attached_node = 1, grass = 1,
 		flammable = 1, dig_immediate = 3},
 	sounds = default.node_sound_leaves_defaults()
