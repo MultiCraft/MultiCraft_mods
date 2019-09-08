@@ -179,6 +179,7 @@ minetest.register_craft({
 minetest.register_craftitem("mobs:cheese", {
 	description = "Cheese",
 	inventory_image = "mobs_cheese.png",
+	wield_image = "mobs_cheese_wield.png",
 	on_use = minetest.item_eat(4),
 	groups = {food_cheese = 1, flammable = 2, food = 1}
 })
