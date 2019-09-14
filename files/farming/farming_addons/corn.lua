@@ -4,7 +4,7 @@ farming.register_plant("farming_addons:corn", {
 	steps = 8,
 	minlight = 12,
 	fertility = {"grassland"},
-	groups = {flammable = 4},
+	groups = {flammable = 4, food = 1},
 	place_param2 = 3
 })
 
