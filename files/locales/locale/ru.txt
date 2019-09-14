@@ -20,6 +20,8 @@ Sticky Piston = Липкий Поршень
 Solar Panel = Солнечная Панель
 Lever = Рычаг
 Bluestone = Блюстоун
+Wooden Pressure Plate = Деревянная Нажимная Плита
+Stone Pressure Plate = Каменная Нажимная Плита
 
 
 #boats
@@ -42,7 +44,7 @@ Milk Bucket = Ведро Молока
 Cart (Sneak+Click to pick up) = Вагонетка (Приседание+Нажатие чтобы взять)
 Rail = Рельсы
 Powered Rail = Электрические Рельсы
-Brake Rail = Рельсы Торможеня
+Brake Rail = Рельсы Торможения
 Start-stop rail = Старт-стоп Рельсы
 Detector rail = Рельсы с Датчиком
 
@@ -214,10 +216,12 @@ Pine Wood Door = Дверь из Дерева Сосны
 Steel Door = Стальная Дверь
 Wooden Trapdoor = Деревянный Люк
 Steel Trapdoor = Стальной Люк
+Apple Wood Fence Gate = Ворота из Дерева Яблока
 Owned by = Владелец
 
 
 #farming
+Wheat = Пшеница
 Wheat Seed = Семена Пшеницы
 Flour = Мука
 Bread = Хлеб
@@ -230,11 +234,42 @@ Gold Hoe = Золотая Мотыга
 Diamond Hoe = Алмазная Мотыга
 
 
+#farming
+Carrot = Морковка
+Golden Carrot = Золотая Морковка
+Carrot Seed = Семена Морковки
+Cocoa Bean = Шоколадные Бобы
+Chocolate = Шоколадка
+
+Potato = Картошка
+Baked Potato = Запечённая Картошка
+Poisonous Potato = Ядовитая Картошка
+Potato Seed = Семена Картошки
+
+Cookie = Печенье
+
+Corn = Кукуруза
+Baked Corn = Запечённая Кукуруза
+Corn Seed = Семена Кукурузы
+
+Melon = Арбуз
+Melon Slice = Долька Арбуза
+Golden Melon Slice = Золотая Долька Арбуза
+Melon Seed = Семена Арбуза
+
+Pumpkin = Тыква
+Pumpkin Seed = Семена Тыквы
+
+Empty Bowl = Пустая Миска
+Stewed Pork Bowl = Миска Тушённой Свинины
+
 #fire
 Flint and Steel = Огниво
 
 
 #flowers
+Red Mushroom = Красный Гриб
+Brown Mushroom = Коричневый Гриб
 
 
 #flowerpot
@@ -298,6 +333,12 @@ Spider Egg = Яйцо Спавна Паука
 Small Spider Egg = Яйцо Спавна Маленького Паука
 Zombie Head = Голова Зомби
 
+
+#pie
+Cake = Торт
+Pumpkin Pie = Тыквенный Пирог
+
+
 #vessels
 Potion Shelf = Шкаф с Зельями
 Empty Glass Bottle = Пустой Стеклянный Бутыль
@@ -305,7 +346,8 @@ Empty Glass Bottle = Пустой Стеклянный Бутыль
 
 #signs
 Sign = Табличка
-
+Enter your text: = Введите текст:
+Save = Сохранить
 
 #sponge
 Sponge = Губка

@@ -1,11 +1,11 @@
 farming.register_plant("farming_addons:potato", {
-	description = "Planting Potato",
+	description = "Potato Seed",
 	paramtype2 = "meshoptions",
 	inventory_image = "farming_addons_potato_seed.png",
 	steps = 4,
 	minlight = 12,
 	fertility = {"grassland"},
-	groups = {flammable = 4},
+	groups = {flammable = 4, food = 1},
 	place_param2 = 3
 })
 
@@ -34,7 +34,7 @@ minetest.override_item("farming_addons:potato_4", {
 			{items = {"farming_addons:potato"}, rarity = 1},
 			{items = {"farming_addons:potato"}, rarity = 2},
 			{items = {"farming_addons:potato"}, rarity = 2},
-			{items = {"farming_addons:poisonouspotato"}, rarity = 5},
+			{items = {"farming_addons:potato_poisonous"}, rarity = 5},
 			{items = {"farming_addons:seed_potato"}, rarity = 1},
 			{items = {"farming_addons:seed_potato"}, rarity = 2}
 		}
@@ -42,21 +42,23 @@ minetest.override_item("farming_addons:potato_4", {
 })
 
 -- Potato
-minetest.register_craftitem("farming_addons:bakedpotato", {
+minetest.register_craftitem("farming_addons:potato_baked", {
 	description = "Baked Potato",
 	inventory_image = "farming_addons_potato_baked.png",
-	on_use = minetest.item_eat(6)
+	on_use = minetest.item_eat(6),
+	groups = { food = 1},
 })
 
-minetest.register_craftitem("farming_addons:poisonouspotato", {
+minetest.register_craftitem("farming_addons:potato_poisonous", {
 	description = "Poisonous Potato",
 	inventory_image = "farming_addons_potato_poisonous.png",
-	on_use = minetest.item_eat(2, nil, -4)
+	on_use = minetest.item_eat(2, nil, -4),
+	groups = {food = 1},
 })
 
 minetest.register_craft({
 	type = "cooking",
 	cooktime = 10,
-	output = "farming_addons:bakedpotato",
+	output = "farming_addons:potato_baked",
 	recipe = "farming_addons:potato"
 })

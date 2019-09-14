@@ -15,8 +15,9 @@ end
 
 -- Soup Bowl
 minetest.register_craftitem("farming_addons:bowl", {
-	description = "Empty Soup Bowl",
-	inventory_image = "farming_addons_bowl.png"
+	description = "Empty Bowl",
+	inventory_image = "farming_addons_bowl.png",
+	groups = {food = 1}
 })
 
 minetest.register_craft({
@@ -28,26 +29,27 @@ minetest.register_craft({
 })
 
 -- Hog Stew
-minetest.register_craftitem("farming_addons:hog_stew", {
-	description = "Hog Stew",
+minetest.register_craftitem("farming_addons:bowl_hog_stew", {
+	description = "Stewed Pork Bowl",
 	inventory_image = "farming_addons_hog_stew.png",
-	on_use = minetest.item_eat(8, "farming_addons:bowl")
+	on_use = minetest.item_eat(8, "farming_addons:bowl"),
+	groups = {food = 1}
 })
 
 minetest.register_craft({
-	output = "farming_addons:hog_stew",
+	output = "farming_addons:bowl_hog_stew",
 	recipe = {
 		{"", "mobs:pork_raw", ""},
-		{"farming_addons:carrot", "farming_addons:bakedpotato", "flowers:mushroom_brown"},
+		{"farming_addons:carrot", "farming_addons:potato_baked", "flowers:mushroom_brown"},
 		{"", "farming_addons:bowl", ""}
 	}
 })
 
 minetest.register_craft({
-	output = "farming_addons:hog_stew",
+	output = "farming_addons:bowl_hog_stew",
 	recipe = {
 		{"", "mobs:pork_raw", ""},
-		{"farming_addons:carrot", "farming_addons:bakedpotato", "flowers:mushroom_red"},
+		{"farming_addons:carrot", "farming_addons:potato_baked", "flowers:mushroom_red"},
 		{"", "farming_addons:bowl", ""}
 	}
 })
