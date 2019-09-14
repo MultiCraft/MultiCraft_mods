@@ -29,7 +29,7 @@ function farming_addons.grow_cocoa_plant(pos, elapsed)
 
 	-- check light
 	local light = minetest.get_node_light(pos)
-	if not light or light < def.minlight or light > def.maxlight then
+	if not light or light < def.minlight then
 		tick_again(pos)
 		return
 	end
@@ -117,7 +117,7 @@ end
 
 -- COCOA
 minetest.register_craftitem("farming_addons:cocoa_bean", {
-	description = "Cocoa bean",
+	description = "Cocoa Bean",
 	tiles = {"farming_addons_cocoa_bean.png"},
 	inventory_image = "farming_addons_cocoa_bean.png",
 	wield_image = "farming_addons_cocoa_bean.png",
@@ -310,7 +310,8 @@ minetest.register_craft( {
 minetest.register_craftitem("farming_addons:chocolate", {
 	description = "Chocolate",
 	inventory_image = "farming_addons_chocolate.png",
-	on_use = minetest.item_eat(3)
+	on_use = minetest.item_eat(3),
+	groups = {food = 1},
 })
 
 minetest.register_craft( {

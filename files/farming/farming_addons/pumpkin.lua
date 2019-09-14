@@ -22,17 +22,17 @@ farming.register_plant("farming_addons:pumpkin", {
 	steps = 8,
 	minlight = 12,
 	fertility = {"grassland", "desert"},
-	groups = {flammable = 4}
+	groups = {flammable = 4, food = 1},
 })
 
 -- PUMPKIN FRUIT - HARVEST
 minetest.register_node("farming_addons:pumpkin_fruit", {
-	description = "Pumpkin Fruit",
+	description = "Pumpkin",
 	tiles = {"farming_addons_pumpkin_top.png", "farming_addons_pumpkin_top.png", "farming_addons_pumpkin_side.png"},
 	paramtype2 = "facedir",
 	sounds = default.node_sound_wood_defaults(),
 	is_ground_content = false,
-	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30},
+	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1},
 	after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local parent = oldmetadata.fields.parent
 		local parent_pos_from_child = minetest.string_to_pos(parent)

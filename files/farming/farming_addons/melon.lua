@@ -4,22 +4,23 @@ farming.register_plant("farming_addons:melon", {
 	steps = 8,
 	minlight = 12,
 	fertility = {"grassland"},
-	groups = {flammable = 4},
+	groups = {flammable = 4, food = 1},
 	place_param2 = 3
 })
 
 -- eat melons
 minetest.override_item("farming_addons:melon", {
+	description = Sl("Melon Slice"),
 	on_use = minetest.item_eat(2)
 })
 
 -- MELON FRUIT - HARVEST
 minetest.register_node("farming_addons:melon_fruit", {
-	description = "Melon Fruit",
+	description = "Melon",
 	tiles = {"farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_side.png", "farming_addons_melon_fruit_side.png", "farming_addons_melon_fruit_side.png", "farming_addons_melon_fruit_side.png"},
 	sounds = default.node_sound_wood_defaults(),
 	is_ground_content = false,
-	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30},
+	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1},
 	drop = {
 		max_items = 7,
 		items = {
@@ -67,14 +68,15 @@ minetest.register_lbm({
 })
 
 -- Melon
-minetest.register_craftitem("farming_addons:golden_melon", {
-	description = "Golden Melon",
-	inventory_image = "farming_addons_golden_melon.png",
-	on_use = minetest.item_eat(10)
+minetest.register_craftitem("farming_addons:melon_golden", {
+	description = "Golden Melon Slice",
+	inventory_image = "farming_addons_melon_golden.png",
+	on_use = minetest.item_eat(10),
+	groups = {food = 1}
 })
 
 minetest.register_craft({
-	output = "farming_addons:golden_melon",
+	output = "farming_addons:melon_golden",
 	recipe = {
 		{"default:gold_ingot", "default:gold_ingot", "default:gold_ingot"},
 		{"default:gold_ingot", "farming_addons:melon", "default:gold_ingot"},

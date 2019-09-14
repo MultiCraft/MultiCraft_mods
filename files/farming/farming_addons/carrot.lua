@@ -1,11 +1,11 @@
 farming.register_plant("farming_addons:carrot", {
-	description = "Planting Carrot",
+	description = "Carrot Seed",
 	paramtype2 = "meshoptions",
 	inventory_image = "farming_addons_carrot_seed.png",
 	steps = 4,
 	minlight = 12,
 	fertility = {"grassland"},
-	groups = {flammable = 4},
+	groups = {flammable = 4, food = 1},
 	place_param2 = 3
 })
 
@@ -27,7 +27,7 @@ minetest.override_item("farming_addons:carrot", {
 	end
 })
 
--- Carrot
+-- Golden Carrot
 minetest.register_craftitem("farming_addons:carrot_golden", {
 	description = "Golden Carrot",
 	inventory_image = "farming_addons_carrot_golden.png",
