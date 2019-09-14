@@ -7,7 +7,11 @@ mobs:register_mob("mobs_animal:pig", {
 	collisionbox = {-0.5, -0.01, -0.5, 0.5, 1.1, 0.5},
 	visual = "mesh",
 	mesh = "mobs_pig.b3d",
-	textures = {"mobs_pig.png"},
+	textures = {
+		{"mobs_pig.png"},
+		{"mobs_pig_black.png"},
+		{"mobs_pig_motley.png"}
+	},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_pig",
