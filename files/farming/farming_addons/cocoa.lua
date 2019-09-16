@@ -297,6 +297,7 @@ minetest.register_craft( {
 minetest.register_craftitem("farming_addons:cookie", {
 	description = "Cookie",
 	inventory_image = "farming_addons_cookie.png",
+	groups = {food = 1},
 	on_use = minetest.item_eat(2)
 })
 
