@@ -2882,7 +2882,7 @@ function mob_class:on_step(dtime)
 	-- run custom function (defined in mob lua file)
 	if self.do_custom then
 		-- when false skip going any further
-		if not self:do_custom(dtime) then return end
+		if self:do_custom(dtime) == false then return end
 	end
 
 	-- attack timer
@@ -3571,7 +3571,7 @@ end
 
 
 -- capture critter (thanks to blert2112 for idea)
-function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso,
+--[[function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso,
 force_take, replacewith)
 	if self.child
 			or not clicker:is_player()
@@ -3674,7 +3674,7 @@ force_take, replacewith)
 		end
 	end
 	return true
-end
+end]]
 
 
 -- protect tamed mob with rune item
