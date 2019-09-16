@@ -84,9 +84,8 @@ end
 default.register_torch("default:torch", {
 	description = "Torch",
 	tiles = {{
-		name = "default_torch.png",
-	--	name = "default_torch_animated.png",
-	--	animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 3}
+		name = "default_torch_animated.png",
+		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 2}
 	}},
 	inventory_image = "default_torch.png",
 	wield_image = "default_torch.png",

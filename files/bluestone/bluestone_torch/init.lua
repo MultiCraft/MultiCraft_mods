@@ -1,9 +1,8 @@
 default.register_torch("bluestone_torch:torch", {
 	description = "Bluestone Torch",
 	tiles = {{
-		name = "bluestone_torch.png",
-	--	name = "bluestone_torch_animated.png",
-	--	animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 3.3}
+		name = "bluestone_torch_animated.png",
+		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 2}
 	}},
 	inventory_image = "bluestone_torch.png",
 	wield_image = "bluestone_torch.png",
