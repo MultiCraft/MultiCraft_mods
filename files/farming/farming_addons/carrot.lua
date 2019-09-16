@@ -32,6 +32,7 @@ minetest.register_craftitem("farming_addons:carrot_golden", {
 	description = "Golden Carrot",
 	inventory_image = "farming_addons_carrot_golden.png",
 	wield_image = "farming_addons_carrot_golden.png^[transformR270",
+	groups = {food = 1},
 	on_use = minetest.item_eat(10)
 })
 
