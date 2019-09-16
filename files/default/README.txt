@@ -20,7 +20,7 @@ the Free Software Foundation; either version 3.0 of the License, or
 http://www.gnu.org/licenses/lgpl-3.0.html
 
 
-Authors of media (textures, sounds, models and schematics)
+Authors of media (sounds, and schematics)
 ----------------------------------------------------------
 Everything not listed in here:
 celeron55, Perttu Ahola <celeron55@gmail.com> (CC BY-SA 3.0)
