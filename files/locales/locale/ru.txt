@@ -1,5 +1,24 @@
 #3d_armor
-
+Leather Helmet = Кожаный Шлем
+Steel Helmet = Стальной Шлем
+Golden Helmet = Золотой Шлем
+Diamond Helmet = Алмазный Шлем
+Chain Helmet = Кольчужный Шлем
+Leather Chestplate = Кожанная Кираса
+Steel Chestplate = Стальная Кираса
+Golden Chestplate = Золотая Кираса
+Diamond Chestplate = Алмазная Кираса
+Chain Chestplate = Кольчужная Кираса
+Leather Leggings = Кожаные Поножи
+Steel Leggings = Стальные Поножи
+Golden Leggings = Золотык Поножи
+Diamond Leggings = Алмазные Поножи
+Chain Leggings = Кольчужные Поножи
+Leather Boots = Кожаные Ботинки
+Steel Boots = Стальные Ботинки
+Golden Boots = Золотык Ботинки
+Diamond Boots = Алмазные Ботинки
+Chain Boots = Кольчужные Ботинки
 
 
 #beds
@@ -51,6 +70,7 @@ Detector rail = Рельсы с Датчиком
 
 #colored
 Hardened Clay = Обожжённая Глина
+Wool = Шерсть
 
 
 #creative || inventory
@@ -78,6 +98,14 @@ No recipes.\nClick again to show usages. = Невозможно скрафтит
 Chest = Сундук
 Large Chest = Большой Сундук
 Furnace = Печка
+Furnace is empty = Печка пустая
+output full = закончилось место
+Empty = Пусто
+Not cookable = Невозможно приготовить
+Item = Предмет
+Fuel = Топливо
+inactive = не активна
+active = активна
 Torch = Факел
 
 Stick = Палка
@@ -371,10 +399,6 @@ Mossy Cobblestone Wall = Стена из Мшистого Булыжника
 
 #watch
 Watch = Часы
-
-
-#wool
-Wool = Шерсть
 
 
 #workbench
