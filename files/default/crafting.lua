@@ -50,6 +50,13 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "default:stonebrickcarved",
+	recipe = {
+		{"default:stonebrick", "default:stonebrick"}
+	}
+})
+
+minetest.register_craft({
 	output = "default:stick 4",
 	recipe = {
 		{"group:wood"},
@@ -412,7 +419,6 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "default:stonebrick",
 	recipe = {
-		{"default:stone", "default:stone"},
 		{"default:stone", "default:stone"}
 	}
 })
