@@ -22,18 +22,24 @@ local function get_chest_neighborpos(pos, param2, side)
 	end
 end
 
-local function chest_dig(pos, oldmetadata)
-	local meta = minetest.get_meta(pos)
-	local meta2 = meta
-	meta:from_table(oldmetadata)
+local function can_dig(pos, oldmetadata)
+	local meta = minetest.get_meta(pos);
 	local inv = meta:get_inventory()
-	for i = 1, inv:get_size("main") do
-		local stack = inv:get_stack("main", i)
-		if not stack:is_empty() then
-			minetest.item_drop(stack, nil, pos)
-		end
+	return inv:is_empty("main")
+end
+
+local function allow_metadata_inventory_take(pos, _, _, stack, player)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return 0
 	end
-	meta:from_table(meta2:to_table())
+	return stack:get_count()
+end
+
+local function allow_metadata_inventory_put(pos, _, _, stack, player)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return 0
+	end
+	return stack:get_count()
 end
 
 local chest_formspec = [[
@@ -111,7 +117,9 @@ minetest.register_node("default:chest", {
 		inv:set_size("main", 9*3)
 	end,
 
-	after_dig_node = chest_dig
+	can_dig = can_dig,
+	allow_metadata_inventory_put = allow_metadata_inventory_put,
+	allow_metadata_inventory_take = allow_metadata_inventory_take
 })
 
 minetest.register_node("default:chest_left", {
@@ -139,7 +147,9 @@ minetest.register_node("default:chest_left", {
 		minetest.swap_node(pos2, {name = "default:chest", param2 = param2})
 	end,
 
-	after_dig_node = chest_dig
+	can_dig = can_dig,
+	allow_metadata_inventory_put = allow_metadata_inventory_put,
+	allow_metadata_inventory_take = allow_metadata_inventory_take
 })
 
 minetest.register_node("default:chest_right", {
@@ -167,5 +177,7 @@ minetest.register_node("default:chest_right", {
 		minetest.swap_node(pos2, {name = "default:chest", param2 = param2})
 	end,
 
-	after_dig_node = chest_dig
+	can_dig = can_dig,
+	allow_metadata_inventory_put = allow_metadata_inventory_put,
+	allow_metadata_inventory_take = allow_metadata_inventory_take
 })

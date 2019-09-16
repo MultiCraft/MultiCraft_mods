@@ -7,11 +7,11 @@ function default.get_furnace_active_formspec(fuel_percent, item_percent)
 		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]" ..
 		"item_image[0,-0.1;1,1;default:furnace_active]" ..
 		"label[0.9,0.1;" .. Sl("Furnace") .. "]" ..
-		"list[current_name;src;3,0.5;1,1;]" ..
-		"list[current_name;fuel;3,2.5;1,1;]" ..
+		"list[context;src;3,0.5;1,1;]" ..
+		"list[context;fuel;3,2.5;1,1;]" ..
 		"image[3,1.5;1,1;default_furnace_fire_bg.png^[lowpart:" ..
-		(100 - fuel_percent) .. ":default_furnace_fire_fg.png]" ..
-		"list[current_name;dst;5,1.5;1,1;]"
+		fuel_percent .. ":default_furnace_fire_fg.png]" ..
+		"list[context;dst;5,1.5;1,1;]"
 end
 
 function default.get_furnace_inactive_formspec()
@@ -19,10 +19,10 @@ function default.get_furnace_inactive_formspec()
 		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]" ..
 		"item_image[0,-0.1;1,1;default:furnace]" ..
 		"label[0.9,0.1;" .. Sl("Furnace") .. "]" ..
-		"list[current_name;src;3,0.5;1,1;]" ..
-		"list[current_name;fuel;3,2.5;1,1;]" ..
+		"list[context;src;3,0.5;1,1;]" ..
+		"list[context;fuel;3,2.5;1,1;]" ..
 		"image[3,1.5;1,1;default_furnace_fire_bg.png]" ..
-		"list[current_name;dst;5,1.5;1,1;]"
+		"list[context;dst;5,1.5;1,1;]"
 end
 
 --
@@ -30,6 +30,9 @@ end
 --
 
 local function can_dig(pos, player)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return
+	end
 	local meta = minetest.get_meta(pos);
 	local inv = meta:get_inventory()
 	for _, name in pairs({"fuel", "dst", "src"}) do
@@ -38,7 +41,7 @@ local function can_dig(pos, player)
 		stack:clear()
 		inv:set_stack(name, 1, stack)
 	end
-	return inv:is_empty("fuel") and inv:is_empty("dst") and inv:is_empty("src")
+	return true
 end
 
 local function allow_metadata_inventory_put(pos, listname, index, stack, player)
@@ -50,7 +53,7 @@ local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	if listname == "fuel" then
 		if minetest.get_craft_result({method="fuel", width=1, items={stack}}).time ~= 0 then
 			if inv:is_empty("src") then
-				meta:set_string("infotext", "Furnace is empty")
+				meta:set_string("infotext", Sl("Furnace is empty"))
 			end
 			return stack:get_count()
 		else
@@ -199,25 +202,25 @@ local function furnace_node_timer(pos, elapsed)
 	if cookable then
 		item_percent =  math.floor(src_time / cooked.time * 100)
 		if dst_full then
-			item_state = "100% (output full)"
+			item_state = "100% " .. Sl("output full")
 		else
 		item_state = item_percent .. "%"
 		end
 	else
 		if srclist[1]:is_empty() then
-			item_state = "Empty"
+			item_state = Sl("Empty")
 		else
-			item_state = "Not cookable"
+			item_state = Sl("Not cookable")
 		end
 	end
 
-	local fuel_state = "Empty"
-	local active = "inactive"
+	local fuel_state = Sl("Empty")
+	local active = Sl("inactive")
 	local result = false
 
 	if fuel_totaltime ~= 0 then
 		active = "active"
-		local fuel_percent = math.floor(fuel_time / fuel_totaltime * 100)
+		local fuel_percent = 100 - math.floor(fuel_time / fuel_totaltime * 100)
 		fuel_state = fuel_percent .. "%"
 		formspec = default.get_furnace_active_formspec(fuel_percent, item_percent)
 		swap_node(pos, "default:furnace_active")
@@ -233,8 +236,8 @@ local function furnace_node_timer(pos, elapsed)
 		minetest.get_node_timer(pos):stop()
 	end
 
-	local infotext = "Furnace " .. active .. "\n(Item: " .. item_state ..
-			"; Fuel: " .. fuel_state .. ")"
+	local infotext = Sl("Furnace") .. " " .. active .. "\n(" .. Sl("Item") .. ": " .. item_state ..
+			"; " .. Sl("Fuel") .. ": " .. fuel_state .. ")"
 
 		--
 		-- Set meta values
@@ -255,7 +258,7 @@ end
 minetest.register_node("default:furnace", {
 	description = "Furnace",
 	tiles = {
-		"default_furnace_top.png", "default_furnace_top.png",
+		"default_furnace_top.png",  "default_furnace_top.png",
 		"default_furnace_side.png", "default_furnace_side.png",
 		"default_furnace_side.png", "default_furnace_front.png"
 	},
@@ -275,7 +278,7 @@ minetest.register_node("default:furnace", {
 		local inv = meta:get_inventory()
 		inv:set_size("src", 1)
 		inv:set_size("fuel", 1)
-		inv:set_size("dst", 4)
+		inv:set_size("dst", 1)
 	end,
 
 	on_metadata_inventory_move = function(pos)
@@ -302,19 +305,9 @@ minetest.register_node("default:furnace", {
 
 minetest.register_node("default:furnace_active", {
 	tiles = {
-		"default_furnace_top.png", "default_furnace_top.png",
+		"default_furnace_top.png",  "default_furnace_top.png",
 		"default_furnace_side.png", "default_furnace_side.png",
-		"default_furnace_side.png",
-		{
-			image = "default_furnace_front_active.png",
-			backface_culling = false,
-			animation = {
-				type = "vertical_frames",
-				aspect_w = 16,
-				aspect_h = 16,
-				length = 1.5
-			},
-		}
+		"default_furnace_side.png", "default_furnace_front_active.png"
 	},
 	paramtype2 = "facedir",
 	light_source = minetest.LIGHT_MAX - 5,

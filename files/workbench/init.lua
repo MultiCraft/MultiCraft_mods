@@ -250,7 +250,10 @@ function workbench.timer(pos)
 	return true
 end
 
-function workbench.put(_, listname, _, stack)
+function workbench.put(pos, listname, _, stack, player)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return 0
+	end
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
 		workbench:repairable(stackname)) or
@@ -278,6 +281,9 @@ function workbench.on_put(pos, listname, _, stack)
 end
 
 function workbench.on_take(pos, listname, index, stack, player)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return 0
+	end
 	local inv = minetest.get_meta(pos):get_inventory()
 	local input = inv:get_stack("craft", 1)
 	local inputname = input:get_name()
