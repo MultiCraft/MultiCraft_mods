@@ -70,6 +70,7 @@ minetest.override_item("farming_addons:corn_8", {
 minetest.register_craftitem("farming_addons:corn_baked", {
 	description = "Baked Corn",
 	inventory_image = "farming_addons_corn_baked.png",
+	groups = {food = 1},
 	on_use = minetest.item_eat(8)
 })
 
