@@ -130,7 +130,7 @@ local function mobs_shoot_egg(itemstack, thrower, pointed_thing)
 end
 
 minetest.register_craftitem(":mobs:chicken_egg", {
-	description = "Chicken Egg",
+	description = "Egg",
 	inventory_image = "mobs_chicken_egg.png",
 	visual_scale = 0.7,
 	on_use = mobs_shoot_egg,
