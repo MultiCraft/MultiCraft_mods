@@ -15,7 +15,6 @@ Added doors API to facilitate coding mods accessing and operating doors.
 Added Fence Gate model, code, and sounds.
 
 Various Minetest developers and contributors (MIT)
-
 MultiCraft Development Team (MIT)
 
 Authors of media (models)
