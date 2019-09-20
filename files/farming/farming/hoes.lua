@@ -3,33 +3,37 @@ farming.register_hoe("farming:hoe_wood", {
 	inventory_image = "farming_tool_woodhoe.png",
 	max_uses = 30,
 	material = "group:wood",
-	groups = {flammable = 2},
+	groups = {hoe = 1, flammable = 2},
 })
 
 farming.register_hoe("farming:hoe_stone", {
 	description = "Stone Hoe",
 	inventory_image = "farming_tool_stonehoe.png",
 	max_uses = 90,
-	material = "group:stone"
+	material = "group:stone",
+	groups = {hoe = 1}
 })
 
 farming.register_hoe("farming:hoe_steel", {
 	description = "Steel Hoe",
 	inventory_image = "farming_tool_steelhoe.png",
 	max_uses = 500,
-	material = "default:steel_ingot"
+	material = "default:steel_ingot",
+	groups = {hoe = 1}
 })
 
 farming.register_hoe("farming:hoe_gold", {
 	description = "Gold Hoe",
 	inventory_image = "farming_tool_goldhoe.png",
 	max_uses = 350,
-	material = "default:gold_ingot"
+	material = "default:gold_ingot",
+	groups = {hoe = 1}
 })
 
 farming.register_hoe("farming:hoe_diamond", {
 	description = "Diamond Hoe",
 	inventory_image = "farming_tool_diamondhoe.png",
 	max_uses = 1000,
-	material = "default:diamond"
+	material = "default:diamond",
+	groups = {hoe = 1}
 })

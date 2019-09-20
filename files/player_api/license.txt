@@ -16,8 +16,8 @@ See the GNU Lesser General Public License for more details:
 https://www.gnu.org/licenses/lgpl-3.0.html
 
 
-Licenses of media (textures, models and sounds)
------------------------------------------------
+Licenses of models
+------------------
 
 Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 Copyright (C) 2018 stujones11

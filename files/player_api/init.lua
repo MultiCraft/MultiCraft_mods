@@ -2,10 +2,6 @@ dofile(minetest.get_modpath("player_api") .. "/api.lua")
 
 local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 
-function player_api.is_enabled_for(name)
-	return creative_mode_cache
-end
-
 -- Default player appearance
 player_api.register_model("character.b3d", {
 	animation_speed = 30,
