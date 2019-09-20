@@ -1,5 +1,5 @@
 MultiCraft Game mod: boats
-========================
+==========================
 See license.txt for license information.
 
 Authors of source code
@@ -8,8 +8,8 @@ Originally by PilzAdam (MIT)
 Various Minetest developers and contributors (MIT)
 
 
-Authors of model:
------------------------
+Authors of model
+----------------
 Model: thetoon and Zeg9,
 modified by PavelS(SokolovPavel) (CC BY-SA 3.0),
 

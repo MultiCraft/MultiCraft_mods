@@ -28,39 +28,18 @@ local function get_v(v)
 	return math.sqrt(v.x ^ 2 + v.z ^ 2)
 end
 
-local function after_detach(name, pos)
-	local player = minetest.get_player_by_name(name)
-	if player then
-		player:set_pos(pos)
-	end
-end
-
-
-local function after_attach(name)
-	local player = minetest.get_player_by_name(name)
-	if player then
-		player_api.set_animation(player, "sit" , 30)
-	end
-end
-
-
-local function after_remove(object)
-	if object then
-		object:remove()
-	end
-end
-
-
 --
 -- Boat entity
 --
 
 local boat = {
-	physical = true,
-	collisionbox = {-0.5, -0.4, -0.5, 0.5, 0.3, 0.5},
-	visual = "mesh",
-	mesh = "boat.x",
-	textures = {"default_acacia_wood.png"},
+	initial_properties = {
+		physical = true,
+		collisionbox = {-0.5, -0.4, -0.5, 0.5, 0.3, 0.5},
+		visual = "mesh",
+		mesh = "boats_boat.x",
+		textures = {"default_acacia_wood.png"}
+	},
 	driver = nil,
 	v = 0,
 	last_v = 0,
@@ -79,10 +58,15 @@ function boat.on_rightclick(self, clicker)
 		self.auto = false
 		clicker:set_detach()
 		player_api.player_attached[name] = false
-		player_api.set_animation(clicker, "stand" , 30)
+		player_api.set_animation(clicker, "stand", 30)
 		local pos = clicker:get_pos()
 		pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
-		minetest.after(0.1, after_detach, name, pos)
+		minetest.after(0.1, function()
+			local player = minetest.get_player_by_name(name)
+			if player then
+				player:set_pos(pos)
+			end
+		end)
 	elseif not self.driver then
 		local attach = clicker:get_attach()
 		if attach and attach:get_luaentity() then
@@ -96,12 +80,18 @@ function boat.on_rightclick(self, clicker)
 		clicker:set_attach(self.object, "",
 			{x = 0.5, y = 11, z = -3}, {x = 0, y = 0, z = 0})
 		player_api.player_attached[name] = true
-		minetest.after(0.2, after_attach, name)
+		minetest.after(0.2, function()
+			local player = minetest.get_player_by_name(name)
+			if player then
+				player_api.set_animation(player, "sit" , 30)
+			end
+		end)
 		clicker:set_look_horizontal(self.object:get_yaw())
 	end
 end
 
 
+-- If driver leaves server while driving boat
 function boat.on_detach_child(self, child)
 	self.driver = nil
 	self.auto = false
@@ -146,7 +136,11 @@ function boat.on_punch(self, puncher)
 			end
 		end
 		-- delay remove to ensure player is detached
-		minetest.after(0.1, after_remove, self.object)
+		minetest.after(0.1, function()
+			if self.object then
+				self.object:remove()
+			end
+		end)
 	end
 end
 
@@ -174,13 +168,13 @@ function boat.on_step(self, dtime)
 			if ctrl.up and ctrl.down then
 				if not self.auto then
 					self.auto = true
-					minetest.chat_send_player(self.driver, "[boats] Cruise on")
+					minetest.chat_send_player(self.driver, Sl("Boat: cruise mode on"))
 				end
 			elseif ctrl.down then
 				self.v = self.v - dtime * 2.0
 				if self.auto then
 					self.auto = false
-					minetest.chat_send_player(self.driver, "[boats] Cruise off")
+					minetest.chat_send_player(self.driver, Sl("Boat: cruise mode off"))
 				end
 			elseif ctrl.up or self.auto then
 				self.v = self.v + dtime * 2.0
@@ -201,10 +195,14 @@ function boat.on_step(self, dtime)
 			if ctrl.jump then
 				player_api.player_attached[self.driver] = false
 				driver_objref:set_detach()
-				player_api.set_animation(driver_objref, "stand" , 30)
+				player_api.set_animation(driver_objref, "stand", 30)
 				local pos = driver_objref:get_pos()
 				pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
-				minetest.after(0.1, after_detach, self.driver, pos)
+				minetest.after(0.1, function()
+					if driver_objref then
+						driver_objref:set_pos(pos)
+					end
+				end)
 				self.driver = nil
 				self.auto = false
 			end
@@ -277,15 +275,11 @@ function boat.on_step(self, dtime)
 
 	-- if boat comes to sudden stop, drop it
 	if (self.v2 or 0) - self.v >= 3 then
-
 		if self.driver then
---print ("Crash! with driver", self.v2 - self.v)
 			local driver_objref = minetest.get_player_by_name(self.driver)
 			player_api.player_attached[self.driver] = false
 			driver_objref:set_detach()
 			player_api.set_animation(driver_objref, "stand" , 30)
-		else
---print ("Crash! no driver")
 		end
 
 		minetest.add_item(self.object:get_pos(), "boats:boat")
