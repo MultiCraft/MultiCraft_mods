@@ -372,7 +372,7 @@ local function leafdecay_after_destruct(pos, oldnode, def)
 			vector.add(pos, def.radius), def.leaves)) do
 		local node = minetest.get_node(v)
 		local timer = minetest.get_node_timer(v)
-		if node.param2 == 0 and not timer:is_started() then
+		if node.param2 ~= 1 and not timer:is_started() then
 			timer:start(math.random(40, 160) / 10)
 		end
 	end
@@ -467,7 +467,6 @@ minetest.register_abm({
 		-- Snow check is cheapest, so comes first
 		if name == "default:snow" then
 			minetest.set_node(pos, {name = "default:dirt_with_snow"})
-		-- Most likely case first
 		elseif minetest.get_item_group(name, "grass") ~= 0 then
 			minetest.set_node(pos, {name = "default:dirt_with_grass"})
 		elseif minetest.get_item_group(name, "dry_grass") ~= 0 then
@@ -718,24 +717,3 @@ if core.is_singleplayer() then
 		end
 	})
 end
-
---
--- Crafting functions 
---
-
-
-minetest.register_on_joinplayer(function(player)
-	local split_inv = minetest.create_detached_inventory("split", {
-		allow_move = function(_, _, _, _, _, count, _)
-			return count
-		end,
-		allow_put = function(_, _, _, stack, _)
-			return stack:get_count() / 2
-		end,
-		allow_take = function(_, _, _, stack, _)
-			return stack:get_count()
-		end,
-	})
-
-	split_inv:set_size("main", 1)
-end)
