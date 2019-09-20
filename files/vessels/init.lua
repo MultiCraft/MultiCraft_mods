@@ -4,6 +4,7 @@ local vessels_shelf_formspec =
 	"item_image[0,-0.1;1,1;vessels:shelf]" ..
 	"label[0.9,0.1;" .. Sl("Potion Shelf") .. "]" ..
 	"list[context;vessels;0,1;9,2;]" ..
+	"list[context;split;8,3.14;1,1;]" ..
 	"listring[context;vessels]" ..
 	"listring[current_player;main]"
 
@@ -27,6 +28,7 @@ minetest.register_node("vessels:shelf", {
 		meta:set_string("formspec", get_vessels_shelf_formspec(nil))
 		local inv = meta:get_inventory()
 		inv:set_size("vessels", 9 * 2)
+		inv:set_size("split", 1)
 	end,
 	can_dig = function(pos,player)
 		local inv = minetest.get_meta(pos):get_inventory()
@@ -34,25 +36,29 @@ minetest.register_node("vessels:shelf", {
 	end,
 	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
 		if minetest.get_item_group(stack:get_name(), "vessel") ~= 0 then
-			return stack:get_count()
+			if listname == "split" then
+				return 1
+			else
+				return stack:get_count()
+			end
 		end
 		return 0
 	end,
+	allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+		if to_list == "split" then
+			return 1
+		end
+		return count
+	end,
 	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-		minetest.log("action", player:get_player_name() ..
-			   " moves stuff in vessels shelf at ".. minetest.pos_to_string(pos))
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec", get_vessels_shelf_formspec(meta:get_inventory()))
 	end,
 	on_metadata_inventory_put = function(pos, listname, index, stack, player)
-		minetest.log("action", player:get_player_name() ..
-			   " moves stuff to vessels shelf at ".. minetest.pos_to_string(pos))
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec", get_vessels_shelf_formspec(meta:get_inventory()))
 	end,
 	on_metadata_inventory_take = function(pos, listname, index, stack, player)
-		minetest.log("action", player:get_player_name() ..
-			   " takes stuff from vessels shelf at ".. minetest.pos_to_string(pos))
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec", get_vessels_shelf_formspec(meta:get_inventory()))
 	end,
@@ -62,7 +68,7 @@ minetest.register_node("vessels:shelf", {
 		drops[#drops + 1] = "vessels:shelf"
 		minetest.remove_node(pos)
 		return drops
-	end,
+	end
 })
 
 minetest.register_craft({

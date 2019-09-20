@@ -8,7 +8,7 @@ for node, def in pairs(minetest.registered_nodes) do
 	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass" or def.drawtype:sub(1,8) == "allfaces") and
 	   (def.tiles and type(def.tiles[1]) == "string") and
 		not def.on_rightclick and
-		not def.on_blast and
+		not def.allow_metadata_inventory_put and
 		not def.on_metadata_inventory_put and
 		not (def.groups.not_in_creative_inventory == 1) and
 		not (def.groups.not_cuttable) and
@@ -99,7 +99,6 @@ end
 
 -- You can't place 'image' on top of 'item_image'
 minetest.register_craftitem("workbench:saw", {
-	description = "Hammer",
 	inventory_image = "workbench_saw.png",
 	groups = {not_in_creative_inventory = 1}
 })
@@ -175,6 +174,7 @@ local formspecs = {
 function workbench:set_formspec(meta, id)
 	meta:set_string("formspec",
 		default.gui ..
+		"list[context;split;8,3.14;1,1;]" ..
 		formspecs[id])
 end
 
@@ -185,8 +185,8 @@ function workbench.construct(pos)
 	inv:set_size("tool", 1)
 	inv:set_size("craft", 1)
 	inv:set_size("hammer", 1)
+	inv:set_size("split", 1)
 	inv:set_size("forms", 4*3)
-	inv:set_size("storage", 9*3)
 
 	meta:set_string("infotext", Sl("Workbench"))
 	meta:set_string("version", "2")
@@ -258,15 +258,17 @@ function workbench.put(pos, listname, _, stack, player)
 	if (listname == "tool" and stack:get_wear() > 0 and
 		workbench:repairable(stackname)) or
 		(listname == "craft" and valid_block[stackname]) or
-		(listname == "hammer" and stackname == "workbench:hammer") or
-		listname == "storage" then
+		(listname == "hammer" and stackname == "workbench:hammer") then
 		return stack:get_count()
+	end
+	if listname == "split" then
+		return stack:get_count() / 2
 	end
 	return 0
 end
 
-function workbench.move(_, from_list, _, to_list, _, count)
-	return (to_list == "storage" and from_list ~= "forms") and count or 0
+function workbench.move()
+	return 0
 end
 
 function workbench.on_put(pos, listname, _, stack)
@@ -405,6 +407,7 @@ for _, d in pairs(workbench.defs) do
 end
 
 -- Aliases. A lot of aliases...
+-- [Delete aliases after July 2020]
 local stairs_aliases = {
 	{"corner",		"outerstair"},
 	{"invcorner",	"outerstair"},

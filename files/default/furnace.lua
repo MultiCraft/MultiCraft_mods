@@ -11,7 +11,8 @@ function default.get_furnace_active_formspec(fuel_percent, item_percent)
 		"list[context;fuel;3,2.5;1,1;]" ..
 		"image[3,1.5;1,1;default_furnace_fire_bg.png^[lowpart:" ..
 		fuel_percent .. ":default_furnace_fire_fg.png]" ..
-		"list[context;dst;5,1.5;1,1;]"
+		"list[context;dst;5,1.5;1,1;]" ..
+		"list[context;split;8,3.14;1,1;]"
 end
 
 function default.get_furnace_inactive_formspec()
@@ -22,7 +23,8 @@ function default.get_furnace_inactive_formspec()
 		"list[context;src;3,0.5;1,1;]" ..
 		"list[context;fuel;3,2.5;1,1;]" ..
 		"image[3,1.5;1,1;default_furnace_fire_bg.png]" ..
-		"list[context;dst;5,1.5;1,1;]"
+		"list[context;dst;5,1.5;1,1;]" ..
+		"list[context;split;8,3.14;1,1;]"
 end
 
 --
@@ -63,10 +65,15 @@ local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 		return stack:get_count()
 	elseif listname == "dst" then
 		return 0
+	elseif listname == "split" then
+		return stack:get_count() / 2
 	end
 end
 
 local function allow_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)
+	if to_list == "split" then
+		return 1
+	end
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local stack = inv:get_stack(from_list, from_index)
@@ -189,7 +196,7 @@ local function furnace_node_timer(pos, elapsed)
 	if fuel and fuel_totaltime > fuel.time then
 		fuel_totaltime = fuel.time
 	end
-	if srclist[1]:is_empty() then
+	if srclist and srclist[1]:is_empty() then
 		src_time = 0
 		end
 
@@ -200,26 +207,26 @@ local function furnace_node_timer(pos, elapsed)
 	local item_state
 	local item_percent = 0
 	if cookable then
-		item_percent =  math.floor(src_time / cooked.time * 100)
+		item_percent = math.floor(src_time / cooked.time * 100)
 		if dst_full then
 			item_state = "100% " .. Sl("output full")
 		else
-		item_state = item_percent .. "%"
+			item_state = item_percent .. "%"
 		end
 	else
-		if srclist[1]:is_empty() then
-			item_state = Sl("Empty")
-		else
+		if srclist and not srclist[1]:is_empty() then
 			item_state = Sl("Not cookable")
+		else
+			item_state = Sl("Empty")
 		end
 	end
 
 	local fuel_state = Sl("Empty")
-	local active = Sl("inactive")
+	local active = false
 	local result = false
 
 	if fuel_totaltime ~= 0 then
-		active = "active"
+		active = true
 		local fuel_percent = 100 - math.floor(fuel_time / fuel_totaltime * 100)
 		fuel_state = fuel_percent .. "%"
 		formspec = default.get_furnace_active_formspec(fuel_percent, item_percent)
@@ -227,7 +234,7 @@ local function furnace_node_timer(pos, elapsed)
 		-- make sure timer restarts automatically
 		result = true
 	else
-		if not fuellist[1]:is_empty() then
+		if fuellist and not fuellist[1]:is_empty() then
 			fuel_state = "0%"
 		end
 		formspec = default.get_furnace_inactive_formspec()
@@ -236,8 +243,13 @@ local function furnace_node_timer(pos, elapsed)
 		minetest.get_node_timer(pos):stop()
 	end
 
-	local infotext = Sl("Furnace") .. " " .. active .. "\n(" .. Sl("Item") .. ": " .. item_state ..
-			"; " .. Sl("Fuel") .. ": " .. fuel_state .. ")"
+	local infotext
+	if active then
+		infotext = Sl("Furnace active")
+	else
+		infotext = Sl("Furnace inactive")
+	end
+	infotext = infotext .. "\n" .. Sl("Item: @1; Fuel: @2", item_state, fuel_state)
 
 		--
 		-- Set meta values
@@ -274,11 +286,12 @@ minetest.register_node("default:furnace", {
 
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("formspec", default.get_furnace_inactive_formspec())
 		local inv = meta:get_inventory()
 		inv:set_size("src", 1)
 		inv:set_size("fuel", 1)
 		inv:set_size("dst", 1)
+		inv:set_size("split", 1)
+		furnace_node_timer(pos, 0)
 	end,
 
 	on_metadata_inventory_move = function(pos)
