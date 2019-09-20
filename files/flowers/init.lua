@@ -17,7 +17,7 @@ minetest.register_alias("flowers:flower_tulip", "flowers:tulip")
 minetest.register_alias("flowers:flower_dandelion_yellow", "flowers:dandelion_yellow")
 minetest.register_alias("flowers:flower_orchid", "flowers:orchid")
 minetest.register_alias("flowers:flower_allium", "flowers:allium")
-minetest.register_alias("flowers:flower_dandelion_white", "flowers:dandelion_white")
+minetest.register_alias("flowers:flower_dandelion_white", "flowers:oxeye_daisy")
 minetest.register_alias("flowers:dandelion_white", "flowers:oxeye_daisy")
 
 -- Flower registration
@@ -52,7 +52,7 @@ end
 flowers.datas = {
 	{
 		"rose",
-		"Rose",
+		"Red Rose",
 		{-2 / 16, -0.5, -2 / 16, 2 / 16, 5 / 16, 2 / 16},
 		{color_red = 1, flammable = 1}
 	},
@@ -85,10 +85,10 @@ flowers.datas = {
 		"White Oxeye",
 		{-5 / 16, -0.5, -5 / 16, 5 / 16, -2 / 16, 5 / 16},
 		{color_white = 1, flammable = 1}
-	},
+	}
 }
 
-for _,item in pairs(flowers.datas) do
+for _, item in pairs(flowers.datas) do
 	add_simple_flower(unpack(item))
 end
 
@@ -156,7 +156,7 @@ minetest.register_abm({
 	chance = 200,
 	action = function(...)
 		flowers.flower_spread(...)
-	end,
+	end
 })
 
 
@@ -180,7 +180,7 @@ minetest.register_node("flowers:mushroom_red", {
 	selection_box = {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
-	},
+	}
 })
 
 minetest.register_node("flowers:mushroom_brown", {
@@ -199,7 +199,7 @@ minetest.register_node("flowers:mushroom_brown", {
 	selection_box = {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
-	},
+	}
 })
 
 
@@ -233,7 +233,7 @@ minetest.register_abm({
 	chance = 100,
 	action = function(...)
 		flowers.mushroom_spread(...)
-	end,
+	end
 })
 
 

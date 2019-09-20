@@ -18,7 +18,7 @@ local function register_mgv6_flower(flower_name)
 		},
 		y_max = 30,
 		y_min = 1,
-		decoration = "flowers:"..flower_name,
+		decoration = "flowers:"..flower_name
 	})
 end
 
@@ -40,7 +40,7 @@ local function register_mgv6_mushroom(mushroom_name)
 		y_min = 1,
 		decoration = "flowers:"..mushroom_name,
 		spawn_by = "default:tree",
-		num_spawn_by = 1,
+		num_spawn_by = 1
 	})
 end
 
@@ -60,7 +60,7 @@ local function register_mgv6_waterlily()
 		y_min = 0,
 		y_max = 0,
 		schematic = minetest.get_modpath("flowers") .. "/schematics/waterlily.mts",
-		rotation = "random",
+		rotation = "random"
 	})
 end
 
@@ -70,7 +70,7 @@ function flowers.register_mgv6_decorations()
 	register_mgv6_flower("dandelion_yellow")
 	register_mgv6_flower("orchid")
 	register_mgv6_flower("allium")
-	register_mgv6_flower("dandelion_white")
+	register_mgv6_flower("oxeye_daisy")
 
 	register_mgv6_mushroom("mushroom_brown")
 	register_mgv6_mushroom("mushroom_red")
@@ -101,7 +101,7 @@ local function register_flower(seed, flower_name)
 			"deciduous_forest", "coniferous_forest", "floatland_grassland", "floatland_coniferous_forest"},
 		y_max = 31000,
 		y_min = 1,
-		decoration = "flowers:"..flower_name,
+		decoration = "flowers:"..flower_name
 	})
 end
 
@@ -123,7 +123,7 @@ local function register_mushroom(mushroom_name)
 			"floatland_coniferous_forest"},
 		y_max = 31000,
 		y_min = 1,
-		decoration = "flowers:"..mushroom_name,
+		decoration = "flowers:"..mushroom_name
 	})
 end
 
@@ -143,7 +143,7 @@ local function register_waterlily()
 		y_min = 0,
 		y_max = 0,
 		schematic = minetest.get_modpath("flowers") .. "/schematics/waterlily.mts",
-		rotation = "random",
+		rotation = "random"
 	})
 end
 
@@ -153,7 +153,7 @@ function flowers.register_decorations()
 	register_flower(1220999, "dandelion_yellow")
 	register_flower(36662,	 "orchid")
 	register_flower(1133,	 "allium")
-	register_flower(73133,	 "dandelion_white")
+	register_flower(73133,	 "oxeye_daisy")
 
 	register_mushroom("mushroom_brown")
 	register_mushroom("mushroom_red")

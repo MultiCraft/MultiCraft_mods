@@ -87,17 +87,6 @@ minetest.register_on_leaveplayer(function(player)
 	player_textures[name] = nil
 end)
 
-local function table_iter(t)
-	local i = 0
-	local n = table.getn(t)
-	return function ()
-		i = i + 1
-		if i <= n then
-			return t[i]
-		end
-	end
-end
-
 -- Localize for better performance.
 local player_set_animation = player_api.set_animation
 local player_attached = player_api.player_attached
