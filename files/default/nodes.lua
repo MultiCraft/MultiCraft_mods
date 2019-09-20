@@ -1231,6 +1231,7 @@ local bookshelf_formspec =
 	"item_image[0,-0.1;1,1;default:bookshelf]" ..
 	"label[0.9,0.1;" .. Sl("Bookshelf") .. "]" ..
 	"list[context;books;0,1;9,2;]" ..
+	"list[context;split;8,3.14;1,1;]" ..
 	"listring[context;books]" ..
 	"listring[current_player;main]"
 
@@ -1264,10 +1265,10 @@ local function update_bookshelf(pos)
 	end
 	meta:set_string("formspec", formspec)
 	if n_written + n_empty == 0 then
-		meta:set_string("infotext", "Empty Bookshelf")
+		meta:set_string("infotext", Sl("Empty Bookshelf"))
 	else
-		meta:set_string("infotext", "Bookshelf (" .. n_written ..
-			" written, " .. n_empty .. " empty books)")
+		meta:set_string("infotext", Sl("Bookshelf") .. "\n(" ..
+			 Sl("Books:") .. " " .. n_written .. ", " .. Sl("Empty Books:") .. " " .. n_empty .. ")")
 	end
 end
 
@@ -1284,6 +1285,7 @@ minetest.register_node("default:bookshelf", {
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
 		inv:set_size("books", 9 * 2)
+		inv:set_size("split", 1)
 		update_bookshelf(pos)
 	end,
 	can_dig = function(pos,player)
@@ -1292,23 +1294,27 @@ minetest.register_node("default:bookshelf", {
 	end,
 	allow_metadata_inventory_put = function(pos, listname, index, stack)
 		if minetest.get_item_group(stack:get_name(), "book") ~= 0 then
-			return stack:get_count()
+			if listname == "split" then
+				return 1
+			else
+				return stack:get_count()
+			end
 		end
 		return 0
 	end,
+	allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+		if to_list == "split" then
+			return 1
+		end
+		return count
+	end,
 	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-		minetest.log("action", player:get_player_name() ..
-			" moves stuff in bookshelf at " .. minetest.pos_to_string(pos))
 		update_bookshelf(pos)
 	end,
 	on_metadata_inventory_put = function(pos, listname, index, stack, player)
-		minetest.log("action", player:get_player_name() ..
-			" puts stuff to bookshelf at " .. minetest.pos_to_string(pos))
 		update_bookshelf(pos)
 	end,
 	on_metadata_inventory_take = function(pos, listname, index, stack, player)
-		minetest.log("action", player:get_player_name() ..
-			" takes stuff from bookshelf at " .. minetest.pos_to_string(pos))
 		update_bookshelf(pos)
 	end,
 	on_blast = function(pos)

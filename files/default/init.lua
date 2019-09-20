@@ -14,7 +14,6 @@ default.gui	= [[
 	default.listcolors .. [[
 	background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]
 	image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]
-	list[detached:split;main;8,3.14;1,1;]
 	list[current_player;main;0.01,4.51;9,3;9]
 	list[current_player;main;0.01,7.75;9,1;]
 ]]
