@@ -23,7 +23,6 @@ mobs:register_mob("mobs_npc:trader", {
 	jump = false,
 	drops = {},
 	lava_damage = 3,
-	view_range = 10,
 	order = "stand",
 	fear_height = 3,
 	animation = {
@@ -33,12 +32,15 @@ mobs:register_mob("mobs_npc:trader", {
 		run_start = 168,	run_end = 187,
 		punch_start = 200,	punch_end = 219
 	},
+
 	on_punch = function(self, clicker)
 		mobs_trader(self, clicker, nil, mobs.human)
 	end,
+
 	on_rightclick = function(self, clicker)
 		mobs_trader(self, clicker, nil, mobs.human)
 	end,
+
 	on_spawn = function(self)
 		self.nametag = S("Trader")
 		self.object:set_properties({
@@ -47,6 +49,7 @@ mobs:register_mob("mobs_npc:trader", {
 		})
 		return true -- return true so on_spawn is run once only
 	end,
+
 	after_activate = function(self, staticdata, def, dtime)
 		if not self.game_name then
 			self.object:set_properties({
@@ -154,7 +157,6 @@ function mobs.add_goods(self, entity, race)
 		end
 	end
 end
-
 
 function mobs_trader(self, clicker, entity, race)
 	if not self.id then
