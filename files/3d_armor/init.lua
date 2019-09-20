@@ -129,7 +129,7 @@ minetest.register_on_dieplayer(function(player)
 		local drop = {}
 		local armor_inv = armor:get_armor_inventory(player)
 		if armor_inv then
-			for i=1, armor_inv:get_size("armor") do
+			for i = 1, armor_inv:get_size("armor") do
 				local stack = armor_inv:get_stack("armor", i)
 				if stack:get_count() > 0 then
 					minetest.item_drop(stack, player, pos)
@@ -154,5 +154,3 @@ minetest.register_on_player_hpchange(function(player, hp_change)
 	end
 	return hp_change
 end)
-
-dofile(modpath .. "/hud.lua")

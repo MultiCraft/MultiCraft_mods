@@ -1,6 +1,8 @@
 ARMOR_LEVEL_MULTIPLIER = 1
 ARMOR_HEAL_MULTIPLIER = 1
 
+local enable_damage = minetest.settings:get_bool("enable_damage")
+
 local armor_def = setmetatable({}, {
 	__index = function()
 		return setmetatable({
@@ -63,6 +65,21 @@ armor.update_player_visuals = function(self, player)
 			self.textures[name].cube,
 		})
 	end
+end
+
+if enable_damage then
+	hud.register("armor", {
+		hud_elem_type = "statbar",
+		position      = {x = 0.5,  y = 1},
+		alignment     = {x = -1,   y = -1},
+		offset        = {x = -247, y = -134},
+		size          = {x = 24,   y = 24},
+		text          = "3d_armor_statbar_fg.png",
+		background    = "3d_armor_statbar_bg.png",
+		number        = 0,
+		max           = 20,
+		autohide_bg   = true
+	})
 end
 
 armor.set_player_armor = function(self, player)
@@ -136,7 +153,7 @@ armor.set_player_armor = function(self, player)
 	if #textures > 0 then
 		armor_texture = table.concat(textures, "^")
 	end
-	local armor_groups = {fleshy=100}
+	local armor_groups = {fleshy = 100}
 	if armor_level > 0 then
 		armor_groups.level = math.floor(armor_level / 20)
 		armor_groups.fleshy = 100 - armor_level
@@ -153,6 +170,12 @@ armor.set_player_armor = function(self, player)
 	self.def[name].speed = physics_o.speed
 	self.def[name].gravity = physics_o.gravity
 	self:update_player_visuals(player)
+
+	if enable_damage then
+		local max_level = 95 -- full diamond armor
+		local armor_lvl = math.floor(20 * (armor_level/max_level)) or 0
+		hud.change_item(player, "armor", {number = armor_lvl})
+	end
 end
 
 armor.update_armor = function(self, player)
