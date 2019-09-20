@@ -4,19 +4,19 @@ Steel Helmet = Стальной Шлем
 Golden Helmet = Золотой Шлем
 Diamond Helmet = Алмазный Шлем
 Chain Helmet = Кольчужный Шлем
-Leather Chestplate = Кожанная Кираса
+Leather Chestplate = Кожаная Кираса
 Steel Chestplate = Стальная Кираса
 Golden Chestplate = Золотая Кираса
 Diamond Chestplate = Алмазная Кираса
 Chain Chestplate = Кольчужная Кираса
 Leather Leggings = Кожаные Поножи
 Steel Leggings = Стальные Поножи
-Golden Leggings = Золотык Поножи
+Golden Leggings = Золотые Поножи
 Diamond Leggings = Алмазные Поножи
 Chain Leggings = Кольчужные Поножи
 Leather Boots = Кожаные Ботинки
 Steel Boots = Стальные Ботинки
-Golden Boots = Золотык Ботинки
+Golden Boots = Золотые Ботинки
 Diamond Boots = Алмазные Ботинки
 Chain Boots = Кольчужные Ботинки
 
@@ -45,6 +45,8 @@ Stone Pressure Plate = Каменная Нажимная Плита
 
 #boats
 Boat = Лодка
+Boat: cruise mode on = Лодка: круизный режим включен
+Boat: cruise mode off = Лодка: круизный режим выключен
 
 
 #bonemeal
@@ -102,11 +104,13 @@ Furnace is empty = Печка пустая
 output full = закончилось место
 Empty = Пусто
 Not cookable = Невозможно приготовить
-Item = Предмет
-Fuel = Топливо
-inactive = не активна
-active = активна
+Item: @1; Fuel: @2 = Предмет: @1; Топливо: @2
+Furnace inactive = Печка не активна
+Furnace active = Печка активна
 Torch = Факел
+Empty Bookshelf = Пустой Книжный Шкаф
+Books: = Книг:
+Empty Books: = Пустых Книг:
 
 Stick = Палка
 Paper = Бумага
@@ -119,7 +123,7 @@ Clay Lump = Кусок Глины
 Steel Ingot = Стальной Слиток
 Gold Ingot = Золотой Слиток
 Emerald = Изумруд
-Clay Brick = Глинянный Кирпич
+Clay Brick = Глиняный Кирпич
 Gunpowder = Порох
 Bone = Кость
 Glowstone Dust = Светящаяся Пыль
@@ -137,11 +141,11 @@ Mossy Cobblestone = Мшистый булыжник
 Stone Brick Carved = Нарезной Каменный Кирпич
 Stone Brick Cracked = Треснувший Каменный Кирпич
 Mossy Stone Brick = Мшистый Каменный Кирпич
-Sandstone = Песчанник
-Smooth Sandstone = Гладкий Песчанник
-Red Sandstone = Красный Песчанник
-Red Sandstone Smooth = Красный Гладкий Песчанник
-Red Sandstone Carved = Красный Нарезной Песчанник
+Sandstone = Песчаник
+Smooth Sandstone = Гладкий Песчаник
+Red Sandstone = Красный Песчаник
+Red Sandstone Smooth = Красный Гладкий Песчаник
+Red Sandstone Carved = Красный Нарезной Песчаник
 Obsidian = Обсидиан
 Bedrock = Коренная Порода
 Dirt = Земля
@@ -245,7 +249,7 @@ Steel Door = Стальная Дверь
 Wooden Trapdoor = Деревянный Люк
 Steel Trapdoor = Стальной Люк
 Apple Wood Fence Gate = Ворота из Дерева Яблока
-Owned by = Владелец
+Owned by @1 = Владелец @1
 
 
 #farming
@@ -289,13 +293,19 @@ Pumpkin = Тыква
 Pumpkin Seed = Семена Тыквы
 
 Empty Bowl = Пустая Миска
-Stewed Pork Bowl = Миска Тушённой Свинины
+Stewed Pork Bowl = Миска Тушёной Свинины
 
 #fire
 Flint and Steel = Огниво
 
 
 #flowers
+Red Rose = Красная Роза
+Orange Tulip = Оранжевый Тюльпан
+Yellow Dandelion = Желтый Одуванчик
+Blue Orchid = Голубая Орхидея
+Allium = Аллиум
+White Oxeye = Белый Нивяник
 Red Mushroom = Красный Гриб
 Brown Mushroom = Коричневый Гриб
 
@@ -336,7 +346,7 @@ Raw Rabbit = Сырая Крольчатина
 Cooked Rabbit = Приготовленный Кролик
 Rabbit Hide = Кролик
 Egg = Яйцо
-Fried Egg = Жаренное Яйцо
+Fried Egg = Жареное Яйцо
 Raw Chicken = Сырая Курица
 Cooked Chicken = Приготовленная Курица
 Cheese = Сыр
