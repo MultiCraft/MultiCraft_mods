@@ -1,12 +1,13 @@
-local show_time = 2
-local has_armor = minetest.get_modpath("3d_armor")
+if PLATFORM == "Android" and PLATFORM == "iOS" then
+	return
+end
 
+local has_armor = minetest.get_modpath("3d_armor")
 local wield_tiles = {}
 local wield_cubes = {}
 local wield_items = {}
-local item_cycle = {}
 
-local function init_wield_items()
+minetest.after(1, function()
 	for name, def in pairs(minetest.registered_items) do
 		if def.inventory_image and def.inventory_image ~= "" then
 			wield_tiles[name] = def.inventory_image
@@ -21,26 +22,7 @@ local function init_wield_items()
 			end
 		end
 	end
-end
-
-hud.register("itemname", {
-	hud_elem_type = "text",
-	position      = {x = 0.5, y =  1},
-	alignment     = {x = 0,   y = -10},
-	offset        = {x = 0,   y = -25},
-	number        = 0xFFFFFF,
-	text          = ""
-})
-
-local function update_statbar_text(player, stack, item)
-	local meta = stack:get_meta()
-	local meta_desc = meta:get_string("description")
-	meta_desc = meta_desc:gsub("\27", ""):gsub("%(c@#%w%w%w%w%w%w%)", "")
-	local def = core.registered_items[item]
-	local description = meta_desc ~= "" and meta_desc or
-		(def and (def.description:match("(.-)\n") or def.description) or "")
-	hud.change_item(player, "itemname", {text = description})
-end
+end)
 
 local function update_player_visuals(player, item)
 	local animation = player_api.get_animation(player) or {}
@@ -62,28 +44,16 @@ local function update_player_visuals(player, item)
 end
 
 local function update_wielded_item(dtime, name)
-	item_cycle[name] = item_cycle[name] and item_cycle[name] + dtime or 0
 	local player = minetest.get_player_by_name(name)
-	if not player or not player:is_player() then
+	if not player then
 		return
 	end
 	local stack = player:get_wielded_item()
 	local item = stack:get_name()
-	if not item then
-		return
-	end
-	if wield_items[name] and wield_items[name] == item then
-		if item_cycle[name] > show_time then
-			hud.change_item(player, "itemname", {text = ""})
-			item_cycle[name] = 0
-		end
+	if item and wield_items[name] and wield_items[name] == item then
 		return
 	else
-		update_statbar_text(player, stack, item)
-		item_cycle[name] = 0
-		if PLATFORM ~= "Android" and PLATFORM ~= "iOS" then
-			update_player_visuals(player, item)
-		end
+		update_player_visuals(player, item)
 	end
 	wield_items[name] = item
 end
@@ -93,14 +63,12 @@ minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	if name then
 		wield_items[name] = ""
-		item_cycle[name] = 0
 	end
 end)
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	if name then
 		wield_items[name] = ""
-		item_cycle[name] = 0
 	end
 end)
 minetest.register_playerstep(function(dtime, playernames)
@@ -108,6 +76,3 @@ minetest.register_playerstep(function(dtime, playernames)
 		update_wielded_item(dtime, name)
 	end
 end, minetest.is_singleplayer()) -- Force step in singlplayer mode only
-if PLATFORM ~= "Android" and PLATFORM ~= "iOS" then
-	minetest.after(0, init_wield_items)
-end
