@@ -5,10 +5,10 @@ if enable_respawn == nil then
 	enable_respawn = true
 end
 
--- Helper functions
-
 -- Intllib
 local S = intllib.make_gettext_pair()
+
+-- Helper functions
 
 local function get_look_yaw(pos)
 	local rotation = minetest.get_node(pos).param2
@@ -111,17 +111,18 @@ end
 
 local function update_formspecs(finished)
 	local ges = #minetest.get_connected_players()
-	local form_n
 	local player_in_bed = get_player_in_bed_count()
 	local is_majority = (ges / 2) < player_in_bed
 
+	local form_n
 	if finished then
-		form_n = beds.formspec .. "label[2.7,9; Good morning.]"
+		form_n = beds.formspec .. "label[2.7,9;" .. S("Good morning.") .. "]"
 	else
-		form_n = beds.formspec .. "label[2.2,9;" .. tostring(player_in_bed) ..
-			" of " .. tostring(ges) .. " players are in bed]"
+		form_n = beds.formspec .. "label[2.2,9;" ..
+			S("@1 of @2 players are in bed", player_in_bed, ges) .. "]"
 		if is_majority and is_night_skip_enabled() then
-			form_n = form_n .. "button_exit[2,6;4,0.75;force;Force night skip]"
+			form_n = form_n .. "button_exit[2,6;4,0.75;force;" ..
+			S("Force night skip") .. "]"
 		end
 	end
 

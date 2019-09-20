@@ -1,20 +1,16 @@
 MultiCraft Game mod: bucket
 ===========================
+See license.txt for license information.
 
-License of source code:
------------------------
-Copyright (C) 2011-2012 Kahrl <kahrl@gmx.net>
-Copyright (C) 2011-2012 celeron55, Perttu Ahola <celeron55@gmail.com>
+Authors of source code
+----------------------
+Kahrl <kahrl@gmx.net> (LGPLv3.0+)
+celeron55, Perttu Ahola <celeron55@gmail.com> (LGPLv3.0+)
+Various Minetest developers and contributors (LGPLv3.0+)
+MultiCraft Development Team (LGPLv3.0+)
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation; either version 3.0 of the License, or
-(at your option) any later version.
-
-http://www.gnu.org/licenses/lgpl-3.0.html
-
-License of textures:
---------------------
+Authors of media (textures)
+---------------------------
 Copyright (C) MultiCraft Development Team
 
 Graphics in this mod is NOT free and can be used only as part of the official MultiCraft build.
