@@ -8,10 +8,38 @@ local vessels_shelf_formspec =
 	"listring[context;vessels]" ..
 	"listring[current_player;main]"
 
-local function get_vessels_shelf_formspec(inv)
+local function update_vessels_shelf(pos)
+	local meta = minetest.get_meta(pos)
+	local inv = meta:get_inventory()
+	local invlist = inv:get_list("vessels")
+
 	local formspec = vessels_shelf_formspec
-	local invlist = inv and inv:get_list("vessels")
-	return formspec
+	-- Inventory slots overlay
+	local vx, vy = 0, 1
+	local n_items = 0
+	for i = 1, 18 do
+		if i == 10 then
+			vx = 0
+			vy = vy + 1
+		end
+		if not invlist or invlist[i]:is_empty() then
+			formspec = formspec ..
+				"image[" .. vx .. "," .. vy .. ";1,1;vessels_shelf_slot.png]"
+		else
+			local stack = invlist[i]
+			if not stack:is_empty() then
+				n_items = n_items + stack:get_count()
+			end
+		end
+		vx = vx + 1
+	end
+	meta:set_string("formspec", formspec)
+	if n_items == 0 then
+		meta:set_string("infotext", Sl("Empty Potion Shelf"))
+	else
+		meta:set_string("infotext", Sl("Potion Shelf") .. "\n(" ..
+			Sl("Bottles:") .. " " .. n_items .. ")")
+	end
 end
 
 minetest.register_node("vessels:shelf", {
@@ -25,7 +53,7 @@ minetest.register_node("vessels:shelf", {
 
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("formspec", get_vessels_shelf_formspec(nil))
+		update_vessels_shelf(pos)
 		local inv = meta:get_inventory()
 		inv:set_size("vessels", 9 * 2)
 		inv:set_size("split", 1)
@@ -51,16 +79,13 @@ minetest.register_node("vessels:shelf", {
 		return count
 	end,
 	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-		local meta = minetest.get_meta(pos)
-		meta:set_string("formspec", get_vessels_shelf_formspec(meta:get_inventory()))
+		update_vessels_shelf(pos)
 	end,
 	on_metadata_inventory_put = function(pos, listname, index, stack, player)
-		local meta = minetest.get_meta(pos)
-		meta:set_string("formspec", get_vessels_shelf_formspec(meta:get_inventory()))
+		update_vessels_shelf(pos)
 	end,
 	on_metadata_inventory_take = function(pos, listname, index, stack, player)
-		local meta = minetest.get_meta(pos)
-		meta:set_string("formspec", get_vessels_shelf_formspec(meta:get_inventory()))
+		update_vessels_shelf(pos)
 	end,
 	on_blast = function(pos)
 		local drops = {}
