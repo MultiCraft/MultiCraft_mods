@@ -957,7 +957,6 @@ function default.register_decorations()
 	-- Apple tree and log
 
 	minetest.register_decoration({
-		name = "default:apple_tree",
 		deco_type = "schematic",
 		place_on = {"default:dirt_with_grass"},
 		sidelen = 16,
@@ -978,7 +977,6 @@ function default.register_decorations()
 	})
 
 	minetest.register_decoration({
-		name = "default:apple_log",
 		deco_type = "schematic",
 		place_on = {"default:dirt_with_grass"},
 		sidelen = 16,
@@ -1003,10 +1001,9 @@ function default.register_decorations()
 	-- Emergent jungle tree
 	-- Due to 32 node height, altitude is limited and prescence depends on chunksize
 
---[[	local chunksize = tonumber(minetest.get_mapgen_setting("chunksize"))
+--[[local chunksize = tonumber(minetest.get_mapgen_setting("chunksize"))
 	if chunksize >= 5 then
 		minetest.register_decoration({
-			name = "default:emergent_jungle_tree",
 			deco_type = "schematic",
 --			place_on = {"default:dirt_with_rainforest_litter"},
 			place_on = {"default:dirt_with_grass", "default:dirt"},
@@ -1026,14 +1023,12 @@ function default.register_decorations()
 					"/schematics/emergent_jungle_tree.mts",
 			flags = "place_center_x, place_center_z",
 			rotation = "random",
-			place_offset_y = -4,
 		})
 	end]]
 
 	-- Jungle tree and log
 
 	minetest.register_decoration({
-		name = "default:jungle_tree",
 		deco_type = "schematic",
 --		place_on = {"default:dirt_with_rainforest_litter", "default:dirt"},
 		place_on = {"default:dirt_with_grass", "default:dirt"},
@@ -1048,7 +1043,6 @@ function default.register_decorations()
 	})
 
 	minetest.register_decoration({
-		name = "default:jungle_log",
 		deco_type = "schematic",
 --		place_on = {"default:dirt_with_rainforest_litter"},
 		place_on = {"default:dirt_with_grass", "default:dirt"},
@@ -1060,14 +1054,12 @@ function default.register_decorations()
 		schematic = minetest.get_modpath("default") .. "/schematics/jungle_log.mts",
 		flags = "place_center_x",
 		rotation = "random",
---		spawn_by = "default:dirt_with_rainforest_litter",
---		num_spawn_by = 8,
+--		spawn_by = "default:dirt_with_rainforest_litter"
 	})
 
 	-- Taiga and temperate coniferous forest pine tree, small pine tree and log
 
 	minetest.register_decoration({
-		name = "default:pine_tree",
 		deco_type = "schematic",
 --		place_on = {"default:dirt_with_snow", "default:dirt_with_coniferous_litter"},
 		place_on = {"default:dirt_with_snow", "default:dirt_with_grass"},
@@ -1088,7 +1080,6 @@ function default.register_decorations()
 	})
 
 	minetest.register_decoration({
-		name = "default:small_pine_tree",
 		deco_type = "schematic",
 --		place_on = {"default:dirt_with_snow", "default:dirt_with_coniferous_litter"},
 		place_on = {"default:dirt_with_snow", "default:dirt_with_grass"},
@@ -1109,7 +1100,6 @@ function default.register_decorations()
 	})
 
 	minetest.register_decoration({
-		name = "default:pine_log",
 		deco_type = "schematic",
 --		place_on = {"default:dirt_with_snow", "default:dirt_with_coniferous_litter"},
 		place_on = {"default:dirt_with_snow", "default:dirt_with_grass"},
@@ -1129,7 +1119,6 @@ function default.register_decorations()
 	-- Acacia tree and log
 
 	minetest.register_decoration({
-		name = "default:acacia_tree",
 		deco_type = "schematic",
 		place_on = {"default:dirt_with_dry_grass"},
 		sidelen = 16,
@@ -1150,7 +1139,6 @@ function default.register_decorations()
 	})
 
 	minetest.register_decoration({
-		name = "default:acacia_log",
 		deco_type = "schematic",
 		place_on = {"default:dirt_with_dry_grass"},
 		sidelen = 16,
@@ -1175,7 +1163,6 @@ function default.register_decorations()
 	-- Birch tree and log
 
 	minetest.register_decoration({
-		name = "default:birch_tree",
 		deco_type = "schematic",
 		place_on = {"default:dirt_with_grass"},
 		sidelen = 16,
@@ -1195,10 +1182,8 @@ function default.register_decorations()
 	})
 
 	minetest.register_decoration({
-		name = "default:birch_log",
 		deco_type = "schematic",
 		place_on = {"default:dirt_with_grass"},
-		place_offset_y = 1,
 		sidelen = 16,
 		noise_params = {
 			offset = 0.0,
@@ -1263,7 +1248,7 @@ function default.register_decorations()
 		height_max = 5,
 	})
 
-	-- Papyrus
+	-- Sugar Cane
 
 	minetest.register_decoration({
 		deco_type = "schematic",
@@ -1278,10 +1263,9 @@ function default.register_decorations()
 			persist = 0.7
 		},
 		biomes = {"savanna_swamp"},
-		y_min = 0,
 		y_max = 0,
-		schematic = minetest.get_modpath("default").."/schematics/papyrus.mts",
---		spawn_by = "default:dirt_with_rainforest_litter",
+		y_min = 0,
+		schematic = minetest.get_modpath("default").."/schematics/sugarcane.mts",
 --		num_spawn_by = 8,
 	})
 

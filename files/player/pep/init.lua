@@ -339,8 +339,8 @@ pep.register_potion({
 minetest.register_craft({
 	type = "shapeless",
 	output = "pep:breath",
-	recipe = { "default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus",
-			"default:papyrus", "default:papyrus", "default:papyrus", "default:papyrus", "vessels:glass_bottle" }
+	recipe = { "default:sugarcane", "default:sugarcane", "default:sugarcane", "default:sugarcane",
+			"default:sugarcane", "default:sugarcane", "default:sugarcane", "default:sugarcane", "vessels:glass_bottle" }
 })
 minetest.register_craft({
 	type = "shapeless",
