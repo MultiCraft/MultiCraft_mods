@@ -205,7 +205,7 @@ minetest.register_node("default:clay", {
 
 minetest.register_node("default:hardened_clay", {
 	description = "Hardened Clay",
-	tiles = {"hardened_clay.png"},
+	tiles = {"default_hardened_clay.png"},
 	is_ground_content = false,
 	groups = {cracky = 3, hardened_clay = 1},
 	sounds = default.node_sound_defaults()
@@ -727,7 +727,7 @@ minetest.register_node("default:birch_sapling", {
 
 minetest.register_node("default:stone_with_coal", {
 	description = "Coal Ore",
-	tiles = {"default_mineral_coal.png"},
+	tiles = {"default_stone.png^default_mineral_coal.png"},
 	groups = {cracky = 3},
 	drop = "default:coal_lump",
 	sounds = default.node_sound_stone_defaults()
@@ -743,7 +743,7 @@ minetest.register_node("default:coalblock", {
 
 minetest.register_node("default:stone_with_iron", {
 	description = "Iron Ore",
-	tiles = {"default_mineral_iron.png"},
+	tiles = {"default_stone.png^default_mineral_iron.png"},
 	groups = {cracky = 2},
 	drop = "default:stone_with_iron",
 	sounds = default.node_sound_stone_defaults()
@@ -766,7 +766,7 @@ minetest.register_node("default:lapisblock", {
 
 minetest.register_node("default:stone_with_bluestone", {
 	description = "Bluestone Ore",
-	tiles = {"default_mineral_bluestone.png"},
+	tiles = {"default_stone.png^default_mineral_bluestone.png"},
 	groups = {cracky = 2},
 	drop = "mesecons:wire_00000000_off 8",
 	sounds = default.node_sound_stone_defaults()
@@ -774,7 +774,7 @@ minetest.register_node("default:stone_with_bluestone", {
 
 minetest.register_node("default:stone_with_lapis", {
 	description = "Lapis Lazuli Ore",
-	tiles = {"default_mineral_lapis.png"},
+	tiles = {"default_stone.png^default_mineral_lapis.png"},
 	groups = {cracky = 2},
 	drop = {
 		max_items = 2,
@@ -792,7 +792,7 @@ minetest.register_node("default:stone_with_lapis", {
 
 minetest.register_node("default:stone_with_gold", {
 	description = "Gold Ore",
-	tiles = {"default_mineral_gold.png"},
+	tiles = {"default_stone.png^default_mineral_gold.png"},
 	groups = {cracky = 2},
 	drop = "default:stone_with_gold",
 	sounds = default.node_sound_stone_defaults()
@@ -808,7 +808,7 @@ minetest.register_node("default:goldblock", {
 
 minetest.register_node("default:stone_with_emerald", {
 	description = "Emerald Ore",
-	tiles = {"default_mineral_emerald.png"},
+	tiles = {"default_stone.png^default_mineral_emerald.png"},
 	groups = {cracky = 2},
 	drop = "default:emerald",
 	sounds = default.node_sound_stone_defaults()
@@ -823,7 +823,7 @@ minetest.register_node("default:emeraldblock", {
 
 minetest.register_node("default:stone_with_diamond", {
 	description = "Diamonds in Stone",
-	tiles = {"default_mineral_diamond.png"},
+	tiles = {"default_stone.png^default_mineral_diamond.png"},
 	groups = {cracky = 1},
 	drop = "default:diamond",
 	sounds = default.node_sound_stone_defaults()
