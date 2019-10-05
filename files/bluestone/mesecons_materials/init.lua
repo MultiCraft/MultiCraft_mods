@@ -20,7 +20,7 @@ minetest.register_node("mesecons_materials:bluestoneblock", {
 	paramtype = "light",
 	is_ground_content = false,
 	groups = {cracky = 1},
-	light_source = minetest.LIGHT_MAX - 3,
+	light_source = minetest.LIGHT_MAX - 4,
 	sounds = default.node_sound_stone_defaults(),
 	mesecons = {receptor = {
 		state = mesecon.state.on

@@ -17,7 +17,7 @@ minetest.register_node(":mesecons_lightstone:lightstone_on", {
 	is_ground_content = false,
 	groups = {cracky = 2, not_in_creative_inventory = 1, mesecon = 2},
 	drop = "mesecons_lightstone:lightstone_off",
-	light_source = minetest.LIGHT_MAX - 2,
+	light_source = minetest.LIGHT_MAX,
 	sounds = default.node_sound_glass_defaults(),
 	mesecons = {effector = {
 		action_off = function(pos, node)
