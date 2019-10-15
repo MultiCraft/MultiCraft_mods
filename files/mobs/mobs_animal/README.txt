@@ -4,8 +4,8 @@ See ../license.txt for license information.
 
 Adds Peaceful Mobs
 
-License of source code:
------------------------
+License of source code
+----------------------
 Copyright (C) 2016 TenPlus1
 Copyright (C) 2019 MultiCraft Development Team
 
@@ -13,13 +13,12 @@ Credits:
 --------
 "Bear", "Wolf" - code based on blert2112 mobs_more_animals mod (MIT)
 "Sheep" by PilzAdam (WTFPL)
-"Chicken" by JKmurray (WTFPL)
-"Bear", "Cow", "Wolf" by KrupnovPavel (MIT)
+"Bear", "Wolf" by KrupnovPavel (MIT)
 "Kitten" by Jordach/BFD (probably MIT?)
 "Bunny" by ExeterDad (MIT)
 
-License of models:
---------------------
+License of models
+-----------------
 Copyright (C) 2019 MultiCraft Development Team
 
 Models in this mod is NOT free and can be used only as part of the official MultiCraft build.
@@ -29,8 +28,8 @@ Allowed to be used in non-official builds ONLY for personal use.
 "Bear", "Wolf", "Kitten" and "Bunny" (MIT)
 "Pig" by MultiCraft Development Team (CC-BY-SA 4.0)
 
-License of textures:
---------------------
+License of textures
+-------------------
 Copyright (C) 2019 MultiCraft Development Team
 
 Graphics in this mod is NOT free and can be used only as part of the official MultiCraft build.

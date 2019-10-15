@@ -7,12 +7,11 @@ mobs_animal.spawn_nodes = {
 }
 
 local path = minetest.get_modpath("mobs_animal")
-local animal = {
-	"bear", "bunny", "chicken",
-	"cow", "dog", "kitten",
-	"pig", "parrot", "sheep"
+local name = {
+	"bear", "bunny", "dog",
+	"kitten", "pig", "sheep"
 }
 
-for _, name in pairs(animal) do
+for _, name in pairs(name) do
 	dofile(path .. "/" .. name .. ".lua")
 end

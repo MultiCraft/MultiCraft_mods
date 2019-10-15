@@ -35,7 +35,7 @@ mobs:register_mob("mobs_animal:bunny", {
 		walk_start = 16,	walk_end = 24,
 		punch_start = 16,	punch_end = 24
 	},
-	follow = {"farming:carrot", "farming_plus:carrot_item", "default:grass", "default:dry_grass"},
+	follow = {"flora", "farming_addons:carrot"},
 	replace_rate = 10,
 	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
 	replace_with = "air",
@@ -43,7 +43,6 @@ mobs:register_mob("mobs_animal:bunny", {
 	on_rightclick = function(self, clicker)
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, true, true) then return end
-		if mobs:protect(self, clicker) then return end
 	--	if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
 
 		-- Monty Python tribute
