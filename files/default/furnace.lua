@@ -33,9 +33,9 @@ end
 
 local function can_dig(pos, player)
 	if minetest.is_protected(pos, player:get_player_name()) then
-		return
+		return false
 	end
-	local meta = minetest.get_meta(pos);
+	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	for _, name in pairs({"fuel", "dst", "src"}) do
 		local stack = inv:get_stack(name, 1)
@@ -276,7 +276,6 @@ minetest.register_node("default:furnace", {
 	},
 	paramtype2 = "facedir",
 	groups = {cracky = 2},
-	legacy_facedir_simple = true,
 	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
 
@@ -325,8 +324,7 @@ minetest.register_node("default:furnace_active", {
 	paramtype2 = "facedir",
 	light_source = minetest.LIGHT_MAX - 5,
 	drop = "default:furnace",
-	groups = {cracky = 2, not_in_creative_inventory=1},
-	legacy_facedir_simple = true,
+	groups = {cracky = 2, not_in_creative_inventory = 1},
 	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
 	on_timer = furnace_node_timer,
