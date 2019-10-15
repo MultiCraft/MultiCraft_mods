@@ -1,7 +1,6 @@
 mobs:register_mob("mobs_animal:pig", {
 	type = "animal",
-	group_attack = true,
-	damage = 1,
+	passive = true,
 	hp_min = 5,
 	hp_max = 15,
 	collisionbox = {-0.5, -0.01, -0.5, 0.5, 1.1, 0.5},
@@ -15,11 +14,11 @@ mobs:register_mob("mobs_animal:pig", {
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_pig",
-		attack = "mobs_pig_angry",
+		damage = "mobs_pig_angry"
 	},
 	walk_velocity = 2,
 	run_velocity = 3,
-	follow = {"default:apple", "farming:potato"},
+	runaway = true,
 	drops = function(pos)
 		if rawget(_G, "experience") then
 			experience.add_orb(math.random(1, 3), pos) -- random amount between 1 and 3
@@ -33,11 +32,11 @@ mobs:register_mob("mobs_animal:pig", {
 	end,
 	fear_height = 2,
 	animation = {
-		speed_normal = 20,
 		stand_start = 0,	stand_end = 60,
 		walk_start = 61,	walk_end = 80,
 		punch_start = 90,	punch_end = 110
 	},
+	follow = {"default:apple", "farming_addons:carrot", "farming_addons:potato"},
 
 	on_rightclick = function(self, clicker)
 		mobs:feed_tame(self, clicker, 8, true, true)
@@ -65,4 +64,4 @@ mobs:spawn({
 	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:pig", "Pig Egg", "mobs_pig_egg.png", 0)
+mobs:register_egg("mobs_animal:pig", "Pig Egg", "mobs_pig_egg.png")
