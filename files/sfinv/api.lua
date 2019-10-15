@@ -26,7 +26,7 @@ function sfinv.override_page(name, def)
 	end
 end
 
-function sfinv.get_nav_fs(player, context, nav, current_idx)
+--[[function sfinv.get_nav_fs(player, context, nav, current_idx)
 	-- Only show tabs if there is more than one page
 	if #nav > 1 then
 		return "tabheader[0,0;sfinv_nav_tabs;" .. table.concat(nav, ",") ..
@@ -34,7 +34,7 @@ function sfinv.get_nav_fs(player, context, nav, current_idx)
 	else
 		return ""
 	end
-end
+end]]
 
 local theme_inv = [[
 		list[current_player;main;0.01,4.51;9,3;9]
@@ -111,6 +111,14 @@ function sfinv.get_or_create_context(player)
 	return context
 end
 
+function sfinv.reset_context(player)
+	local name = player:get_player_name()
+	local context = {
+		page = sfinv.get_homepage_name(player)
+	}
+	sfinv.contexts[name] = context
+end
+
 function sfinv.set_context(player, context)
 	sfinv.contexts[player:get_player_name()] = context
 end
@@ -124,10 +132,10 @@ end
 function sfinv.open_formspec(player, context)
 	local fs = sfinv.get_formspec(player,
 			context or sfinv.get_or_create_context(player))
-	minetest.show_formspec(player:get_player_name(), "sfinv", fs)
+	minetest.show_formspec(player:get_player_name(), "", fs)
 end
 
-function sfinv.set_page(player, pagename)
+function sfinv.set_page(player, pagename, temp)
 	local context = sfinv.get_or_create_context(player)
 	local oldpage = sfinv.pages[context.page]
 	if oldpage and oldpage.on_leave then
@@ -137,6 +145,10 @@ function sfinv.set_page(player, pagename)
 	local page = sfinv.pages[pagename]
 	if page.on_enter then
 		page:on_enter(player, context)
+	end
+	if temp then
+		sfinv.open_formspec(player, context)
+		return
 	end
 	sfinv.set_player_inventory_formspec(player, context)
 end
@@ -144,20 +156,6 @@ end
 function sfinv.get_page(player)
 	local context = sfinv.contexts[player:get_player_name()]
 	return context and context.page or sfinv.get_homepage_name(player)
-end
-
-function sfinv.open_page(player, pagename)
-	local context = sfinv.get_or_create_context(player)
-	local oldpage = sfinv.pages[context.page]
-	if oldpage and oldpage.on_leave then
-		oldpage:on_leave(player, context)
-	end
-	context.page = pagename
-	local page = sfinv.pages[pagename]
-	if page.on_enter then
-		page:on_enter(player, context)
-	end
-	sfinv.open_formspec(player, context)
 end
 
 minetest.register_on_joinplayer(function(player)
@@ -171,7 +169,12 @@ minetest.register_on_leaveplayer(function(player)
 end)
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if --[[formname ~= "" or]] not sfinv.enabled then
+	if formname ~= "" or not sfinv.enabled then
+		return false
+	end
+
+	if fields.quit then
+		sfinv.reset_context(player)
 		return false
 	end
 
@@ -179,12 +182,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local name = player:get_player_name()
 	local context = sfinv.contexts[name]
 	if not context then
-		sfinv.set_player_inventory_formspec(player)
+		sfinv.set_player_inventory_formspec(player, context)
 		return false
 	end
 
 	-- Was a tab selected?
-	if fields.sfinv_nav_tabs and context.nav then
+--[[if fields.sfinv_nav_tabs and context.nav then
 		local tid = tonumber(fields.sfinv_nav_tabs)
 		if tid and tid > 0 then
 			local id = context.nav[tid]
@@ -193,11 +196,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				sfinv.set_page(player, id)
 			end
 		end
-	else
+	else]]
 		-- Pass event to page
 		local page = sfinv.pages[context.page]
 		if page and page.on_player_receive_fields then
 			return page:on_player_receive_fields(player, context, fields)
 		end
-	end
+--	end
 end)
