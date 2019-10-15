@@ -4,7 +4,15 @@
 -- The API documentation in here was moved into doc/lua_api.txt
 
 -- Definitions made by this mod that other mods can use too
-default = {}
+default = {
+	colors = {
+		grey = minetest.get_color_escape_sequence("#9d9d9d"),
+		green = minetest.get_color_escape_sequence("#1eff00"),
+		gold = minetest.get_color_escape_sequence("#ffdf00"),
+		white = minetest.get_color_escape_sequence("#ffffff"),
+		emerald = minetest.get_color_escape_sequence("#00e87e")
+	}
+}
 
 default.gui_bg = "bgcolor[#08080880;true]"
 default.listcolors = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"
@@ -18,6 +26,8 @@ default.gui	= [[
 	list[current_player;main;0.01,7.75;9,1;]
 ]]
 
+
+default.coloremerald = minetest.get_color_escape_sequence("#00D67C")
 
 -- Load files
 local default_path = minetest.get_modpath("default")

@@ -50,7 +50,7 @@ minetest.register_tool("default:pick_gold", {
 	inventory_image = "default_tool_goldpick.png",
 	tool_capabilities = {
 		full_punch_interval = 0.9,
-		max_drop_level=3,
+		max_drop_level = 3,
 		groupcaps = {
 			cracky = {times = {[1]=2.4, [2]=1.8, [3]=1.5}, uses = 40, maxlevel = 3}
 		},
@@ -64,9 +64,23 @@ minetest.register_tool("default:pick_diamond", {
 	inventory_image = "default_tool_diamondpick.png",
 	tool_capabilities = {
 		full_punch_interval = 0.9,
-		max_drop_level=3,
+		max_drop_level = 3,
 		groupcaps = {
 			cracky = {times = {[1]=2.0, [2]=1.5, [3]=1.0}, uses = 60, maxlevel = 3}
+		},
+		damage_groups = {fleshy = 5}
+	},
+	sound = {breaks = "default_tool_breaks"}
+})
+
+minetest.register_tool("default:pick_emerald", {
+	description = default.colors.emerald .. Sl("Emerald Pickaxe"),
+	inventory_image = "default_tool_emeraldpick.png",
+	tool_capabilities = {
+		full_punch_interval = 0.9,
+		max_drop_level = 3,
+		groupcaps = {
+			cracky = {times = {[1]=2.0, [2]=1.5, [3]=1.0}, uses = 80, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 5}
 	},
@@ -128,7 +142,7 @@ minetest.register_tool("default:shovel_gold", {
 	wield_image = "default_tool_goldshovel.png^[transformR90",
 	tool_capabilities = {
 		full_punch_interval = 1.0,
-		max_drop_level=3,
+		max_drop_level = 3,
 		groupcaps = {
 			crumbly = {times = {[1]=1.50, [2]=1.20, [3]=1.5}, uses = 40, maxlevel = 3}
 		},
@@ -146,6 +160,21 @@ minetest.register_tool("default:shovel_diamond", {
 		max_drop_level = 1,
 		groupcaps = {
 			crumbly = {times = {[1]=1.30, [2]=1.5, [3]=1.0}, uses = 60, maxlevel = 3}
+		},
+		damage_groups = {fleshy = 4}
+	},
+	sound = {breaks = "default_tool_breaks"}
+})
+
+minetest.register_tool("default:shovel_emerald", {
+	description = default.colors.emerald .. Sl("Emerald Shovel"),
+	inventory_image = "default_tool_emeraldshovel.png",
+	wield_image = "default_tool_emeraldshovel.png^[transformR90",
+	tool_capabilities = {
+		full_punch_interval = 1.0,
+		max_drop_level = 1,
+		groupcaps = {
+			crumbly = {times = {[1]=1.30, [2]=1.5, [3]=1.0}, uses = 80, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 4}
 	},
@@ -226,6 +255,20 @@ minetest.register_tool("default:axe_diamond", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
+minetest.register_tool("default:axe_emerald", {
+	description = default.colors.emerald .. Sl("Emerald Axe"),
+	inventory_image = "default_tool_emeraldaxe.png",
+	tool_capabilities = {
+		full_punch_interval = 0.9,
+		max_drop_level = 1,
+		groupcaps = {
+			choppy={times = {[1]=2.5, [2]=1.5, [3]=1.0}, uses = 80, maxlevel = 3}
+		},
+		damage_groups = {fleshy = 6}
+	},
+	sound = {breaks = "default_tool_breaks"}
+})
+
 --
 -- Swords
 --
@@ -278,6 +321,17 @@ minetest.register_tool("default:sword_gold", {
 minetest.register_tool("default:sword_diamond", {
 	description = "Diamond Sword",
 	inventory_image = "default_tool_diamondsword.png",
+	tool_capabilities = {
+		full_punch_interval = 0.7,
+		max_drop_level = 1,
+		damage_groups = {fleshy = 8}
+	},
+	sound = {breaks = "default_tool_breaks"}
+})
+
+minetest.register_tool("default:sword_emerald", {
+	description = default.colors.emerald .. Sl("Emerald Sword"),
+	inventory_image = "default_tool_emeraldsword.png",
 	tool_capabilities = {
 		full_punch_interval = 0.7,
 		max_drop_level = 1,
