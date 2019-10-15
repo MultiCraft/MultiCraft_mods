@@ -1,76 +1,51 @@
 local tmp = {}
 
 minetest.register_entity("itemframes:item",{
-	hp_max = 1,
 	visual = "wielditem",
 	visual_size = {x = 0.33, y = 0.33},
-	collisionbox = {0, 0, 0, 0, 0, 0},
+	collisionbox = {0},
 	physical = false,
-	textures = {"air"},
+	textures = {"blank.png"},
 
 	on_activate = function(self, staticdata)
-		if tmp.nodename ~= nil and tmp.texture ~= nil then
+		if tmp.nodename and tmp.texture then
 			self.nodename = tmp.nodename
 			tmp.nodename = nil
 			self.texture = tmp.texture
 			tmp.texture = nil
-		else
-			if staticdata ~= nil and staticdata ~= "" then
-				local data = staticdata:split(";")
-				if data and data[1] and data[2] then
-					self.nodename = data[1]
-					self.texture = data[2]
-				end
+		elseif staticdata and staticdata ~= "" then
+			local data = staticdata:split(";")
+			if data and data[1] and data[2] then
+				self.nodename = data[1]
+				self.texture = data[2]
 			end
 		end
-		if self.texture ~= nil then
+		if self.texture then
 			self.object:set_properties({textures = {self.texture}})
-		end
-		if self.texture ~= nil and self.nodename ~= nil then
-			local entity_pos = vector.round(self.object:get_pos())
-			local objs = minetest.get_objects_inside_radius(entity_pos, 0.5)
-			for _, obj in ipairs(objs) do
-				if obj ~= self.object and
-				   obj:get_luaentity() and
-				   obj:get_luaentity().name == "itemframes:item" and
-				   obj:get_luaentity().nodename == self.nodename and
-				   obj:get_properties() and
-				   obj:get_properties().textures and
-				   obj:get_properties().textures[1] == self.texture then
-					minetest.log("action","[itemframes] Removing extra " ..
-						self.texture .. " found in " .. self.nodename .. " at " ..
-						minetest.pos_to_string(entity_pos))
-					self.object:remove()
-					break
-				end
-			end
 		end
 	end,
 
 	get_staticdata = function(self)
-		if self.nodename ~= nil and self.texture ~= nil then
+		if self.nodename and self.texture then
 			return self.nodename .. ";" .. self.texture
 		end
 		return ""
 	end
 })
 
-local facedir = {}
-facedir[2] = {x =  1, y = 0, z =  0}
-facedir[3] = {x = -1, y = 0, z =  0}
-facedir[4] = {x =  0, y = 0, z =  1}
-facedir[5] = {x =  0, y = 0, z = -1}
+local facedir = {
+	[2] = {x =  1, y = 0, z =  0},
+	[3] = {x = -1, y = 0, z =  0},
+	[4] = {x =  0, y = 0, z =  1},
+	[5] = {x =  0, y = 0, z = -1}
+}
 
 local remove_item = function(pos, node)
-	local objs = nil
-	if node.name == "itemframes:frame" then
-		objs = minetest.get_objects_inside_radius(pos, 0.5)
-	end
-	if objs then
-		for _, obj in ipairs(objs) do
-			if obj and obj:get_luaentity() and obj:get_luaentity().name == "itemframes:item" then
-				obj:remove()
-			end
+	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+		local ent = obj:get_luaentity()
+		if ent and ent.name == "itemframes:item" then
+			obj:remove()
+			break
 		end
 	end
 end
@@ -78,31 +53,56 @@ end
 local update_item = function(pos, node)
 	remove_item(pos, node)
 	local meta = minetest.get_meta(pos)
-	if meta:get_string("item") ~= "" then
-		local posad = facedir[node.param2]
-		if not posad then return end
-		pos.x = pos.x + posad.x * 6.5 / 16
-		pos.y = pos.y + posad.y * 6.5 / 16
-		pos.z = pos.z + posad.z * 6.5 / 16
-		tmp.nodename = node.name
-		tmp.texture = ItemStack(meta:get_string("item")):get_name()
-		local e = minetest.add_entity(pos, "itemframes:item")
-		if node.param2 == 2 or node.param2 == 3 then
-			local yaw = math.pi / 2 - node.param2 * math.pi * 2
-			e:setyaw(yaw)
-		end
+	local itemstring = meta:get_string("item")
+	local posad = facedir[node.param2]
+	if not posad or itemstring == "" then return end
+
+	pos = vector.add(pos, vector.multiply(posad, 6.5/16))
+	tmp.nodename = node.name
+	tmp.texture = ItemStack(itemstring):get_name()
+
+	local entity  = minetest.add_entity(pos, "itemframes:item")
+	if node.param2 == 2 or node.param2 == 3 then
+		local yaw = math.pi / 2 - node.param2 * math.pi * 2
+		entity:set_yaw(yaw)
 	end
 end
 
 local drop_item = function(pos, node)
 	local meta = minetest.get_meta(pos)
-	if meta:get_string("item") ~= "" then
-		if node.name == "itemframes:frame" then
-			minetest.add_item(pos, meta:get_string("item"))
-		end
-		meta:set_string("item", "")
-	end
+	local item = meta:get_string("item")
+	if item == "" then return end
+
+	minetest.add_item(pos, item)
+	meta:set_string("item", "")
 	remove_item(pos, node)
+end
+
+local function check_item(pos, node)
+	local meta = minetest.get_meta(pos)
+	local item = meta:get_string("item")
+	if item == "" then return end
+	local found = false
+	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+		local ent = obj:get_luaentity()
+		if ent and ent.name == "itemframes:item" then
+			found = true
+			break
+		end
+	end
+	if not found then
+		update_item(pos, node)
+	end
+end
+
+local function after_dig_node(pos, node)
+	local meta = minetest.get_meta(pos)
+	local item = meta:get_string("item")
+	if item == "" then return end
+	if not node then
+		local node = minetest.get_node(pos)
+	end
+	drop_item(pos, node)
 end
 
 minetest.register_node("itemframes:frame",{
@@ -118,7 +118,6 @@ minetest.register_node("itemframes:frame",{
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,
 	groups = {choppy = 2, dig_immediate = 2, attached_node = 1},
-	legacy_wallmounted = false,
 	sounds = default.node_sound_wood_defaults(),
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -137,47 +136,44 @@ minetest.register_node("itemframes:frame",{
 
 	after_place_node = function(pos, placer, itemstack)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("owner",placer:get_player_name())
-		meta:set_string("infotext","Item frame (owned by " .. placer:get_player_name() .. ")")
+		local pn = placer:get_player_name()
+		meta:set_string("owner", pn)
+		meta:set_string("infotext", Sl("Item frame") .. "\n" .. Sl("Owned by @1", pn))
 	end,
 
 	on_rightclick = function(pos, node, clicker, itemstack)
 		if not itemstack then return end
-		local meta = minetest.get_meta(pos)
-		local name = clicker and clicker:get_player_name()
-		if name == meta:get_string("owner") or
-				minetest.check_player_privs(name, "protection_bypass") then
-			drop_item(pos, node)
-			local string = itemstack:take_item()
-			meta:set_string("item", string:to_string())
-			update_item(pos, node)
+		if clicker and not default.can_interact_with_node(clicker, pos) then
+			return false
 		end
+		local meta = minetest.get_meta(pos)
+		drop_item(pos, node)
+		local item = itemstack:take_item()
+		meta:set_string("item", item:to_string())
+		update_item(pos, node)
 		return itemstack
 	end,
 
-	on_punch = function(pos, node, puncher)
-		local meta = minetest.get_meta(pos)
-		local name = puncher and puncher:get_player_name()
-		if name == meta:get_string("owner") or
-				minetest.check_player_privs(name, "protection_bypass") then
-			drop_item(pos, node)
-		end
-	end,
+	on_punch = check_item,
 
-	can_dig = function(pos,player)
-		if not player then return end
-		local name = player and player:get_player_name()
-		local meta = minetest.get_meta(pos)
-		return name == meta:get_string("owner") or
-				minetest.check_player_privs(name, "protection_bypass")
-	end,
-
-	on_destruct = function(pos)
-		local meta = minetest.get_meta(pos)
-		local node = minetest.get_node(pos)
-		if meta:get_string("item") ~= "" then
-			drop_item(pos, node)
+	can_dig = function(pos, player)
+		if player and not default.can_interact_with_node(player, pos) then
+			return false
 		end
+		return true
+	end,
+	
+	after_dig_node = after_dig_node,
+	on_destruct = after_dig_node
+})
+
+minetest.register_lbm({
+	label = "Check Itemframe item",
+	name = "itemframes:item",
+	nodenames = {"itemframes:frame"},
+	run_at_every_load = true,
+	action = function(pos, node)
+		check_item(pos, node)
 	end
 })
 
