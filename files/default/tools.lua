@@ -341,6 +341,58 @@ minetest.register_tool("default:sword_emerald", {
 })
 
 --
+-- Register Craft Recipies
+--
+
+local craft_ingreds = {
+	wood = "group:wood",
+	stone = "group:stone",
+	steel = "default:steel_ingot",
+	gold = "default:gold_ingot",
+	diamond = "default:diamond",
+	emerald = "default:emerald"
+}
+
+for k, v in pairs(craft_ingreds) do
+	minetest.register_craft({
+		output = "default:pick_" .. k,
+		recipe = {
+			{v, v, v},
+			{"", "default:stick", ""},
+			{"", "default:stick", ""}
+		}
+	})
+
+	minetest.register_craft({
+		output = "default:shovel_" .. k,
+		recipe = {
+			{v},
+			{"default:stick"},
+			{"default:stick"}
+		}
+	})
+
+	minetest.register_craft({
+		output = "default:axe_" .. k,
+		recipe = {
+			{v, v},
+			{v, "default:stick"},
+			{"", "default:stick"}
+		}
+	})
+
+	minetest.register_craft({
+		output = "default:sword_" .. k,
+		recipe = {
+			{v},
+			{v},
+			{"default:stick"}
+		}
+	})
+end
+
+
+--
 -- Fishing Pole
 --
 
