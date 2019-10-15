@@ -25,6 +25,10 @@ Authors of media (sounds, and schematics)
 Everything not listed in here:
 celeron55, Perttu Ahola <celeron55@gmail.com> (CC BY-SA 3.0)
 
+TeddyDesTodes (textures) CC-BY-SA 3.0:
+  weather_rain.png
+  weather_snow.png
+
 ------
 Glass breaking sounds (CC BY 3.0):
   1: http://www.freesound.org/people/cmusounddesign/sounds/71947/
