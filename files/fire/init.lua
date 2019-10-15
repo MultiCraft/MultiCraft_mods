@@ -64,6 +64,8 @@ minetest.register_node("fire:basic_flame", flame_fire_node)
 -- Permanent flame nodes
 minetest.register_node("fire:permanent_flame", fire_node)
 
+local tr = minetest.get_modpath("toolranks")
+
 -- Flint and Steel
 minetest.register_tool("fire:flint_and_steel", {
 	description = "Flint and Steel",
@@ -96,7 +98,14 @@ minetest.register_tool("fire:flint_and_steel", {
 					and creative.is_enabled_for(player_name)) then
 				-- Wear tool
 				local wdef = itemstack:get_definition()
-				itemstack:add_wear(1000)
+
+				-- Toolranks support
+				if tr then
+					toolranks.new_afteruse(itemstack, user, nil, {wear = 1000})
+				else
+					itemstack:add_wear(1000)
+				end
+
 				-- Tool break sound
 				if itemstack:get_count() == 0 and wdef.sound and wdef.sound.breaks then
 					minetest.sound_play(wdef.sound.breaks, {pos = sound_pos, gain = 0.5})
@@ -206,7 +215,7 @@ if flame_sound then
 				to_player = player_name,
 				gain = math.min(0.06 * (1 + flames * 0.125), 0.18),
 				max_hear_distance = 32,
-				loop = true, -- In case of lag
+				loop = true -- In case of lag
 			})
 			-- Store sound handle for this player
 			if handle then
@@ -261,7 +270,7 @@ if minetest.is_singleplayer() then
 			if p then
 				minetest.set_node(p, {name = "fire:basic_flame"})
 			end
-		end,
+		end
 	})
 
 	-- Remove flammable nodes around basic flame
@@ -273,10 +282,10 @@ if minetest.is_singleplayer() then
 		chance = 18,
 		catch_up = false,
 		action = function(pos)
-		local p = minetest.find_node_near(pos, 1, {"group:flammable"})
-		if not p then
-			return
-		end
+			local p = minetest.find_node_near(pos, 1, {"group:flammable"})
+			if not p then
+				return
+			end
 			local flammable_node = minetest.get_node(p)
 			local def = minetest.registered_nodes[flammable_node.name]
 			if def.on_burn then
