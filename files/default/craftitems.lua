@@ -202,7 +202,7 @@ minetest.register_craftitem("default:gold_ingot", {
 })
 
 minetest.register_craftitem("default:emerald", {
-	description = "Emerald",
+	description = default.colors.emerald .. Sl("Emerald"),
 	inventory_image = "default_emerald.png"
 })
 
@@ -229,15 +229,15 @@ minetest.register_craftitem("default:glowstone_dust", {
 minetest.register_craftitem("default:fish_raw", {
 	description = "Raw Fish",
 	inventory_image = "default_fish.png",
-	groups = {food = 1},
-	on_use = minetest.item_eat(2)
+	groups = {food_fish_raw = 1, food = 1},
+	on_use = minetest.item_eat(2, nil, -3)
 })
 
 minetest.register_craftitem("default:fish", {
 	description = "Cooked Fish",
 	inventory_image = "default_fish_cooked.png",
 	groups = {food = 1},
-	on_use = minetest.item_eat(4)
+	on_use = minetest.item_eat(6)
 })
 
 minetest.register_craftitem("default:sugar", {

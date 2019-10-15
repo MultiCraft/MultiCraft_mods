@@ -18,10 +18,16 @@ armor:register_armor("3d_armor:helmet_gold", {
 	groups = {armor_head = 15, armor_heal = 10, armor_use = 500}
 })
 
-armor:register_armor("3d_armor:helmet_diamond",{
+armor:register_armor("3d_armor:helmet_diamond", {
 	description = "Diamond Helmet",
 	inventory_image = "3d_armor_inv_helmet_diamond.png",
 	groups = {armor_head = 20, armor_heal = 15, armor_use = 750}
+})
+
+armor:register_armor("3d_armor:helmet_emerald", {
+	description = default.colors.emerald .. Sl("Emerald Helmet"),
+	inventory_image = "3d_armor_inv_helmet_emerald.png",
+	groups = {armor_head = 20, armor_heal = 15, armor_use = 1000}
 })
 
 armor:register_armor("3d_armor:helmet_chain", {
@@ -56,6 +62,12 @@ armor:register_armor("3d_armor:chestplate_diamond",{
 	groups = {armor_torso = 30, armor_heal = 15, armor_use = 750}
 })
 
+armor:register_armor("3d_armor:chestplate_emerald", {
+	description = default.colors.emerald .. Sl("Emerald Chestplate"),
+	inventory_image = "3d_armor_inv_chestplate_emerald.png",
+	groups = {armor_torso = 30, armor_heal = 15, armor_use = 1000}
+})
+
 armor:register_armor("3d_armor:chestplate_chain", {
 	description = "Chain Chestplate",
 	inventory_image = "3d_armor_inv_chestplate_chain.png",
@@ -82,10 +94,16 @@ armor:register_armor("3d_armor:leggings_gold", {
 	groups = {armor_legs = 20, armor_heal = 10, armor_use = 500}
 })
 
-armor:register_armor("3d_armor:leggings_diamond",{
-	description = "Diamond Helmet",
+armor:register_armor("3d_armor:leggings_diamond", {
+	description = "Diamond Leggings",
 	inventory_image = "3d_armor_inv_leggings_diamond.png",
 	groups = {armor_legs = 25, armor_heal = 15, armor_use = 750}
+})
+
+armor:register_armor("3d_armor:leggings_emerald", {
+	description = default.colors.emerald .. Sl("Emerald Leggings"),
+	inventory_image = "3d_armor_inv_leggings_emerald.png",
+	groups = {armor_legs = 25, armor_heal = 15, armor_use = 1000}
 })
 
 armor:register_armor("3d_armor:leggings_chain", {
@@ -114,10 +132,16 @@ armor:register_armor("3d_armor:boots_gold", {
 	groups = {armor_feet = 15, armor_heal = 10, armor_use = 500}
 })
 
-armor:register_armor("3d_armor:boots_diamond",{
-	description = "Diamond Helmet",
+armor:register_armor("3d_armor:boots_diamond", {
+	description = "Diamond Boots",
 	inventory_image = "3d_armor_inv_boots_diamond.png",
 	groups = {armor_feet = 20, armor_heal = 15, armor_use = 750}
+})
+
+armor:register_armor("3d_armor:boots_emerald", {
+	description = default.colors.emerald .. Sl("Emerald Boots"),
+	inventory_image = "3d_armor_inv_boots_emerald.png",
+	groups = {armor_feet = 20, armor_heal = 15, armor_use = 1000}
 })
 
 armor:register_armor("3d_armor:boots_chain", {
@@ -133,6 +157,7 @@ local craft_ingreds = {
 	steel = "default:steel_ingot",
 	gold = "default:gold_ingot",
 	diamond = "default:diamond",
+	emerald = "default:emerald",
 	chain = "fire:basic_flame"
 }
 
@@ -142,30 +167,30 @@ for k, v in pairs(craft_ingreds) do
 		recipe = {
 			{v, v, v},
 			{v, "", v},
-			{"", "", ""},
-		},
+			{"", "", ""}
+		}
 	})
 	minetest.register_craft({
 		output = "3d_armor:chestplate_" .. k,
 		recipe = {
 			{v, "", v},
 			{v, v, v},
-			{v, v, v},
-		},
+			{v, v, v}
+		}
 	})
 	minetest.register_craft({
 		output = "3d_armor:leggings_" .. k,
 		recipe = {
 			{v, v, v},
 			{v, "", v},
-			{v, "", v},
-		},
+			{v, "", v}
+		}
 	})
 	minetest.register_craft({
 		output = "3d_armor:boots_" .. k,
 		recipe = {
 			{v, "", v},
-			{v, "", v},
-		},
+			{v, "", v}
+		}
 	})
 end
