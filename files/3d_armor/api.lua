@@ -28,10 +28,9 @@ local armor_textures = setmetatable({}, {
 })
 
 armor = {
-	player_hp = {},
 	elements = {"head", "torso", "legs", "feet"},
 	physics = {"jump", "speed", "gravity"},
-	--[[formspec = "size[8,8.5]list[detached:player_name_armor;armor;0,1;2,3;]"
+--[[formspec = "size[8,8.5]list[detached:player_name_armor;armor;0,1;2,3;]"
 		.."image[2,0.75;2,4;armor_preview]"
 		.."list[current_player;main;0,4.5;8,4;]"
 		.."list[current_player;craft;4,1;3,3;]"
@@ -62,7 +61,7 @@ armor.update_player_visuals = function(self, player)
 			self.textures[name].skin,
 			self.textures[name].armor,
 			self.textures[name].wielditem,
-			self.textures[name].cube,
+			self.textures[name].cube
 		})
 	end
 end
@@ -83,9 +82,6 @@ if enable_damage then
 end
 
 armor.set_player_armor = function(self, player)
-	if not player then
-		return
-	end
 	local name = player:get_player_name()
 	local armor_inv = self:get_armor_inventory(player)
 	if not name then
@@ -95,80 +91,75 @@ armor.set_player_armor = function(self, player)
 		minetest.log("error", "Failed to read player inventory")
 		return
 	end
-	local armor_texture = "blank.png"
 	local armor_level = 0
 	local armor_heal = 0
 	local state = 0
-	local items = 0
-	local elements = {}
+	local count = 0
+	local texture = "blank.png"
 	local textures = {}
-	local physics_o = {speed=1,gravity=1,jump=1}
+	local physics = {speed = 1, gravity = 1, jump = 1}
 	local material = {type=nil, count=1}
-	--local preview = armor:get_player_skin(name).."_preview.png"
-	for _,v in ipairs(self.elements) do
-		elements[v] = false
-	end
-	for i=1, 4 do
-		local stack = armor_inv:get_stack("armor", i)
-		local item = stack:get_name()
+--	local preview = armor:get_player_skin(name).."_preview.png"
+	local list = {"1", "3", "2", "4"}
+	for _, number in pairs(list) do
+		local stack = armor_inv:get_stack("armor", number)
 		if stack:get_count() == 1 then
-			local def = stack:get_definition()
-			for k, v in pairs(elements) do
-				if v == false then
-					local level = def.groups["armor_"..k]
+			local stack = armor_inv:get_stack("armor", number)
+			local item = stack:get_name()
+			if stack:get_count() == 1 then
+				local def = stack:get_definition()
+				for _, element in pairs(self.elements) do
+					local level = def.groups["armor_"..element]
 					if level then
-						local texture = item:gsub("%:", "_")
-						table.insert(textures, texture..".png")
-						--preview = preview.."^"..texture.."_preview.png"
+						local tex = def.texture or item:gsub("%:", "_")
+						tex = tex:gsub(".png$", "")
+						local prev = def.preview or tex.."_preview"
+						prev = prev:gsub(".png$", "")
+						texture = texture.."^"..tex..".png"
+					--	preview = preview.."^"..prev..".png"
 						armor_level = armor_level + level
 						state = state + stack:get_wear()
-						items = items + 1
+						count = count + 1
 						local heal = def.groups["armor_heal"] or 0
 						armor_heal = armor_heal + heal
-						for kk,vv in ipairs(self.physics) do
-							local o_value = def.groups["physics_"..vv]
-							if o_value then
-								physics_o[vv] = physics_o[vv] + o_value
-							end
+						for _, phys in pairs(self.physics) do
+							local value = def.groups["physics_"..phys] or 0
+							physics[phys] = physics[phys] + value
 						end
 						local mat = string.match(item, "%:.+_(.+)$")
-						if material.type then
-							if material.type == mat then
+						if material.name then
+							if material.name == mat then
 								material.count = material.count + 1
 							end
 						else
-							material.type = mat
+							material.name = mat
 						end
-						elements[k] = true
 					end
 				end
 			end
 		end
 	end
-	if material.type and material.count == #self.elements then
+	if material.name and material.count == #self.elements then
 		armor_level = armor_level * 1.1
 	end
 	armor_level = armor_level * ARMOR_LEVEL_MULTIPLIER
 	armor_heal = armor_heal * ARMOR_HEAL_MULTIPLIER
-	if #textures > 0 then
-		armor_texture = table.concat(textures, "^")
-	end
 	local armor_groups = {fleshy = 100}
 	if armor_level > 0 then
 		armor_groups.level = math.floor(armor_level / 20)
 		armor_groups.fleshy = 100 - armor_level
 	end
 	player:set_armor_groups(armor_groups)
-	player:set_physics_override(physics_o)
-	self.textures[name].armor = armor_texture
-	--self.textures[name].preview = preview
+	player:set_physics_override(physics)
+	self.textures[name].armor = texture
+--	self.textures[name].preview = preview
 	self.def[name].state = state
-	self.def[name].count = items
+	self.def[name].count = count
 	self.def[name].level = armor_level
 	self.def[name].heal = armor_heal
-	self.def[name].jump = physics_o.jump
-	self.def[name].speed = physics_o.speed
-	self.def[name].gravity = physics_o.gravity
+	self.def[name].jump = physics.jump
+	self.def[name].speed = physics.speed
+	self.def[name].gravity = physics.gravity
 	self:update_player_visuals(player)
 
 	if enable_damage then
@@ -194,32 +185,34 @@ armor.update_armor = function(self, player)
 		return
 	end
 	local state = 0
-	local items = 0
-	for i=1, 4 do
-		local stack = armor_inv:get_stack("armor", i)
-		if stack:get_count() > 0 then
+	local count = 0
+	local list = armor_inv:get_list("armor")
+	if type(list) ~= "table" then
+		return
+	end
+	for i, stack in pairs(list) do
+		if stack:get_count() == 1 then
 			local use = stack:get_definition().groups["armor_use"] or 0
 			local item = stack:get_name()
 			stack:add_wear(use)
 			armor_inv:set_stack("armor", i, stack)
 			state = state + stack:get_wear()
-			items = items + 1
+			count = count + 1
 			if stack:get_count() == 0 then
 				local desc = minetest.registered_items[item].description
-				if desc then
-					minetest.chat_send_player(name, "Your "..desc.." got destroyed!")
+				if name and desc then
+					minetest.chat_send_player(name, Sl("Your @1 got destroyed!", desc))
 				end
 				self:set_player_armor(player)
-				armor:update_inventory(player)
 			end
 		end
 	end
 	self:save_armor_inventory(player)
 	self.def[name].state = state
-	self.def[name].count = items
+	self.def[name].count = count
 end
 
-armor.get_player_skin = function(self, name)
+--[[armor.get_player_skin = function(self, name)
 	local skin = nil
 	if skins then
 		skin = skins.skins[name]
@@ -229,12 +222,10 @@ end
 
 armor.get_armor_formspec = function(self, name)
 	local formspec = armor.formspec:gsub("player_name", name)
-	--formspec = formspec:gsub("armor_preview", armor.textures[name].preview)
+--	formspec = formspec:gsub("armor_preview", armor.textures[name].preview)
 	formspec = formspec:gsub("armor_level", armor.def[name].level)
 	return formspec:gsub("armor_heal", armor.def[name].heal)
-end
-
-armor.update_inventory = function(self, player) end
+end]]
 
 armor.get_armor_inventory = function(self, player)
 	local name = player:get_player_name()
