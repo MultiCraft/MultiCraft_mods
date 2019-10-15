@@ -37,7 +37,7 @@ for i = 1, #dyes do
 			stand_start = 0,	stand_end = 80,
 			walk_start = 81,	walk_end = 100
 		},
-		follow = {"farming:wheat", "default:grass", "default:dry_grass"},
+		follow = {"flora", "farming:wheat"},
 		replace_rate = 10,
 		replace_what = {
 			{"group:grass", "air", -1},
@@ -135,7 +135,6 @@ for i = 1, #dyes do
 				return
 			end
 
-			if mobs:protect(self, clicker) then return end
 		--	if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 		end
 	})

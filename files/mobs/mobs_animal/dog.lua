@@ -1,8 +1,14 @@
 mobs:register_mob("mobs_animal:wolf", {
 	type = "animal",
+	damage = 2,
+	hp_min = 8,
+	hp_max = 10,
+	collisionbox = {-0.6, -0.01, -0.6, 0.6, 1.1, 0.6},
 	visual = "mesh",
 	mesh = "mobs_wolf.x",
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
+	textures = {
+		{"mobs_wolf.png"}
+	},
 	animation = {
 		speed_normal = 20,	speed_run = 30,
 		stand_start = 10,	stand_end = 20,
@@ -10,26 +16,20 @@ mobs:register_mob("mobs_animal:wolf", {
 		run_start = 100,	run_end = 130,
 		punch_start = 135,	punch_end = 155
 	},
-	textures = {
-		{"mobs_wolf.png"},
-	},
-	walk_chance = 75,
-	walk_velocity = 2,
-	run_velocity = 3,
-	view_range = 7,
-	follow = "mobs:meat_raw",
-	damage = 2,
-	pathfinding = true,
-	group_attack = true,
-	hp_min = 8,
-	hp_max = 10,
-	fall_damage = 3,
-	fear_height = 4,
 	makes_footstep_sound = true,
 	sounds = {
 		war_cry = "mobs_wolf_attack",
 		death = "mobs_wolf_attack"
 	},
+	walk_chance = 75,
+	walk_velocity = 2,
+	run_velocity = 3,
+	view_range = 7,
+	follow = {"food_meat_raw"},
+	pathfinding = true,
+	group_attack = true,
+	fall_damage = 3,
+	fear_height = 4,
 
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 2, false, true) then
@@ -47,23 +47,18 @@ mobs:register_mob("mobs_animal:wolf", {
 	end
 })
 
-mobs:spawn({
-	name = "mobs_animal:wolf",
-	mobs_animal.spawn_nodes,
-	min_light = 0,
-	chance = 20000,
-	min_height = 0,
-	day_toggle = true
-})
-
-mobs:register_egg("mobs_animal:wolf", "Wolf's Egg", "wool_grey.png", true)
-
 -- Dog
 mobs:register_mob("mobs_animal:dog", {
 	type = "npc",
+	damage = 4,
+	hp_min = 15,
+	hp_max = 25,
+	collisionbox = {-0.6, -0.01, -0.6, 0.6, 1.1, 0.6},
 	visual = "mesh",
 	mesh = "mobs_wolf.x",
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
+	textures = {
+		{"mobs_dog.png"}
+	},
 	animation = {
 		speed_normal = 20,	speed_run = 30,
 		stand_start = 10,	stand_end = 20,
@@ -71,32 +66,24 @@ mobs:register_mob("mobs_animal:dog", {
 		run_start = 100,	run_end = 130,
 		punch_start = 135,	punch_end = 155
 	},
-	textures = {
-		{"mobs_dog.png"}
+	makes_footstep_sound = true,
+	sounds = {
+		war_cry = "mobs_wolf_attack",
+		death = "mobs_wolf_attack"
 	},
 	fear_height = 4,
 	walk_chance = 75,
 	walk_velocity = 2,
 	run_velocity = 4,
 	view_range = 15,
-	follow = "mobs:meat_raw",
-	damage = 4,
+	follow = {"food_meat_raw"},
 	attacks_monsters = true,
 	pathfinding = true,
 	group_attack = true,
-	hp_min = 15,
-	hp_max = 25,
 	fall_damage = 5,
-	makes_footstep_sound = true,
-	sounds = {
-		war_cry = "mobs_wolf_attack",
-		death = "mobs_wolf_attack"
-	},
 
 	on_rightclick = function(self, clicker)
-		if mobs:feed_tame(self, clicker, 6, true, true) then
-			return
-		end
+		if mobs:feed_tame(self, clicker, 6, true, true) then return end
 		if clicker:get_wielded_item():is_empty() and clicker:get_player_name() == self.owner then
 			if clicker:get_player_control().sneak then
 				self.order = ""
@@ -122,4 +109,14 @@ mobs:register_mob("mobs_animal:dog", {
 	end
 })
 
+mobs:spawn({
+	name = "mobs_animal:wolf",
+	mobs_animal.spawn_nodes,
+	min_light = 0,
+	chance = 20000,
+	min_height = 0,
+	day_toggle = true
+})
+
+mobs:register_egg("mobs_animal:wolf", "Wolf's Egg", "wool_grey.png", true)
 mobs:register_egg("mobs_animal:dog", "Dog Egg", "wool_brown.png", true)
