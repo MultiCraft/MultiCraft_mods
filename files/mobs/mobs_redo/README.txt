@@ -19,13 +19,11 @@ License of textures:
 Copyright (C) 2013 Vattic
 https://github.com/MultiCraft/MultiCraft/blob/master/doc/Other%20License.md#license-of-media-textures
 
-* Exceptions 1:
-mobs_chicken_egg.png, mobs_egg_overlay.png, mobs_cheese.png, mobs_cheese_wield.png, mobs_cheeseblock.png, by MultiCraft Development Team
+* Exceptions:
+mobs_chicken_egg.png, mobs_egg_overlay.png, mobs_chicken_egg_fried.png,
+mobs_cheese.png, mobs_cheese_wield.png, mobs_cheeseblock.png, by MultiCraft Development Team
 Is NOT free and can be used only as part of the official MultiCraft build.
 Allowed to be used in non-official builds ONLY for personal use.
-
-* Exceptions 2:
-mobs_chicken_egg_fried.png, mobs_protector.png from mobs_redo by TenPlus1 
 
 License of sounds:
 --------------------
