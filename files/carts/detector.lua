@@ -31,7 +31,7 @@ carts:register_rail("carts:detectorrail", {
 	},
 	groups = carts:get_rail_groups({detector_rail = 1}),
 
-	mesecons = {receptor = {state = "off", rules = mesecons_rules}},
+	mesecons = {receptor = {state = "off", rules = mesecons_rules}}
 })
 
 carts:register_rail("carts:detectorrail_on", {
@@ -44,7 +44,7 @@ carts:register_rail("carts:detectorrail_on", {
 	}),
 	drop = "carts:detectorrail",
 
-	mesecons = {receptor = {state = "on", rules = mesecons_rules}},
+	mesecons = {receptor = {state = "on", rules = mesecons_rules}}
 })
 
 minetest.register_craft({
@@ -52,6 +52,6 @@ minetest.register_craft({
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
 		{"default:steel_ingot", "mesecons_pressureplates:pressure_plate_stone_off", "default:steel_ingot"},
-		{"default:steel_ingot", "mesecons:wire_00000000_off", "default:steel_ingot"},
-	},
+		{"default:steel_ingot", "mesecons:wire_00000000_off", "default:steel_ingot"}
+	}
 })

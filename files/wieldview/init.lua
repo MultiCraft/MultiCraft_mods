@@ -24,7 +24,7 @@ minetest.after(1, function()
 	end
 end)
 
-local function update_player_visuals(player, item)
+local function update_player_visuals(player, name, item)
 	local animation = player_api.get_animation(player) or {}
 	local textures = animation.textures or {}
 	local skin = textures[1] and textures[1] or "character.png"
@@ -34,7 +34,6 @@ local function update_player_visuals(player, item)
 	end
 	local wield_cube = wield_cubes[item] or "blank.png"
 	if has_armor then
-		local name = player:get_player_name()
 		armor.textures[name].wielditem = wield_tile
 		armor.textures[name].cube = wield_cube
 		armor:update_player_visuals(player)
@@ -43,36 +42,27 @@ local function update_player_visuals(player, item)
 	end
 end
 
-local function update_wielded_item(dtime, name)
+local function update_wielded_item(name)
 	local player = minetest.get_player_by_name(name)
-	if not player then
-		return
-	end
+	if not player then return end
 	local stack = player:get_wielded_item()
 	local item = stack:get_name()
 	if item and wield_items[name] and wield_items[name] == item then
 		return
 	else
-		update_player_visuals(player, item)
+		update_player_visuals(player, name, item)
 	end
 	wield_items[name] = item
 end
 
-
-minetest.register_on_joinplayer(function(player)
-	local name = player:get_player_name()
-	if name then
-		wield_items[name] = ""
-	end
-end)
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	if name then
-		wield_items[name] = ""
+		wield_items[name] = nil
 	end
 end)
 minetest.register_playerstep(function(dtime, playernames)
 	for _, name in pairs(playernames) do
-		update_wielded_item(dtime, name)
+		update_wielded_item(name)
 	end
 end, minetest.is_singleplayer()) -- Force step in singlplayer mode only
