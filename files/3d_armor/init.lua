@@ -5,7 +5,7 @@ dofile(modpath .. "/armor.lua")
 
 -- Register Callbacks
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+--[[minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local name = player:get_player_name()
 	for field, _ in pairs(fields) do
 		if string.find(field, "skins_set_") then
@@ -16,87 +16,74 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end, player)
 		end
 	end
-end)
+end)]]
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local armor_inv = minetest.create_detached_inventory(name.."_armor",{
-		allow_put = function(inv, listname, index, stack, player)
+		allow_put = function(_, _, index, stack)
 			local item = stack:get_name()
-			if not minetest.registered_items[item] and not minetest.registered_items[item].groups then return 0 end
-			if  minetest.registered_items[item].groups['armor_head']
+			if not item and
+			   not minetest.registered_items[item] and
+			   not minetest.registered_items[item].groups then
+				return 0
+			end
+			if  minetest.registered_items[item].groups["armor_head"]
 			and index == 1 then
 				return 1
 			end
-			if  minetest.registered_items[item].groups['armor_torso']
+			if  minetest.registered_items[item].groups["armor_torso"]
 			and index == 2 then
 				return 1
 			end
-			if  minetest.registered_items[item].groups['armor_legs']
+			if  minetest.registered_items[item].groups["armor_legs"]
 			and index == 3 then
 				return 1
 			end
-			if  minetest.registered_items[item].groups['armor_feet']
+			if  minetest.registered_items[item].groups["armor_feet"]
 			and index == 4 then
 				return 1
 			end
 			return 0
 		end,
-		allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
+		allow_move = function()
 			return 0
 		end,
-		allow_take = function(inv, listname, index, stack, player)
-			return stack:get_count()
-		end,
-		on_put = function(inv, listname, index, stack, player)
+		on_put = function(_, _, _, _, player)
 			armor:save_armor_inventory(player)
 			armor:set_player_armor(player)
-			--armor:update_inventory(player)
 		end,
-		on_take = function(inv, listname, index, stack, player)
+		on_take = function(_, _, _, _, player)
 			armor:save_armor_inventory(player)
 			armor:set_player_armor(player)
-			--armor:update_inventory(player)
-		end,
-		on_move = function(inv, from_list, from_index, to_list, to_index, count, player)
-			armor:save_armor_inventory(player)
-			armor:set_player_armor(player)
-			--armor:update_inventory(player)
-		end,
+		end
 	}, name)
 
 	armor_inv:set_size("armor", 4)
 	if not armor:load_armor_inventory(player) then
 		local player_inv = player:get_inventory()
-		if player_inv then
-			player_inv:set_size("armor", 4)
-			for i=1, 4 do
-				local stack = player_inv:get_stack("armor", i)
-				armor_inv:set_stack("armor", i, stack)
-			end
-			player_inv:set_size("armor", 0)
+		player_inv:set_size("armor", 4)
+		for i = 1, 4 do
+			local stack = player_inv:get_stack("armor", i)
+			armor_inv:set_stack("armor", i, stack)
 		end
 		armor:save_armor_inventory(player)
+		player_inv:set_size("armor", 0)
 	end
-
-	armor.player_hp[name] = 0
 	armor.def[name] = {
+		level = 0,
 		state = 0,
 		count = 0,
-		level = 0,
-		heal = 0,
-		jump = 1,
-		speed = 1,
-		gravity = 1
+		heal = 0
 	}
 	armor.textures[name] = {
 		skin = armor.default_skin..".png",
 		armor = "blank.png",
 		wielditem = "blank.png",
 		cube = "blank.png",
-		preview = armor.default_skin.."_preview.png",
+	--	preview = armor.default_skin.."_preview.png"
 	}
-	if minetest.get_modpath("skins") then
+--[[if minetest.get_modpath("skins") then
 		local skin = skins.skins[name]
 		if skin and skins.get_type(skin) == skins.type.MODEL then
 			armor.textures[name].skin = skin..".png"
@@ -114,11 +101,17 @@ minetest.register_on_joinplayer(function(player)
 			f:close()
 			armor.textures[name].skin = "player_"..name..".png"
 		end
-	end
-	for i=1, 1 do
-		minetest.after(1 * i, function(player)
-			armor:set_player_armor(player)
-		end, player)
+	end]]
+	minetest.after(2, function(player)
+		armor:set_player_armor(player)
+	end, player)
+end)
+
+minetest.register_on_leaveplayer(function(player)
+	local name = player:get_player_name()
+	if name then
+		armor.def[name] = nil
+		armor.textures[name] = nil
 	end
 end)
 
@@ -146,7 +139,8 @@ minetest.register_on_player_hpchange(function(player, hp_change)
 	if player and hp_change < 0 then
 		local name = player:get_player_name()
 		if name then
-			if armor.def[name].heal > math.random(100) then
+			local heal = armor.def[name].heal
+			if heal >= math.random(100) then
 				hp_change = 0
 			end
 		end
