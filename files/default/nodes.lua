@@ -17,7 +17,6 @@ minetest.register_node("default:stone", {
 	tiles = {"default_stone.png"},
 	groups = {cracky = 3, stone = 1},
 	drop = "default:cobble",
-	legacy_mineral = true,
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -229,12 +228,16 @@ minetest.register_node("default:snow", {
 	groups = {crumbly = 3, falling_node = 1, snowy = 1, puts_out_fire = 1, misc = 1, speed = -30, not_in_creative_inventory = 1},
 	sounds = default.node_sound_snow_defaults(),
 	drop = "default:snowball",
-	on_use = default.snow_shoot_snowball,
+
 	on_construct = function(pos)
-	pos.y = pos.y - 1
+		pos.y = pos.y - 1
 		if minetest.get_node(pos).name == "default:dirt_with_grass" then
 			minetest.set_node(pos, {name = "default:dirt_with_snow"})
 		end
+	end,
+	
+	on_timer = function(pos)
+		minetest.remove_node(pos)
 	end
 })
 
@@ -303,7 +306,6 @@ minetest.register_node("default:sapling", {
 	drawtype = "plantlike",
 	tiles = {"default_sapling.png"},
 	inventory_image = "default_sapling.png",
-	wield_image = "default_sapling.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -454,7 +456,6 @@ minetest.register_node("default:junglesapling", {
 	drawtype = "plantlike",
 	tiles = {"default_junglesapling.png"},
 	inventory_image = "default_junglesapling.png",
-	wield_image = "default_junglesapling.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -533,7 +534,6 @@ minetest.register_node("default:pine_sapling", {
 	drawtype = "plantlike",
 	tiles = {"default_pine_sapling.png"},
 	inventory_image = "default_pine_sapling.png",
-	wield_image = "default_pine_sapling.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -613,7 +613,6 @@ minetest.register_node("default:acacia_sapling", {
 	drawtype = "plantlike",
 	tiles = {"default_acacia_sapling.png"},
 	inventory_image = "default_acacia_sapling.png",
-	wield_image = "default_acacia_sapling.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -690,7 +689,6 @@ minetest.register_node("default:birch_sapling", {
 	drawtype = "plantlike",
 	tiles = {"default_birch_sapling.png"},
 	inventory_image = "default_birch_sapling.png",
-	wield_image = "default_birch_sapling.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -807,7 +805,7 @@ minetest.register_node("default:goldblock", {
 })
 
 minetest.register_node("default:stone_with_emerald", {
-	description = "Emerald Ore",
+	description = default.colors.emerald .. Sl("Emerald Ore"),
 	tiles = {"default_stone.png^default_mineral_emerald.png"},
 	groups = {cracky = 2},
 	drop = "default:emerald",
@@ -815,7 +813,7 @@ minetest.register_node("default:stone_with_emerald", {
 })
 
 minetest.register_node("default:emeraldblock", {
-	description = "Emerald Block",
+	description = default.colors.emerald .. Sl("Emerald Block"),
 	tiles = {"default_emerald_block.png"},
 	groups = {cracky = 1},
 	sounds = default.node_sound_stone_defaults()
@@ -872,7 +870,6 @@ minetest.register_node("default:sugarcane", {
 	drawtype = "plantlike",
 	tiles = {"default_sugarcane.png"},
 	inventory_image = "default_sugarcane_inv.png",
-	wield_image = "default_sugarcane_inv.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -893,6 +890,7 @@ minetest.register_node("default:dry_shrub", {
 	drawtype = "plantlike",
 	waving = 1,
 	tiles = {"default_dry_shrub.png"},
+	inventory_image = "default_dry_shrub.png",
 	paramtype = "light",
 	paramtype2 = "meshoptions",
 	place_param2 = 4,
@@ -914,7 +912,6 @@ minetest.register_node("default:junglegrass", {
 	visual_scale = 1.3,
 	tiles = {"default_junglegrass.png"},
 	inventory_image = "default_junglegrass.png",
-	wield_image = "default_junglegrass.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -929,7 +926,6 @@ minetest.register_node("default:grass", {
 	waving = 1,
 	tiles = {"default_tallgrass.png"},
 	inventory_image = "default_tallgrass.png",
-	wield_image = "default_tallgrass.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -946,7 +942,6 @@ minetest.register_node("default:dry_grass", {
 	waving = 1,
 	tiles = {"default_dry_tallgrass.png"},
 	inventory_image = "default_dry_tallgrass.png",
-	wield_image = "default_dry_tallgrass.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -1338,8 +1333,8 @@ minetest.register_node("default:bookshelf", {
 
 minetest.register_node("default:ladder_wood", {
 	description = "Wooden Ladder",
-	drawtype = "signlike",
-	tiles = {"default_ladder_wood.png"},
+	drawtype = "nodebox",
+	tiles = {"default_wood.png"},
 	inventory_image = "default_ladder_wood.png",
 	wield_image = "default_ladder_wood.png",
 	paramtype = "light",
@@ -1348,14 +1343,24 @@ minetest.register_node("default:ladder_wood", {
 	walkable = false,
 	climbable = true,
 	is_ground_content = false,
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.375, -0.5, -0.5,  -0.25,  -0.375, 0.5}, -- Strut Left
+			{ 0.25,  -0.5, -0.5,   0.375, -0.375, 0.5}, -- Strut Right
+			{-0.438, -0.5,  0.312, 0.438, -0.35,  0.435}, -- Rung 1
+			{-0.438, -0.5,  0.06, 0.438, -0.35,  0.185}, -- Rung 2
+			{-0.438, -0.5, -0.185, 0.438, -0.35, -0.06}, -- Rung 3
+			{-0.438, -0.5, -0.435, 0.438, -0.35, -0.31} -- Rung 4
+		}
+	},
 	selection_box = {
 		type = "wallmounted",
-		--wall_top = = <default>
-		--wall_bottom = = <default>
-		--wall_side = = <default>
+		wall_top    = {-0.438,  0.35, -0.5,    0.438,  0.5,   0.5},
+		wall_bottom = {-0.438, -0.5,  -0.5,    0.438, -0.35, 0.5},
+		wall_side   = {-0.5,   -0.5,  -0.438, -0.35,  0.5,   0.438}
 	},
 	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1},
-	legacy_wallmounted = true,
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -1384,7 +1389,6 @@ minetest.register_node("default:vine", {
 		type = "wallmounted",
 	},
 	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2},
-	legacy_wallmounted = true,
 	sounds = default.node_sound_leaves_defaults(),
 	drop = "",
 	after_dig_node = function(pos, oldnode, oldmetadata, user)
