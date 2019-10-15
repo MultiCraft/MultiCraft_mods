@@ -1,0 +1,5 @@
+Level = Уровень
+Uses = Использований
+Your tool is almost broken! = Ваш инструмент почти сломан!
+Your = Ваш инструмент
+got a new level! = получил новый уровень!
