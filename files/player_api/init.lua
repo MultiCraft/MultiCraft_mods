@@ -106,6 +106,13 @@ minetest.register_on_joinplayer(function(player)
 	player:get_inventory():set_stack("hand", 1, "player_api:hand")
 end)
 
+minetest.register_node("player_api:character", {
+	drawtype = "mesh",
+	mesh = "character_preview.b3d",
+	tiles = {"character.png"},
+	groups = {not_in_creative_inventory = 1}
+})
+
 -- Temporary solution to the problem of loading yaw 'nul' on iOS
 if PLATFORM == "iOS" then
 	minetest.register_on_joinplayer(function(player)
