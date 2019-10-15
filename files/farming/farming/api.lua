@@ -1,4 +1,3 @@
-
 -- Wear out hoes, place soil
 -- TODO Ignore group:flower
 farming.registered_plants = {}
@@ -75,13 +74,6 @@ farming.register_hoe = function(name, def)
 	-- Check for : prefix (register new hoes in your mod's namespace)
 	if name:sub(1,1) ~= ":" then
 		name = ":" .. name
-	end
-	-- Check def table
-	if def.description == nil then
-		def.description = "Hoe"
-	end
-	if def.inventory_image == nil then
-		def.inventory_image = "unknown_item.png"
 	end
 	if def.max_uses == nil then
 		def.max_uses = 30
@@ -319,11 +311,12 @@ farming.register_plant = function(name, def)
 		maxlight = def.maxlight,
 	})
 
+	def.groups.farming = 1
 	-- Register harvest
 	minetest.register_craftitem(":" .. mname .. ":" .. pname, {
 		description = pname:gsub("^%l", string.upper),
 		inventory_image = mname .. "_" .. pname .. ".png",
-		groups = def.groups or {flammable = 2},
+		groups = def.groups or {flammable = 2}
 	})
 
 	-- Register growing steps
@@ -387,7 +380,7 @@ farming.register_plant = function(name, def)
 		nodenames = lbm_nodes,
 		action = function(pos, node)
 			tick_again(pos)
-		end,
+		end
 	})
 
 	-- Return

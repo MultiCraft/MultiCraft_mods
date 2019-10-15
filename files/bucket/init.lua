@@ -130,8 +130,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 	liquids_pointable = true,
 	on_use = function(itemstack, user, pointed_thing)
 		if pointed_thing.type == "object" then
-			pointed_thing.ref:punch(user, 1.0, {full_punch_interval = 1.0}, nil)
-			return user:get_wielded_item()
+			return
 		elseif pointed_thing.type ~= "node" then
 			-- do nothing if it's neither object nor node
 			return
@@ -155,7 +154,6 @@ minetest.register_craftitem("bucket:bucket_empty", {
 
 			-- check if holding more than 1 empty bucket
 			if item_count > 1 then
-
 				-- if space in inventory add filled bucked, otherwise drop as item
 				local inv = user:get_inventory()
 				if inv:room_for_item("main", {name=liquiddef.itemname}) then
@@ -168,7 +166,6 @@ minetest.register_craftitem("bucket:bucket_empty", {
 
 				-- set to return empty buckets minus 1
 				giving_back = "bucket:bucket_empty " .. tostring(item_count - 1)
-
 			end
 
 			-- force_renew requires a source neighbour
@@ -180,7 +177,6 @@ minetest.register_craftitem("bucket:bucket_empty", {
 			if not (source_neighbor and liquiddef.force_renew) then
 			minetest.add_node(pointed_thing.under, {name = "air"})
 			end
-
 			return ItemStack(giving_back)
 		else
 			-- non-liquid nodes will have their on_punch triggered
@@ -232,7 +228,7 @@ minetest.register_craftitem("bucket:bucket_milk", {
 	inventory_image = "bucket_milk.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
-	groups = {food_milk = 1, flammable = 3, food = 1}
+	groups = {food_milk = 1, food = 1}
 })
 
 minetest.register_alias("mobs:bucket_milk", "bucket:bucket_milk")

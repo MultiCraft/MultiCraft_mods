@@ -2,7 +2,7 @@
 minetest.register_craftitem("mobs:nametag", {
 	description = "Name Tag",
 	inventory_image = "mobs_nametag.png",
-	groups = {flammable = 2}
+	groups = {flammable = 2, nohit = 1}
 })
 
 core.register_craft({
@@ -69,7 +69,7 @@ minetest.register_craftitem("mobs:rabbit_raw", {
 	description = "Raw Rabbit",
 	inventory_image = "mobs_rabbit_raw.png",
 	on_use = minetest.item_eat(3, nil, -4),
-	groups = {food_meat_raw = 1, food_rabbit_raw = 1, flammable = 2, food = 1}
+	groups = {food_meat_raw = 1, flammable = 2, food = 1}
 })
 
 -- cooked rabbit
@@ -77,7 +77,7 @@ minetest.register_craftitem("mobs:rabbit_cooked", {
 	description = "Cooked Rabbit",
 	inventory_image = "mobs_rabbit_cooked.png",
 	on_use = minetest.item_eat(5),
-	groups = {food_meat = 1, food_rabbit = 1, flammable = 2, food = 1}
+	groups = {food_meat = 1, flammable = 2, food = 1}
 })
 
 minetest.register_craft({
@@ -129,12 +129,12 @@ local function mobs_shoot_egg(itemstack, thrower, pointed_thing)
 	return itemstack
 end
 
-minetest.register_craftitem(":mobs:chicken_egg", {
+minetest.register_craftitem("mobs:chicken_egg", {
 	description = "Egg",
 	inventory_image = "mobs_chicken_egg.png",
 	visual_scale = 0.7,
 	on_use = mobs_shoot_egg,
-	groups = {snappy = 2, dig_immediate = 3}
+	groups = {food = 1}
 })
 
 minetest.register_alias("mobs:egg", "air")
@@ -229,11 +229,11 @@ minetest.register_alias("mobs_monster:rotten_flesh", "mobs:rotten_flesh")
 minetest.register_alias("mobs:magic_lasso", "farming:string")
 minetest.register_alias("mobs:lasso", "farming:string")
 
--- shears (right click to shear animal)
+-- shears
 minetest.register_tool("mobs:shears", {
-	description = "Steel Shears (right-click to shear)",
+	description = "Steel Shears",
 	inventory_image = "mobs_shears.png",
-	groups = {flammable = 2}
+	groups = {flammable = 2, nohit = 1}
 })
 
 minetest.register_craft({
@@ -264,24 +264,6 @@ minetest.register_craft({
 		{"farming:string", "farming:string", "farming:string"},
 		{"farming:string", "farming:string", "farming:string"},
 		{"farming:string", "farming:string", "farming:string"}
-	}
-})
-
--- protection item
-if not minetest.is_singleplayer() then
-	minetest.register_craftitem("mobs:protector", {
-		description = "Mob Protection Rune",
-		inventory_image = "mobs_protector.png",
-		groups = {flammable = 2},
-	})
-end
-
-minetest.register_craft({
-	output = "mobs:protector",
-	recipe = {
-		{"default:stone", "default:stone", "default:stone"},
-		{"default:stone", "default:goldblock", "default:stone"},
-		{"default:stone", "default:stone", "default:stone"}
 	}
 })
 
