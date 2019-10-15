@@ -121,7 +121,8 @@ minetest.register_craftitem("farming_addons:cocoa_bean", {
 	tiles = {"farming_addons_cocoa_bean.png"},
 	inventory_image = "farming_addons_cocoa_bean.png",
 	wield_image = "farming_addons_cocoa_bean.png",
-	on_place = farming_addons.place_cocoa_bean
+	on_place = farming_addons.place_cocoa_bean,
+	groups = {farming = 1}
 })
 
 -- 1

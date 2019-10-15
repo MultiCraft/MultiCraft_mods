@@ -27,7 +27,7 @@ farming.register_plant("farming:wheat", {
 minetest.register_craftitem("farming:flour", {
 	description = "Flour",
 	inventory_image = "farming_flour.png",
-	groups = {food_flour = 1, flammable = 1}
+	groups = {food_flour = 1, flammable = 1, farming = 1}
 })
 
 minetest.register_craftitem("farming:bread", {

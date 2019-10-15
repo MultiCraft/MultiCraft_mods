@@ -513,10 +513,10 @@ for i = 1, #doors_aliases do
 	minetest.register_alias("doors:door_" .. old, new)
 end
 
-minetest.register_alias("doors:door_acacia", "doors:door_wood")
-minetest.register_alias("doors:door_birch", "doors:door_wood")
-minetest.register_alias("doors:door_dark_oak", "doors:door_wood")
-minetest.register_alias("doors:door_jungle", "doors:door_wood")
+minetest.register_alias("doors:door_acacia", "doors:door_acacia_wood")
+minetest.register_alias("doors:door_birch", "doors:door_birch_wood")
+minetest.register_alias("doors:door_dark_oak", "doors:door_pine_wood")
+minetest.register_alias("doors:door_jungle", "doors:door_jungle_wood")
 minetest.register_alias("doors:hidden", "air")
 
 ---- Trapdoor ----

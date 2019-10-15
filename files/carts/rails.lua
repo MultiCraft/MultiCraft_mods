@@ -6,7 +6,7 @@ carts:register_rail("carts:rail", {
 		"carts_rail_straight.png", "carts_rail_curved.png",
 		"carts_rail_t_junction.png", "carts_rail_crossing.png"
 	},
-	groups = carts:get_rail_groups(),
+	groups = carts:get_rail_groups()
 })
 
 minetest.register_craft({
@@ -14,7 +14,7 @@ minetest.register_craft({
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
 		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
-		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"default:steel_ingot", "", "default:steel_ingot"}
 	}
 })
 
@@ -38,9 +38,9 @@ carts:register_rail("carts:powerrail", {
 			end,
 			action_off = function(pos, node)
 				minetest.get_meta(pos):set_string("cart_acceleration", "0")
-			end,
-		},
-	},
+			end
+		}
+	}
 })
 
 minetest.register_craft({
@@ -48,7 +48,7 @@ minetest.register_craft({
 	recipe = {
 		{"default:gold_ingot", "", "default:gold_ingot"},
 		{"default:gold_ingot", "group:stick", "default:gold_ingot"},
-		{"default:gold_ingot", "mesecons:wire_00000000_off", "default:gold_ingot"},
+		{"default:gold_ingot", "mesecons:wire_00000000_off", "default:gold_ingot"}
 	}
 })
 
@@ -72,9 +72,9 @@ carts:register_rail("carts:brakerail", {
 			end,
 			action_off = function(pos, node)
 				minetest.get_meta(pos):set_string("cart_acceleration", "0")
-			end,
-		},
-	},
+			end
+		}
+	}
 })
 
 minetest.register_craft({
@@ -82,12 +82,12 @@ minetest.register_craft({
 	recipe = {
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
 		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
 	}
 })
 
 carts:register_rail("carts:startstoprail", {
-	description = "Start-stop rail",
+	description = "Start-stop Rail",
 	tiles = {
 		"carts_rail_straight_ss.png", "carts_rail_curved_ss.png",
 		"carts_rail_t_junction_ss.png", "carts_rail_crossing_ss.png"
@@ -105,9 +105,9 @@ carts:register_rail("carts:startstoprail", {
 			end,
 			action_off = function(pos, node)
 				minetest.get_meta(pos):set_string("cart_acceleration", "halt")
-			end,
-		},
-	},
+			end
+		}
+	}
 })
 
 minetest.register_craft({
@@ -115,6 +115,6 @@ minetest.register_craft({
 	recipe = {
 		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
 		{"default:steel_ingot", "mesecons_torch:mesecon_torch_on", "default:steel_ingot"},
-		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
+		{"default:steel_ingot", "group:stick", "default:steel_ingot"}
 	}
 })
