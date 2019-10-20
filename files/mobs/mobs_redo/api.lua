@@ -10,13 +10,11 @@ local S = intllib.make_gettext_pair()
 
 -- localize math functions
 local pi = math.pi
-local square = math.sqrt
 local sin = math.sin
 local cos = math.cos
 local abs = math.abs
 local min = math.min
 local max = math.max
-local atann = math.atan
 local random = math.random
 local floor = math.floor
 local get_distance = vector.distance
@@ -25,29 +23,26 @@ local atan = function(x)
 		--error("atan bassed NaN")
 		return 0
 	else
-		return atann(x)
+		return math.atan(x)
 	end
 end
 
 
 -- Load settings
-local mobs_spawn = minetest.settings:get_bool("mobs_spawn") ~= false
-local peaceful_only = minetest.settings:get_bool("only_peaceful_mobs")
-local disable_blood = minetest.settings:get_bool("mobs_disable_blood") ~= true
-local mobs_drop_items = minetest.settings:get_bool("mobs_drop_items") ~= false
-local mobs_griefing = minetest.settings:get_bool("mobs_griefing") ~= false
+local peaceful_only = false
+local disable_blood = true
+local mobs_griefing = true
 local creative = minetest.settings:get_bool("creative_mode")
-local spawn_protected = minetest.settings:get_bool("mobs_spawn_protected") ~= false
-local remove_far = minetest.settings:get_bool("remove_far_mobs") ~= false
+local spawn_protected = false
+local remove_far = false
 local difficulty = tonumber(minetest.settings:get("mob_difficulty")) or 1.0
-local show_health = minetest.settings:get_bool("mob_show_health") ~= true
+local show_health = true
 local max_per_block = tonumber(minetest.settings:get("max_objects_per_block"))
-local mob_chance_multiplier = tonumber(minetest.settings:get("mob_chance_multiplier") or 1)
 local lifetime = 1200 -- 20 min
 local spawn_interval = 15
 if not minetest.is_singleplayer() then
-	lifetime = 300 -- 5 min
-	spawn_interval = 60
+	lifetime = 600 -- 5 min
+	spawn_interval = 30
 end
 
 -- creative check
@@ -601,9 +596,6 @@ function mob_class:item_drop()
 	-- check for nil or no drops
 	if not self.drops or #self.drops == 0 then return end
 
-	-- no drops if disabled by setting
-	if not mobs_drop_items then return end
-
 	-- no drops for child mobs
 	if self.child then return end
 
@@ -1060,12 +1052,11 @@ function mob_class:breed()
 	-- find another same animal who is also horny and mate if nearby
 	if self.horny and self.hornytimer <= 40 then
 		local pos = self.object:get_pos()
-
-		effect({x = pos.x, y = pos.y + 1.5, z = pos.z}, 8, "heart.png", 3, 4, 1, 0.1)
-
 		local objs = minetest.get_objects_inside_radius(pos, 3)
 		local num = 0
-		local ent = nil
+		local ent
+
+		effect({x = pos.x, y = pos.y + 1.5, z = pos.z}, 8, "heart.png", 3, 4, 1, 0.1)
 
 		for n = 1, #objs do
 			ent = objs[n]:get_luaentity()
@@ -1153,9 +1144,7 @@ function mob_class:breed()
 					ent2.tamed = true
 					ent2.owner = self.owner
 				end, self, ent)
-
 				num = 0
-
 				break
 			end
 		end
@@ -1500,7 +1489,6 @@ function mob_class:general_attack()
 				objs[n] = nil
 			--	print("- pla", n)
 			end
-
 			-- or are we a mob?
 		elseif ent and ent.obj_is_mob then
 			-- remove mobs not to attack
@@ -1586,7 +1574,6 @@ function mob_class:do_runaway_from()
 
 			if mobs.invis[pname]
 					or self.owner == pname then
-
 				name = ""
 			else
 				player = objs[n]
@@ -1781,8 +1768,7 @@ function mob_class:do_states(dtime)
 	local yaw = self.object:get_yaw() or 0
 	if self.state == "stand" then
 		if random(1, 4) == 1 then
-			local lp = nil
-			local s = self.object:get_pos()
+			local s, lp = self.object:get_pos()
 			local objs = minetest.get_objects_inside_radius(s, 3)
 
 			for n = 1, #objs do
@@ -1824,8 +1810,7 @@ function mob_class:do_states(dtime)
 			self:set_animation("walk")
 		end
 	elseif self.state == "walk" then
-		local s = self.object:get_pos()
-		local lp = nil
+		local s, lp = self.object:get_pos()
 
 		-- is there something I need to avoid?
 		if self.water_damage > 0
@@ -2492,8 +2477,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir)
 		self:do_attack(hitter)
 
 		-- alert others to the attack
-		local objs = minetest.get_objects_inside_radius(hitter:get_pos(), self.view_range)
-		local obj = nil
+		local objs, obj = minetest.get_objects_inside_radius(hitter:get_pos(), self.view_range)
 
 		for n = 1, #objs do
 			obj = objs[n]:get_luaentity()
@@ -2526,7 +2510,6 @@ function mob_class:get_staticdata()
 			and self.state ~= "attack"
 			and not self.tamed
 			and self.lifetimer < 20000 then
-
 	--	print ("REMOVED " .. self.name)
 
 		self.object:remove()
@@ -3021,9 +3004,6 @@ end
 
 function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 interval, chance, aoc, min_height, max_height, day_toggle, on_spawn)
-	-- Do mobs spawn at all?
-	if not mobs_spawn then return end
-
 	-- chance/spawn number override in minetest.conf for registered mob
 	local numbers = minetest.settings:get(name)
 
@@ -3047,7 +3027,7 @@ interval, chance, aoc, min_height, max_height, day_toggle, on_spawn)
 		nodenames = nodes,
 		neighbors = neighbors,
 		interval = interval,
-		chance = max(1, (chance * mob_chance_multiplier)),
+		chance = max(1, chance),
 		catch_up = false,
 		action = function(pos, node, active_object_count, active_object_count_wider)
 
