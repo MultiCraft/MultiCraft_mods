@@ -104,7 +104,7 @@ minetest.register_craft({
 })
 
 -- chicken egg
-local function mobs_shoot_egg(itemstack, thrower, pointed_thing)
+local function mobs_shoot_egg(itemstack, thrower)
 	local playerpos = thrower:get_pos()
 	if not minetest.is_valid_pos(playerpos) then
 		return
