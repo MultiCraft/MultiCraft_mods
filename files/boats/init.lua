@@ -8,15 +8,6 @@ local function is_water(pos, nodename)
 end
 
 
-local function get_sign(i)
-	if i == 0 then
-		return 0
-	else
-		return i / math.abs(i)
-	end
-end
-
-
 local function get_velocity(v, yaw, y)
 	local x = -math.sin(yaw) * v
 	local z =  math.cos(yaw) * v
@@ -92,13 +83,13 @@ end
 
 
 -- If driver leaves server while driving boat
-function boat.on_detach_child(self, child)
+function boat.on_detach_child(self)
 	self.driver = nil
 	self.auto = false
 end
 
 
-function boat.on_activate(self, staticdata, dtime_s)
+function boat.on_activate(self, staticdata)
 	self.object:set_armor_groups({fleshy = 100}) -- {immortal = 1}
 	if staticdata then
 		self.v = tonumber(staticdata)
@@ -159,7 +150,7 @@ function boat.on_step(self, dtime)
 		return
 	end
 
-	self.v = get_v(self.object:get_velocity()) * get_sign(self.v)
+	self.v = get_v(self.object:get_velocity()) * math.sign(self.v)
 	if self.driver then
 		self.count = 0
 		local driver_objref = minetest.get_player_by_name(self.driver)
@@ -218,9 +209,10 @@ function boat.on_step(self, dtime)
 		self.object:set_pos(self.object:get_pos())
 		return
 	end
-	-- We need to multiple by abs to not loose sign of velocity
-	local drag = dtime * 0.08 * self.v * math.abs(self.v)
-	-- If drag is larger than velocity, then stop horizontal move.
+	-- We need to preserve velocity sign to properly apply drag force
+	-- while moving backward
+	local drag = dtime * math.sign(self.v) * (0.01 + 0.0796 * self.v * self.v)
+	-- If drag is larger than velocity, then stop horizontal movement
 	if math.abs(self.v) <= math.abs(drag) then
 		self.v = 0
 	else
@@ -332,7 +324,7 @@ minetest.register_craftitem("boats:boat", {
 			end
 		end
 		return itemstack
-	end,
+	end
 })
 
 
