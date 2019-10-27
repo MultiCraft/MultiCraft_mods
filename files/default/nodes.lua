@@ -384,7 +384,7 @@ minetest.register_node("default:apple", {
 	on_use = minetest.item_eat(2),
 	sounds = default.node_sound_leaves_defaults(),
 
-	after_place_node = function(pos, placer, itemstack)
+	after_place_node = function(pos)
 		minetest.set_node(pos, {name = "default:apple", param2 = 1})
 	end
 })
@@ -851,10 +851,10 @@ minetest.register_node("default:cactus", {
 		type = "fixed",
 		fixed = {
 			{-7/16, -8/16, -7/16,  7/16, 8/16,  7/16}, -- Main Body
-			{-8/16, -8/16, -7/16,  8/16, 8/16, -7/16}, -- Spikes
-			{-8/16, -8/16,  7/16,  8/16, 8/16,  7/16}, -- Spikes
-			{-7/16, -8/16, -8/16, -7/16, 8/16,  8/16}, -- Spikes
-			{ 7/16, -8/16,  8/16,  7/16, 8/16, -8/16}  -- Spikes
+			{-8/17, -8/16, -7/16,  8/16, 8/16, -7/16}, -- Spikes
+			{-8/17, -8/16,  7/16,  8/16, 8/16,  7/16}, -- Spikes
+			{-7/16, -8/16, -8/17, -7/16, 8/16,  8/16}, -- Spikes
+			{ 7/16, -8/16,  8/16,  7/16, 8/16, -8/17}  -- Spikes
 		}
 	},
 	selection_box = {
@@ -880,7 +880,7 @@ minetest.register_node("default:sugarcane", {
 	groups = {snappy = 3, flammable = 2, flora = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
-	after_dig_node = function(pos, node, metadata, digger)
+	after_dig_node = function(pos, node, _, digger)
 		default.dig_up(pos, node, digger)
 	end
 })
@@ -1246,17 +1246,17 @@ local function update_bookshelf(pos)
 
 	local formspec = bookshelf_formspec
 	-- Inventory slots overlay
-	local bx, by = 0, 0.3
+	local bx, by = 0, 1
 	local n_written, n_empty = 0, 0
-	for i = 1, 16 do
-		if i == 9 then
+	for i = 1, 18 do
+		if i == 10 then
 			bx = 0
 			by = by + 1
 		end
 		local stack = invlist[i]
 		if stack:is_empty() then
-			formspec = formspec --[[..
-				"image[" .. bx .. "," .. by .. ";1,1;default_bookshelf_slot.png]"]]
+			formspec = formspec ..
+				"image[" .. bx .. "," .. by .. ";1,1;default_bookshelf_slot.png]"
 		else
 			local metatable = stack:get_meta():to_table() or {}
 			if metatable.fields and metatable.fields.text then
@@ -1292,11 +1292,11 @@ minetest.register_node("default:bookshelf", {
 		inv:set_size("split", 1)
 		update_bookshelf(pos)
 	end,
-	can_dig = function(pos,player)
+	can_dig = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()
 		return inv:is_empty("books")
 	end,
-	allow_metadata_inventory_put = function(pos, listname, index, stack)
+	allow_metadata_inventory_put = function(_, listname, _, stack)
 		if minetest.get_item_group(stack:get_name(), "book") ~= 0 then
 			if listname == "split" then
 				return 1
@@ -1306,21 +1306,15 @@ minetest.register_node("default:bookshelf", {
 		end
 		return 0
 	end,
-	allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+	allow_metadata_inventory_move = function(_, _, _, to_list, _, count)
 		if to_list == "split" then
 			return 1
 		end
 		return count
 	end,
-	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-		update_bookshelf(pos)
-	end,
-	on_metadata_inventory_put = function(pos, listname, index, stack, player)
-		update_bookshelf(pos)
-	end,
-	on_metadata_inventory_take = function(pos, listname, index, stack, player)
-		update_bookshelf(pos)
-	end,
+	on_metadata_inventory_move = update_bookshelf,
+	on_metadata_inventory_put = update_bookshelf,
+	on_metadata_inventory_take = update_bookshelf,
 	on_blast = function(pos)
 		local drops = {}
 		default.get_inventory_drops(pos, "books", drops)
@@ -1391,8 +1385,7 @@ minetest.register_node("default:vine", {
 	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2},
 	sounds = default.node_sound_leaves_defaults(),
 	drop = "",
-	after_dig_node = function(pos, oldnode, oldmetadata, user)
-		local item = user:get_wielded_item()
+	after_dig_node = function(pos)
 		local next_find = true
 		local down = 1
 		while next_find == true do
@@ -1476,7 +1469,7 @@ minetest.register_node("default:slimeblock", {
 minetest.register_node("default:quartz_ore", {
 	description = "Quartz Ore",
 	tiles = {"default_quartz_ore.png"},
-	groups = {cracky = 3, stone = 1},
+	groups = {cracky = 3, quartz = 1},
 	drop = "default:quartz_crystal",
 	sounds = default.node_sound_stone_defaults()
 })
@@ -1484,14 +1477,14 @@ minetest.register_node("default:quartz_ore", {
 minetest.register_node("default:quartz_block", {
 	description = "Quartz Block",
 	tiles = {"default_quartz_block_top.png", "default_quartz_block_bottom.png", "default_quartz_block_side.png"},
-	groups = {snappy = 1, bendy = 2, cracky = 1},
+	groups = {snappy = 1, quartz = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("default:quartz_chiseled", {
 	description = "Chiseled Quartz",
 	tiles = {"default_quartz_chiseled_top.png", "default_quartz_chiseled_top.png", "default_quartz_chiseled_side.png"},
-	groups = {snappy = 1, bendy = 2, cracky = 1},
+	groups = {snappy = 1, quartz = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -1500,7 +1493,7 @@ minetest.register_node("default:quartz_pillar", {
 	paramtype2 = "facedir",
 	on_place = minetest.rotate_node,
 	tiles = {"default_quartz_pillar_top.png", "default_quartz_pillar_top.png", "default_quartz_pillar_side.png"},
-	groups = {snappy = 1, bendy = 2, cracky = 1},
+	groups = {snappy = 1, quartz = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
