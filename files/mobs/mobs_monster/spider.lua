@@ -49,7 +49,7 @@ mobs:register_mob("mobs_monster:spider", {
 		punch_start = 25,	punch_end = 45,
 	},
 
-	after_activate = function(self, staticdata, def, dtime)
+	after_activate = function(self)
 		-- replace spider using the old directx model
 		if self.mesh == "mobs_spider.x" then
 			local pos = self.object:get_pos()
@@ -104,7 +104,7 @@ mobs:register_mob("mobs_monster:small_spider", {
 		punch_start = 25,	punch_end = 45
 	},
 
-	after_activate = function(self, staticdata, def, dtime)
+	after_activate = function(self)
 		-- replace spider using the old directx model
 		if self.mesh == "mobs_spider.x" then
 			local pos = self.object:get_pos()

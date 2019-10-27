@@ -33,10 +33,10 @@ minetest.register_node("farming_addons:melon_fruit", {
 			{items = {"farming_addons:melon"}, rarity = 3}
 		}
 	},
-	after_dig_node = function(pos, oldnode, oldmetadata, digger)
+	after_dig_node = function(_, _, oldmetadata, _)
 		local parent = oldmetadata.fields.parent
 		local parent_pos_from_child = minetest.string_to_pos(parent)
-		local parent_node = nil
+		local parent_node
 
 		-- make sure we have position
 		if parent_pos_from_child
@@ -62,9 +62,7 @@ minetest.override_item("farming_addons:melon_8", {
 minetest.register_lbm({
 	name = "farming_addons:start_nodetimer_melon",
 	nodenames = {"farming_addons:melon_8"},
-	action = function(pos, node)
-		farming_addons.tick_short(pos)
-	end
+	action = farming_addons.tick_short
 })
 
 -- Melon

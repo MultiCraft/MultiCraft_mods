@@ -40,7 +40,7 @@ local facedir = {
 	[5] = {x =  0, y = 0, z = -1}
 }
 
-local remove_item = function(pos, node)
+local remove_item = function(pos)
 	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "itemframes:item" then
@@ -51,7 +51,6 @@ local remove_item = function(pos, node)
 end
 
 local update_item = function(pos, node)
-	remove_item(pos, node)
 	local meta = minetest.get_meta(pos)
 	local itemstring = meta:get_string("item")
 	local posad = facedir[node.param2]
@@ -134,7 +133,7 @@ minetest.register_node("itemframes:frame",{
 		end
 	end,
 
-	after_place_node = function(pos, placer, itemstack)
+	after_place_node = function(pos, placer)
 		local meta = minetest.get_meta(pos)
 		local pn = placer:get_player_name()
 		meta:set_string("owner", pn)
@@ -150,6 +149,7 @@ minetest.register_node("itemframes:frame",{
 		drop_item(pos, node)
 		local item = itemstack:take_item()
 		meta:set_string("item", item:to_string())
+		remove_item(pos, node)
 		update_item(pos, node)
 		return itemstack
 	end,
@@ -181,8 +181,8 @@ minetest.register_lbm({
 minetest.register_craft({
 	output = "itemframes:frame",
 	recipe = {
-		{"group:stick", "group:stick", "group:stick"},
-		{"group:stick", "default:paper", "group:stick"},
-		{"group:stick", "group:stick", "group:stick"}
+		{"default:stick", "default:stick", "default:stick"},
+		{"default:stick", "default:paper", "default:stick"},
+		{"default:stick", "default:stick", "default:stick"}
 	}
 })

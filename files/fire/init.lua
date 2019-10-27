@@ -5,7 +5,7 @@ fire = {}
 --
 
 -- Flood flame function
-local function flood_flame(pos, oldnode, newnode)
+local function flood_flame(pos, _, newnode)
 	-- Play flame extinguish sound if liquid is not an 'igniter'
 	local nodedef = minetest.registered_items[newnode.name]
 	if not (nodedef and nodedef.groups and
@@ -125,13 +125,13 @@ minetest.register_craft({
 -- Override coalblock to enable permanent flame above
 -- Coalblock is non-flammable to avoid unwanted basic_flame nodes
 minetest.override_item("default:coalblock", {
-	after_destruct = function(pos, oldnode)
+	after_destruct = function(pos)
 		pos.y = pos.y + 1
 		if minetest.get_node(pos).name == "fire:permanent_flame" then
 			minetest.remove_node(pos)
 		end
 	end,
-	on_ignite = function(pos, igniter)
+	on_ignite = function(pos)
 		local flame_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
 		if minetest.get_node(flame_pos).name == "air" then
 			minetest.set_node(flame_pos, {name = "fire:permanent_flame"})
@@ -152,7 +152,6 @@ end
 
 if flame_sound then
 	local handles = {}
-	local timer = 0
 
 	-- Parameters
 	local radius = 8 -- Flame node search radius around player

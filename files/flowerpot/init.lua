@@ -13,7 +13,7 @@
 flowerpot = {}
 
 -- Handle plant removal from flowerpot
-local function flowerpot_on_punch(pos, node, puncher, pointed_thing)
+local function flowerpot_on_punch(pos, node, puncher)
 	if puncher and not minetest.check_player_privs(puncher, "protection_bypass") then
 		local name = puncher:get_player_name()
 		if minetest.is_protected(pos, name) then
@@ -31,7 +31,7 @@ local function flowerpot_on_punch(pos, node, puncher, pointed_thing)
 end
 
 -- Handle plant insertion into flowerpot
-local function flowerpot_on_rightclick(pos, node, clicker, itemstack, pointed_thing)
+local function flowerpot_on_rightclick(pos, _, clicker, itemstack)
 	if clicker and not minetest.check_player_privs(clicker, "protection_bypass") then
 		local name = clicker:get_player_name()
 		if minetest.is_protected(pos, name) then

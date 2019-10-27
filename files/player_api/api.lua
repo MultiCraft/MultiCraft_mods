@@ -92,7 +92,7 @@ local player_set_animation = player_api.set_animation
 local player_attached = player_api.player_attached
 
 -- Check each player and apply animations
-minetest.register_playerstep(function(dtime, playernames)
+minetest.register_playerstep(function(_, playernames)
 	for _, name in pairs(playernames) do
 		local player = minetest.get_player_by_name(name)
 		if player and player:is_player() then

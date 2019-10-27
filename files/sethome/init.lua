@@ -60,7 +60,7 @@ minetest.register_chatcommand("sethome", {
 	end,
 })
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+minetest.register_on_player_receive_fields(function(player, _, fields)
 	if not player or not player:is_player() then
 		return
 	end

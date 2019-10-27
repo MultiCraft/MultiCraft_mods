@@ -128,7 +128,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 	description = "Empty Bucket",
 	inventory_image = "bucket.png",
 	liquids_pointable = true,
-	on_use = function(itemstack, user, pointed_thing)
+	on_use = function(_, user, pointed_thing)
 		if pointed_thing.type == "object" then
 			return
 		elseif pointed_thing.type ~= "node" then

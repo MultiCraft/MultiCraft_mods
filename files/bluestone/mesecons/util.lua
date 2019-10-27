@@ -9,7 +9,7 @@ end
 -- Rules rotation Functions:
 function mesecon.rotate_rules_right(rules)
 	local nr = {}
-	for i, rule in ipairs(rules) do
+	for _, rule in ipairs(rules) do
 		table.insert(nr, {
 			x = -rule.z,
 			y =  rule.y,
@@ -21,7 +21,7 @@ end
 
 function mesecon.rotate_rules_left(rules)
 	local nr = {}
-	for i, rule in ipairs(rules) do
+	for _, rule in ipairs(rules) do
 		table.insert(nr, {
 			x =  rule.z,
 			y =  rule.y,
@@ -33,7 +33,7 @@ end
 
 function mesecon.rotate_rules_down(rules)
 	local nr = {}
-	for i, rule in ipairs(rules) do
+	for _, rule in ipairs(rules) do
 		table.insert(nr, {
 			x = -rule.y,
 			y =  rule.x,
@@ -45,7 +45,7 @@ end
 
 function mesecon.rotate_rules_up(rules)
 	local nr = {}
-	for i, rule in ipairs(rules) do
+	for _, rule in ipairs(rules) do
 		table.insert(nr, {
 			x =  rule.y,
 			y = -rule.x,
@@ -179,7 +179,7 @@ function mesecon.set_bit(binary,bit,value)
 		end
 	end
 	return binary
-	
+
 end
 
 function mesecon.invertRule(r)
@@ -211,7 +211,7 @@ function mesecon.mergetable(source, dest)
 	for k, v in pairs(source) do
 		rval[k] = dest[k] or mesecon.tablecopy(v)
 	end
-	for i, v in ipairs(source) do
+	for _, v in ipairs(source) do
 		table.insert(rval, mesecon.tablecopy(v))
 	end
 
@@ -278,15 +278,15 @@ end
 -- table.
 --
 -- Contents of the table are:
--- “vm” > the VoxelManipulator
--- “va” > the VoxelArea
--- “data” > the data array
--- “param1” > the param1 array
--- “param2” > the param2 array
--- “dirty” > true if data has been modified
+-- 'vm' > the VoxelManipulator
+-- 'va' > the VoxelArea
+-- 'data' > the data array
+-- 'param1' > the param1 array
+-- 'param2' > the param2 array
+-- 'dirty' > true if data has been modified
 --
 -- Nil if no VM-based transaction is in progress.
-local vm_cache = nil
+local vm_cache
 
 -- Starts a VoxelManipulator-based transaction.
 --
@@ -301,7 +301,7 @@ end
 -- Finishes a VoxelManipulator-based transaction, freeing the VMs and map data
 -- and writing back any modified areas.
 function mesecon.vm_commit()
-	for hash, tbl in pairs(vm_cache) do
+	for _, tbl in pairs(vm_cache) do
 		if tbl.dirty then
 			local vm = tbl.vm
 			vm:set_data(tbl.data)
@@ -347,7 +347,7 @@ function mesecon.vm_get_node(pos)
 	end
 end
 
--- Sets a node’s name during a VoxelManipulator-based transaction.
+-- Sets a nodes name during a VoxelManipulator-based transaction.
 --
 -- Existing param1, param2, and metadata are left alone.
 function mesecon.vm_swap_node(pos, name)
@@ -361,9 +361,9 @@ function mesecon.vm_swap_node(pos, name)
 -- not, respecting a transaction if one is in progress.
 --
 -- Outside a VM transaction, if the mapblock is not loaded, it is pulled into
--- the server’s main map data cache and then accessed from there.
+-- the servers main map data cache and then accessed from there.
 --
--- Inside a VM transaction, the transaction’s VM cache is used.
+-- Inside a VM transaction, the transactions VM cache is used.
 function mesecon.get_node_force(pos)
 	if vm_cache then
 		return mesecon.vm_get_node(pos)
@@ -383,11 +383,11 @@ end
 -- not, respecting a transaction if one is in progress.
 --
 -- Outside a VM transaction, if the mapblock is not loaded, it is pulled into
--- the server’s main map data cache and then accessed from there.
+-- the servers main map data cache and then accessed from there.
 --
--- Inside a VM transaction, the transaction’s VM cache is used.
+-- Inside a VM transaction, the transactions VM cache is used.
 --
--- This function can only be used to change the node’s name, not its parameters
+-- This function can only be used to change the nodes name, not its parameters
 -- or metadata.
 function mesecon.swap_node_force(pos, name)
 	if vm_cache then

@@ -73,15 +73,14 @@ mobs:register_mob("mobs_npc:npc_man", {
 	animation = {
 		speed_normal = 30,	speed_run = 30,
 		stand_start = 0,	stand_end = 79,
-		walk_start = 168,	walk_end = 187,
+		walk_start = 168,	walk_end = 187, walk_speed = 15,
 		run_start = 168,	run_end = 187,
-		punch_start = 200,	punch_end = 219
+		punch_start = 189,	punch_end = 198
 	},
 
 --[[on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
-		if mobs:protect(self, clicker) then return end
 
 		local item = clicker:get_wielded_item()
 		local name = clicker:get_player_name()
@@ -183,15 +182,14 @@ mobs:register_mob("mobs_npc:npc_woman", {
 	animation = {
 		speed_normal = 30,	speed_run = 30,
 		stand_start = 0,	stand_end = 79,
-		walk_start = 168,	walk_end = 187,
+		walk_start = 168,	walk_end = 187, walk_speed = 15,
 		run_start = 168,	run_end = 187,
-		punch_start = 200,	punch_end = 219
+		punch_start = 189,	punch_end = 198
 	},
 
 --[[on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
-		if mobs:protect(self, clicker) then return end
 
 		local item = clicker:get_wielded_item()
 		local name = clicker:get_player_name()
@@ -226,18 +224,6 @@ mobs:register_mob("mobs_npc:npc_woman", {
 			end
 		end
 	end]]
-})
-
-mobs:spawn({
-	name = "mobs_npc:npc_man",
-	nodes = {"villages:junglewood"},
-	chance = 100
-})
-
-mobs:spawn({
-	name = "mobs_npc:npc_woman",
-	nodes = {"villages:junglewood"},
-	chance = 100
 })
 
 mobs:register_egg("mobs_npc:npc_man", S("NPC Man"), "mobs_npc_man_egg.png")

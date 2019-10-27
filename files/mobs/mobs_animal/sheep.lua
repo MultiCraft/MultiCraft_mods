@@ -1,7 +1,7 @@
 local dyes = dye.dyes
 
 for i = 1, #dyes do
-	local name, desc = unpack(dyes[i])
+	local name = unpack(dyes[i])
 
 	mobs:register_mob("mobs_animal:sheep_" .. name, {
 		stay_near = {"farming:straw", 10},
@@ -45,7 +45,7 @@ for i = 1, #dyes do
 		},
 		fear_height = 3,
 
-		on_replace = function(self, pos, oldnode, newnode)
+		on_replace = function(self)
 			self.food = (self.food or 0) + 1
 
 			-- if sheep replaces 8x grass then it regrows wool
@@ -110,7 +110,7 @@ for i = 1, #dyes do
 						and not self.child
 						and self.tamed
 						and player == self.owner then
-					local color = string.split(itemname, ":")[2]
+					local color = itemname:split(":")[2]
 					for i = 1, #dyes do
 						local name = unpack(dyes[i])
 

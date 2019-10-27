@@ -305,8 +305,8 @@ function default.register_fence(name, def)
 	minetest.register_craft({
 		output = name .. " 4",
 		recipe = {
-			{ def.material, "group:stick", def.material },
-			{ def.material, "group:stick", def.material },
+			{ def.material, "default:stick", def.material },
+			{ def.material, "default:stick", def.material },
 		}
 	})
 
@@ -366,8 +366,8 @@ end
 
 -- Prevent decay of placed leaves
 
-default.after_place_leaves = function(pos, placer, itemstack, pointed_thing)
-	if placer and placer:is_player() and not placer:get_player_control().sneak then
+default.after_place_leaves = function(pos, placer)
+	if placer and placer:is_player() then
 		local node = minetest.get_node(pos)
 		node.param2 = 1
 		minetest.set_node(pos, node)
@@ -375,7 +375,7 @@ default.after_place_leaves = function(pos, placer, itemstack, pointed_thing)
 end
 
 -- Leafdecay
-local function leafdecay_after_destruct(pos, oldnode, def)
+local function leafdecay_after_destruct(pos, _, def)
 	for _, v in pairs(minetest.find_nodes_in_area(vector.subtract(pos, def.radius),
 			vector.add(pos, def.radius), def.leaves)) do
 		local node = minetest.get_node(v)
@@ -420,8 +420,8 @@ function default.register_leafdecay(def)
 	assert(def.radius)
 	for _, v in pairs(def.trunks) do
 		minetest.override_item(v, {
-			after_destruct = function(pos, oldnode)
-				leafdecay_after_destruct(pos, oldnode, def)
+			after_destruct = function(pos)
+				leafdecay_after_destruct(pos, _, def)
 			end,
 		})
 	end
@@ -454,7 +454,7 @@ minetest.register_abm({
 	interval = 10,
 	chance = 25,
 	catch_up = false,
-	action = function(pos, node)
+	action = function(pos)
 		-- Check for darkness: night, shadow or under a light-blocking node
 		-- Returns if ignore above
 		local above = {x = pos.x, y = pos.y + 1, z = pos.z}
@@ -513,16 +513,16 @@ minetest.register_abm({
 
 local moss_correspondences = {
 	["default:cobble"] = "default:mossycobble",
-	["stairs:slab_default_cobble"] = "stairs:slab_mossycobble",
-	["stairs:stair_default_cobble"] = "stairs:stair_mossycobble",
-	["stairs:stair_innerstair_cobble"] = "stairs:stair_innerstair_mossycobble",
-	["stairs:stair_outerstair_cobble"] = "stairs:stair_outerstair_mossycobble",
+	["stairs:slab_default_cobble"] = "stairs:slab_default_mossycobble",
+	["stairs:stair_default_cobble"] = "stairs:stair_default_mossycobble",
+	["stairs:innerstair_default_cobble"] = "stairs:innerstair_default_mossycobble",
+	["stairs:outerstair_default_cobble"] = "stairs:outerstair_default_mossycobble",
 	["walls:cobble"] = "walls:mossycobble"
 }
 minetest.register_abm({
 	label = "Moss growth",
 	nodenames = {"default:cobble", "stairs:slab_default_cobble", "stairs:stair_default_cobble",
-		"stairs:stair_innerstair_cobble", "stairs:stair_outerstair_cobble",
+		"stairs:innerstair_default_cobble", "stairs:outerstair_default_cobble",
 		"walls:cobble"
 	},
 	neighbors = {"group:water"},
@@ -569,7 +569,7 @@ local function snowball_impact(thrower, pos, dir, hit_object)
 		}
 		hit_object:punch(thrower, 1.0, punch_damage, dir)
 	end
-	local node_pos = nil
+	local node_pos
 	local node = minetest.get_node(pos)
 	if node.name == "air" then
 		local pos_under = vector.subtract(pos, {x=0, y=1, z=0})
@@ -594,7 +594,7 @@ local function snowball_impact(thrower, pos, dir, hit_object)
 	end
 end
 
-function default.snow_shoot_snowball(itemstack, thrower, pointed_thing)
+function default.snow_shoot_snowball(itemstack, thrower)
 	local playerpos = thrower:get_pos()
 	if not minetest.is_valid_pos(playerpos) then
 		return

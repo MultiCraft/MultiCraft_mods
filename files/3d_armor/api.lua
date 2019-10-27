@@ -42,7 +42,7 @@ armor = {
 
 -- Armor Registration
 
-armor.register_armor = function(self, name, def)
+armor.register_armor = function(_, name, def)
 	minetest.register_tool(name, def)
 end
 
@@ -96,7 +96,6 @@ armor.set_player_armor = function(self, player)
 	local state = 0
 	local count = 0
 	local texture = "blank.png"
-	local textures = {}
 	local physics = {speed = 1, gravity = 1, jump = 1}
 	local material = {type=nil, count=1}
 --	local preview = armor:get_player_skin(name).."_preview.png"
@@ -227,14 +226,14 @@ armor.get_armor_formspec = function(self, name)
 	return formspec:gsub("armor_heal", armor.def[name].heal)
 end]]
 
-armor.get_armor_inventory = function(self, player)
+armor.get_armor_inventory = function(_, player)
 	local name = player:get_player_name()
 	if name then
 		return minetest.get_inventory({type="detached", name=name.."_armor"})
 	end
 end
 
-armor.serialize_inventory_list = function(self, list)
+armor.serialize_inventory_list = function(_, list)
 	local list_table = {}
 	for _, stack in ipairs(list) do
 		table.insert(list_table, stack:to_string())
@@ -242,7 +241,7 @@ armor.serialize_inventory_list = function(self, list)
 	return minetest.serialize(list_table)
 end
 
-armor.deserialize_inventory_list = function(self, list_string)
+armor.deserialize_inventory_list = function(_, list_string)
 	local list_table = minetest.deserialize(list_string)
 	local list = {}
 	for _, stack in ipairs(list_table or {}) do

@@ -66,9 +66,9 @@ end
 
 local update_on_place_dig = function (pos, node)
 	-- Update placed node (get_node again as it may have been dug)
-	local nn = minetest.get_node(pos)
-	if (minetest.registered_nodes[nn.name])
-	and (minetest.registered_nodes[nn.name].mesecon_wire) then
+	local _ = minetest.get_node(pos)
+	if (minetest.registered_nodes[_.name])
+	and (minetest.registered_nodes[_.name].mesecon_wire) then
 		wire_updateconnect(pos)
 	end
 
