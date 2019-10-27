@@ -51,7 +51,7 @@ minetest.register_craft({
 	output = "carts:detectorrail 6",
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
-		{"default:steel_ingot", "mesecons_pressureplates:pressure_plate_stone_off", "default:steel_ingot"},
-		{"default:steel_ingot", "mesecons:wire_00000000_off", "default:steel_ingot"}
+		{"default:steel_ingot", "default:stick", "default:steel_ingot"},
+		{"default:steel_ingot", "mesecons_pressureplates:pressure_plate_stone_off", "default:steel_ingot"}
 	}
 })
