@@ -83,6 +83,18 @@ Wool = Шерсть
 Set Home = Установить Дом
 Go Home = Идти Домой
 
+Inventory = Инвентарь
+Search Items = Поиск Предметов
+Building Blocks = Строительные Блоки
+Cutted Blocks = Нарезанные Блоки
+Bluestone and Transport = Блюстоун и Транспорт
+Mob Spawning Eggs = Яйца Спавна Мобов
+Non Cubic Stuff = Вещи и Декорации
+Food and Seeds = Еда и Семена
+Tools and Armor = Инструменты и Броня
+Items and Dyes = Предметы и Красители
+Potions = Зелья
+
 
 #craftguide
 Crafting Guide = Руководство Крафта
