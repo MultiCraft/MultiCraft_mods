@@ -240,7 +240,7 @@ minetest.register_craft({
 	output = "mobs:shears",
 	recipe = {
 		{"", "default:steel_ingot", ""},
-		{"", "group:stick", "default:steel_ingot"}
+		{"", "default:stick", "default:steel_ingot"}
 	}
 })
 
