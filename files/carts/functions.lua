@@ -18,11 +18,7 @@ function carts:manage_attachment(player, obj)
 	player_api.player_attached[player_name] = status
 
 	if status then
-		local y_pos = 6
-		if player:get_properties().visual == "upright_sprite" then
-			y_pos = -4
-		end
-		player:set_attach(obj, "", {x=0, y=y_pos, z=0}, {x=0, y=0, z=0})
+		player:set_attach(obj, "", {x=0, y=0, z=0}, {x=0, y=0, z=0})
 		player:set_eye_offset({x=0, y=-4, z=0},{x=0, y=-4, z=0})
 	else
 		player:set_detach()
@@ -66,7 +62,7 @@ end
 
 function carts:check_front_up_down(pos, dir_, check_up, railtype)
 	local dir = vector.new(dir_)
-	local cur = nil
+	local cur
 
 	-- Front
 	dir.y = 0
@@ -93,7 +89,7 @@ end
 
 function carts:get_rail_direction(pos_, dir, ctrl, old_switch, railtype)
 	local pos = vector.round(pos_)
-	local cur = nil
+	local cur
 	local left_check, right_check = true, true
 
 	-- Check left and right
@@ -213,7 +209,7 @@ end
 
 function carts:boost_rail(pos, amount)
 	minetest.get_meta(pos):set_string("cart_acceleration", tostring(amount))
-	for _,obj_ in ipairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+	for _, obj_ in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
 		if not obj_:is_player() and
 				obj_:get_luaentity() and
 				obj_:get_luaentity().name == "carts:cart" then

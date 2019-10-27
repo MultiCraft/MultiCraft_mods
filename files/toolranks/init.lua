@@ -26,7 +26,7 @@ function toolranks.get_level(uses)
 	end
 end
 
-function toolranks.new_afteruse(itemstack, user, node, digparams)
+function toolranks.new_afteruse(itemstack, user, _, digparams)
 	-- Get tool metadata and number of times used
 	local itemmeta = itemstack:get_meta()
 	local dugnodes = tonumber(itemmeta:get_string("dug")) or 1

@@ -43,7 +43,7 @@ mobs:register_mob("mobs_animal:pig", {
 	--	mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
 	end,
 
-	after_activate = function(self, staticdata, def, dtime)
+	after_activate = function(self)
 		-- replace cow using the old directx model
 		if self.mesh == "mobs_pig.x" then
 			local pos = self.object:get_pos()

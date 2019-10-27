@@ -2,7 +2,7 @@
 -- Formspecs
 --
 
-function default.get_furnace_active_formspec(fuel_percent, item_percent)
+function default.get_furnace_active_formspec(fuel_percent)
 	return default.gui ..
 		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]" ..
 		"item_image[0,-0.1;1,1;default:furnace_active]" ..
@@ -46,7 +46,7 @@ local function can_dig(pos, player)
 	return true
 end
 
-local function allow_metadata_inventory_put(pos, listname, index, stack, player)
+local function allow_metadata_inventory_put(pos, listname, _, stack, player)
 	if minetest.is_protected(pos, player:get_player_name()) then
 		return 0
 	end
@@ -70,7 +70,7 @@ local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	end
 end
 
-local function allow_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)
+local function allow_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, _, player)
 	if to_list == "split" then
 		return 1
 	end
@@ -80,7 +80,7 @@ local function allow_metadata_inventory_move(pos, from_list, from_index, to_list
 	return allow_metadata_inventory_put(pos, to_list, to_index, stack, player)
 end
 
-local function allow_metadata_inventory_take(pos, listname, index, stack, player)
+local function allow_metadata_inventory_take(pos, _, _, stack, player)
 	if minetest.is_protected(pos, player:get_player_name()) then
 		return 0
 	end

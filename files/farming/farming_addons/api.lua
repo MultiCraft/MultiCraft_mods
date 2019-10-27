@@ -24,7 +24,7 @@ function farming_addons.meta_set_str(key, value, pos)
 end
 
 -- grow blocks next to the plant
-function farming_addons.grow_block(pos, elapsed)
+function farming_addons.grow_block(pos)
 	local node = minetest.get_node(pos)
 	local random_pos = false
 	local spawn_positions = {}
@@ -55,7 +55,7 @@ function farming_addons.grow_block(pos, elapsed)
 	end
 
 	-- check if the fruit belongs to this stem
-	for side,child_pos in pairs(children) do
+	for _, child_pos in pairs(children) do
 		-- print(side, minetest.pos_to_string(child_pos))
 
 		local parent_pos_from_child = farming_addons.meta_get_str("parent", child_pos)

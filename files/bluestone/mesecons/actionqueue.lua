@@ -19,7 +19,7 @@ function mesecon.queue:add_action(pos, func, params, time, overwritecheck, prior
 				owcheck=(overwritecheck and mesecon.tablecopy(overwritecheck)) or nil,
 				priority=priority}
 
-	local toremove = nil
+	local toremove
 	-- Otherwise, add the action to the queue
 	if overwritecheck then -- check if old action has to be overwritten / removed:
 		for i, ac in ipairs(mesecon.queue.actions) do
@@ -77,7 +77,7 @@ minetest.register_globalstep(function (dtime)
 
 		-- sort actions into two categories:
 		-- those toexecute now (actions_now) and those to execute later (mesecon.queue.actions)
-		for i, ac in ipairs(actions) do
+		for _, ac in ipairs(actions) do
 			if ac.time > 0 then
 				ac.time = ac.time - dtime -- executed later
 				table.insert(mesecon.queue.actions, ac)

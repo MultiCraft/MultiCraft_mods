@@ -41,7 +41,7 @@ local theme_inv = [[
 		list[current_player;main;0.01,7.74;9,1;]
 	]]
 
-function sfinv.make_formspec(player, context, content, show_inv, size)
+function sfinv.make_formspec(_, _, content, show_inv, size)
 	local tmp = {
 		size or "size[9,8.75]",
 		default.gui_bg,
@@ -53,7 +53,7 @@ function sfinv.make_formspec(player, context, content, show_inv, size)
 	return table.concat(tmp, "")
 end
 
-function sfinv.get_homepage_name(player)
+function sfinv.get_homepage_name()
 	return "sfinv:inventory"
 end
 
@@ -62,7 +62,7 @@ function sfinv.get_formspec(player, context)
 	local nav = {}
 	local nav_ids = {}
 	local current_idx = 1
-	for i, pdef in pairs(sfinv.pages_unordered) do
+	for _, pdef in pairs(sfinv.pages_unordered) do
 		if not pdef.is_in_nav or pdef:is_in_nav(player, context) then
 			nav[#nav + 1] = pdef.title
 			nav_ids[#nav_ids + 1] = pdef.name

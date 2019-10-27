@@ -121,7 +121,7 @@ local function populate_chest(pos, rand, dungeontype)
 end
 
 
-minetest.register_on_generated(function(minp, maxp, blockseed)
+minetest.register_on_generated(function()
 	local gennotify = minetest.get_mapgen_object("gennotify")
 	local poslist = gennotify["dungeon"] or {}
 	for _, entry in ipairs(gennotify["temple"] or {}) do

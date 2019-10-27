@@ -40,7 +40,7 @@ mobs:register_mob("mobs_monster:zombie", {
 		}
 	end,
 
-	after_activate = function(self, staticdata, def, dtime)
+	after_activate = function(self)
 	-- replace zombies using the old directx model
 		if self.mesh == "mobs_zombie.x" then
 			local pos = self.object:get_pos()

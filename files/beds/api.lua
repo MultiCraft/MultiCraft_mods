@@ -79,14 +79,12 @@ function beds.register_bed(name, def)
 			return itemstack
 		end,
 
-		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+		on_rightclick = function(pos, _, clicker, itemstack)
 			beds.on_rightclick(pos, clicker)
 			return itemstack
 		end,
 
-		can_dig = function(pos, player)
-			return beds.can_dig(pos)
-		end,
+		can_dig = beds.can_dig
 	})
 
 	minetest.register_alias(name .. "_bottom", name)

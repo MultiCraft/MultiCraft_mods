@@ -22,7 +22,7 @@ local function get_chest_neighborpos(pos, param2, side)
 	end
 end
 
-local function can_dig(pos, oldmetadata)
+local function can_dig(pos)
 	local meta = minetest.get_meta(pos);
 	local inv = meta:get_inventory()
 	return inv:is_empty("main")
