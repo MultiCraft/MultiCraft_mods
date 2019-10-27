@@ -524,7 +524,7 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "group:stick",
+	recipe = "default:stick",
 	burntime = 3
 })
 

@@ -4,7 +4,6 @@ dye = {}
 local S = intllib.make_gettext_pair()
 
 -- Make dye names and descriptions available globally
-
 dye.dyes = {
 	{"black",      S("Black"),      S("Black2"),      S("Black3")},
 	{"blue",       S("Blue"),       S("Blue2"),       S("Blue3")},
@@ -24,11 +23,10 @@ dye.dyes = {
 }
 
 -- Define items
-
 for _, row in pairs(dye.dyes) do
 	local name = row[1]
 	local description = row[2]
-	local groups = {dye = 1}
+	local groups = {dye = 1, nohit = 1}
 	groups["color_" .. name] = 1
 
 	minetest.register_craftitem("dye:" .. name, {
@@ -36,7 +34,24 @@ for _, row in pairs(dye.dyes) do
 		description = description .. " " .. S("Dye"),
 		groups = groups
 	})
+end
 
+-- Manually add coal -> black dye
+minetest.register_craft({
+	output = "dye:black 4",
+	recipe = {
+		{"group:coal"}
+	}
+})
+
+
+-- Manually add flowers recipes
+local flowers_recipes = {
+	"blue", "orange", "red",
+	"violet", "white", "yellow"
+}
+
+for _, name in pairs(flowers_recipes) do
 	minetest.register_craft({
 		output = "dye:" .. name .. " 4",
 		recipe = {
@@ -45,17 +60,7 @@ for _, row in pairs(dye.dyes) do
 	})
 end
 
--- Manually add coal -> black dye
-
-minetest.register_craft({
-	output = "dye:black 4",
-	recipe = {
-		{"group:coal"}
-	}
-})
-
 -- Mix recipes
-
 local dye_recipes = {
 	-- src1, src2, dst
 	-- RYB mixes
