@@ -15,7 +15,7 @@ minetest.register_entity(":throwing:arrow_entity", {
 })
 
 --== split ==--
-minetest.register_on_joinplayer(function(player)
+minetest.register_on_joinplayer(function()
 	local split_inv = minetest.create_detached_inventory("split", {
 		allow_put = function(_, _, _, stack, _)
 			return stack:get_count() / 2

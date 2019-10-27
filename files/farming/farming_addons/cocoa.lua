@@ -8,7 +8,7 @@ local function tick_again(pos)
 	minetest.get_node_timer(pos):start(math.random(80, 160))
 end
 
-function farming_addons.grow_cocoa_plant(pos, elapsed)
+function farming_addons.grow_cocoa_plant(pos)
 	local node = minetest.get_node(pos)
 	local name = node.name
 	local def = minetest.registered_nodes[name]
@@ -282,9 +282,7 @@ minetest.register_lbm({
 		"farming_addons:cocoa_1",
 		"farming_addons:cocoa_2"
 	},
-	action = function(pos, node)
-		tick_again(pos)
-	end
+	action = tick_again
 })
 
 -- Cocoa

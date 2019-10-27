@@ -61,7 +61,7 @@ minetest.register_on_leaveplayer(function(player)
 		wield_items[name] = nil
 	end
 end)
-minetest.register_playerstep(function(dtime, playernames)
+minetest.register_playerstep(function(_, playernames)
 	for _, name in pairs(playernames) do
 		update_wielded_item(name)
 	end

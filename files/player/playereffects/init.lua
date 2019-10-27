@@ -431,7 +431,7 @@ if playereffects.use_autosave then
 	end)
 end
 
-minetest.register_playerstep(function(dtime, playernames)
+minetest.register_playerstep(function(_, playernames)
 	for _, name in pairs(playernames) do
 		local player = minetest.get_player_by_name(name)
 		if player and player:is_player() then

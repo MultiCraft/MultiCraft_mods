@@ -28,9 +28,9 @@ mobs:register_mob("mobs_npc:trader", {
 	animation = {
 		speed_normal = 30,	speed_run = 30,
 		stand_start = 0,	stand_end = 79,
-		walk_start = 168,	walk_end = 187,
+		walk_start = 168,	walk_end = 187, walk_speed = 15,
 		run_start = 168,	run_end = 187,
-		punch_start = 200,	punch_end = 219
+		punch_start = 189,	punch_end = 198
 	},
 
 	on_punch = function(self, clicker)
@@ -50,7 +50,7 @@ mobs:register_mob("mobs_npc:trader", {
 		return true -- return true so on_spawn is run once only
 	end,
 
-	after_activate = function(self, staticdata, def, dtime)
+	after_activate = function(self)
 		if not self.game_name then
 			self.object:set_properties({
 				nametag_color = "#FFFFFF"
@@ -112,11 +112,11 @@ mobs.human = {
 		{"default:sword_gold 1", "default:emerald 2", 17},
 		{"default:shovel_gold 1", "default:emerald 1", 17},
 		{"default:cactus 4", "default:emerald 2", 40},
-		{"default:papyrus 4", "default:emerald 2", 40}
+		{"default:sugarcane 4", "default:emerald 2", 40}
 	}
 }
 
-function mobs.add_goods(self, entity, race)
+function mobs.add_goods(self, _, race)
 	local trade_index = 1
 	local trades_already_added = {}
 	local trader_pool_size = 6
@@ -132,7 +132,7 @@ function mobs.add_goods(self, entity, race)
 		-- If there are more trades than the amount being added, they are
 		-- randomly selected. If they are equal, there is no reason to randomly
 		-- select them
-		local random_trade = nil
+		local random_trade
 
 		if item_pool_size == trader_pool_size then
 			random_trade = i
@@ -167,7 +167,6 @@ function mobs_trader(self, clicker, entity, race)
 	if not self.game_name then
 		self.game_name = tostring(race.names[math.random(1, #race.names)])
 		self.nametag = S("Trader @1", self.game_name)
-
 		self.object:set_properties({
 			nametag = self.nametag,
 			nametag_color = "#00FF00"
@@ -200,15 +199,16 @@ function mobs_trader(self, clicker, entity, race)
 			formspec_trade_list = formspec_trade_list ..
 					"item_image[" .. x .. "," .. y .. ";1,1;" .. self.trades[i][2] .. "]" ..
 					"image_button[" .. x .. "," .. y .. ";1,1;blank.png;prices#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]" ..
-				--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip..";#000;#FFF]" ..
+				--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip.."]" ..
 					"item_image[" .. x + 2 .. "," .. y .. ";1,1;" .. self.trades[i][1] .. "]" ..
 					"image_button[" .. x + 2 .. "," .. y .. ";1,1;blank.png;goods#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]"
-				--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip..";#000;#FFF]"
+				--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip.."]"
 		end
 	end
 
 	minetest.show_formspec(player, "mobs_npc:trade",
 		default.gui ..
+		"background[7.95,3.1;1,1;default_background.png]" ..
 		"background[-0.2,-0.26;9.41,9.49;formspec_trader.png]" ..
 		"item_image[0,-0.1;1,1;default:emerald]" ..
 		"label[0.9,0.1;" .. S("Trader @1's stock", self.game_name) .. "]" ..
@@ -221,15 +221,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	if fields then
 		local trade = ""
-		for k, v in pairs(fields) do
+		for k, _ in pairs(fields) do
 			trade = tostring(k)
 		end
 
 		local id = trade:split("#")[3]
-		local self = nil
+		local self
 
 		if id ~= nil then
-			for k, v in pairs(minetest.luaentities) do
+			for _, v in pairs(minetest.luaentities) do
 				if v.object and v.id and v.id == id then
 					self = v
 					break
@@ -264,11 +264,5 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 	end
 end)
-
-mobs:spawn({
-	name = "mobs_npc:trader",
-	nodes = {"villages:junglewood"},
-	chance = 100
-})
 
 mobs:register_egg("mobs_npc:trader", S("Trader"), "mobs_trader_egg.png")

@@ -149,7 +149,7 @@ end
 -- movedir: direction of actual movement
 -- maximum: maximum nodes to be pushed
 -- all_pull_sticky: All nodes are sticky in the direction that they are pulled from
-function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sticky)
+function mesecon.mvps_push_or_pull(pos, _, movedir, maximum, all_pull_sticky)
 	local nodes = mesecon.mvps_get_stack(pos, movedir, maximum, all_pull_sticky)
 
 	if not nodes then return end
@@ -204,7 +204,6 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 end
 
 function mesecon.mvps_move_objects(pos, dir, nodestack, movefactor)
-	local objects_to_move = {}
 	local dir_k
 	local dir_l
 	for k, v in pairs(dir) do
@@ -216,7 +215,7 @@ function mesecon.mvps_move_objects(pos, dir, nodestack, movefactor)
 	end
 	movefactor = movefactor or 1
 	dir = vector.multiply(dir, movefactor)
-	for id, obj in pairs(minetest.object_refs) do
+	for _, obj in pairs(minetest.object_refs) do
 		local obj_pos = obj:get_pos()
 		local cbox = obj:get_properties().collisionbox
 		local min_pos = vector.add(obj_pos, vector.new(cbox[1], cbox[2], cbox[3]))
@@ -258,7 +257,7 @@ function mesecon.mvps_move_objects(pos, dir, nodestack, movefactor)
 end
 end
 
--- Never push into unloaded blocks. Don’t try to pull from them, either.
+-- Never push into unloaded blocks. Don't try to pull from them, either.
 -- TODO: load blocks instead, as with wires.
 mesecon.register_mvps_stopper("ignore")
 

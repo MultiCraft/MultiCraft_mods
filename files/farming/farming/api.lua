@@ -99,8 +99,8 @@ farming.register_hoe = function(name, def)
 			output = name:sub(2),
 			recipe = {
 				{def.material, def.material},
-				{"", "group:stick"},
-				{"", "group:stick"}
+				{"", "default:stick"},
+				{"", "default:stick"}
 			}
 		})
 	end
@@ -173,7 +173,7 @@ farming.place_seed = function(itemstack, placer, pointed_thing, plantname)
 	return itemstack
 end
 
-farming.grow_plant = function(pos, elapsed)
+farming.grow_plant = function(pos)
 	local node = minetest.get_node(pos)
 	local name = node.name
 	local def = minetest.registered_nodes[name]
@@ -266,7 +266,7 @@ farming.register_plant = function(name, def)
 	-- Register seed
 	local lbm_nodes = {mname .. ":seed_" .. pname}
 	local g = {seed = 1, snappy = 3, attached_node = 1, flammable = 2}
-	for k, v in pairs(def.fertility) do
+	for _, v in pairs(def.fertility) do
 		g[v] = 1
 	end
 	minetest.register_node(":" .. mname .. ":seed_" .. pname, {
@@ -336,7 +336,7 @@ farming.register_plant = function(name, def)
 		local nodegroups = {snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1}
 		nodegroups[pname] = i
 
-		local next_plant = nil
+		local next_plant
 
 		if i < def.steps then
 			next_plant = mname .. ":" .. pname .. "_" .. (i + 1)
@@ -364,7 +364,7 @@ farming.register_plant = function(name, def)
 			minlight = def.minlight,
 			maxlight = def.maxlight,
 			floodable = true,
-			on_flood = function(pos, oldnode, newnode)
+			on_flood = function(pos, oldnode)
 				local items = minetest.get_node_drops(oldnode.name, nil)
 				for j = 1, #items do
 					minetest.add_item(pos, ItemStack(items[j]))
@@ -378,9 +378,7 @@ farming.register_plant = function(name, def)
 	minetest.register_lbm({
 		name = ":" .. mname .. ":start_nodetimer_" .. pname,
 		nodenames = lbm_nodes,
-		action = function(pos, node)
-			tick_again(pos)
-		end
+		action = tick_again
 	})
 
 	-- Return

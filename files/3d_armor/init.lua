@@ -119,7 +119,6 @@ minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
 	local pos = player:get_pos()
 	if name and pos then
-		local drop = {}
 		local armor_inv = armor:get_armor_inventory(player)
 		if armor_inv then
 			for i = 1, armor_inv:get_size("armor") do

@@ -58,11 +58,11 @@ minetest.register_node("vessels:shelf", {
 		inv:set_size("vessels", 9 * 2)
 		inv:set_size("split", 1)
 	end,
-	can_dig = function(pos,player)
+	can_dig = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()
 		return inv:is_empty("vessels")
 	end,
-	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
+	allow_metadata_inventory_put = function(_, listname, _, stack)
 		if minetest.get_item_group(stack:get_name(), "vessel") ~= 0 then
 			if listname == "split" then
 				return 1
@@ -72,21 +72,15 @@ minetest.register_node("vessels:shelf", {
 		end
 		return 0
 	end,
-	allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+	allow_metadata_inventory_move = function(_, _, _, to_list, _, count)
 		if to_list == "split" then
 			return 1
 		end
 		return count
 	end,
-	on_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-		update_vessels_shelf(pos)
-	end,
-	on_metadata_inventory_put = function(pos, listname, index, stack, player)
-		update_vessels_shelf(pos)
-	end,
-	on_metadata_inventory_take = function(pos, listname, index, stack, player)
-		update_vessels_shelf(pos)
-	end,
+	on_metadata_inventory_move = update_vessels_shelf,
+	on_metadata_inventory_put = update_vessels_shelf,
+	on_metadata_inventory_take = update_vessels_shelf,
 	on_blast = function(pos)
 		local drops = {}
 		default.get_inventory_drops(pos, "vessels", drops)
