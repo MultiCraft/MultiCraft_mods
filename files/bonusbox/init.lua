@@ -3,16 +3,16 @@
 
 local items_ore = {
 	{"default:diamond", 1, 1},
-	{"default:emerald", 1, 2},
-	{"default:gold_ingot", 2, 3},
-	{"default:steel_ingot", 2, 4}
+	{"default:emerald", 1, 1},
+	{"default:gold_ingot", 1, 3},
+	{"default:steel_ingot", 1, 3}
 }
 
 local items_food = {
-	{"default:apple", 2, 8},
-	{"mobs:pork", 1, 4},
-	{"mobs:meat", 1, 4},
-	{"mobs:chicken_cooked", 1, 4}
+	{"default:apple", 2, 6},
+	{"mobs:pork", 1, 3},
+	{"mobs:meat", 1, 3},
+	{"mobs:chicken_cooked", 1, 3}
 }
 
 local items_material = {
@@ -22,7 +22,7 @@ local items_material = {
 	{"default:tree", 4, 16}
 }
 
-local item_spawn = function (pos, node)
+local item_spawn = function(pos, node)
 	local item1 = items_food[math.random(#items_food)]
 	item1 = item1[1] .. " " .. math.random(item1[2], item1[3])
 	local item2 = items_ore[math.random(#items_ore)]
@@ -39,12 +39,9 @@ end
 
 minetest.register_node("bonusbox:chest", {
 	tiles = {
-		"chest_top.png",
-		"chest_top.png^[transformFY",
-		"chest_side.png",
-		"chest_side.png^[transformFX",
-		"chest_back.png",
-		"chest_front.png"
+		"chest_top.png",  "chest_top.png^[transformFY",
+		"chest_side.png", "chest_side.png^[transformFX",
+		"chest_back.png", "chest_front.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -52,10 +49,10 @@ minetest.register_node("bonusbox:chest", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, -0.43863, 0.18736},
-			{-0.48365, -0.44153, -0.48365, 0.48365, 0.11038, 0.17284},
-			{-0.5, 0.11038, -0.5, 0.5, 0.24981, 0.18736},
-			{-0.48365, 0.24691, -0.48365, 0.48365, 0.5, 0.16993}
+			{-0.5, -0.5, -0.5, 0.5, -0.4386, 0.1874},
+			{-0.4837, -0.4415, -0.4837, 0.4837, 0.1104, 0.1729},
+			{-0.5, 0.1104, -0.5, 0.5, 0.2498, 0.1874},
+			{-0.4837, 0.2469, -0.4837, 0.4837, 0.5, 0.1699}
 		}
 	},
 	groups = {choppy = 2, not_in_creative_inventory = 1},
@@ -66,12 +63,9 @@ minetest.register_node("bonusbox:chest", {
 
 minetest.register_node("bonusbox:chest_open", {
 	tiles = {
-		"chest_open_top.png",
-		"chest_open_bottom.png",
-		"chest_open_side.png",
-		"chest_open_side.png^[transformFX",
-		"chest_open_back.png",
-		"chest_open_front.png"
+		"chest_open_top.png",  "chest_open_bottom.png",
+		"chest_open_side.png", "chest_open_side.png^[transformFX",
+		"chest_open_back.png", "chest_open_front.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -79,19 +73,19 @@ minetest.register_node("bonusbox:chest_open", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, -0.43863, 0.18736},
-			{-0.48365, -0.44444, -0.48365, 0.48365, 0.11038, 0.16993},
-			{-0.5, 0.11038, -0.5, 0.5, 0.18881, 0.18736},
-			{-0.5, 0.18881, 0.17284, 0.5, 0.5, 0.24836},
-			{-0.48448, 0.20624, 0.24255, 0.48448, 0.5, 0.5}
+			{-0.5, -0.5, -0.5, 0.5, -0.4386, 0.1874},
+			{-0.4837, -0.4444, -0.4837, 0.4837, 0.1109, 0.1699},
+			{-0.5, 0.1104, -0.5, 0.5, 0.1888, 0.1874},
+			{-0.5, 0.1888, 0.1728, 0.5, 0.5, 0.2484},
+			{-0.4845, 0.2062, 0.2426, 0.4845, 0.5, 0.5}
 		}
 	},
 	selection_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, -0.43863, 0.18736},
-			{-0.48365, -0.44444, -0.48365, 0.48365, 0.11038, 0.16993},
-			{-0.5, 0.11038, -0.5, 0.5, 0.18881, 0.18736}
+			{-0.5, -0.5, -0.5, 0.5, -0.4386, 0.1874},
+			{-0.4837, -0.4444, -0.4837, 0.4837, 0.1104, 0.1699},
+			{-0.5, 0.1104, -0.5, 0.5, 0.1888, 0.1874}
 		}
 	},
 	groups = {choppy = 2, not_in_creative_inventory = 1},
@@ -100,12 +94,9 @@ minetest.register_node("bonusbox:chest_open", {
 
 minetest.register_node("bonusbox:chest_cap", {
 	tiles = {
-		"chest_open_top.png",
-		"chest_open_bottom.png",
-		"chest_open_side_two.png",
-		"chest_open_side_two.png^[transformFX",
-		"chest_open_back_two.png",
-		"chest_open_front_two.png"
+		"chest_open_top.png",      "chest_open_bottom.png",
+		"chest_open_side_two.png", "chest_open_side_two.png^[transformFX",
+		"chest_open_back_two.png", "chest_open_front_two.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -113,8 +104,8 @@ minetest.register_node("bonusbox:chest_cap", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, 0.17224, 0.5, -0.12878, 0.2495},
-			{-0.48518, -0.5, 0.2495, 0.48518, -0.14487, 0.5}
+			{-0.5, -0.5, 0.1722, 0.5, -0.1288, 0.25},
+			{-0.4852, -0.5, 0.25, 0.4852, -0.1449, 0.5}
 		}
 	},
 	selection_box = {
