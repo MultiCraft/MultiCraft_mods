@@ -1,5 +1,5 @@
 local function rshift(x, by)
-  return math.floor(x / 2 ^ by)
+	return math.floor(x / 2 ^ by)
 end
 
 local directions = {
@@ -7,22 +7,21 @@ local directions = {
 	{x = 0, y = 0, z = 1},
 	{x = -1, y = 0, z = 0},
 	{x = 0, y = 0, z = -1},
-	{x = 0, y = -1, z = 0},
+	{x = 0, y = -1, z = 0}
 }
 
 function update_wall(pos)
-		local typewall = 0
+	local typewall = 0
 
 	if minetest.get_node(pos).name:find("wallet:wall") == 1 then
-				typewall = typewall + 1
+		typewall = typewall + 1
 	end
-		if minetest.get_node(pos).name:find("wallet:wallmossy") == 1 then
-				typewall = typewall + 1
-		end
 
-		if typewall == 0 then
-				return
-		end
+	if minetest.get_node(pos).name:find("wallet:wallmossy") == 1 then
+		typewall = typewall + 1
+	end
+
+	if typewall == 0 then return end
 
 	local sum = 0
 	for i = 1, 4 do
@@ -43,12 +42,11 @@ function update_wall(pos)
 		sum = 15
 	end
 
-		if typewall == 1 then
-				minetest.add_node(pos, {name = "wallet:wall_"..sum})
-		else
-				minetest.add_node(pos, {name = "wallet:wallmossy_"..sum})
-		end
-
+	if typewall == 1 then
+		minetest.add_node(pos, {name = "wallet:wall_"..sum})
+	else
+		minetest.add_node(pos, {name = "wallet:wallmossy_"..sum})
+	end
 end
 
 function update_wall_global(pos)
@@ -85,12 +83,12 @@ for i = 0, 15 do
 	end
 
 	local take = {}
-	if need[1] == true and need[3] == true then
+	if need[1] and need[3] then
 		need[1] = nil
 		need[3] = nil
 		table.insert(take, full_blocks[1])
 	end
-	if need[2] == true and need[4] == true then
+	if need[2] and need[4] then
 		need[2] = nil
 		need[4] = nil
 		table.insert(take, full_blocks[2])
@@ -104,7 +102,7 @@ for i = 0, 15 do
 
 	minetest.register_node("wallet:wall_"..i, {
 		collision_box = {
-			type = 'fixed',
+			type = "fixed",
 			fixed = collision
 		},
 		drawtype = "nodebox",
@@ -115,14 +113,14 @@ for i = 0, 15 do
 		node_box = {
 			type = "fixed",
 			fixed = take
-		},
+		}
 	})
 end
 
 minetest.register_node("wallet:wall_0", {
 	drawtype = "nodebox",
 	collision_box = {
-		type = 'fixed',
+		type = "fixed",
 		fixed = collision
 	},
 	tiles = {"default_cobble.png"},
@@ -132,13 +130,13 @@ minetest.register_node("wallet:wall_0", {
 	node_box = {
 		type = "fixed",
 		fixed = pillar
-	},
+	}
 })
 
 minetest.register_node("wallet:wall_16", {
 	drawtype = "nodebox",
 	collision_box = {
-		type = 'fixed',
+		type = "fixed",
 		fixed = collision
 	},
 	tiles = {"default_cobble.png"},
@@ -148,13 +146,13 @@ minetest.register_node("wallet:wall_16", {
 	node_box = {
 		type = "fixed",
 		fixed = {pillar, full_blocks[1]}
-	},
+	}
 })
 
 minetest.register_node("wallet:wall_21", {
 	drawtype = "nodebox",
 	collision_box = {
-		type = 'fixed',
+		type = "fixed",
 		fixed = collision
 	},
 	tiles = {"default_cobble.png"},
@@ -164,7 +162,7 @@ minetest.register_node("wallet:wall_21", {
 	node_box = {
 		type = "fixed",
 		fixed = {pillar, full_blocks[2]}
-	},
+	}
 })
 
 minetest.register_node("wallet:wall", {
@@ -179,7 +177,7 @@ minetest.register_node("wallet:wall", {
 		fixed = pillar
 	},
 	collision_box = {
-		type = 'fixed',
+		type = "fixed",
 		fixed = collision
 	},
 	on_construct = update_wall
@@ -187,10 +185,10 @@ minetest.register_node("wallet:wall", {
 
 
 minetest.register_craft({
-	output = 'wallet:wall 6',
+	output = "wallet:wall 6",
 	recipe = {
-		{'default:cobble', 'default:cobble', 'default:cobble'},
-		{'default:cobble', 'default:cobble', 'default:cobble'}
+		{"default:cobble", "default:cobble", "default:cobble"},
+		{"default:cobble", "default:cobble", "default:cobble"}
 	}
 })
 
@@ -206,12 +204,12 @@ for i = 0, 15 do
 	end
 
 	local take = {}
-	if need[1] == true and need[3] == true then
+	if need[1] and need[3] then
 		need[1] = nil
 		need[3] = nil
 		table.insert(take, full_blocks[1])
 	end
-	if need[2] == true and need[4] == true then
+	if need[2] and need[4] then
 		need[2] = nil
 		need[4] = nil
 		table.insert(take, full_blocks[2])
@@ -226,7 +224,7 @@ for i = 0, 15 do
 	minetest.register_node("wallet:wallmossy_"..i, {
 		drawtype = "nodebox",
 		collision_box = {
-			type = 'fixed',
+			type = "fixed",
 			fixed = collision
 		},
 		tiles = {"default_mossycobble.png"},
@@ -236,14 +234,14 @@ for i = 0, 15 do
 		node_box = {
 			type = "fixed",
 			fixed = take
-		},
+		}
 	})
 end
 
 minetest.register_node("wallet:wallmossy_0", {
 	drawtype = "nodebox",
 	collision_box = {
-		type = 'fixed',
+		type = "fixed",
 		fixed = collision
 	},
 	tiles = {"default_mossycobble.png"},
@@ -253,13 +251,13 @@ minetest.register_node("wallet:wallmossy_0", {
 	node_box = {
 		type = "fixed",
 		fixed = pillar
-	},
+	}
 })
 
 minetest.register_node("wallet:wallmossy_16", {
 	drawtype = "nodebox",
 	collision_box = {
-		type = 'fixed',
+		type = "fixed",
 		fixed = collision
 	},
 	tiles = {"default_mossycobble.png"},
@@ -269,13 +267,13 @@ minetest.register_node("wallet:wallmossy_16", {
 	node_box = {
 		type = "fixed",
 		fixed = {pillar, full_blocks[1]}
-	},
+	}
 })
 
 minetest.register_node("wallet:wallmossy_21", {
 	drawtype = "nodebox",
 	collision_box = {
-		type = 'fixed',
+		type = "fixed",
 		fixed = collision
 	},
 	tiles = {"default_mossycobble.png"},
@@ -285,14 +283,14 @@ minetest.register_node("wallet:wallmossy_21", {
 	node_box = {
 		type = "fixed",
 		fixed = {pillar, full_blocks[2]}
-	},
+	}
 })
 
 minetest.register_node("wallet:wallmossy", {
 	description = "Mossy Cobblestone Wall",
 	paramtype = "light",
 	collision_box = {
-		type = 'fixed',
+		type = "fixed",
 		fixed = collision
 	},
 	tiles = {"default_mossycobble.png"},
@@ -306,10 +304,10 @@ minetest.register_node("wallet:wallmossy", {
 	on_construct = update_wall
 })
 minetest.register_craft({
-	output = 'wallet:wallmossy 6',
+	output = "wallet:wallmossy 6",
 	recipe = {
-			{'default:mossycobble', 'default:mossycobble', 'default:mossycobble'},
-			{'default:mossycobble', 'default:mossycobble', 'default:mossycobble'}
+			{"default:mossycobble", "default:mossycobble", "default:mossycobble"},
+			{"default:mossycobble", "default:mossycobble", "default:mossycobble"}
 	}
 })
 

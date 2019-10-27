@@ -405,8 +405,8 @@ minetest.register_tool("default:pole", {
 	on_use = function(itemstack, user, pointed_thing)
 		if pointed_thing and pointed_thing.under then
 			local node = minetest.get_node(pointed_thing.under)
-			if string.find(node.name, "water_source") then
-				if math.random(8) == 8 then
+			if node.name:find("water_source") then
+				if math.random(8) == 1 then
 					local inv = user:get_inventory()
 					if inv:room_for_item("main", "default:fish_raw") then
 						inv:add_item("main", "default:fish_raw")
