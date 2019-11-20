@@ -20,15 +20,6 @@ player_api.register_model("character.b3d", {
 })
 
 if creative_mode_cache then
-	minetest.register_item(":", {
-		type = "none",
-		wield_image = "blank.png",
-		tool_capabilities = {
-			full_punch_interval = 0.5,
-			damage_groups = {fleshy = 5},
-		}
-	})
-
 	local digtime = 128
 	local caps = {times = {digtime, digtime, digtime}, uses = 0, maxlevel = 192}
 	minetest.register_node("player_api:hand", {
@@ -53,17 +44,8 @@ if creative_mode_cache then
 			},
 			damage_groups = {fleshy = 5}
 		}
-})
-else
-	minetest.register_item(":", {
-		type = "none",
-		wield_image = "blank.png",
-		tool_capabilities = {
-			full_punch_interval = 0.5,
-			damage_groups = {fleshy = 1}
-		}
 	})
-
+else
 	minetest.register_node("player_api:hand", {
 		tiles = {"character.png"},
 		wield_scale = {x = 1, y = 1, z = 0.7},
@@ -82,10 +64,10 @@ else
 				choppy  = {times = {[1]=6.0, [2]=4.0, [3]=3.0}, uses = 0, maxlevel = 1},
 				cracky  = {times = {[1]=7.0, [2]=5.0, [3]=4.0}, uses = 0, maxlevel = 1},
 				oddly_breakable_by_hand = {times = {[1]=3.5, [2]=2.0, [3]=0.7}, uses = 0}
-		},
-		damage_groups = {fleshy = 1}
-	}
-})
+			},
+			damage_groups = {fleshy = 1}
+		}
+	})
 end
 
 -- Update appearance when the player joins
@@ -116,7 +98,6 @@ minetest.register_node("player_api:character", {
 -- Temporary solution to the problem of loading yaw 'nul' on iOS
 if PLATFORM == "iOS" then
 	minetest.register_on_joinplayer(function(player)
-
 		if (player:get_look_horizontal() == 0) then
 			player:set_look_horizontal(0.01)
 		end
@@ -132,9 +113,9 @@ end
 -- Items for the new player
 if not creative_mode_cache and minetest.is_singleplayer() then
 	minetest.register_on_newplayer(function (player)
-			player:get_inventory():add_item("main", "default:sword_steel")
-			player:get_inventory():add_item("main", "default:torch 8")
-			player:get_inventory():add_item("main", "default:wood 64")
+		player:get_inventory():add_item("main", "default:sword_steel")
+		player:get_inventory():add_item("main", "default:torch 8")
+		player:get_inventory():add_item("main", "default:wood 32")
 	end)
 end
 
@@ -147,7 +128,8 @@ minetest.register_on_dieplayer(function(player)
 	for i = 1, inv:get_size("main") do
 		local stack = inv:get_stack("main", i)
 		minetest.item_drop(stack, nil, pos)
-		inv:set_stack("main", i, nil)
+		stack:clear()
+		inv:set_stack("main", i, stack)
 	end
 
 	-- Display death coordinates
