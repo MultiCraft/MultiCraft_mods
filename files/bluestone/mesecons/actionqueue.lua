@@ -58,7 +58,7 @@ end
 
 local m_time, timer = 0, 0
 local resumetime = mesecon.setting("resumetime", 4)
-local delaytime = mesecon.setting("delaytime", core.settings:get("dedicated_server_step") * 3)
+local delaytime = mesecon.setting("delaytime", core.settings:get("dedicated_server_step") * 2)
 if not minetest.is_singleplayer() then
 	delaytime = delaytime * 3
 end

@@ -70,7 +70,7 @@ local function piston_remove_pusher(pos, node, check_falling)
 	minetest.sound_play("piston_retract", {
 		pos = pos,
 		max_hear_distance = 20,
-		gain = 0.3,
+		gain = 0.3
 	})
 
 	if check_falling then
@@ -90,7 +90,7 @@ local piston_on = function(pos, node)
 	if not success then
 		return
 	end
-		minetest.set_node(pos, {param2 = node.param2, name = pistonspec.onname})
+	minetest.set_node(pos, {param2 = node.param2, name = pistonspec.onname})
 	minetest.set_node(pusher_pos, {param2 = node.param2, name = pistonspec.pusher})
 		minetest.sound_play("piston_extend", {
 			pos = pos,
@@ -448,7 +448,7 @@ mesecon.register_mvps_stopper("mesecons_pistons:piston_normal_on", piston_get_st
 mesecon.register_mvps_stopper("mesecons_pistons:piston_sticky_on", piston_get_stopper)
 
 
---craft recipes
+-- craft recipes
 minetest.register_craft({
 	output = "mesecons_pistons:piston_normal_off 2",
 	recipe = {
