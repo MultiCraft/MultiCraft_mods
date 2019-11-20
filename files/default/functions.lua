@@ -264,10 +264,10 @@ if not minetest.settings:get_bool("creative_mode") then
 		chance = 1,
 		action = function(pos)
 			local players = minetest.get_objects_inside_radius(pos, 1)
-			for i, player in pairs(players) do
+			for _, player in pairs(players) do
 				player:set_hp(player:get_hp() - 2)
 			end
-		end,
+		end
 	})
 end
 
@@ -306,7 +306,7 @@ function default.register_fence(name, def)
 		output = name .. " 4",
 		recipe = {
 			{ def.material, "default:stick", def.material },
-			{ def.material, "default:stick", def.material },
+			{ def.material, "default:stick", def.material }
 		}
 	})
 
@@ -342,7 +342,7 @@ function default.register_fence(name, def)
 		tiles = {def.texture},
 		sunlight_propagates = true,
 		is_ground_content = false,
-		groups = {},
+		groups = {}
 	}
 	for k, v in pairs(default_fields) do
 		if def[k] == nil then
@@ -405,7 +405,7 @@ local function leafdecay_on_timer(pos, def)
 			minetest.add_item({
 				x = pos.x - 0.5 + math.random(),
 				y = pos.y - 0.5 + math.random(),
-				z = pos.z - 0.5 + math.random(),
+				z = pos.z - 0.5 + math.random()
 			}, item)
 		end
 	end
@@ -422,14 +422,14 @@ function default.register_leafdecay(def)
 		minetest.override_item(v, {
 			after_destruct = function(pos)
 				leafdecay_after_destruct(pos, _, def)
-			end,
+			end
 		})
 	end
 	for _, v in pairs(def.leaves) do
 		minetest.override_item(v, {
 			on_timer = function(pos)
 				leafdecay_on_timer(pos, def)
-			end,
+			end
 		})
 	end
 end
@@ -452,7 +452,7 @@ minetest.register_abm({
 		"default:snow"
 	},
 	interval = 10,
-	chance = 25,
+	chance = 15,
 	catch_up = false,
 	action = function(pos)
 		-- Check for darkness: night, shadow or under a light-blocking node
@@ -560,41 +560,45 @@ end
 --
 
 -- Shoot snowball
-
 local function snowball_impact(thrower, pos, dir, hit_object)
 	if hit_object then
 		local punch_damage = {
 			full_punch_interval = 1.0,
-			damage_groups = {fleshy=1},
+			damage_groups = {fleshy = 1},
 		}
 		hit_object:punch(thrower, 1.0, punch_damage, dir)
 	end
 	local node_pos
 	local node = minetest.get_node(pos)
 	if node.name == "air" then
-		local pos_under = vector.subtract(pos, {x=0, y=1, z=0})
+		local pos_under = vector.subtract(pos, {x = 0, y = 1, z = 0})
 		node = minetest.get_node(pos_under)
 		if node.name then
 			local def = minetest.registered_items[node.name] or {}
-			if def.buildable_to == true then
+			if def.buildable_to then
 				node_pos = pos_under
-			elseif def.walkable == true then
+			elseif def.walkable then
 				node_pos = pos
 			end
 		elseif node.name then
 			local def = minetest.registered_items[node.name]
-			if def and def.buildable_to == true then
+			if def and def.buildable_to then
 				node_pos = pos
 			end
 		end
 		if node_pos then
-			minetest.add_node(pos, {name="default:snow"})
-			minetest.spawn_falling_node(pos)
+			if not minetest.is_protected(node_pos, thrower:get_player_name()) then
+				minetest.add_node(pos, {name = "default:snow"})
+				minetest.spawn_falling_node(pos)
+			end
 		end
 	end
 end
 
 function default.snow_shoot_snowball(itemstack, thrower)
+	if not thrower or not thrower:is_player() then
+		return
+	end
 	local playerpos = thrower:get_pos()
 	if not minetest.is_valid_pos(playerpos) then
 		return
@@ -604,13 +608,13 @@ function default.snow_shoot_snowball(itemstack, thrower)
 	if obj then
 		obj:set_properties({
 			visual = "sprite",
-			visual_size = {x=1, y=1},
+			visual_size = {x = 1, y = 1},
 			textures = {"default_snowball.png"},
 		})
 		minetest.sound_play("throwing_sound", {
 			pos = playerpos,
 			gain = 0.7,
-			max_hear_distance = 10,
+			max_hear_distance = 10
 		})
 		if not (creative and creative.is_enabled_for and
 				creative.is_enabled_for(thrower)) or
@@ -624,6 +628,7 @@ end
 --
 -- Liquid particles
 --
+
 if core.is_singleplayer() then
 	minetest.register_abm({
 		label = "Water particles",
@@ -633,6 +638,7 @@ if core.is_singleplayer() then
 		},
 		interval = 3,
 		chance = 3,
+		catch_up = false,
 		action = function(pos, node)
 			pos.y = pos.y - 2
 			if minetest.get_node(pos).name == "air" then
@@ -647,7 +653,7 @@ if core.is_singleplayer() then
 					minexptime = 2,
 					maxexptime = 4,
 					vertical = true,
-					texture = "default_water.png^[resize:17x16^[mask:default_liquid_drop.png",
+					texture = "default_water.png^[resize:17x16^[mask:default_liquid_drop.png"
 				})
 			end
 		end
@@ -661,6 +667,7 @@ if core.is_singleplayer() then
 		},
 		interval = 3,
 		chance = 3,
+		catch_up = false,
 		action = function(pos, node)
 			pos.y = pos.y - 2
 			if minetest.get_node(pos).name == "air" then
@@ -675,7 +682,7 @@ if core.is_singleplayer() then
 					minexptime = 2,
 					maxexptime = 4,
 					vertical = true,
-					texture = "default_river_water.png^[resize:17x16^[mask:default_liquid_drop.png",
+					texture = "default_river_water.png^[resize:17x16^[mask:default_liquid_drop.png"
 				})
 			end
 		end
@@ -689,6 +696,7 @@ if core.is_singleplayer() then
 		},
 		interval = 3,
 		chance = 3,
+		catch_up = false,
 		action = function(pos, node)
 			pos.y = pos.y + 1
 			if minetest.get_node(pos).name == "air" then
@@ -703,7 +711,7 @@ if core.is_singleplayer() then
 					minexptime = 1,
 					maxexptime = 2,
 					vertical = true,
-					texture = "default_lava.png",
+					texture = "default_lava.png"
 				})
 			end
 			pos.y = pos.y - 3
@@ -719,7 +727,7 @@ if core.is_singleplayer() then
 					minexptime = 2,
 					maxexptime = 4,
 					vertical = true,
-					texture = "default_lava.png^[resize:17x16^[mask:default_liquid_drop.png",
+					texture = "default_lava.png^[resize:17x16^[mask:default_liquid_drop.png"
 				})
 			end
 		end
