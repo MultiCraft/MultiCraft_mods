@@ -1,6 +1,5 @@
---register stoppers for movestones/pistons
-
-mesecon.mvps_stoppers={}
+-- Register stoppers for movestones/pistons
+mesecon.mvps_stoppers = {}
 mesecon.on_mvps_move = {}
 mesecon.mvps_unmov = {}
 
@@ -81,7 +80,7 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 			if minetest.registered_nodes[nn.name]
 			and minetest.registered_nodes[nn.name].mvps_sticky then
 				connected = minetest.registered_nodes[nn.name].mvps_sticky(np, nn)
-		end
+			end
 
 			table.insert(connected, vector.add(np, dir))
 
@@ -102,7 +101,7 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 						end
 					end
 				end
-		end
+			end
 
 			if all_pull_sticky then
 				table.insert(connected, vector.subtract(np, dir))
@@ -115,7 +114,7 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 				for _, rp in ipairs(nodes) do
 					if vector.equals(cp, rp.pos) then
 						duplicate = true
-	end
+					end
 				end
 				for _, fp in ipairs(frontiers) do
 					if vector.equals(cp, fp) then
@@ -244,7 +243,7 @@ function mesecon.mvps_move_objects(pos, dir, nodestack, movefactor)
 			if obj:is_player() or (ent and not mesecon.is_mvps_unmov(ent.name)) then
 				local np = vector.add(obj_pos, dir)
 				-- Move only if destination is not solid or object is inside stack:
-			local nn = minetest.get_node(np)
+				local nn = minetest.get_node(np)
 				local node_def = minetest.registered_nodes[nn.name]
 				local obj_offset = dir_l * (obj_pos[dir_k] - pos[dir_k])
 				if (node_def and not node_def.walkable) or
@@ -259,13 +258,15 @@ end
 
 -- Never push into unloaded blocks. Don't try to pull from them, either.
 -- TODO: load blocks instead, as with wires.
-mesecon.register_mvps_stopper("ignore")
 
+mesecon.register_mvps_stopper("ignore")
 mesecon.register_mvps_stopper("doors:door_steel_b_1")
 mesecon.register_mvps_stopper("doors:door_steel_t_1")
 mesecon.register_mvps_stopper("doors:door_steel_b_2")
 mesecon.register_mvps_stopper("doors:door_steel_t_2")
 mesecon.register_mvps_stopper("default:furnace")
+mesecon.register_mvps_stopper("itemframes:frame")
+
 mesecon.register_on_mvps_move(mesecon.move_hot_nodes)
 mesecon.register_on_mvps_move(function(moved_nodes)
 	for i = 1, #moved_nodes do
