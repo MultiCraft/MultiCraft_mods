@@ -237,6 +237,7 @@ farming.grow_plant = function(pos)
 end
 
 -- Register plants
+local singleplayer = minetest.is_singleplayer()
 farming.register_plant = function(name, def)
 	local mname = name:split(":")[1]
 	local pname = name:split(":")[2]
@@ -283,13 +284,13 @@ farming.register_plant = function(name, def)
 		sunlight_propagates = true,
 		selection_box = {
 			type = "fixed",
-			fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5},
+			fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
 		},
 		fertility = def.fertility,
 		sounds = default.node_sound_dirt_defaults({
 			dig = {name = "", gain = 0},
 			dug = {name = "default_grass_footstep", gain = 0.2},
-			place = {name = "default_place_node", gain = 0.25},
+			place = {name = "default_place_node", gain = 0.25}
 		}),
 
 		on_place = function(itemstack, placer, pointed_thing)
@@ -308,7 +309,7 @@ farming.register_plant = function(name, def)
 		next_plant = mname .. ":" .. pname .. "_1",
 		on_timer = farming.grow_plant,
 		minlight = def.minlight,
-		maxlight = def.maxlight,
+		maxlight = def.maxlight
 	})
 
 	def.groups.farming = 1
@@ -330,7 +331,7 @@ farming.register_plant = function(name, def)
 				{items = {mname .. ":" .. pname}, rarity = base_rarity},
 				{items = {mname .. ":" .. pname}, rarity = base_rarity * 2},
 				{items = {mname .. ":seed_" .. pname}, rarity = base_rarity},
-				{items = {mname .. ":seed_" .. pname}, rarity = base_rarity * 2},
+				{items = {mname .. ":seed_" .. pname}, rarity = base_rarity * 2}
 			}
 		}
 		local nodegroups = {snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1}
@@ -355,7 +356,7 @@ farming.register_plant = function(name, def)
 			drop = drop,
 			selection_box = {
 				type = "fixed",
-				fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5},
+				fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
 			},
 			groups = nodegroups,
 			sounds = default.node_sound_leaves_defaults(),
@@ -363,7 +364,7 @@ farming.register_plant = function(name, def)
 			on_timer = farming.grow_plant,
 			minlight = def.minlight,
 			maxlight = def.maxlight,
-			floodable = true,
+			floodable = singleplayer,
 			on_flood = function(pos, oldnode)
 				local items = minetest.get_node_drops(oldnode.name, nil)
 				for j = 1, #items do
