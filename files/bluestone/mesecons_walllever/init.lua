@@ -10,21 +10,13 @@ mesecon.register_node("mesecons_walllever:wall_lever", {
 	sunlight_propagates = true,
 	walkable = false,
 	sounds = default.node_sound_wood_defaults(),
-	on_punch = function(pos, node)
-		if (mesecon.flipstate(pos, node) == "on") then
-			mesecon.receptor_on(pos, mesecon.rules.buttonlike_get(node))
-		else
-			mesecon.receptor_off(pos, mesecon.rules.buttonlike_get(node))
-		end
-		minetest.sound_play("mesecons_lever", {pos=pos})
-	end,
 	on_rightclick = function(pos, node)
 		if (mesecon.flipstate(pos, node) == "on") then
 			mesecon.receptor_on(pos, mesecon.rules.buttonlike_get(node))
 		else
 			mesecon.receptor_off(pos, mesecon.rules.buttonlike_get(node))
 		end
-		minetest.sound_play("mesecons_lever", {pos=pos})
+		minetest.sound_play("mesecons_lever", {pos = pos})
 	end
 },{
 	tiles = {
@@ -71,6 +63,6 @@ minetest.register_craft({
 	output = "mesecons_walllever:wall_lever_off 2",
 	recipe = {
 		{"default:cobble"},
-		{"default:stick"},
+		{"default:stick"}
 	}
 })
