@@ -72,9 +72,6 @@ minetest.register_node(":mesecons_button:button_stone_off", {
 	sounds = default.node_sound_stone_defaults(),
 	
 	on_place = on_place,
-	on_punch = function(pos, node)
-		press(pos, node, "stone")
-	end,
 	on_rightclick = function(pos, node)
 		press(pos, node, "stone")
 	end,
@@ -129,9 +126,6 @@ minetest.register_node(":mesecons_button:button_wood_off", {
 	sounds = default.node_sound_stone_defaults(),
 
 	on_place = on_place,
-	on_punch = function(pos, node)
-		press(pos, node, "wood")
-	end,
 	on_rightclick = function(pos, node)
 		press(pos, node, "wood")
 	end,

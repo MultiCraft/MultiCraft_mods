@@ -102,8 +102,8 @@ local off_state = {
 	},
 	wield_image = "mesecons_delayer_off.png",
 	groups = off_groups,
-	on_punch = function(pos, node, puncher)
-		if minetest.is_protected(pos, puncher and puncher:get_player_name()) then
+	on_rightclick = function(pos, node, clicker)
+		if minetest.is_protected(pos, clicker and clicker:get_player_name()) then
 			return
 		end
 
@@ -114,13 +114,11 @@ local off_state = {
 	end,
 	delayer_onstate = "mesecons_delayer:delayer_on_" .. tostring(i),
 	mesecons = {
-		receptor =
-		{
+		receptor = {
 			state = mesecon.state.off,
 			rules = delayer_get_output_rules
 		},
-		effector =
-		{
+		effector = {
 			rules = delayer_get_input_rules,
 			action_on = delayer_activate
 		}
@@ -144,8 +142,8 @@ local on_state = {
 		"mesecons_delayer_sides_on.png"
 	},
 	groups = {bendy = 2, snappy = 1, dig_immediate = 2, not_in_creative_inventory = 1},
-	on_punch = function(pos, node, puncher)
-		if minetest.is_protected(pos, puncher and puncher:get_player_name()) then
+	on_rightclick  = function(pos, node, clicker)
+		if minetest.is_protected(pos, clicker and clicker:get_player_name()) then
 			return
 		end
 
@@ -156,13 +154,11 @@ local on_state = {
 	end,
 	delayer_offstate = "mesecons_delayer:delayer_off_" .. tostring(i),
 	mesecons = {
-		receptor =
-		{
+		receptor = {
 			state = mesecon.state.on,
 			rules = delayer_get_output_rules
 		},
-		effector =
-		{
+		effector = {
 			rules = delayer_get_input_rules,
 			action_off = delayer_deactivate
 		}
