@@ -40,16 +40,6 @@ local facedir = {
 	[5] = {x =  0, y = 0, z = -1}
 }
 
-local remove_item = function(pos)
-	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
-		local ent = obj:get_luaentity()
-		if ent and ent.name == "itemframes:item" then
-			obj:remove()
-			break
-		end
-	end
-end
-
 local update_item = function(pos, node)
 	local meta = minetest.get_meta(pos)
 	local itemstring = meta:get_string("item")
@@ -64,6 +54,16 @@ local update_item = function(pos, node)
 	if node.param2 == 2 or node.param2 == 3 then
 		local yaw = math.pi / 2 - node.param2 * math.pi * 2
 		entity:set_yaw(yaw)
+	end
+end
+
+local remove_item = function(pos)
+	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+		local ent = obj:get_luaentity()
+		if ent and ent.name == "itemframes:item" then
+			obj:remove()
+			break
+		end
 	end
 end
 
@@ -115,6 +115,7 @@ minetest.register_node("itemframes:frame",{
 	wield_image = "itemframe_background.png",
 	paramtype = "light",
 	paramtype2 = "wallmounted",
+	node_placement_prediction = "",
 	sunlight_propagates = true,
 	groups = {choppy = 2, dig_immediate = 2, attached_node = 1},
 	sounds = default.node_sound_wood_defaults(),
@@ -123,14 +124,11 @@ minetest.register_node("itemframes:frame",{
 		if pointed_thing.type == "node" then
 			local undery = pointed_thing.under.y
 			local posy = pointed_thing.above.y
-			if undery > posy then -- Place on celling, not allowed
-				return itemstack
-			elseif undery < posy then -- Place on bottom, not allowed
-				return itemstack
-			else
-				return minetest.item_place(itemstack, placer, pointed_thing)
+			if undery == posy then -- allowed wall-mounted only
+				itemstack = minetest.item_place(itemstack, placer, pointed_thing)
 			end
 		end
+		return itemstack
 	end,
 
 	after_place_node = function(pos, placer)
@@ -141,15 +139,22 @@ minetest.register_node("itemframes:frame",{
 	end,
 
 	on_rightclick = function(pos, node, clicker, itemstack)
-		if not itemstack then return end
-		if clicker and not default.can_interact_with_node(clicker, pos) then
-			return false
-		end
-		local meta = minetest.get_meta(pos)
+		if not clicker or
+		minetest.is_protected(pos, clicker:get_player_name()) then return end
+
 		drop_item(pos, node)
-		local item = itemstack:take_item()
-		meta:set_string("item", item:to_string())
-		remove_item(pos, node)
+
+		if not itemstack or itemstack:get_name() == "" then return end
+		local item = clicker:get_wielded_item():get_name() -- get real item name
+		local meta = minetest.get_meta(pos)
+
+		if minetest.registered_tools[item] then
+			meta:set_string("item", itemstack:take_item():to_string())
+		else
+			meta:set_string("item", item)
+			itemstack:take_item() -- take 1 item
+		end
+
 		update_item(pos, node)
 		return itemstack
 	end,
@@ -157,12 +162,12 @@ minetest.register_node("itemframes:frame",{
 	on_punch = check_item,
 
 	can_dig = function(pos, player)
-		if player and not default.can_interact_with_node(player, pos) then
+		if minetest.is_protected(pos, player and player:get_player_name()) then
 			return false
 		end
 		return true
 	end,
-	
+
 	after_dig_node = after_dig_node,
 	on_destruct = after_dig_node
 })
@@ -185,4 +190,10 @@ minetest.register_craft({
 		{"default:stick", "default:paper", "default:stick"},
 		{"default:stick", "default:stick", "default:stick"}
 	}
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "itemframes:frame",
+	burntime = 10
 })
