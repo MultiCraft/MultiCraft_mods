@@ -335,12 +335,14 @@ function doors.register(name, def)
 		name = name,
 		sounds = {def.sound_close, def.sound_open}
 	}
+
 	if not def.on_rightclick then
 		def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 			doors.door_toggle(pos, node, clicker)
 			return itemstack
 		end
 	end
+
 	def.mesecons = {effector = {
 		action_on = function(pos, node)
 			local door = doors.get(pos)
@@ -355,10 +357,12 @@ function doors.register(name, def)
 			end
 		end
 	}}
+
 	def.after_dig_node = function(pos, node, meta, digger)
 		minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
 		minetest.check_for_falling({x = pos.x, y = pos.y + 1, z = pos.z})
 	end
+
 	def.on_rotate = function(pos, node, user, mode, new_param2)
 		return false
 	end
@@ -398,6 +402,8 @@ function doors.register(name, def)
 	doors.registered_doors[name .. "_b"] = true
 end
 
+-- Apple Wood Doors --
+
 doors.register("door_wood", {
 	tiles = {{name = "doors_door_wood.png", backface_culling = true}},
 	description = "Apple Wood Door",
@@ -410,6 +416,8 @@ doors.register("door_wood", {
 		{"default:wood", "default:wood"}
 	}
 })
+
+-- Acacia Wood Doors --
 
 doors.register("door_acacia_wood", {
 	tiles = {{name = "doors_door_acacia_wood.png", backface_culling = true}},
@@ -424,6 +432,8 @@ doors.register("door_acacia_wood", {
 	}
 })
 
+-- Birch Wood Doors --
+
 doors.register("door_birch_wood", {
 	tiles = {{name = "doors_door_birch_wood.png", backface_culling = true}},
 	description = "Birch Wood Door",
@@ -437,6 +447,8 @@ doors.register("door_birch_wood", {
 	}
 })
 
+-- Jungle Wood Doors --
+
 doors.register("door_jungle_wood", {
 	tiles = {{name = "doors_door_jungle_wood.png", backface_culling = true}},
 	description = "Jungle Wood Door",
@@ -449,6 +461,8 @@ doors.register("door_jungle_wood", {
 		{"default:junglewood", "default:junglewood"}
 	}
 })
+
+-- Pine Wood Doors --
 
 doors.register("door_pine_wood", {
 	tiles = {{name = "doors_door_pine_wood.png", backface_culling = true}},
@@ -505,7 +519,7 @@ local doors_aliases = {
 	{"steel_b_1",		"doors:door_steel_a"},
 	{"steel_b_2",		"doors:door_steel_b"},
 	{"steel_t_1",		"air"},
-	{"steel_t_2",		"air"},
+	{"steel_t_2",		"air"}
 }
 
 for i = 1, #doors_aliases do
@@ -557,7 +571,7 @@ function doors.register_trapdoor(name, def)
 		doors.trapdoor_toggle(pos, node, clicker)
 		return itemstack
 	end
-	
+
 	def.mesecons = {effector = {
 		action_on = function(pos, node)
 			local door = doors.get(pos)
@@ -618,10 +632,6 @@ function doors.register_trapdoor(name, def)
 		type = "fixed",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -6/16, 0.5}
 	}
-	def_closed.selection_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -6/16, 0.5}
-	}
 	def_closed.tiles = {
 		def.tile_front,
 		def.tile_front .. "^[transformFY",
@@ -632,10 +642,6 @@ function doors.register_trapdoor(name, def)
 	}
 
 	def_opened.node_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, 6/16, 0.5, 0.5, 0.5}
-	}
-	def_opened.selection_box = {
 		type = "fixed",
 		fixed = {-0.5, -0.5, 6/16, 0.5, 0.5, 0.5}
 	}
@@ -664,7 +670,7 @@ doors.register_trapdoor("doors:trapdoor", {
 	wield_image = "doors_trapdoor.png",
 	tile_front = "doors_trapdoor.png",
 	tile_side = "doors_trapdoor_side.png",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, door = 1},
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, door = 1}
 })
 
 doors.register_trapdoor("doors:trapdoor_steel", {
@@ -677,7 +683,7 @@ doors.register_trapdoor("doors:trapdoor_steel", {
 	sounds = default.node_sound_metal_defaults(),
 	sound_open = "doors_steel_door_open",
 	sound_close = "doors_steel_door_close",
-	groups = {cracky = 1, level = 2, door = 1},
+	groups = {cracky = 1, level = 2, door = 1}
 })
 
 minetest.register_craft({
@@ -692,7 +698,7 @@ minetest.register_craft({
 	output = "doors:trapdoor_steel",
 	recipe = {
 		{"default:steel_ingot", "default:steel_ingot"},
-		{"default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot"}
 	}
 })
 
@@ -701,7 +707,6 @@ minetest.register_craft({
 	recipe = "doors:trapdoor",
 	burntime = 7
 })
-
 
 ---- Fence Gate ----
 
@@ -741,7 +746,7 @@ function doors.register_fencegate(name, def)
 		doors.fencegate_toggle(pos, node, clicker)
 		return itemstack
 	end
-	
+
 	def.mesecons = {effector = {
 		action_on = function(pos, node)
 			local door = doors.get(pos)
@@ -768,7 +773,7 @@ function doors.register_fencegate(name, def)
 	def.groups = def.groups
 	def.sounds = def.sounds
 	def.groups.fence = 1
-	
+
 	if type(def.texture) == "string" then
 		def.tiles[1] = {name = def.texture, backface_culling = true}
 	elseif def.texture.backface_culling == nil then
@@ -839,7 +844,7 @@ function doors.register_fencegate(name, def)
 	}
 
 	def_opened.drop = name_closed
-	
+
 	def_opened.groups.not_in_creative_inventory = 1
 
 	minetest.register_node(name_opened, def_opened)
@@ -849,10 +854,10 @@ function doors.register_fencegate(name, def)
 	doors.registered_fencegates[name_closed] = true
 
 	minetest.register_craft({
-		output = name .. "_closed",
+		output = name,
 		recipe = {
-			{"group:stick", def.material, "group:stick"},
-			{"group:stick", def.material, "group:stick"}
+			{"default:stick", def.material, "default:stick"},
+			{"default:stick", def.material, "default:stick"}
 		}
 	})
 end
@@ -860,18 +865,17 @@ end
 doors.register_fencegate("doors:gate_wood", {
 	description = "Apple Wood Fence Gate",
 	texture = "default_wood.png",
-	inventory_image = "default_wood_fencegate.png",
-	wield_image = "default_wood_fencegate.png",
+	inventory_image = "doors_fencegate_wood.png",
+	wield_image = "doors_fencegate_wood.png",
 	material = "default:wood",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2}
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fencegate_wood = 1}
 })
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "doors:gate_wood",
-	burntime = 7
+	recipe = "group:fencegate_wood",
+	burntime = 10
 })
-
 
 minetest.register_alias("fences:fencegate_open", "doors:gate_wood_open")
 minetest.register_alias("fences:fencegate", "doors:gate_wood")

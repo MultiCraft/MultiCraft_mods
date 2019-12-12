@@ -428,7 +428,7 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "default:fence_wood",
+	recipe = "group:fence_wood",
 	burntime = 15
 })
 
