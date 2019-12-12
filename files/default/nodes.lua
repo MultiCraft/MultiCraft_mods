@@ -235,7 +235,7 @@ minetest.register_node("default:snow", {
 			minetest.set_node(pos, {name = "default:dirt_with_snow"})
 		end
 	end,
-	
+
 	on_timer = function(pos)
 		minetest.remove_node(pos)
 	end
@@ -348,16 +348,9 @@ minetest.register_node("default:leaves", {
 	drop = {
 		max_items = 1,
 		items = {
-			{
-				-- player will get sapling with 1/20 chance
-				items = {"default:sapling"},
-				rarity = 20
-			},
-			{
-				-- player will get leaves only if he get no saplings,
-				-- this is because max_items is 1
-				items = {"default:leaves"}
-			}
+			{items = {"default:sapling"}, rarity = 20},
+			{items = {"default:vine"}, rarity = 8},
+			{items = {"default:leaves"}}
 		}
 	},
 	sounds = default.node_sound_leaves_defaults(),
@@ -443,6 +436,7 @@ minetest.register_node("default:jungleleaves", {
 		max_items = 1,
 		items = {
 			{items = {"default:junglesapling"}, rarity = 20},
+			{items = {"default:vine"}, rarity = 8},
 			{items = {"default:jungleleaves"}}
 		}
 	},
@@ -600,6 +594,7 @@ minetest.register_node("default:acacia_leaves", {
 		max_items = 1,
 		items = {
 			{items = {"default:acacia_sapling"}, rarity = 20},
+			{items = {"default:vine"}, rarity = 8},
 			{items = {"default:acacia_leaves"}}
 		}
 	},
@@ -677,6 +672,7 @@ minetest.register_node("default:birch_leaves", {
 		max_items = 1,
 		items = {
 			{items = {"default:birch_sapling"}, rarity = 20},
+			{items = {"default:vine"}, rarity = 8},
 			{items = {"default:birch_leaves"}}
 		}
 	},
@@ -1358,13 +1354,73 @@ minetest.register_node("default:ladder_wood", {
 	sounds = default.node_sound_wood_defaults()
 })
 
+minetest.register_node("default:grill_bar", {
+	description = "Grill",
+	drawtype = "nodebox",
+	tiles = {
+		"default_grill_side.png",
+		"default_grill_side.png^[transform2",
+		"default_grill_side.png^[transform3",
+		"default_grill_side.png^[transform1",
+		"default_grill_bar.png^[transform46",
+		"default_grill_bar.png^[transform6"
+	},
+	inventory_image = "default_grill_bar.png",
+	wield_image = "default_grill_bar.png",
+	paramtype = "light",
+	paramtype2 = "facedir",
+	sunlight_propagates = true,
+	is_ground_content = false,
+	node_box = {
+		type = "fixed",
+		fixed = {{-1/2, -1/2, -1/2, 1/2, 1/2, -6/16}}
+	},
+	groups = {choppy = 2, oddly_breakable_by_hand = 3},
+	sounds = default.node_sound_wood_defaults()
+})
 
 default.register_fence("default:fence_wood", {
 	description = "Apple Wood Fence",
 	texture = "default_wood.png",
-	inventory_image = "default_wood_fence.png",
+	inventory_image = "default_fence_wood.png",
 	material = "default:wood",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	sounds = default.node_sound_wood_defaults()
+})
+
+default.register_fence("default:fence_acacia_wood", {
+	description = "Acacia Wood Fence",
+	texture = "default_acacia_wood.png",
+	inventory_image = "default_fence_acacia_wood.png",
+	material = "default:acacia_wood",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	sounds = default.node_sound_wood_defaults()
+})
+
+default.register_fence("default:fence_birch_wood", {
+	description = "Birch Wood Fence",
+	texture = "default_birch_wood.png",
+	inventory_image = "default_fence_birch_wood.png",
+	material = "default:birch_wood",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	sounds = default.node_sound_wood_defaults()
+})
+
+default.register_fence("default:fence_jungle_wood", {
+	description = "Jungle Wood Fence",
+	texture = "default_junglewood.png",
+	inventory_image = "default_fence_jungle_wood.png",
+	material = "default:junglewood",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	sounds = default.node_sound_wood_defaults()
+})
+
+default.register_fence("default:fence_pine_wood", {
+	description = "Pine Wood Fence",
+	texture = "default_pine_wood.png",
+	inventory_image = "default_fence_pine_wood.png",
+	material = "default:pine_wood",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -1380,19 +1436,18 @@ minetest.register_node("default:vine", {
 	walkable = false,
 	climbable = true,
 	selection_box = {
-		type = "wallmounted",
+		type = "wallmounted"
 	},
 	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2},
 	sounds = default.node_sound_leaves_defaults(),
-	drop = "",
 	after_dig_node = function(pos)
 		local next_find = true
 		local down = 1
-		while next_find == true do
-			local pos2 = {x = pos.x, y = pos.y - down, z = pos.z}
-			local node = minetest.get_node(pos2)
+		while next_find do
+			pos.y = pos.y - down
+			local node = minetest.get_node(pos)
 			if node.name == "default:vine" then
-				minetest.remove_node(pos2)
+				minetest.remove_node(pos)
 				down = down + 1
 			else
 				next_find = false
@@ -1430,7 +1485,7 @@ minetest.register_node("default:glowstone", {
 	tiles = {"default_glowstone.png"},
 	paramtype = "light",
 	groups = {cracky = 3},
---[[	drop = {
+--[[drop = {
 	max_items = 1,
 	items = {
 			{items = {"default:glowdust 9"}, rarity = 7},
@@ -1460,7 +1515,6 @@ minetest.register_node("default:slimeblock", {
 	sunlight_propagates = true,
 	groups = {oddly_breakable_by_hand = 3, disable_jump = 1, fall_damage_add_percent = -100, speed = -60}
 })
-
 
 --
 -- Quartz
