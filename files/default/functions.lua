@@ -296,6 +296,19 @@ function default.dig_up(pos, node, digger)
 	end
 end
 
+--
+-- Dig downwards
+--
+
+function default.dig_down(pos, node, digger)
+	if digger == nil then return end
+	local np = {x = pos.x, y = pos.y - 1, z = pos.z}
+	local nn = minetest.get_node(np)
+	if nn.name == node.name then
+		minetest.node_dig(np, nn, digger)
+	end
+end
+
 
 --
 -- Fence registration helper

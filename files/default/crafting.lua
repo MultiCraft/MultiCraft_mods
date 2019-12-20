@@ -475,6 +475,12 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
+	recipe = "default:vine",
+	burntime = 3
+})
+
+minetest.register_craft({
+	type = "fuel",
 	recipe = "bucket:bucket_lava",
 	burntime = 1000
 })
