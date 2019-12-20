@@ -1,60 +1,54 @@
 function default.register_torch(name, def)
-	local torch = {
-		description = def.description,
-		drawtype = "mesh",
-		tiles = def.tiles,
-		paramtype = "light",
-		paramtype2 = "wallmounted",
-		sunlight_propagates = true,
-		walkable = false,
-		liquids_pointable = false,
-		light_source = def.light_source,
-		groups = def.groups,
-		drop = name,
-		sounds = def.sounds,
-		floodable = true,
-
-		mesecons = def.mesecons,
-
-		on_blast = def.on_blast,
-
-		on_flood = function(pos, oldnode, newnode)
-			oldnode.name = name or name .. "_wall" or name .. "_celling"
-			minetest.add_item(pos, ItemStack(oldnode))
-			-- Play flame-extinguish sound if liquid is not an 'igniter'
-			local nodedef = minetest.registered_items[newnode.name]
-			if not (nodedef and nodedef.groups and
-					nodedef.groups.igniter and nodedef.groups.igniter > 0) then
-				minetest.sound_play(
-					"default_cool_lava",
-					{pos = pos, max_hear_distance = 16, gain = 0.1}
-				)
-			end
-			-- Remove the torch node
-			return false
-		end,
-
-		on_place = function(itemstack, placer, pointed_thing)
-			local under = pointed_thing.under
-			local above = pointed_thing.above
-			local wdir = minetest.dir_to_wallmounted(vector.subtract(under, above))
-			if wdir == 0 then
-				itemstack:set_name(name .. "_ceiling")
-			elseif wdir == 1 then
-				itemstack:set_name(name)
-			else
-				itemstack:set_name(name .. "_wall")
-			end
-			itemstack = minetest.item_place(itemstack, placer, pointed_thing, wdir)
-			itemstack:set_name(name)
-			return itemstack
+	local torch = table.copy(def)
+	torch.drawtype = "mesh"
+	torch.paramtype = "light"
+	torch.paramtype2 = "wallmounted"
+	torch.sunlight_propagates = true
+	torch.walkable = false
+	torch.liquids_pointable = false
+	torch.drop = name
+	torch.floodable = true
+	torch.on_flood = function(pos, oldnode, newnode)
+		oldnode.name = name or name .. "_wall" or name .. "_celling"
+		minetest.add_item(pos, ItemStack(oldnode))
+		-- Play flame-extinguish sound if liquid is not an 'igniter'
+		local nodedef = minetest.registered_items[newnode.name]
+		if not (nodedef and nodedef.groups and
+				nodedef.groups.igniter and nodedef.groups.igniter > 0) then
+			minetest.sound_play(
+				"default_cool_lava",
+				{pos = pos, max_hear_distance = 16, gain = 0.1}
+			)
 		end
-	}
+		-- Remove the torch node
+		return false
+	end
+	torch.on_place = function(itemstack, placer, pointed_thing)
+		local under = pointed_thing.under
+		local node = minetest.get_node(under)
+		local node_def = minetest.registered_nodes[node.name]
+		if node_def and node_def.on_rightclick and
+			not (placer and placer:is_player() and
+			placer:get_player_control().sneak) then
+			return node_def.on_rightclick(under, node, placer, itemstack,
+				pointed_thing) or itemstack
+		end
+		local above = pointed_thing.above
+		local wdir = minetest.dir_to_wallmounted(vector.subtract(under, above))
+		if wdir == 0 then
+			itemstack:set_name(name .. "_ceiling")
+		elseif wdir == 1 then
+			itemstack:set_name(name)
+		else
+			itemstack:set_name(name .. "_wall")
+		end
+		itemstack = minetest.item_place(itemstack, placer, pointed_thing, wdir)
+		itemstack:set_name(name)
+		return itemstack
+	end
 
 	local torch_floor = table.copy(torch)
 	torch_floor.mesh = "torch_floor.obj"
-	torch_floor.inventory_image = def.inventory_image
-	torch_floor.wield_image = def.wield_image
 	torch_floor.selection_box = {
 		type = "wallmounted",
 		wall_bottom = {-1/8, -1/2, -1/8, 1/8, 2/16, 1/8}
