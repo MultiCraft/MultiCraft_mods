@@ -135,19 +135,19 @@ function boat.on_punch(self, puncher)
 	end
 end
 
+local sp = minetest.is_singleplayer()
 
 function boat.on_step(self, dtime)
-	local drop_timer = 300 -- 5 min
-	if not minetest.is_singleplayer() then
-		drop_timer = 60 -- 1 min
-	end
-	self.count = (self.count or 0) + dtime
-
 	-- Drop boat if the player is not on board
-	if self.count > drop_timer then
-		minetest.add_item(self.object:get_pos(), "boats:boat")
-		self.object:remove()
-		return
+	if not sp then
+		local drop_timer = 120 -- 2 min
+
+		self.count = (self.count or 0) + dtime
+		if self.count > drop_timer then
+			minetest.add_item(self.object:get_pos(), "boats:boat")
+			self.object:remove()
+			return
+		end
 	end
 
 	self.v = get_v(self.object:get_velocity()) * math.sign(self.v)
