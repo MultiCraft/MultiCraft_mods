@@ -174,13 +174,13 @@ local function rail_sound(self, dtime)
 end
 
 local v3_len = vector.length
+local sp = minetest.is_singleplayer()
+
 local function rail_on_step(self, dtime)
 	-- Drop cart if there is no player or items inside.
-	if not self.driver and #self.attached_items == 0 then
-		local drop_timer = 300 -- 5 min
-		if not minetest.is_singleplayer() then
-			drop_timer = 60 -- 1 min
-		end
+	if not sp and not self.driver and #self.attached_items == 0 then
+		local drop_timer = 120 -- 2 min
+
 		self.age = (self.age or 0) + dtime
 		if self.age > drop_timer then
 			minetest.add_item(self.object:get_pos(), "carts:cart")
@@ -190,8 +190,6 @@ local function rail_on_step(self, dtime)
 			self.object:remove()
 			return
 		end
-	else
-		self.age = 0
 	end
 	
 	local ctrl, player
