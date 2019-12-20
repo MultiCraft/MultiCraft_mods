@@ -210,6 +210,27 @@ minetest.register_node("default:hardened_clay", {
 	sounds = default.node_sound_defaults()
 })
 
+minetest.register_node("default:cement", {
+	description = "Cement",
+	tiles = {"default_cement.png"},
+	is_ground_content = false,
+	groups = {crumbly = 3, falling_node = 1},
+	sounds = default.node_sound_defaults(),
+	floodable = true,
+	on_flood = function(pos)
+		minetest.swap_node(pos, {name = "default:concrete"})
+		return true
+	end
+})
+
+minetest.register_node("default:concrete", {
+	description = "Concrete",
+	tiles = {"default_concrete.png"},
+	groups = {cracky = 3},
+	drop = "",
+	sounds = default.node_sound_dirt_defaults()
+})
+
 
 minetest.register_node("default:snow", {
 	description = "Snow",
