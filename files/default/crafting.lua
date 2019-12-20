@@ -180,6 +180,26 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "default:cement 8",
+	recipe = {
+		{"default:gravel", "default:gravel", "default:sand"},
+		{"default:gravel", "bucket:bucket_water", "default:sand"},
+		{"default:gravel", "default:sand", "default:sand"}
+	},
+	replacements = {{"bucket:bucket_water", "bucket:bucket_empty"}}
+})
+
+minetest.register_craft({
+	output = "default:cement 8",
+	recipe = {
+		{"default:gravel", "default:gravel", "default:sand"},
+		{"default:gravel", "bucket:bucket_river_water", "default:sand"},
+		{"default:gravel", "default:sand", "default:sand"}
+	},
+	replacements = {{"bucket:bucket_river_water", "bucket:bucket_empty"}}
+})
+
+minetest.register_craft({
 	output = "default:clay",
 	recipe = {
 		{"default:clay_lump", "default:clay_lump"},
@@ -228,11 +248,20 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:ladder",
+	output = "default:ladder_wood",
 	recipe = {
 		{"default:stick", "", "default:stick"},
 		{"default:stick", "default:stick", "default:stick"},
 		{"default:stick", "", "default:stick"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:grill_bar",
+	recipe = {
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"", "default:steel_ingot", ""},
+		{"default:steel_ingot", "", "default:steel_ingot"}
 	}
 })
 
