@@ -1072,7 +1072,7 @@ function default.register_decorations()
 			octaves = 3,
 			persist = 0.66
 		},
-		biomes = {"taiga", "coniferous_forest", "floatland_coniferous_forest"},
+		biomes = {"taiga", "coniferous_forest"},
 		y_max = 31000,
 		y_min = 4,
 		schematic = minetest.get_modpath("default") .. "/schematics/pine_tree.mts",
@@ -1092,7 +1092,7 @@ function default.register_decorations()
 			octaves = 3,
 			persist = 0.66
 		},
-		biomes = {"taiga", "coniferous_forest", "floatland_coniferous_forest"},
+		biomes = {"taiga", "coniferous_forest"},
 		y_max = 31000,
 		y_min = 4,
 		schematic = minetest.get_modpath("default") .. "/schematics/small_pine_tree.mts",
@@ -1105,7 +1105,7 @@ function default.register_decorations()
 		place_on = {"default:dirt_with_snow", "default:dirt_with_grass"},
 		sidelen = 80,
 		fill_ratio = 0.0018,
-		biomes = {"taiga", "coniferous_forest", "floatland_coniferous_forest"},
+		biomes = {"taiga", "coniferous_forest"},
 		y_max = 31000,
 		y_min = 4,
 		schematic = minetest.get_modpath("default") .. "/schematics/pine_log.mts",
@@ -1283,9 +1283,9 @@ function default.register_decorations()
 			octaves = 3,
 			persist = 0.6
 		},
-		biomes = {"grassland", "deciduous_forest", "floatland_grassland", "stone_grassland", "sandstone_grassland",
+		biomes = {"grassland", "deciduous_forest", "stone_grassland",
 			"deciduous_forest", "coniferous_forest",
-			"stone_grassland_dunes", "sandstone_grassland_dunes",
+			"stone_grassland_dunes",
 			"coniferous_forest_dunes"},
 		y_max = 31000,
 		y_min = 1,
@@ -1348,21 +1348,8 @@ end
 
 
 --
--- Detect mapgen, flags and parameters to select functions
+-- Detect mapgen to select functions
 --
-
--- Get setting or default
-local mgv7_spflags = minetest.get_mapgen_setting("mgv7_spflags") or
-	"mountains, ridges, nofloatlands, caverns"
-local captures_float = string.match(mgv7_spflags, "floatlands")
-local captures_nofloat = string.match(mgv7_spflags, "nofloatlands")
-
--- Get setting or default
--- Make global for mods to use to register floatland biomes
-default.mgv7_floatland_level =
-	minetest.get_mapgen_setting("mgv7_floatland_level") or 1280
-default.mgv7_shadow_limit =
-	minetest.get_mapgen_setting("mgv7_shadow_limit") or 1024
 
 minetest.clear_registered_biomes()
 minetest.clear_registered_ores()
@@ -1374,17 +1361,6 @@ if mg_name == "v6" then
 	default.register_bedrock()
 	default.register_ores()
 	default.register_mgv6_decorations()
--- Need to check for 'nofloatlands' because that contains
--- 'floatlands' which makes the second condition true.
-elseif mg_name == "v7" and
-	captures_float == "floatlands" and
-	captures_nofloat ~= "nofloatlands" then
-	-- Mgv7 with floatlands and floatland biomes
-	default.register_biomes(default.mgv7_shadow_limit - 1)
-	default.register_floatland_biomes(
-		default.mgv7_floatland_level, default.mgv7_shadow_limit)
-	default.register_ores()
-	default.register_decorations()
 else
 	default.register_biomes()
 	default.register_ores()
