@@ -952,7 +952,6 @@ minetest.register_node("default:grass", {
 	sounds = default.node_sound_leaves_defaults()
 })
 
-
 minetest.register_node("default:dry_grass", {
 	description = "Dry Grass",
 	drawtype = "plantlike",
@@ -1461,18 +1460,29 @@ minetest.register_node("default:vine", {
 	},
 	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2},
 	sounds = default.node_sound_leaves_defaults(),
-	after_dig_node = function(pos)
-		local next_find = true
-		local down = 1
-		while next_find do
-			pos.y = pos.y - down
-			local node = minetest.get_node(pos)
-			if node.name == "default:vine" then
-				minetest.remove_node(pos)
-				down = down + 1
-			else
-				next_find = false
-			end
+
+	on_construct = function(pos)
+		minetest.get_node_timer(pos):start(math.random(30, 60))
+	end,
+
+	on_timer = function(pos)
+		local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
+		if (minetest.get_node_light(pos) or 0) < 13 then
+			return true
+		end
+		if minetest.get_node(pos_under).name == "air" then
+			minetest.set_node(pos_under, {
+				name = "default:vine",
+				param2 = minetest.get_node(pos).param2
+			})
+		end
+	end,
+
+	after_dig_node = function(pos, node, _, digger)
+		default.dig_down(pos, node, digger)
+		local pos_above = {x = pos.x, y = pos.y + 1, z = pos.z}
+		if minetest.get_node(pos_above).name == "default:vine" then
+			minetest.get_node_timer(pos_above):start(math.random(30, 60))
 		end
 	end
 })
