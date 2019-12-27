@@ -4,7 +4,7 @@ player_api = {}
 -- Note: This is currently broken due to a bug in Irrlicht, leave at 0
 local animation_blend = 0
 
-player_api.registered_models = { }
+player_api.registered_models = {}
 
 -- Local for speed.
 local models = player_api.registered_models
@@ -25,7 +25,7 @@ function player_api.get_animation(player)
 	return {
 		model = player_model[name],
 		textures = player_textures[name],
-		animation = player_anim[name],
+		animation = player_anim[name]
 	}
 end
 
@@ -44,7 +44,7 @@ function player_api.set_model(player, model_name)
 			visual_size = model.visual_size or {x = 1, y = 1},
 			collisionbox = model.collisionbox, -- or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
 			stepheight = model.stepheight or 0.6,
-			eye_height = model.eye_height or 1.47,
+			eye_height = model.eye_height or 1.47
 		})
 		player_api.set_animation(player, "stand")
 	else
@@ -52,7 +52,7 @@ function player_api.set_model(player, model_name)
 			visual = "upright_sprite",
 		--	collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.75, 0.3},
 			stepheight = 0.6,
-			eye_height = 1.625,
+			eye_height = 1.625
 		})
 	end
 	player_model[name] = model_name
@@ -63,7 +63,7 @@ function player_api.set_textures(player, textures)
 	local model = models[player_model[name]]
 	local model_textures = model and model.textures or nil
 	player_textures[name] = textures or model_textures
-	player:set_properties({textures = textures or model_textures,})
+	player:set_properties({textures = textures or model_textures})
 end
 
 function player_api.set_animation(player, anim_name, speed)

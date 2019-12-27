@@ -31,6 +31,6 @@ Creative Commons sounds from Freesound.org
 
 mobs_swing.ogg by qubodup (CC0)
 http://freesound.org/people/qubodup/sounds/60012/
- 
+
 mobs_spell.ogg by littlerobotsoundfactory (CC BY 3.0)
 http://freesound.org/people/LittleRobotSoundFactory/sounds/270396/

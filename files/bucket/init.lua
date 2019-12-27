@@ -61,7 +61,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 			on_place = function(itemstack, user, pointed_thing)
 				-- Must be pointing to node
 				if pointed_thing.type ~= "node" then
-					return
+					return itemstack
 				end
 
 				local node = minetest.get_node_or_nil(pointed_thing.under)
@@ -98,17 +98,15 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				end
 
 				local player_name = user:get_player_name()
-				if not minetest.is_singleplayer() then
-					if pointed_thing.under.y >= 8 then
-						minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"), true)
-					return
-					end
+				if not minetest.is_singleplayer() and pointed_thing.under.y >= 8 then
+					minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"))
+					return itemstack
 				end
 
 				if check_protection(lpos, user
 						and user:get_player_name()
 						or "", "place " .. source) then
-					return
+					return itemstack
 				end
 
 				minetest.set_node(lpos, {name = source})

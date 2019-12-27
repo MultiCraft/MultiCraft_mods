@@ -1,8 +1,8 @@
 -- Mobs API
 mobs = {
 	mod = "redo",
-	version = "20190912",
-	invis = minetest.global_exists("invisibility") and invisibility or {},
+	version = "20191116",
+	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
 -- Intllib
@@ -517,10 +517,7 @@ function mob_class:do_stay_near()
 
 	local target = nearby_nodes[math.random(1, #nearby_nodes)]
 	local direction = vector.direction(pos, target)
-	local vec = {
-		x = target.x - pos.x,
-		z = target.z - pos.z
-	}
+	local vec = {x = target.x - pos.x, z = target.z - pos.z}
 
 	local yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
@@ -1189,7 +1186,7 @@ function mob_class:replace(pos)
 			on_replace_return = self:on_replace(pos, oldnode, newnode)
 		end
 
-		if on_replace_return ~= false then
+		if on_replace_return ~= false and with ~= "" then
 			minetest.set_node(pos, {name = with})
 		end
 	end
@@ -1803,7 +1800,7 @@ function mob_class:do_states(dtime)
 				and self.walk_chance ~= 0
 				and self.facing_fence ~= true
 				and random(1, 100) <= self.walk_chance
-				and not self:is_at_cliff() then
+				and not self.at_cliff then
 
 			self:set_velocity(self.walk_velocity)
 			self.state = "walk"
@@ -1869,9 +1866,7 @@ function mob_class:do_states(dtime)
 		end
 
 		-- stand for great fall in front
-		local temp_is_cliff = self:is_at_cliff()
-
-		if self.facing_fence or temp_is_cliff
+		if self.facing_fence or self.at_cliff
 				or random(1, 100) <= self.stand_chance then
 			self:set_velocity(0)
 			self.state = "stand"
@@ -1895,7 +1890,7 @@ function mob_class:do_states(dtime)
 
 		-- stop after 5 seconds or when at cliff
 		if self.runaway_timer > 5
-				or self:is_at_cliff()
+				or self.at_cliff
 				or self.order == "stand" then
 			self.runaway_timer = 0
 			self:set_velocity(0)
@@ -2113,7 +2108,7 @@ function mob_class:do_states(dtime)
 					self:smart_mobs(s, p, dist, dtime)
 				end
 
-				if self:is_at_cliff() then
+				if self.at_cliff then
 					self:set_velocity(0)
 					self:set_animation("stand")
 				else
@@ -2506,7 +2501,6 @@ function mob_class:get_staticdata()
 	-- remove mob when out of range unless tamed
 	if remove_far
 			and self.remove_ok
-			and self.type ~= "npc"
 			and self.state ~= "attack"
 			and not self.tamed
 			and self.lifetimer < 20000 then
@@ -2685,8 +2679,7 @@ end
 -- handle mob lifetimer and expiration
 function mob_class:mob_expire(pos, dtime)
 	-- when lifetimer expires remove mob (except npc and tamed)
-	if self.type ~= "npc"
-			and not self.tamed
+	if not self.tamed
 			and self.state ~= "attack"
 			and remove_far ~= true
 			and self.lifetimer < 20000 then
@@ -2704,7 +2697,6 @@ function mob_class:mob_expire(pos, dtime)
 			end
 
 --			effect(pos, 15, "item_smoke.png", 2, 4, 2, 0)
-
 			self.object:remove()
 			return
 		end
@@ -2743,6 +2735,13 @@ function mob_class:on_step(dtime)
 				y = self.jump_height,
 				z = 0
 			})
+		end
+
+		-- check and stop if standing at cliff and fear of heights
+		self.at_cliff = self:is_at_cliff()
+
+		if self.at_cliff then
+			self:set_velocity(0)
 		end
 
 		-- check for mob expiration (0.25 instead of dtime since were in a timer)
@@ -3372,7 +3371,6 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 		stack_max = 1,
 		on_use = throw_spawn_egg,
 		on_place = function(itemstack, placer, pointed_thing)
-
 			local pos = pointed_thing.above
 
 			-- am I clicking on something with existing on_rightclick function?
@@ -3382,6 +3380,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
 			end
 
+			local mob = itemstack:get_name():gsub("_set$", "")
 			if spawn_mob(pos, mob, itemstack:get_metadata(), placer) then
 				-- since mob is unique we remove egg once spawned
 				itemstack:take_item()
@@ -3400,6 +3399,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 		on_use = throw_spawn_egg,
 		on_place = function(itemstack, placer, pointed_thing)
 			local pos = pointed_thing.above
+
 			-- am I clicking on something with existing on_rightclick function?
 			local under = minetest.get_node(pointed_thing.under)
 			local def = minetest.registered_nodes[under.name]
@@ -3407,6 +3407,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
 			end
 
+			local mob = itemstack:get_name():gsub("_set$", "")
 			if spawn_mob(pos, mob, itemstack:get_metadata(), placer) then
 				-- if not in creative then take item and minimal protection
 				-- against creating a large number of mobs on the server

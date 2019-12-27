@@ -262,6 +262,7 @@ if not minetest.settings:get_bool("creative_mode") then
 		nodenames = {"default:cactus"},
 		interval = 1,
 		chance = 1,
+		catch_up = false,
 		action = function(pos)
 			local players = minetest.get_objects_inside_radius(pos, 1)
 			for _, player in pairs(players) do
@@ -318,8 +319,8 @@ function default.register_fence(name, def)
 	minetest.register_craft({
 		output = name .. " 4",
 		recipe = {
-			{ def.material, "default:stick", def.material },
-			{ def.material, "default:stick", def.material }
+			{def.material, "default:stick", def.material},
+			{def.material, "default:stick", def.material}
 		}
 	})
 
@@ -539,8 +540,8 @@ minetest.register_abm({
 		"walls:cobble"
 	},
 	neighbors = {"group:water"},
-	interval = 16,
-	chance = 200,
+	interval = 15,
+	chance = 100,
 	catch_up = false,
 	action = function(pos, node)
 		node.name = moss_correspondences[node.name]
@@ -577,7 +578,7 @@ local function snowball_impact(thrower, pos, dir, hit_object)
 	if hit_object then
 		local punch_damage = {
 			full_punch_interval = 1.0,
-			damage_groups = {fleshy = 1},
+			damage_groups = {fleshy = 1}
 		}
 		hit_object:punch(thrower, 1.0, punch_damage, dir)
 	end
@@ -622,7 +623,7 @@ function default.snow_shoot_snowball(itemstack, thrower)
 		obj:set_properties({
 			visual = "sprite",
 			visual_size = {x = 1, y = 1},
-			textures = {"default_snowball.png"},
+			textures = {"default_snowball.png"}
 		})
 		minetest.sound_play("throwing_sound", {
 			pos = playerpos,
@@ -652,15 +653,13 @@ if core.is_singleplayer() then
 		interval = 3,
 		chance = 3,
 		catch_up = false,
-		action = function(pos, node)
-			pos.y = pos.y - 2
-			if minetest.get_node(pos).name == "air" then
-				pos.y = pos.y + 1
+		action = function(pos)
+			if minetest.get_node({x = pos.x, y = pos.y - 2, z = pos.z}).name == "air" then
 				minetest.add_particlespawner({
 					amount = 1,
 					time = 0.1,
-					minpos = {x = pos.x - 0.5, y = pos.y, z = pos.z - 0.5},
-					maxpos = {x = pos.x + 0.5, y = pos.y, z = pos.z + 0.5},
+					minpos = {x = pos.x - 0.5, y = pos.y - 1, z = pos.z - 0.5},
+					maxpos = {x = pos.x + 0.5, y = pos.y - 1, z = pos.z + 0.5},
 					minvel = {x = 0, y = -1, z = 0},
 					maxvel = {x = 0, y = -2, z = 0},
 					minexptime = 2,
@@ -681,15 +680,13 @@ if core.is_singleplayer() then
 		interval = 3,
 		chance = 3,
 		catch_up = false,
-		action = function(pos, node)
-			pos.y = pos.y - 2
-			if minetest.get_node(pos).name == "air" then
-				pos.y = pos.y + 1
+		action = function(pos)
+			if minetest.get_node({x = pos.x, y = pos.y - 2, z = pos.z}).name == "air" then
 				minetest.add_particlespawner({
 					amount = 1,
 					time = 0.1,
-					minpos = {x = pos.x - 0.5, y = pos.y, z = pos.z - 0.5},
-					maxpos = {x = pos.x + 0.5, y = pos.y, z = pos.z + 0.5},
+					minpos = {x = pos.x - 0.5, y = pos.y - 1, z = pos.z - 0.5},
+					maxpos = {x = pos.x + 0.5, y = pos.y - 1, z = pos.z + 0.5},
 					minvel = {x = 0, y = -1, z = 0},
 					maxvel = {x = 0, y = -2, z = 0},
 					minexptime = 2,
@@ -710,10 +707,8 @@ if core.is_singleplayer() then
 		interval = 3,
 		chance = 3,
 		catch_up = false,
-		action = function(pos, node)
-			pos.y = pos.y + 1
-			if minetest.get_node(pos).name == "air" then
-				pos.y = pos.y - 1
+		action = function(pos)
+			if minetest.get_node({x = pos.x, y = pos.y + 1, z = pos.z}).name == "air" then
 				minetest.add_particlespawner({
 					amount = 1,
 					time = 0.1,
@@ -727,14 +722,12 @@ if core.is_singleplayer() then
 					texture = "default_lava.png"
 				})
 			end
-			pos.y = pos.y - 3
-			if minetest.get_node(pos).name == "air" then
-				pos.y = pos.y + 1
+			if minetest.get_node({x = pos.x, y = pos.y - 2, z = pos.z}).name == "air" then
 				minetest.add_particlespawner({
 					amount = 1,
 					time = 0.1,
-					minpos = {x = pos.x - 0.5, y = pos.y, z = pos.z - 0.5},
-					maxpos = {x = pos.x + 0.5, y = pos.y, z = pos.z + 0.5},
+					minpos = {x = pos.x - 0.5, y = pos.y - 1, z = pos.z - 0.5},
+					maxpos = {x = pos.x + 0.5, y = pos.y - 1, z = pos.z + 0.5},
 					minvel = {x = 0, y = -1, z = 0},
 					maxvel = {x = 0, y = -2, z = 0},
 					minexptime = 2,

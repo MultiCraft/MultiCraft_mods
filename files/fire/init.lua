@@ -294,8 +294,8 @@ if minetest.is_singleplayer() then
 				minetest.add_particlespawner({
 					amount = 3,
 					time = 0.1,
-					minpos = {x = p.x - 0.1, y = p.y + 0.1, z = p.z - 0.1 },
-					maxpos = {x = p.x + 0.1, y = p.y + 0.2, z = p.z + 0.1 },
+					minpos = {x = p.x - 0.1, y = p.y + 0.1, z = p.z - 0.1},
+					maxpos = {x = p.x + 0.1, y = p.y + 0.2, z = p.z + 0.1},
 					minvel = {x = 0, y = 2.5, z = 0},
 					maxvel = {x = 0, y = 2.5, z = 0},
 					minacc = {x = -0.15, y = -0.02, z = -0.15},
