@@ -19,4 +19,4 @@ Kitten = Кошка
 Parrot = Попугай
 Pig = Поросёнок
 Sheep = Овца
-Turtle = Черепаха
+Tutrle = Черепаха

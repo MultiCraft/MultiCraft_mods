@@ -39,6 +39,8 @@ minetest.register_alias("mapgen_mossycobble", "default:mossycobble")
 minetest.register_alias("mapgen_sandstonebrick", "default:sandstone")
 minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_default_sandstone")
 
+local modpath = minetest.get_modpath("default")
+
 --
 -- Register bedrock for Mgv6
 --
@@ -971,7 +973,7 @@ function default.register_decorations()
 		biomes = {"deciduous_forest"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/apple_tree.mts",
+		schematic = modpath .. "/schematics/apple_tree.mts",
 		flags = "place_center_x, place_center_z",
 		rotation = "random",
 	})
@@ -991,7 +993,7 @@ function default.register_decorations()
 		biomes = {"deciduous_forest"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/apple_log.mts",
+		schematic = modpath .. "/schematics/apple_log.mts",
 		flags = "place_center_x",
 		rotation = "random",
 		spawn_by = "default:dirt_with_grass",
@@ -1019,7 +1021,7 @@ function default.register_decorations()
 			biomes = {"rainforest"},
 			y_max = 32,
 			y_min = 1,
-			schematic = minetest.get_modpath("default") ..
+			schematic = modpath ..
 					"/schematics/emergent_jungle_tree.mts",
 			flags = "place_center_x, place_center_z",
 			rotation = "random",
@@ -1037,7 +1039,7 @@ function default.register_decorations()
 		biomes = {"rainforest", "rainforest_swamp"},
 		y_max = 31000,
 		y_min = -1,
-		schematic = minetest.get_modpath("default") .. "/schematics/jungle_tree.mts",
+		schematic = modpath .. "/schematics/jungle_tree.mts",
 		flags = "place_center_x, place_center_z",
 		rotation = "random",
 	})
@@ -1051,7 +1053,7 @@ function default.register_decorations()
 		biomes = {"rainforest", "rainforest_swamp"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/jungle_log.mts",
+		schematic = modpath .. "/schematics/jungle_log.mts",
 		flags = "place_center_x",
 		rotation = "random",
 --		spawn_by = "default:dirt_with_rainforest_litter"
@@ -1075,7 +1077,7 @@ function default.register_decorations()
 		biomes = {"taiga", "coniferous_forest"},
 		y_max = 31000,
 		y_min = 4,
-		schematic = minetest.get_modpath("default") .. "/schematics/pine_tree.mts",
+		schematic = modpath .. "/schematics/pine_tree.mts",
 		flags = "place_center_x, place_center_z",
 	})
 
@@ -1095,7 +1097,7 @@ function default.register_decorations()
 		biomes = {"taiga", "coniferous_forest"},
 		y_max = 31000,
 		y_min = 4,
-		schematic = minetest.get_modpath("default") .. "/schematics/small_pine_tree.mts",
+		schematic = modpath .. "/schematics/small_pine_tree.mts",
 		flags = "place_center_x, place_center_z",
 	})
 
@@ -1108,7 +1110,7 @@ function default.register_decorations()
 		biomes = {"taiga", "coniferous_forest"},
 		y_max = 31000,
 		y_min = 4,
-		schematic = minetest.get_modpath("default") .. "/schematics/pine_log.mts",
+		schematic = modpath .. "/schematics/pine_log.mts",
 		flags = "place_center_x",
 		rotation = "random",
 --		spawn_by = {"default:dirt_with_snow", "default:dirt_with_coniferous_litter"},
@@ -1133,7 +1135,7 @@ function default.register_decorations()
 		biomes = {"savanna"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/acacia_tree.mts",
+		schematic = modpath .. "/schematics/acacia_tree.mts",
 		flags = "place_center_x, place_center_z",
 		rotation = "random",
 	})
@@ -1153,7 +1155,7 @@ function default.register_decorations()
 		biomes = {"savanna"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/acacia_log.mts",
+		schematic = modpath .. "/schematics/acacia_log.mts",
 		flags = "place_center_x",
 		rotation = "random",
 		spawn_by = "default:dirt_with_dry_grass",
@@ -1177,7 +1179,7 @@ function default.register_decorations()
 		biomes = {"deciduous_forest"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/birch_tree.mts",
+		schematic = modpath .. "/schematics/birch_tree.mts",
 		flags = "place_center_x, place_center_z",
 	})
 
@@ -1196,7 +1198,7 @@ function default.register_decorations()
 		biomes = {"deciduous_forest"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/birch_log.mts",
+		schematic = modpath .. "/schematics/birch_log.mts",
 		flags = "place_center_x",
 		rotation = "random",
 		spawn_by = "default:dirt_with_grass",
@@ -1221,7 +1223,7 @@ function default.register_decorations()
 		biomes = {"desert"},
 		y_max = 31000,
 		y_min = 4,
-		schematic = minetest.get_modpath("default").."/schematics/large_cactus.mts",
+		schematic = modpath.."/schematics/large_cactus.mts",
 		flags = "place_center_x, place_center_z",
 		rotation = "random",
 	})
@@ -1265,7 +1267,7 @@ function default.register_decorations()
 		biomes = {"savanna_swamp"},
 		y_max = 0,
 		y_min = 0,
-		schematic = minetest.get_modpath("default").."/schematics/sugarcane.mts",
+		schematic = modpath.."/schematics/sugarcane.mts",
 --		num_spawn_by = 8,
 	})
 

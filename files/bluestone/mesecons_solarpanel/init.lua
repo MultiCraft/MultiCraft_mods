@@ -61,6 +61,7 @@ minetest.register_abm(
 	{nodenames = {"mesecons_solarpanel:solar_panel_off"},
 	interval = 3,
 	chance = 1,
+	catch_up = false,
 	action = function(pos, node)
 		local light = minetest.get_node_light(pos)
 
@@ -76,6 +77,7 @@ minetest.register_abm(
 	{nodenames = {"mesecons_solarpanel:solar_panel_on"},
 	interval = 3,
 	chance = 1,
+	catch_up = false,
 	action = function(pos, node)
 		local light = minetest.get_node_light(pos)
 

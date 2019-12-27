@@ -189,7 +189,7 @@ minetest.register_craft({
 	output = "mobs:cheese",
 	recipe = "mobs:bucket_milk",
 	cooktime = 5,
-	replacements = {{"mobs:bucket_milk", "bucket:bucket_empty"}}
+	replacements = {{"bucket:bucket_milk", "bucket:bucket_empty"}}
 })
 
 -- cheese block
@@ -279,7 +279,6 @@ minetest.register_craft({
 	recipe = "mobs:leather",
 	burntime = 4
 })
-
 
 minetest.register_craft({
 	type = "fuel",

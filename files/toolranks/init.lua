@@ -86,10 +86,12 @@ end
 -- Helper function
 minetest.after(0, function()
 	for name, def in pairs(minetest.registered_tools) do
-		minetest.override_item(name, {
-			original_description = def.description,
-			description = create_description(def.description),
-			after_use = toolranks.new_afteruse
-		})	
+		if not def.groups.armor_use then
+			minetest.override_item(name, {
+				original_description = def.description,
+				description = create_description(def.description),
+				after_use = toolranks.new_afteruse
+			})
+		end
 	end
 end)
