@@ -260,5 +260,11 @@ minetest.register_craftitem("default:snowball", {
 	inventory_image = "default_snowball.png",
 	stack_max = 16,
 	groups = {flammable = 3},
-	on_use = default.snow_shoot_snowball
+	on_use = default.snow_shoot_snowball,
+	on_place = function(itemstack, placer, pointed_thing)
+		if minetest.item_place_node(ItemStack("default:snow"), placer, pointed_thing) then
+			itemstack:take_item()
+		end
+		return itemstack
+	end
 })

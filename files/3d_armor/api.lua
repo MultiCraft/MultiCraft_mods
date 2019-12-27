@@ -71,7 +71,7 @@ if enable_damage then
 		hud_elem_type = "statbar",
 		position      = {x = 0.5,  y = 1},
 		alignment     = {x = -1,   y = -1},
-		offset        = {x = -247, y = -134},
+		offset        = {x = -247, y = -120},
 		size          = {x = 24,   y = 24},
 		text          = "3d_armor_statbar_fg.png",
 		background    = "3d_armor_statbar_bg.png",

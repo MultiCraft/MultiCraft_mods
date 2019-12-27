@@ -89,7 +89,6 @@ mobs:register_mob("mobs_animal:bear", {
 mobs:spawn({
 	name = "mobs_animal:bear",
 	mobs_animal.spawn_nodes,
-	min_light = 0,
 	chance = 30000,
 	min_height = 0,
 	day_toggle = true

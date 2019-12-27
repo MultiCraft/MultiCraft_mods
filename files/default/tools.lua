@@ -390,32 +390,3 @@ for k, v in pairs(craft_ingreds) do
 		}
 	})
 end
-
-
---
--- Fishing Pole
---
-
-minetest.register_tool("default:pole", {
-	description = "Fishing Pole",
-	inventory_image = "default_tool_fishing_pole.png",
-	groups = {flammable = 2},
-	liquids_pointable = true,
-	sound = {breaks = "default_tool_breaks"},
-	on_use = function(itemstack, user, pointed_thing)
-		if pointed_thing and pointed_thing.under then
-			local node = minetest.get_node(pointed_thing.under)
-			if node.name:find("water_source") then
-				if math.random(8) == 1 then
-					local inv = user:get_inventory()
-					if inv:room_for_item("main", "default:fish_raw") then
-						inv:add_item("main", "default:fish_raw")
-					end
-				end
-				itemstack:add_wear(65535/65) -- 65 uses
-				return itemstack
-			end
-		end
-		return
-	end
-})

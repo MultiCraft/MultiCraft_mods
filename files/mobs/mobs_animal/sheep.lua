@@ -37,19 +37,19 @@ for i = 1, #dyes do
 			stand_start = 0,	stand_end = 80,
 			walk_start = 81,	walk_end = 100
 		},
+		fear_height = 3,
 		follow = {"flora", "farming:wheat"},
 		replace_rate = 10,
 		replace_what = {
-			{"group:grass", "air", -1},
+			{"group:flora", "air", -1},
 			{"default:dirt_with_grass", "default:dirt", -2}
 		},
-		fear_height = 3,
 
 		on_replace = function(self)
 			self.food = (self.food or 0) + 1
 
 			-- if sheep replaces 8x grass then it regrows wool
-			if self.food >= 8 then
+			if self.food >= 8 and self.gotten then
 				self.food = 0
 				self.gotten = false
 
@@ -68,7 +68,7 @@ for i = 1, #dyes do
 					self.gotten = false
 					self.object:set_properties({
 						textures = {"mobs_sheep.png^mobs_sheep_" .. name .. ".png"},
-						mesh = "mobs_sheep.b3d",
+						mesh = "mobs_sheep.b3d"
 					})
 				end
 				return
@@ -81,15 +81,14 @@ for i = 1, #dyes do
 			--are we giving a haircut>
 			if itemname == "mobs:shears" then
 				if self.gotten or self.child
-						or player ~= self.owner
-						or not minetest.get_modpath("wool") then
+						or player ~= self.owner then
 					return
 				end
 				self.gotten = true -- shaved
 				local obj = minetest.add_item(self.object:get_pos(),
 					ItemStack("wool:" .. name .. " " .. math.random(1, 3)))
 				if obj then
-					obj:setvelocity({
+					obj:set_velocity({
 						x = math.random(-1, 1),
 						y = 5,
 						z = math.random(-1, 1)
@@ -99,7 +98,7 @@ for i = 1, #dyes do
 				clicker:set_wielded_item(item)
 				self.object:set_properties({
 					textures = {"mobs_sheep.png^mobs_sheep_shaved.png"},
-					mesh = "mobs_sheep_shaved.b3d",
+					mesh = "mobs_sheep_shaved.b3d"
 				})
 				return
 			end

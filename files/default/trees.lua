@@ -1,5 +1,7 @@
 local random = math.random
 
+local modpath = minetest.get_modpath("default")
+
 --
 -- Grow trees from saplings
 --
@@ -372,7 +374,7 @@ end
 -- New apple tree
 
 function default.grow_new_apple_tree(pos)
-	local path = minetest.get_modpath("default") ..
+	local path = modpath ..
 		"/schematics/apple_tree_from_sapling.mts"
 	minetest.place_schematic({x = pos.x - 3, y = pos.y - 1, z = pos.z - 3},
 		path, "random", nil, false)
@@ -382,7 +384,7 @@ end
 -- New jungle tree
 
 function default.grow_new_jungle_tree(pos)
-	local path = minetest.get_modpath("default") ..
+	local path = modpath ..
 		"/schematics/jungle_tree_from_sapling.mts"
 	minetest.place_schematic({x = pos.x - 2, y = pos.y - 1, z = pos.z - 2},
 		path, "random", nil, false)
@@ -392,7 +394,7 @@ end
 -- New emergent jungle tree
 
 --[[function default.grow_new_emergent_jungle_tree(pos)
-	local path = minetest.get_modpath("default") ..
+	local path = modpath ..
 		"/schematics/emergent_jungle_tree_from_sapling.mts"
 	minetest.place_schematic({x = pos.x - 3, y = pos.y - 5, z = pos.z - 3},
 		path, "random", nil, false)
@@ -404,10 +406,10 @@ end]]
 function default.grow_new_pine_tree(pos)
 	local path
 	if math.random() > 0.5 then
-		path = minetest.get_modpath("default") ..
+		path = modpath ..
 			"/schematics/pine_tree_from_sapling.mts"
 	else
-		path = minetest.get_modpath("default") ..
+		path = modpath ..
 			"/schematics/small_pine_tree_from_sapling.mts"
 	end
 	minetest.place_schematic({x = pos.x - 2, y = pos.y - 1, z = pos.z - 2},
@@ -420,10 +422,10 @@ end
 function default.grow_new_snowy_pine_tree(pos)
 	local path
 	if math.random() > 0.5 then
-		path = minetest.get_modpath("default") ..
+		path = modpath ..
 			"/schematics/snowy_pine_tree_from_sapling.mts"
 	else
-		path = minetest.get_modpath("default") ..
+		path = modpath ..
 			"/schematics/snowy_small_pine_tree_from_sapling.mts"
 	end
 	minetest.place_schematic({x = pos.x - 2, y = pos.y - 1, z = pos.z - 2},
@@ -434,7 +436,7 @@ end
 -- New acacia tree
 
 function default.grow_new_acacia_tree(pos)
-	local path = minetest.get_modpath("default") ..
+	local path = modpath ..
 	"/schematics/acacia_tree_from_sapling.mts"
 	minetest.place_schematic({x = pos.x - 4, y = pos.y - 1, z = pos.z - 4},
 		path, "random", nil, false)
@@ -444,7 +446,7 @@ end
 -- New birch tree
 
 function default.grow_new_birch_tree(pos)
-	local path = minetest.get_modpath("default") ..
+	local path = modpath ..
 		"/schematics/birch_tree_from_sapling.mts"
 	minetest.place_schematic({x = pos.x - 2, y = pos.y - 1, z = pos.z - 2},
 		path, "0", nil, false)
@@ -453,7 +455,7 @@ end
 -- Large cactus
 
 function default.grow_large_cactus(pos)
-	local path = minetest.get_modpath("default") ..
+	local path = modpath ..
 		"/schematics/large_cactus.mts"
 	minetest.place_schematic({x = pos.x - 2, y = pos.y - 1, z = pos.z - 2},
 		path, "random", nil, false)

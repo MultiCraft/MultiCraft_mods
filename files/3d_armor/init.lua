@@ -20,11 +20,11 @@ end)]]
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	local armor_inv = minetest.create_detached_inventory(name.."_armor",{
+	local armor_inv = minetest.create_detached_inventory(name .. "_armor", {
 		allow_put = function(_, _, index, stack)
 			local item = stack:get_name()
-			if not item and
-			   not minetest.registered_items[item] and
+			if not item or
+			   not minetest.registered_items[item] or
 			   not minetest.registered_items[item].groups then
 				return 0
 			end
@@ -77,7 +77,7 @@ minetest.register_on_joinplayer(function(player)
 		heal = 0
 	}
 	armor.textures[name] = {
-		skin = armor.default_skin..".png",
+		skin = armor.default_skin .. ".png",
 		armor = "blank.png",
 		wielditem = "blank.png",
 		cube = "blank.png",

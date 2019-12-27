@@ -15,7 +15,7 @@ mobs:register_mob("mobs_animal:kitten", {
 		{"mobs_kitten_sandy.png"}
 	},
 	sounds = {
-		random = "mobs_kitten",
+		random = "mobs_kitten"
 	},
 	walk_velocity = 0.6,
 	walk_chance = 15,
