@@ -16,18 +16,13 @@ default = {
 
 default.gui_bg = "bgcolor[#08080880;true]"
 default.listcolors = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"
-default.gui	= [[
-	size[9,8.75]
-	]] .. default.gui_bg ..
-	default.listcolors .. [[
-	background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]
-	image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]
-	list[current_player;main;0.01,4.51;9,3;9]
-	list[current_player;main;0.01,7.75;9,1;]
-]]
-
-
-default.coloremerald = minetest.get_color_escape_sequence("#00D67C")
+default.gui = "size[9,8.75]" ..
+	default.gui_bg ..
+	default.listcolors ..
+	"background[-0.2,-0.26;9.41,9.49;formspec_inventory.png]" ..
+	"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
+	"list[current_player;main;0.01,4.51;9,3;9]" ..
+	"list[current_player;main;0.01,7.75;9,1;]"
 
 -- Load files
 local default_path = minetest.get_modpath("default")
