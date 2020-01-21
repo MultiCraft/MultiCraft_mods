@@ -179,6 +179,12 @@ end
 -- # Signals (effectors) #
 -- #######################
 
+-- Delay
+local delaytime = mesecon.setting("delaytime", core.settings:get("dedicated_server_step") * 2)
+if not minetest.is_singleplayer() then
+	delaytime = delaytime * 3
+end
+
 -- Activation:
 mesecon.queue:add_function("activate", function (pos, rulename)
 	local node = mesecon.get_node_force(pos)
@@ -198,7 +204,7 @@ function mesecon.activate(pos, node, rulename, depth)
 			end
 			return
 		end
-	mesecon.queue:add_action(pos, "activate", {rulename}, nil, rulename, 1 / depth)
+	mesecon.queue:add_action(pos, "activate", {rulename}, delaytime, rulename, 1 / depth)
 end
 
 
@@ -221,7 +227,7 @@ function mesecon.deactivate(pos, node, rulename, depth)
 			end
 		return
 		end
-	mesecon.queue:add_action(pos, "deactivate", {rulename}, nil, rulename, 1 / depth)
+	mesecon.queue:add_action(pos, "deactivate", {rulename}, delaytime, rulename, 1 / depth)
 end
 
 
@@ -248,7 +254,7 @@ end
 	-- Include "change" in overwritecheck so that it cannot be overwritten
 	-- by "active" / "deactivate" that will be called upon the node at the same time.
 	local overwritecheck = {"change", rulename}
-	mesecon.queue:add_action(pos, "change", {rulename, newstate}, nil, overwritecheck, 1 / depth)
+	mesecon.queue:add_action(pos, "change", {rulename, newstate}, delaytime, overwritecheck, 1 / depth)
 end
 
 -- Conductors
