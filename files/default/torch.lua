@@ -87,3 +87,17 @@ default.register_torch("default:torch", {
 	groups = {choppy = 2, dig_immediate = 3, flammable = 1, attached_node = 1, torch = 1},
 	sounds = default.node_sound_wood_defaults()
 })
+
+minetest.register_craft({
+	output = "default:torch 4",
+	recipe = {
+		{"group:coal"},
+		{"default:stick"}
+	}
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:torch",
+	burntime = 7
+})
