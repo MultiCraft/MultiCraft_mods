@@ -80,6 +80,21 @@ function player_api.set_animation(player, anim_name, speed)
 	player:set_animation(anim, speed or model.animation_speed, animation_blend)
 end
 
+function player_api.character(player)
+	local character = "player_api:character"
+
+	if player:get_attribute("gender") == "female" then
+		character = character .. "_female"
+	end
+
+	local skin = player:get_attribute("skin")
+	if skin then
+		character = character .. "_" .. skin
+	end
+
+	return character
+end
+
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	player_model[name] = nil
