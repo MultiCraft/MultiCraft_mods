@@ -3681,3 +3681,27 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		mob_sta[name] = nil
 	end
 end)
+
+function mobs:alias_mob(old_name, new_name)
+	-- check old_name entity doesnt already exist
+	if minetest.registered_entities[old_name] then
+		return
+	end
+
+	-- entity
+	minetest.register_entity(":" .. old_name, {
+		physical = false,
+
+		on_activate = function(self, staticdata)
+			if minetest.registered_entities[new_name] then
+				minetest.add_entity(self.object:get_pos(), new_name, staticdata)
+			end
+
+			self.object:remove()
+		end,
+
+		get_staticdata = function(self)
+			return self
+		end
+	})
+end
