@@ -1,35 +1,17 @@
-local tmp = {}
-
 minetest.register_entity("itemframes:item",{
 	visual = "wielditem",
 	visual_size = {x = 0.33, y = 0.33},
 	collisionbox = {0},
 	physical = false,
-	textures = {"blank.png"},
 
 	on_activate = function(self, staticdata)
-		if tmp.nodename and tmp.texture then
-			self.nodename = tmp.nodename
-			tmp.nodename = nil
-			self.texture = tmp.texture
-			tmp.texture = nil
-		elseif staticdata and staticdata ~= "" then
-			local data = staticdata:split(";")
-			if data and data[1] and data[2] then
-				self.nodename = data[1]
-				self.texture = data[2]
-			end
-		end
-		if self.texture then
-			self.object:set_properties({textures = {self.texture}})
-		end
+		local data = staticdata:split(";")
+		self.texture = data and data[2] or "air"
+		self.object:set_properties({textures = {self.texture}})
 	end,
 
 	get_staticdata = function(self)
-		if self.nodename and self.texture then
-			return self.nodename .. ";" .. self.texture
-		end
-		return ""
+		return self.texture and " " .. ";" .. self.texture or ""
 	end
 })
 
@@ -42,18 +24,20 @@ local facedir = {
 
 local update_item = function(pos, node)
 	local meta = minetest.get_meta(pos)
-	local itemstring = meta:get_string("item")
+	local item = meta:get_string("item")
 	local posad = facedir[node.param2]
-	if not posad or itemstring == "" then return end
+	if item == "" or not posad then return end
 
 	pos = vector.add(pos, vector.multiply(posad, 6.5/16))
-	tmp.nodename = node.name
-	tmp.texture = ItemStack(itemstring):get_name()
+	local entity = minetest.add_entity(pos, "itemframes:item")
+	local ent = entity:get_luaentity()
+	local item_name = ItemStack(item):get_name()
 
-	local entity  = minetest.add_entity(pos, "itemframes:item")
+	ent.texture = item_name
+	ent.object:set_properties({textures = {item_name}})
 	if node.param2 == 2 or node.param2 == 3 then
-		local yaw = math.pi / 2 - node.param2 * math.pi * 2
-		entity:set_yaw(yaw)
+		entity:set_yaw(3.14 / 2 - node.param2 * 3.14 * 2)
+		entity:set_texture_mod(ItemStack(item):get_name())
 	end
 end
 
@@ -82,6 +66,7 @@ local function check_item(pos, node)
 	local item = meta:get_string("item")
 	if item == "" then return end
 	local found = false
+
 	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "itemframes:item" then
@@ -98,10 +83,7 @@ local function after_dig_node(pos, node)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
 	if item == "" then return end
-	if not node then
-		local node = minetest.get_node(pos)
-	end
-	drop_item(pos, node)
+	drop_item(pos, node and node or minetest.get_node(pos))
 end
 
 minetest.register_node("itemframes:frame",{
