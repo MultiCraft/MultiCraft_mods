@@ -9,23 +9,24 @@ mobs = {
 local S = intllib.make_gettext_pair()
 
 -- localize math functions
-local pi = math.pi
-local sin = math.sin
-local cos = math.cos
 local abs = math.abs
+local atan = function(x)
+	return x and math.atan(x) or 0
+end
+local ceil = math.ceil
+local cos = math.cos
+local floor = math.floor
+local add_vector = vector.add
+local get_distance = vector.distance
+local get_direction = vector.direction
+local multiply = vector.multiply
+local subtract = vector.subtract
 local min = math.min
 local max = math.max
+local pi = math.pi
+local rad = math.rad
 local random = math.random
-local floor = math.floor
-local get_distance = vector.distance
-local atan = function(x)
-	if not x or x ~= x then
-		--error("atan bassed NaN")
-		return 0
-	else
-		return math.atan(x)
-	end
-end
+local sin = math.sin
 
 
 -- Load settings
@@ -38,12 +39,9 @@ local remove_far = false
 local difficulty = tonumber(minetest.settings:get("mob_difficulty")) or 1.0
 local show_health = true
 local max_per_block = tonumber(minetest.settings:get("max_objects_per_block"))
+local singleplayer = minetest.is_singleplayer()
 local lifetime = 1200 -- 20 min
 local spawn_interval = 15
-if not minetest.is_singleplayer() then
-	lifetime = 600 -- 5 min
-	spawn_interval = 30
-end
 
 -- creative check
 function mobs.is_creative(name)
@@ -51,7 +49,7 @@ function mobs.is_creative(name)
 end
 
 -- pathfinding settings
-local enable_pathfinding = minetest.is_singleplayer() -- disable pathfinder in multiplayer
+local enable_pathfinding = singleplayer -- disable pathfinder in multiplayer
 local stuck_timeout = 3 -- how long before mob gets stuck in place and starts searching
 local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
@@ -362,7 +360,7 @@ local new_line_of_sight = function(self, pos1, pos2, stepsize)
 	if not pos1 or not pos2 then return end
 
 	stepsize = stepsize or 1
-	local stepv = vector.multiply(vector.direction(pos1, pos2), stepsize)
+	local stepv = multiply(get_direction(pos1, pos2), stepsize)
 	local s, pos = minetest.line_of_sight(pos1, pos2, stepsize)
 
 	-- normal walking and flying mobs can see you through air
@@ -384,7 +382,7 @@ local new_line_of_sight = function(self, pos1, pos2, stepsize)
 			and not minetest.registered_nodes[nn].walkable do
 		--	or minetest.registered_nodes[nn].drawtype == "nodebox") do
 
-		npos1 = vector.add(npos1, stepv)
+		npos1 = add_vector(npos1, stepv)
 
 		if get_distance(npos1, pos2) < stepsize then return true end
 
@@ -455,10 +453,10 @@ function mob_class:attempt_flight_correction()
 		return false
 	end
 
-	local escape_target = flyable_nodes[math.random(1, #flyable_nodes)]
-	local escape_direction = vector.direction(pos, escape_target)
+	local escape_target = flyable_nodes[random(1, #flyable_nodes)]
+	local escape_direction = get_direction(pos, escape_target)
 
-	self.object:set_velocity(vector.multiply(escape_direction, self.run_velocity))
+	self.object:set_velocity(multiply(escape_direction, self.run_velocity))
 	return true
 end
 
@@ -515,8 +513,8 @@ function mob_class:do_stay_near()
 		return false
 	end
 
-	local target = nearby_nodes[math.random(1, #nearby_nodes)]
-	local direction = vector.direction(pos, target)
+	local target = nearby_nodes[random(1, #nearby_nodes)]
+	local direction = get_direction(pos, target)
 	local vec = {x = target.x - pos.x, z = target.z - pos.z}
 
 	local yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
@@ -1274,7 +1272,7 @@ function mob_class:smart_mobs(s, p, dist, dtime)
 		end, self)
 	end
 
-	if abs(vector.subtract(s, target_pos).y) > self.stepheight then
+	if abs(subtract(s, target_pos).y) > self.stepheight then
 		if height_switcher then
 			use_pathfind = true
 			height_switcher = false
@@ -1360,7 +1358,7 @@ function mob_class:smart_mobs(s, p, dist, dtime)
 						end
 					end
 
-					local sheight = math.ceil(self.collisionbox[5]) + 1
+					local sheight = ceil(self.collisionbox[5]) + 1
 
 					-- assume mob is 2 blocks high so it digs above its head
 					s.y = s.y + sheight
@@ -2517,7 +2515,7 @@ function mob_class:get_staticdata()
 
 	-- used to rotate older mobs
 	if self.drawtype and self.drawtype == "side" then
-		self.rotate = math.rad(90)
+		self.rotate = rad(90)
 	end
 
 	local tmp = {}
@@ -2881,7 +2879,7 @@ function mobs:register_mob(name, def)
 		do_custom = def.do_custom,
 		jump_height = def.jump_height,
 		drawtype = def.drawtype, -- DEPRECATED, use rotate instead
-		rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
+		rotate = rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
 		lifetimer = def.lifetimer,
 		hp_min = max(1, (def.hp_min or 5) * difficulty),
 		hp_max = max(1, (def.hp_max or 10) * difficulty),
@@ -3029,7 +3027,6 @@ interval, chance, aoc, min_height, max_height, day_toggle, on_spawn)
 		chance = max(1, chance),
 		catch_up = false,
 		action = function(pos, node, active_object_count, active_object_count_wider)
-
 			-- is mob actually registered?
 			if not mobs.spawning_mobs[name]
 					or not minetest.registered_entities[name] then
@@ -3098,17 +3095,19 @@ interval, chance, aoc, min_height, max_height, day_toggle, on_spawn)
 			end
 
 			-- are light levels ok?
-			local light = minetest.get_node_light(pos)
-			if not light
-					or light > max_light
-					or light < min_light then
-			--	print ("--- light limits not met", name, light)
-				return
+			if min_light ~= 0 or max_light ~= 15 then
+				local light = minetest.get_node_light(pos)
+				if not light
+						or light > max_light
+						or light < min_light then
+				--	print ("--- light limits not met", name, light)
+					return
+				end
 			end
 
 			-- do we have enough height clearance to spawn mob?
 			local ent = minetest.registered_entities[name]
-			local height = max(1, math.ceil(
+			local height = max(1, ceil(
 					(ent.collisionbox[5] or 0.25) -
 					(ent.collisionbox[2] or -0.25) - 1))
 
@@ -3336,8 +3335,7 @@ local function throw_spawn_egg(itemstack, user, pointed_thing)
 			gain = 0.7,
 			max_hear_distance = 10
 		})
-		if not mobs.is_creative(user) or
-				not minetest.is_singleplayer() then
+		if not mobs.is_creative(user) or not singleplayer then
 			itemstack:take_item()
 		end
 	end
@@ -3411,8 +3409,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 			if spawn_mob(pos, mob, itemstack:get_metadata(), placer) then
 				-- if not in creative then take item and minimal protection
 				-- against creating a large number of mobs on the server
-				if not mobs.is_creative(placer) or
-						not minetest.is_singleplayer() then
+				if not mobs.is_creative(placer) or not singleplayer then
 					itemstack:take_item()
 				end
 			end
