@@ -268,7 +268,7 @@ function default.grow_pine_tree(pos, snow)
 	local c_air = minetest.get_content_id("air")
 	local c_ignore = minetest.get_content_id("ignore")
 	local c_pine_tree = minetest.get_content_id("default:pine_tree")
-	local c_pine_needles  = minetest.get_content_id("default:pine_needles")
+	local c_pine_needles = minetest.get_content_id("default:pine_needles")
 	local c_snow = minetest.get_content_id("default:snow")
 
 	local vm = minetest.get_voxel_manip()
