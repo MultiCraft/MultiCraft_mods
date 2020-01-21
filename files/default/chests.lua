@@ -23,9 +23,7 @@ local function get_chest_neighborpos(pos, param2, side)
 end
 
 local function can_dig(pos)
-	local meta = minetest.get_meta(pos);
-	local inv = meta:get_inventory()
-	return inv:is_empty("main")
+	return minetest.get_meta(pos):get_inventory():is_empty("main")
 end
 
 local function allow_metadata_inventory_take(pos, _, _, stack, player)
@@ -42,26 +40,22 @@ local function allow_metadata_inventory_put(pos, _, _, stack, player)
 	return stack:get_count()
 end
 
-local chest_formspec = [[
-	size[9,8.75]
-	background[-0.2,-0.26;9.41,9.49;formspec_chest.png]
-	]] .. default.gui_bg ..
-	default.listcolors .. [[
-	image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;false;close_pressed.png]
-	list[current_name;main;0,0.5;9,3;]
-	list[current_player;main;0,4.5;9,3;9]
-	list[current_player;main;0,7.74;9,1;]
-]]
+local chest_formspec = "size[9,8.75]" ..
+	"background[-0.2,-0.26;9.41,9.49;formspec_chest.png]" ..
+	default.gui_bg ..
+	default.listcolors ..
+	"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
+	"list[current_name;main;0,0.5;9,3;]" ..
+	"list[current_player;main;0,4.5;9,3;9]" ..
+	"list[current_player;main;0,7.74;9,1;]"
 
-local large_chest_formspec = [[
-	size[9,11.5]
-	background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]
-	]] .. default.gui_bg ..
-	default.listcolors .. [[
-	image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;false;close_pressed.png]
-	list[current_player;main;0.01,7.4;9,3;9]
-	list[current_player;main;0,10.61;9,1;]
-]]
+local large_chest_formspec = "size[9,11.5]" ..
+	"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]" ..
+	default.gui_bg ..
+	default.listcolors ..
+	"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
+	"list[current_player;main;0.01,7.4;9,3;9]" ..
+	"list[current_player;main;0,10.61;9,1;]"
 
 minetest.register_node("default:chest", {
 	description = "Chest",
@@ -76,35 +70,32 @@ minetest.register_node("default:chest", {
 	sounds = default.node_sound_wood_defaults(),
 
 	on_construct = function(pos)
+		if not minetest.is_valid_pos(pos) then return end
 		local param2 = minetest.get_node(pos).param2
 		local meta = minetest.get_meta(pos)
 		if minetest.get_node(get_chest_neighborpos(pos, param2, "right")).name == "default:chest" then
 			minetest.set_node(pos, {name="default:chest_right", param2 = param2})
 			local pos2 = get_chest_neighborpos(pos, param2, "right")
-			meta:set_string("formspec",
-				large_chest_formspec ..
+			meta:set_string("formspec", large_chest_formspec ..
 				"list[nodemeta:" .. pos2.x .. "," .. pos2.y .. "," .. pos2.z .. ";main;0.01,0.4;9,3;]" ..
 				"list[current_name;main;0.01,3.39;9,3;]")
 			meta:set_string("infotext", Sl("Large Chest"))
 			minetest.swap_node(pos2, {name = "default:chest_left", param2 = param2})
 			local meta2 = minetest.get_meta(pos2)
-			meta2:set_string("formspec",
-				large_chest_formspec ..
+			meta2:set_string("formspec", large_chest_formspec ..
 				"list[nodemeta:" .. pos.x .. "," .. pos.y .. "," .. pos.z .. ";main;0.01,3.39;9,3;]" ..
 				"list[current_name;main;0.01,0.4;9,3;]")
 			meta2:set_string("infotext", Sl("Large Chest"))
 		elseif minetest.get_node(get_chest_neighborpos(pos, param2, "left")).name == "default:chest" then
 			minetest.set_node(pos, {name = "default:chest_left", param2 = param2})
 			local pos2 = get_chest_neighborpos(pos, param2, "left")
-			meta:set_string("formspec",
-				large_chest_formspec ..
+			meta:set_string("formspec", large_chest_formspec ..
 				"list[nodemeta:" .. pos2.x .. "," .. pos2.y .. "," .. pos2.z .. ";main;0.01,3.39;9,3;]" ..
 				"list[current_name;main;0.01,0.4;9,3;]")
 			meta:set_string("infotext", Sl("Large Chest"))
 			minetest.swap_node(pos2, {name = "default:chest_right", param2 = param2})
 			local meta2 = minetest.get_meta(pos2)
-			meta2:set_string("formspec",
-				large_chest_formspec ..
+			meta2:set_string("formspec", large_chest_formspec ..
 				"list[nodemeta:" .. pos.x .. "," .. pos.y .. "," .. pos.z .. ";main;0.01,0.4;9,3;]" ..
 				"list[current_name;main;0.01,3.39;9,3;]")
 			meta2:set_string("infotext", Sl("Large Chest"))
@@ -112,8 +103,7 @@ minetest.register_node("default:chest", {
 			meta:set_string("formspec", chest_formspec)
 			meta:set_string("infotext", Sl("Chest"))
 		end
-		local inv = meta:get_inventory()
-		inv:set_size("main", 9*3)
+		meta:get_inventory():set_size("main", 9*3)
 	end,
 
 	can_dig = can_dig,
