@@ -2663,7 +2663,7 @@ function mob_class:mob_activate(staticdata, def, dtime)
 	-- run on_spawn function if found
 	if self.on_spawn and not self.on_spawn_run then
 		if self.on_spawn(self) then
-			self.on_spawn_run = true --  if true, set flag to run once only
+			self.on_spawn_run = true -- if true, set flag to run once only
 		end
 	end
 
@@ -2879,7 +2879,7 @@ function mobs:register_mob(name, def)
 		do_custom = def.do_custom,
 		jump_height = def.jump_height,
 		drawtype = def.drawtype, -- DEPRECATED, use rotate instead
-		rotate = rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
+		rotate = rad(def.rotate or 0), -- 0=front, 90=side, 180=back, 270=side2
 		lifetimer = def.lifetimer,
 		hp_min = max(1, (def.hp_min or 5) * difficulty),
 		hp_max = max(1, (def.hp_max or 10) * difficulty),

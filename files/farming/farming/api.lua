@@ -324,7 +324,7 @@ farming.register_plant = function(name, def)
 	for i = 1, def.steps do
 		local base_rarity = 1
 		if def.steps ~= 1 then
-			base_rarity =  8 - (i - 1) * 7 / (def.steps - 1)
+			base_rarity = 8 - (i - 1) * 7 / (def.steps - 1)
 		end
 		local drop = {
 			items = {

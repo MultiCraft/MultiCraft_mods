@@ -192,7 +192,7 @@ local function on_place_node(place_to, newnode,
 			type  = pointed_thing.type,
 			above = vector.new(pointed_thing.above),
 			under = vector.new(pointed_thing.under),
-			ref   = pointed_thing.ref,
+			ref   = pointed_thing.ref
 		}
 		callback(place_to_copy, newnode_copy, placer,
 			oldnode_copy, itemstack, pointed_thing_copy)
