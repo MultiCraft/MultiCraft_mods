@@ -166,7 +166,6 @@ Obsidian = Обсидиан
 Bedrock = Коренная Порода
 Dirt = Земля
 Dirt with Grass = Земля с Травой
-Dirt with Grass and Footsteps = Земля с Травой и Шагами
 Dirt with Dry Grass = Земля с Сухой Травой
 Dirt with Snow = Земля со Снегом
 Sand = Песок
@@ -174,6 +173,8 @@ Gravel = Гравий
 Red Sand = Красный Песок
 Clay = Глина
 Hardened Clay = Твёрдая Глина
+Cement = Цемент
+Concrete = Бетон
 Snow = Снег
 Snow Block = Снежный Блок
 Ice = Лёд
@@ -292,7 +293,7 @@ Acacia Wood Fence Gate = Ворота из Дерева Акации
 Birch Wood Fence Gate = Ворота из Дерева Берёзы
 Jungle Wood Fence Gate = Ворота из Дерева Джунгли-дерева
 Pine Wood Fence Gate = Ворота из Дерева Сосны
-Owned by @1 = Владелец @1
+Owned by @1 = Владелец: @1
 
 
 #farming
@@ -417,6 +418,27 @@ Zombie Head = Голова Зомби
 Turtle Egg = Яйцо Спавна Черепахи
 
 
+#mobs_water
+Aquarium = Аквариум
+Click a \"Fish in Bucket\" to settle a Fish = Нажмите \"Выдром с Рыбкой\" чтобы поселить Рыбку
+You forgot about your Fish! = Вы забыли о своей Рыбке!
+Pick up the Fish with a \"Empty Bucket\" = Возьмите Рыбку \"Пустым Ведром\"
+Small Fish in Bucket = Маленькая Рыбка в Ведре
+Medium Fish in Bucket = Рыбка в Ведре
+Squid Egg = Яйцо Спавна Кальмара
+
+
+#ocean
+Ammania Bonsai = Аммания Бонсай
+Ceramium = Церамиум
+Phyllophora = Филлофора
+Posidonia = Посидония
+Codium = Кодиум
+Inky Algae = Чернильница
+Macrocystis = Макроцистис
+Nitella = Нителла
+
+
 #pie
 Cake = Торт
 Pumpkin Pie = Тыквенный Пирог
@@ -441,6 +463,10 @@ Wet Sponge = Влажная Губка
 
 #player_api
 Your last coordinates: = Ваши последние координаты:
+
+
+#player_skin
+Appearance = Внешний Вид
 
 
 #throwing
