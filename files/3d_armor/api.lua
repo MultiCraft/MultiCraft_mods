@@ -178,7 +178,7 @@ armor.update_armor = function(self, player)
 			state = state + stack:get_wear()
 			count = count + 1
 			if stack:get_count() == 0 then
-				local desc = minetest.registered_items[item].description
+				local desc = minetest.registered_tools[item].description
 				if name and desc then
 					minetest.chat_send_player(name, Sl("Your @1 got destroyed!", desc))
 				end

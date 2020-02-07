@@ -130,11 +130,10 @@ minetest.register_on_dieplayer(function(player)
 	local inv = player:get_inventory()
 
 	-- Drop inventory items
-	for i = 1, inv:get_size("main") do
-		local stack = inv:get_stack("main", i)
+	for _, stack in pairs(inv:get_list("main")) do
 		minetest.item_drop(stack, nil, pos)
-		inv:set_stack("main", i, nil)
 	end
+	inv:set_list("main", {})
 
 	-- Display death coordinates
 	minetest.chat_send_player(player:get_player_name(), Sl("Your last coordinates:") .. " "

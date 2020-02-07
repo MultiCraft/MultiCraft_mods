@@ -12,7 +12,7 @@ function default.register_torch(name, def)
 		oldnode.name = name or name .. "_wall" or name .. "_celling"
 		minetest.add_item(pos, ItemStack(oldnode))
 		-- Play flame-extinguish sound if liquid is not an 'igniter'
-		local nodedef = minetest.registered_items[newnode.name]
+		local nodedef = minetest.registered_nodes[newnode.name]
 		if not (nodedef and nodedef.groups and
 				nodedef.groups.igniter and nodedef.groups.igniter > 0) then
 			minetest.sound_play(
