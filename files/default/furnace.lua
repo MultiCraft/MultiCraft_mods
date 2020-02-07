@@ -40,8 +40,7 @@ local function can_dig(pos, player)
 	for _, name in pairs({"fuel", "dst", "src"}) do
 		local stack = inv:get_stack(name, 1)
 		minetest.item_drop(stack, nil, pos)
-		stack:clear()
-		inv:set_stack(name, 1, stack)
+		inv:set_stack(name, 1, nil)
 	end
 	return true
 end

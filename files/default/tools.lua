@@ -32,6 +32,7 @@ minetest.register_tool("default:pick_stone", {
 	},
 	sound = {breaks = "default_tool_breaks"}
 })
+
 minetest.register_tool("default:pick_steel", {
 	description = "Steel Pickaxe",
 	inventory_image = "default_tool_steelpick.png",
@@ -45,6 +46,7 @@ minetest.register_tool("default:pick_steel", {
 	},
 	sound = {breaks = "default_tool_breaks"}
 })
+
 minetest.register_tool("default:pick_gold", {
 	description = "Gold Pickaxe",
 	inventory_image = "default_tool_goldpick.png",
@@ -121,6 +123,7 @@ minetest.register_tool("default:shovel_stone", {
 	},
 	sound = {breaks = "default_tool_breaks"}
 })
+
 minetest.register_tool("default:shovel_steel", {
 	description = "Steel Shovel",
 	inventory_image = "default_tool_steelshovel.png",
@@ -227,6 +230,7 @@ minetest.register_tool("default:axe_steel", {
 	},
 	sound = {breaks = "default_tool_breaks"}
 })
+
 minetest.register_tool("default:axe_gold", {
 	description = "Gold Axe",
 	inventory_image = "default_tool_goldaxe.png",
@@ -353,40 +357,64 @@ local craft_ingreds = {
 	emerald = "default:emerald"
 }
 
-for k, v in pairs(craft_ingreds) do
+for name, mat in pairs(craft_ingreds) do
 	minetest.register_craft({
-		output = "default:pick_" .. k,
+		output = "default:pick_" .. name,
 		recipe = {
-			{v, v, v},
+			{mat, mat, mat},
 			{"", "default:stick", ""},
 			{"", "default:stick", ""}
 		}
 	})
 
 	minetest.register_craft({
-		output = "default:shovel_" .. k,
+		output = "default:shovel_" .. name,
 		recipe = {
-			{v},
+			{mat},
 			{"default:stick"},
 			{"default:stick"}
 		}
 	})
 
 	minetest.register_craft({
-		output = "default:axe_" .. k,
+		output = "default:axe_" .. name,
 		recipe = {
-			{v, v},
-			{v, "default:stick"},
+			{mat, mat},
+			{mat, "default:stick"},
 			{"", "default:stick"}
 		}
 	})
 
 	minetest.register_craft({
-		output = "default:sword_" .. k,
+		output = "default:sword_" .. name,
 		recipe = {
-			{v},
-			{v},
+			{mat},
+			{mat},
 			{"default:stick"}
 		}
 	})
 end
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:pick_wood",
+	burntime = 6
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:shovel_wood",
+	burntime = 4
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:axe_wood",
+	burntime = 6
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:sword_wood",
+	burntime = 5
+})

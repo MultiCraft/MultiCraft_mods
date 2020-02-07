@@ -46,7 +46,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 		source = source,
 		flowing = flowing,
 		itemname = itemname,
-		force_renew = force_renew,
+		force_renew = force_renew
 	}
 	bucket.liquids[flowing] = bucket.liquids[source]
 
@@ -126,9 +126,12 @@ minetest.register_craftitem("bucket:bucket_empty", {
 	description = "Empty Bucket",
 	inventory_image = "bucket.png",
 	liquids_pointable = true,
+	groups = {tool = 1},
+
 	on_use = function(_, user, pointed_thing)
 		if pointed_thing.type == "object" then
-			return
+			pointed_thing.ref:right_click(user)
+			return user:get_wielded_item()
 		elseif pointed_thing.type ~= "node" then
 			-- do nothing if it's neither object nor node
 			return
@@ -191,7 +194,7 @@ bucket.register_liquid(
 	"default:water_source",
 	"default:water_flowing",
 	"bucket:bucket_water",
-	"bucket_water.png",
+	"bucket.png^bucket_water.png",
 	"Water Bucket",
 	{water_bucket = 1}
 )
@@ -206,7 +209,7 @@ bucket.register_liquid(
 	"default:river_water_source",
 	"default:river_water_flowing",
 	"bucket:bucket_river_water",
-	"bucket_river_water.png",
+	"bucket.png^bucket_river_water.png",
 	"River Water Bucket",
 	{water_bucket = 1},
 	true
@@ -216,14 +219,14 @@ bucket.register_liquid(
 	"default:lava_source",
 	"default:lava_flowing",
 	"bucket:bucket_lava",
-	"bucket_lava.png",
+	"bucket.png^bucket_lava.png",
 	"Lava Bucket"
 )
 
 -- Milk Bucket
 minetest.register_craftitem("bucket:bucket_milk", {
 	description = "Milk Bucket",
-	inventory_image = "bucket_milk.png",
+	inventory_image = "bucket.png^bucket_milk.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
 	groups = {food_milk = 1, food = 1}

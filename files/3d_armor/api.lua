@@ -1,6 +1,5 @@
-ARMOR_LEVEL_MULTIPLIER = 1
-ARMOR_HEAL_MULTIPLIER = 1
-
+local ARMOR_LEVEL_MULTIPLIER = 1
+local ARMOR_HEAL_MULTIPLIER = 1
 local enable_damage = minetest.settings:get_bool("enable_damage")
 
 local armor_def = setmetatable({}, {
