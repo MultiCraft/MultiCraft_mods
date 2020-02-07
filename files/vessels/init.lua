@@ -16,29 +16,32 @@ local function update_vessels_shelf(pos)
 	local formspec = vessels_shelf_formspec
 	-- Inventory slots overlay
 	local vx, vy = 0, 1
-	local n_items = 0
+	local n_potions, n_empty = 0, 0
 	for i = 1, 18 do
 		if i == 10 then
 			vx = 0
 			vy = vy + 1
 		end
-		if not invlist or invlist[i]:is_empty() then
+		local stack = invlist[i]
+		if stack:is_empty() then
 			formspec = formspec ..
 				"image[" .. vx .. "," .. vy .. ";1,1;vessels_shelf_slot.png]"
 		else
-			local stack = invlist[i]
-			if not stack:is_empty() then
-				n_items = n_items + stack:get_count()
+			local vessel = minetest.registered_items[stack:get_name()] or {}
+			if vessel and vessel.groups and vessel.groups.potion then
+				n_potions = n_potions + stack:get_count()
+			else
+				n_empty = n_empty + stack:get_count()
 			end
 		end
 		vx = vx + 1
 	end
 	meta:set_string("formspec", formspec)
-	if n_items == 0 then
+	if n_potions + n_empty == 0 then
 		meta:set_string("infotext", Sl("Empty Potion Shelf"))
 	else
 		meta:set_string("infotext", Sl("Potion Shelf") .. "\n(" ..
-			Sl("Bottles:") .. " " .. n_items .. ")")
+			Sl("Potions:") .. " " .. n_potions .. ", " .. Sl("Bottles:") .. " " .. n_empty .. ")")
 	end
 end
 
@@ -53,10 +56,10 @@ minetest.register_node("vessels:shelf", {
 
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		update_vessels_shelf(pos)
 		local inv = meta:get_inventory()
 		inv:set_size("vessels", 9 * 2)
 		inv:set_size("split", 1)
+		update_vessels_shelf(pos)
 	end,
 	can_dig = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()

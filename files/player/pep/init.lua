@@ -59,7 +59,7 @@ function pep.register_potion(potiondef)
 		inventory_image = "pep_"..potiondef.basename..".png",
 		wield_image = "pep_"..potiondef.basename..".png",
 		on_use = on_use,
-		groups = {vessel = 1},
+		groups = {vessel = 1, potion = 1},
 	})
 end
 
