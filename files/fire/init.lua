@@ -7,7 +7,7 @@ fire = {}
 -- Flood flame function
 local function flood_flame(pos, _, newnode)
 	-- Play flame extinguish sound if liquid is not an 'igniter'
-	local nodedef = minetest.registered_items[newnode.name]
+	local nodedef = minetest.registered_nodes[newnode.name]
 	if not (nodedef and nodedef.groups and
 			nodedef.groups.igniter and nodedef.groups.igniter > 0) then
 		minetest.sound_play("fire_extinguish_flame",
