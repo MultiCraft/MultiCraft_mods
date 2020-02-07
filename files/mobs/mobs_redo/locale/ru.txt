@@ -7,6 +7,7 @@ Already protected! = Уже защищён!
 "@1" has been tamed! = Моб "@1" был приручен!
 Enter name: = Введите имя:
 Rename = Переименовать
+Health: = Здоровье:
 Cow already milked! = Корова уже подоена!
 
 Bear = Медведь

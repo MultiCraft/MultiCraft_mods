@@ -652,7 +652,6 @@ function mob_class:check_for_death(cmi_cause)
 
 	-- still got some health? play hurt sound
 	if self.health > 0 then
-
 		self:mob_sound(self.sounds.damage)
 
 		-- make sure health isn't higher than max
@@ -668,7 +667,7 @@ function mob_class:check_for_death(cmi_cause)
 		if show_health
 				and (cmi_cause and cmi_cause.type == "punch") then
 			self.htimer = 2
-			self.nametag = "Health: " .. self.health .. " / " .. self.hp_max
+			self.nametag = S("Health:") .. " " .. self.health .. " / " .. self.hp_max
 			self:update_tag()
 		end
 
@@ -784,7 +783,7 @@ function mob_class:do_env_damage()
 			self.health = self.health - self.light_damage
 			effect(pos, 5, "heart.png")
 			if show_health then
-				self.nametag = "Health: " .. self.health .. " / " .. self.hp_max
+				self.nametag = S("Health:") .. " " .. self.health .. " / " .. self.hp_max
 				self:update_tag()
 			end
 			if self:check_for_death({type = "light"}) then return end
@@ -839,7 +838,7 @@ function mob_class:do_env_damage()
 		end
 	end
 
---[[
+
 	-- suffocation inside solid node
 	if self.suffocation ~= 0
 	and nodef.walkable
@@ -849,7 +848,7 @@ function mob_class:do_env_damage()
 		if self:check_for_death({type = "environment",
 				pos = pos, node = self.standing_in}) then return end
 	end
-]]
+
 	self:check_for_death({type = "unknown"})
 end
 
@@ -1475,11 +1474,11 @@ function mob_class:general_attack()
 		local ent = objs[n]:get_luaentity()
 		-- are we a player?
 		if objs[n]:is_player() then
-
 			-- if player invisible or mob not setup to attack then remove from list
 			if not self.attack_players
 					or (self.owner and self.type ~= "monster")
 					or mobs.invis[objs[n]:get_player_name()]
+					or mobs.is_creative(objs[n]:get_player_name())
 					or not specific_attack(self.specific_attack, "player") then
 				objs[n] = nil
 			--	print("- pla", n)
@@ -1564,10 +1563,10 @@ function mob_class:do_runaway_from()
 
 	for n = 1, #objs do
 		if objs[n]:is_player() then
-
 			pname = objs[n]:get_player_name()
 
 			if mobs.invis[pname]
+					or mobs.is_creative(pname)
 					or self.owner == pname then
 				name = ""
 			else

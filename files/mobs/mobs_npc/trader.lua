@@ -1,6 +1,8 @@
 -- Intllib
 local S = intllib.make_gettext_pair()
 
+local b = "blank.png"
+
 mobs:register_mob("mobs_npc:trader", {
 	type = "npc",
 	damage = 1,
@@ -12,9 +14,9 @@ mobs:register_mob("mobs_npc:trader", {
 	visual = "mesh",
 	mesh = "character.b3d",
 	textures = {
-		{"mobs_trader.png^mobs_trader1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_trader.png^mobs_trader2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_trader.png^mobs_trader3.png", "blank.png", "blank.png", "blank.png"}
+		{"mobs_trader.png^mobs_trader1.png", b, b, b},
+		{"mobs_trader.png^mobs_trader2.png", b, b, b},
+		{"mobs_trader.png^mobs_trader3.png", b, b, b}
 	},
 	makes_footstep_sound = true,
 	sounds = {},
@@ -87,8 +89,7 @@ mobs:register_mob("mobs_npc:trader", {
 -- initially being chosen. Also the formspec uses item image buttons instead of
 -- inventory slots.
 
-
--- Define table containing names for use and shop items for sale
+-- Define tabe containing names for use and shop items for sale
 mobs.human = {
 	names = {
 		"Bob", "Duncan", "Bill", "Tom", "James", "Ian", "Lenny",
@@ -160,12 +161,12 @@ end
 
 function mobs_trader(self, clicker, entity, race)
 	if not self.id then
-		self.id = (math.random(1, 1000) * math.random(1, 10000))
-				.. self.name .. (math.random(1, 1000) ^ 2)
+		self.id = (math.random(1000) * math.random(10000))
+				.. self.name .. (math.random(1000) ^ 2)
 	end
 
 	if not self.game_name then
-		self.game_name = tostring(race.names[math.random(1, #race.names)])
+		self.game_name = tostring(S(race.names[math.random(#race.names)]))
 		self.nametag = S("Trader @1", self.game_name)
 		self.object:set_properties({
 			nametag = self.nametag,
@@ -178,9 +179,10 @@ function mobs_trader(self, clicker, entity, race)
 	end
 
 	local player = clicker:get_player_name()
+	local player_name = (player == "Player" and S("Player")) or player
 	minetest.chat_send_player(player,
-		S("[NPC] <Trader @1> Hello, @2, have a look at my wares.",
-			self.game_name, player))
+		S("<[NPC] Trader @1> Hello, @2, have a look at my wares.",
+			self.game_name, player_name))
 
 	-- Make formspec trade list
 	local formspec_trade_list = ""
@@ -214,7 +216,6 @@ function mobs_trader(self, clicker, entity, race)
 		"label[0.9,0.1;" .. S("Trader @1's stock", self.game_name) .. "]" ..
 		formspec_trade_list)
 end
-
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "mobs_npc:trade" then return end
