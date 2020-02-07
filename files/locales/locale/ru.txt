@@ -451,6 +451,7 @@ Potion Shelf = Шкаф с Зельями
 Empty Potion Shelf = Пустой Шкаф с Зельями
 Empty Glass Bottle = Пустой Стеклянный Бутыль
 Bottles: = Бутылей:
+Potions: = Зелий:
 
 
 #signs
