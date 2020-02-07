@@ -111,24 +111,23 @@ function player_api.preview(player, skin)
 	end
 
 	local texture = "((" ..
-	"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png)^" ..					-- Left Leg
-	"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png^[transformFX)^" ..	-- Right Leg
+		"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png)^" ..					-- Left Leg
+		"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png^[transformFX)^" ..	-- Right Leg
 
-	"([combine:32x64:-8,-16=" .. c .. "^[mask:player_api_head.png)^" ..				-- Head
+		"([combine:32x64:-8,-16=" .. c .. "^[mask:player_api_head.png)^" ..				-- Head
 
-	"([combine:32x64:-32,-24=" .. c .. "^[mask:player_api_chest.png)^" ..			-- Chest
+		"([combine:32x64:-32,-24=" .. c .. "^[mask:player_api_chest.png)^" ..			-- Chest
 
-	"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png)^" ..				-- Left Arm
-	"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png^[transformFX)" ..	-- Right Arm
+		"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png)^" ..				-- Left Arm
+		"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png^[transformFX)" ..	-- Right Arm
 
-	")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
+		")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
 
 	return texture
 end
 
 -- Localize for better performance
 local player_set_animation = player_api.set_animation
-local wielded_item = player_api.wielded_item
 local player_attached = player_api.player_attached
 local update_wielded_item = player_api.update_wielded_item
 
@@ -142,7 +141,7 @@ minetest.register_on_leaveplayer(function(player)
 	player_armor[name] = nil
 	player_wielditem[name] = nil
 	player_cube[name] = nil
-	wielded_item[name] = nil
+	player_api.wielded_item[name] = nil
 
 	player_attached[name] = nil
 	player_sneak[name] = nil
