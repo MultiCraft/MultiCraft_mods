@@ -21,7 +21,7 @@ minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local armor_inv = minetest.create_detached_inventory(name .. "_armor", {
 		allow_put = function(_, _, index, stack)
-			local item = minetest.registered_items[stack:get_name()]
+			local item = minetest.registered_tools[stack:get_name()]
 			if not item or not item.groups then
 				return 0
 			end
