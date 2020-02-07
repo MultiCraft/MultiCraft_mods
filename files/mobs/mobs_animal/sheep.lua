@@ -48,22 +48,22 @@ for i = 1, #dyes do
 		on_replace = function(self)
 			self.food = (self.food or 0) + 1
 
-			-- if sheep replaces 8x grass then it regrows wool
+			-- if the sheep replaces 8x grass, it will regrow wool
 			if self.food >= 8 and self.gotten then
 				self.food = 0
 				self.gotten = false
 
 				self.object:set_properties({
 					textures = {"mobs_sheep.png^mobs_sheep_" .. name .. ".png"},
-					mesh = "mobs_sheep.b3d",
+					mesh = "mobs_sheep.b3d"
 				})
 			end
 		end,
 
 		on_rightclick = function(self, clicker)
-			--are we feeding?
+			-- feed or tame
 			if mobs:feed_tame(self, clicker, 8, true, true) then
-				--if fed 7x grass or wheat then sheep regrows wool
+				-- if feed 7x, the sheep regrow wool
 				if self.food and self.food > 6 then
 					self.gotten = false
 					self.object:set_properties({
@@ -78,7 +78,7 @@ for i = 1, #dyes do
 			local itemname = item:get_name()
 			local player = clicker:get_player_name()
 
-			--are we giving a haircut>
+			-- are we giving a haircut?
 			if itemname == "mobs:shears" then
 				if self.gotten or self.child
 						or player ~= self.owner then
@@ -86,7 +86,7 @@ for i = 1, #dyes do
 				end
 				self.gotten = true -- shaved
 				local obj = minetest.add_item(self.object:get_pos(),
-					ItemStack("wool:" .. name .. " " .. math.random(1, 3)))
+					ItemStack("wool:" .. name .. " " .. math.random(3)))
 				if obj then
 					obj:set_velocity({
 						x = math.random(-1, 1),
@@ -103,7 +103,7 @@ for i = 1, #dyes do
 				return
 			end
 
-			--are we coloring?
+			-- are we coloring?
 			if itemname:find("dye:") then
 				if not self.gotten
 						and not self.child

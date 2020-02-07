@@ -187,7 +187,7 @@ minetest.register_craftitem("mobs:cheese", {
 minetest.register_craft({
 	type = "cooking",
 	output = "mobs:cheese",
-	recipe = "mobs:bucket_milk",
+	recipe = "bucket:bucket_milk",
 	cooktime = 5,
 	replacements = {{"bucket:bucket_milk", "bucket:bucket_empty"}}
 })
