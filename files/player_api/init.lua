@@ -1,4 +1,7 @@
+player_api = {}
+
 dofile(minetest.get_modpath("player_api") .. "/api.lua")
+dofile(minetest.get_modpath("player_api") .. "/wieldview.lua")
 
 local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 
@@ -20,16 +23,18 @@ player_api.register_model("character.b3d", {
 })
 
 -- Hand definition
-local hand = {
+player_api.hand = {
 	wield_scale = {x = 1, y = 1, z = 0.7},
 	paramtype = "light",
 	drawtype = "mesh",
 	mesh = "hand.b3d",
+	tiles = {"character.png"},
 	inventory_image = "blank.png",
 	drop = "",
 	node_placement_prediction = ""
 }
 
+local hand = player_api.hand
 if creative_mode_cache then
 	local digtime = 128
 	local caps = {times = {digtime, digtime, digtime}, uses = 0, maxlevel = 192}
@@ -63,18 +68,11 @@ else
 
 end
 
-local hand_male, hand_female = table.copy(hand), table.copy(hand)
-
-hand_male.tiles = {"character.png"}
-hand_female.tiles = {"character_female.png"}
-
-minetest.register_node("player_api:hand", hand_male)
-minetest.register_node("player_api:hand_female", hand_female)
+minetest.register_node("player_api:hand", hand)
 
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	local gender = player:get_attribute("gender")
 
 	player_api.player_attached[name] = false
 	player_api.set_model(player, "character.b3d")
@@ -89,37 +87,18 @@ minetest.register_on_joinplayer(function(player)
 	player:hud_set_hotbar_image("gui_hotbar.png")
 	player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
 
-	if gender == "female" then
-		-- ToDo: do not call 3d_armor here
-		if minetest.get_modpath("3d_armor") then
-			minetest.after(0, function()
-				armor.textures[name].skin = "character" .. (gender == "female" and "_female" or "") .. ".png"
-				armor:set_player_armor(player)
-			end)
-		else
-			player_api.set_textures(player, {
-				"character" .. (gender == "female" and "_female" or "") .. ".png", "blank.png", "blank.png", "blank.png"
-			})
-		end
-		player:get_inventory():set_stack("hand", 1, "player_api:hand_female")
-	else
-		player:get_inventory():set_stack("hand", 1, "player_api:hand")
-	end
+	local gender = player:get_attribute("gender")
+	local color  = player:get_attribute("color")
+	local skin   = player:get_attribute("skin")
+
+	gender = (gender and gender == "female" and "_female")   or ""
+	color  = (color  and color  == "yes"    and "_dark")     or ""
+	skin   = (skin   and skin   ~= "1"      and "_" .. skin) or ""
+
+	local texture = "character" .. gender .. color .. skin .. ".png"
+	player_api.set_textures(player, texture)
+	player:get_inventory():set_stack("hand", 1, "player_api:hand" .. gender .. color)
 end)
-
-minetest.register_node("player_api:character", {
-	drawtype = "mesh",
-	mesh = "character_preview.b3d",
-	tiles = {"character.png"},
-	groups = {not_in_creative_inventory = 1}
-})
-
-minetest.register_node("player_api:character_female", {
-	drawtype = "mesh",
-	mesh = "character_preview.b3d",
-	tiles = {"character_female.png"},
-	groups = {not_in_creative_inventory = 1}
-})
 
 -- Temporary solution to the problem of loading yaw 'nul' on iOS
 if PLATFORM == "iOS" then
@@ -154,8 +133,7 @@ minetest.register_on_dieplayer(function(player)
 	for i = 1, inv:get_size("main") do
 		local stack = inv:get_stack("main", i)
 		minetest.item_drop(stack, nil, pos)
-		stack:clear()
-		inv:set_stack("main", i, stack)
+		inv:set_stack("main", i, nil)
 	end
 
 	-- Display death coordinates

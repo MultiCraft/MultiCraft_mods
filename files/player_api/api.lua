@@ -1,12 +1,10 @@
-player_api = {}
-
 -- Player animation blending
 -- Note: This is currently broken due to a bug in Irrlicht, leave at 0
 local animation_blend = 0
 
 player_api.registered_models = {}
 
--- Local for speed.
+-- Local for speed
 local models = player_api.registered_models
 
 function player_api.register_model(name, def)
@@ -18,6 +16,13 @@ local player_model = {}
 local player_textures = {}
 local player_anim = {}
 local player_sneak = {}
+
+local player_skin = {}
+local player_armor = {}
+local player_wielditem = {}
+local player_cube = {}
+
+player_api.wielded_item = {}
 player_api.player_attached = {}
 
 function player_api.get_animation(player)
@@ -33,37 +38,51 @@ end
 function player_api.set_model(player, model_name)
 	local name = player:get_player_name()
 	local model = models[model_name]
-	if model then
-		if player_model[name] == model_name then
-			return
-		end
-		player:set_properties({
-			mesh = model_name,
-			textures = player_textures[name] or model.textures,
-			visual = "mesh",
-			visual_size = model.visual_size or {x = 1, y = 1},
-			collisionbox = model.collisionbox, -- or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
-			stepheight = model.stepheight or 0.6,
-			eye_height = model.eye_height or 1.47
-		})
-		player_api.set_animation(player, "stand")
-	else
-		player:set_properties({
-			visual = "upright_sprite",
-		--	collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.75, 0.3},
-			stepheight = 0.6,
-			eye_height = 1.625
-		})
+	if player_model[name] == model_name then
+		return
 	end
+	player:set_properties({
+		mesh = model_name,
+		textures = player_textures[name] or model.textures,
+		visual = "mesh",
+		visual_size = model.visual_size or {x = 1, y = 1},
+		collisionbox = model.collisionbox, -- or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
+		stepheight = model.stepheight or 0.6,
+		eye_height = model.eye_height or 1.47
+	})
+	player_api.set_animation(player, "stand")
 	player_model[name] = model_name
 end
 
-function player_api.set_textures(player, textures)
+function player_api.set_textures(player, skin, armor, wielditem, cube)
 	local name = player:get_player_name()
-	local model = models[player_model[name]]
-	local model_textures = model and model.textures or nil
-	player_textures[name] = textures or model_textures
-	player:set_properties({textures = textures or model_textures})
+
+	local oldskin      = player_skin[name]      or "character.png"
+	local oldarmor     = player_armor[name]     or "blank.png"
+	local oldwielditem = player_wielditem[name] or "blank.png"
+	local oldcube      = player_cube[name]      or "blank.png"
+
+	skin      = skin      or oldskin
+	armor     = armor     or oldarmor
+	wielditem = wielditem or oldwielditem
+	cube      = cube      or oldcube
+
+	if oldskin ~= skin then
+		player_skin[name] = skin
+	end
+	if oldarmor ~= armor then
+		player_armor[name] = armor
+	end
+	if oldwielditem ~= wielditem then
+		player_wielditem[name] = wielditem
+	end
+	if oldcube ~= cube then
+		player_cube[name] = cube
+	end
+
+	local texture = {skin, armor, wielditem, cube}
+	player_textures[name] = texture
+	player:set_properties({textures = texture})
 end
 
 function player_api.set_animation(player, anim_name, speed)
@@ -80,31 +99,54 @@ function player_api.set_animation(player, anim_name, speed)
 	player:set_animation(anim, speed or model.animation_speed, animation_blend)
 end
 
-function player_api.character(player)
-	local character = "player_api:character"
-
-	if player:get_attribute("gender") == "female" then
-		character = character .. "_female"
+function player_api.preview(player, skin)
+	local c = "blank.png"
+	if player then
+		local name = player:get_player_name()
+		local model = models[player_model[name]]
+		skin = player_textures[name] or model.textures
+		c = "(" .. skin[1] .. "^" .. skin[2] .. ")"
+	elseif skin then
+		c = skin
 	end
 
-	local skin = player:get_attribute("skin")
-	if skin then
-		character = character .. "_" .. skin
-	end
+	local texture = "((" ..
+	"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png)^" ..					-- Left Leg
+	"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png^[transformFX)^" ..	-- Right Leg
 
-	return character
+	"([combine:32x64:-8,-16=" .. c .. "^[mask:player_api_head.png)^" ..				-- Head
+
+	"([combine:32x64:-32,-24=" .. c .. "^[mask:player_api_chest.png)^" ..			-- Chest
+
+	"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png)^" ..				-- Left Arm
+	"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png^[transformFX)" ..	-- Right Arm
+
+	")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
+
+	return texture
 end
+
+-- Localize for better performance
+local player_set_animation = player_api.set_animation
+local wielded_item = player_api.wielded_item
+local player_attached = player_api.player_attached
+local update_wielded_item = player_api.update_wielded_item
 
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	player_model[name] = nil
 	player_anim[name] = nil
 	player_textures[name] = nil
-end)
 
--- Localize for better performance.
-local player_set_animation = player_api.set_animation
-local player_attached = player_api.player_attached
+	player_skin[name] = nil
+	player_armor[name] = nil
+	player_wielditem[name] = nil
+	player_cube[name] = nil
+	wielded_item[name] = nil
+
+	player_attached[name] = nil
+	player_sneak[name] = nil
+end)
 
 -- Check each player and apply animations
 minetest.register_playerstep(function(_, playernames)
@@ -126,6 +168,11 @@ minetest.register_playerstep(function(_, playernames)
 				-- Determine if the player is sneaking, and reduce animation speed if so
 				if controls.sneak then
 					animation_speed_mod = animation_speed_mod / 2
+					player:set_eye_offset({x = 0, y = -3, z = 0}, {x = 0, y = -3, z = 0})
+					player_sneak[name] = controls.sneak
+				elseif player_sneak[name] then
+					player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+					player_sneak[name] = controls.sneak
 				end
 
 				-- Apply animations based on what the player is doing
@@ -136,21 +183,20 @@ minetest.register_playerstep(function(_, playernames)
 						player_anim[name] = nil
 						player_sneak[name] = controls.sneak
 					end
-					if controls.LMB then
-						player_set_animation(player, "walk_mine", animation_speed_mod)
-					elseif controls.RMB then
+					if controls.LMB or controls.RMB then
 						player_set_animation(player, "walk_mine", animation_speed_mod)
 					else
 						player_set_animation(player, "walk", animation_speed_mod)
 					end
-				elseif controls.LMB then
-					player_set_animation(player, "mine")
-				elseif controls.RMB then
-					player_set_animation(player, "mine")
+				elseif controls.LMB or controls.RMB then
+					player_set_animation(player, "mine", animation_speed_mod)
 				else
 					player_set_animation(player, "stand", animation_speed_mod)
 				end
 			end
+
+			-- Update wielditem
+			player_api.update_wielded_item(player, name)
 		end
 	end
 end, true) -- Force this callback to run every step for smoother animations
