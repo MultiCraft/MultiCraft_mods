@@ -3,6 +3,8 @@
 -- Intllib
 local S = intllib.make_gettext_pair()
 
+local b = "blank.png"
+
 mobs.npc_drops = {
 	"default:pick_steel", "mobs:meat", "default:sword_steel",
 	"default:shovel_steel", "farming:bread", "bucket:bucket_water"
@@ -23,44 +25,44 @@ mobs:register_mob("mobs_npc:npc_man", {
 	mesh = "character.b3d",
 	drawtype = "front",
 	textures = {
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", b, b, b},
 --===--
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", b, b, b},
 --===--
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", "blank.png", "blank.png", "blank.png"}
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", b, b, b},
+		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", b, b, b}
 	},
 --[[child_texture = {
-		{"mobs_npc_baby.png", "blank.png", "blank.png", "blank.png"}
+		{"mobs_npc_baby.png", b, b, b}
 	},]]
 	makes_footstep_sound = true,
 	sounds = {},
@@ -97,7 +99,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 			local drops = self.npc_drops or mobs.npc_drops
 
 			minetest.add_item(pos, {
-				name = drops[math.random(1, #drops)]
+				name = drops[math.random(#drops)]
 			})
 
 			minetest.chat_send_player(name, S("NPC dropped you an item for gold!"))
@@ -132,44 +134,44 @@ mobs:register_mob("mobs_npc:npc_woman", {
 	mesh = "character.b3d",
 	drawtype = "front",
 	textures = {
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", b, b, b},
 --===--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", b, b, b},
 --===--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", b, b, b},
 --=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", "blank.png", "blank.png", "blank.png"},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", "blank.png", "blank.png", "blank.png"}
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", b, b, b},
+		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", b, b, b}
 	},
 --[[child_texture = {
-		{"mobs_npc_baby.png", "blank.png", "blank.png", "blank.png"}
+		{"mobs_npc_baby.png", b, b, b}
 	},]]
 	makes_footstep_sound = true,
 	sounds = {},
@@ -206,7 +208,7 @@ mobs:register_mob("mobs_npc:npc_woman", {
 			local drops = self.npc_drops or mobs.npc_drops
 
 			minetest.add_item(pos, {
-				name = drops[math.random(1, #drops)]
+				name = drops[math.random(#drops)]
 			})
 
 			minetest.chat_send_player(name, S("NPC dropped you an item for gold!"))
