@@ -6,9 +6,6 @@
 local wield_tiles = {}
 local wield_cubes = {}
 
--- Localize for better performance
-local wielded_item = player_api.wielded_item
-
 minetest.after(1, function()
 	for name, def in pairs(minetest.registered_items) do
 		if def.inventory_image and def.inventory_image ~= "" then
@@ -32,6 +29,7 @@ end)
 
 function player_api.update_wielded_item(player, name)
 	local item = player:get_wielded_item():get_name()
+	local wielded_item = player_api.wielded_item
 	if item and (not wielded_item[name] or wielded_item[name] ~= item) then
 		local wield_tile = wield_tiles[item] or "blank.png"
 		local wield_cube = wield_cubes[item] or "blank.png"
