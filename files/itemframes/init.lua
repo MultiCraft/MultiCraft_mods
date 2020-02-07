@@ -1,4 +1,4 @@
-minetest.register_entity("itemframes:item",{
+minetest.register_entity("itemframes:item", {
 	visual = "wielditem",
 	visual_size = {x = 0.33, y = 0.33},
 	collisionbox = {0},
