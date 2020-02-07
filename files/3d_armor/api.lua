@@ -29,14 +29,8 @@ local armor_textures = setmetatable({}, {
 armor = {
 	elements = {"head", "torso", "legs", "feet"},
 	physics = {"jump", "speed", "gravity"},
---[[formspec = "size[8,8.5]list[detached:player_name_armor;armor;0,1;2,3;]"
-		.."image[2,0.75;2,4;armor_preview]"
-		.."list[current_player;main;0,4.5;8,4;]"
-		.."list[current_player;craft;4,1;3,3;]"
-		.."list[current_player;craftpreview;7,2;1,1;]",]]
 	def = armor_def,
-	textures = armor_textures,
-	default_skin = "character"
+	textures = armor_textures
 }
 
 -- Armor Registration
@@ -51,17 +45,9 @@ armor.register_armor_group = function(self, group, base)
 end
 
 armor.update_player_visuals = function(self, player)
-	if not player then
-		return
-	end
-	local name = player:get_player_name()
-	if self.textures[name] then
-		player_api.set_textures(player, {
-			self.textures[name].skin,
-			self.textures[name].armor,
-			self.textures[name].wielditem,
-			self.textures[name].cube
-		})
+	if player then
+		local armor = self.textures[player:get_player_name()].armor
+		player_api.set_textures(player, nil, armor)
 	end
 end
 
@@ -96,8 +82,7 @@ armor.set_player_armor = function(self, player)
 	local count = 0
 	local texture = "blank.png"
 	local physics = {speed = 1, gravity = 1, jump = 1}
-	local material = {type=nil, count=1}
---	local preview = armor:get_player_skin(name).."_preview.png"
+	local material = {type = nil, count = 1}
 	local list = {"1", "3", "2", "4"}
 	for _, number in pairs(list) do
 		local stack = armor_inv:get_stack("armor", number)
@@ -111,10 +96,7 @@ armor.set_player_armor = function(self, player)
 					if level then
 						local tex = def.texture or item:gsub("%:", "_")
 						tex = tex:gsub(".png$", "")
-						local prev = def.preview or tex.."_preview"
-						prev = prev:gsub(".png$", "")
 						texture = texture.."^"..tex..".png"
-					--	preview = preview.."^"..prev..".png"
 						armor_level = armor_level + level
 						state = state + stack:get_wear()
 						count = count + 1
@@ -150,7 +132,6 @@ armor.set_player_armor = function(self, player)
 	player:set_armor_groups(armor_groups)
 	player:set_physics_override(physics)
 	self.textures[name].armor = texture
---	self.textures[name].preview = preview
 	self.def[name].state = state
 	self.def[name].count = count
 	self.def[name].level = armor_level
@@ -210,25 +191,10 @@ armor.update_armor = function(self, player)
 	self.def[name].count = count
 end
 
---[[armor.get_player_skin = function(self, name)
-	local skin = nil
-	if skins then
-		skin = skins.skins[name]
-	end
-	return skin or armor.default_skin
-end
-
-armor.get_armor_formspec = function(self, name)
-	local formspec = armor.formspec:gsub("player_name", name)
---	formspec = formspec:gsub("armor_preview", armor.textures[name].preview)
-	formspec = formspec:gsub("armor_level", armor.def[name].level)
-	return formspec:gsub("armor_heal", armor.def[name].heal)
-end]]
-
 armor.get_armor_inventory = function(_, player)
 	local name = player:get_player_name()
 	if name then
-		return minetest.get_inventory({type="detached", name=name.."_armor"})
+		return minetest.get_inventory({type = "detached", name = name.."_armor"})
 	end
 end
 
