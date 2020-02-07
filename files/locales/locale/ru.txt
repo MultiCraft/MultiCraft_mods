@@ -469,6 +469,11 @@ Your last coordinates: = Ваши последние координаты:
 
 #player_skin
 Appearance = Внешний Вид
+Male = Парень
+Female = Девушка
+Black Mode = Чёрный Режим
+Light Mode = Светлый Режим
+
 
 
 #throwing

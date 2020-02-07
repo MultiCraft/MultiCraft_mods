@@ -5,43 +5,36 @@ dofile(modpath .. "/armor.lua")
 
 -- Register Callbacks
 
---[[minetest.register_on_player_receive_fields(function(player, formname, fields)
-	local name = player:get_player_name()
-	for field, _ in pairs(fields) do
-		if string.find(field, "skins_set_") then
-			minetest.after(0, function(player)
-				local skin = armor:get_player_skin(name)
-				armor.textures[name].skin = skin..".png"
-				armor:set_player_armor(player)
-			end, player)
+local function handle_inventory(player)
+	if player and player:is_player() then
+		armor:save_armor_inventory(player)
+		armor:set_player_armor(player)
+		if creative and creative.is_enabled_for and creative.is_enabled_for(player) then
+			set_creative_inventory(player)
+		else
+			set_survival_inventory(player)
 		end
 	end
-end)]]
+end
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local armor_inv = minetest.create_detached_inventory(name .. "_armor", {
 		allow_put = function(_, _, index, stack)
-			local item = stack:get_name()
-			if not item or
-			   not minetest.registered_items[item] or
-			   not minetest.registered_items[item].groups then
+			local item = minetest.registered_items[stack:get_name()]
+			if not item or not item.groups then
 				return 0
 			end
-			if  minetest.registered_items[item].groups["armor_head"]
-			and index == 1 then
+			if item.groups.armor_head  and index == 1 then
 				return 1
 			end
-			if  minetest.registered_items[item].groups["armor_torso"]
-			and index == 2 then
+			if item.groups.armor_torso and index == 2 then
 				return 1
 			end
-			if  minetest.registered_items[item].groups["armor_legs"]
-			and index == 3 then
+			if item.groups.armor_legs  and index == 3 then
 				return 1
 			end
-			if  minetest.registered_items[item].groups["armor_feet"]
-			and index == 4 then
+			if item.groups.armor_feet  and index == 4 then
 				return 1
 			end
 			return 0
@@ -50,12 +43,10 @@ minetest.register_on_joinplayer(function(player)
 			return 0
 		end,
 		on_put = function(_, _, _, _, player)
-			armor:save_armor_inventory(player)
-			armor:set_player_armor(player)
+			handle_inventory(player)
 		end,
 		on_take = function(_, _, _, _, player)
-			armor:save_armor_inventory(player)
-			armor:set_player_armor(player)
+			handle_inventory(player)
 		end
 	}, name)
 
@@ -76,35 +67,11 @@ minetest.register_on_joinplayer(function(player)
 		count = 0,
 		heal = 0
 	}
-	armor.textures[name] = {
-		skin = armor.default_skin .. ".png",
-		armor = "blank.png",
-		wielditem = "blank.png",
-		cube = "blank.png",
-	--	preview = armor.default_skin.."_preview.png"
-	}
---[[if minetest.get_modpath("skins") then
-		local skin = skins.skins[name]
-		if skin and skins.get_type(skin) == skins.type.MODEL then
-			armor.textures[name].skin = skin..".png"
-		end
-	elseif minetest.get_modpath("simple_skins") then
-		local skin = skins.skins[name]
-		if skin then
-			armor.textures[name].skin = skin..".png"
-		end
-	end
-	if minetest.get_modpath("player_textures") then
-		local filename = minetest.get_modpath("player_textures").."/textures/player_"..name
-		local f = io.open(filename..".png")
-		if f then
-			f:close()
-			armor.textures[name].skin = "player_"..name..".png"
-		end
-	end]]
-	minetest.after(2, function(player)
+	armor.textures[name] = {armor = "blank.png"}
+	minetest.after(1, function()
 		armor:set_player_armor(player)
-	end, player)
+		handle_inventory(player)
+	end)
 end)
 
 minetest.register_on_leaveplayer(function(player)
