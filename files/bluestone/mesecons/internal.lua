@@ -46,6 +46,8 @@
 -- mesecon.rotate_rules_down(rules)
 -- These functions return rules that have been rotated in the specific direction
 
+local table_remove = table.remove
+
 -- General
 function mesecon.get_effector(nodename)
 	if  minetest.registered_nodes[nodename]
@@ -381,7 +383,7 @@ function mesecon.turnon(pos, link)
 
 	local depth = 1
 	while frontiers[1] do
-		local f = table.remove(frontiers, 1)
+		local f = table_remove(frontiers, 1)
 		local node = mesecon.get_node_force(f.pos)
 
 		if not node then
@@ -393,7 +395,7 @@ function mesecon.turnon(pos, link)
 			for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
 				local np = vector.add(f.pos, r)
 				for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
-						table.insert(frontiers, {pos = np, link = l})
+					frontiers[#frontiers+1] = {pos = np, link = l}
 			end
 		end
 
@@ -430,7 +432,7 @@ function mesecon.turnoff(pos, link)
 
 	local depth = 1
 	while frontiers[1] do
-		local f = table.remove(frontiers, 1)
+		local f = table_remove(frontiers, 1)
 		local node = mesecon.get_node_force(f.pos)
 
 		if not node then
@@ -445,24 +447,24 @@ function mesecon.turnoff(pos, link)
 				-- discard all the changes that we made in the voxelmanip:
 				for _, l in ipairs(mesecon.rules_link_rule_all_inverted(f.pos, r)) do
 					if mesecon.is_receptor_on(mesecon.get_node_force(np).name) then
-	return false
-end
+						return false
+					end
 				end
 
 				-- Call turnoff on neighbors
 				for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
-						table.insert(frontiers, {pos = np, link = l})
-		end
-	end
+					frontiers[#frontiers+1] = {pos = np, link = l}
+				end
+			end
 
 			mesecon.swap_node_force(f.pos, mesecon.get_conductor_off(node, f.link))
 		elseif mesecon.is_effector(node.name) then
-			table.insert(signals, {
+			signals[#signals+1] = {
 				pos = f.pos,
 				node = node,
 				link = f.link,
 				depth = depth
-			})
+			}
 		end
 		depth = depth + 1
 	end
@@ -491,7 +493,7 @@ end
 	for _, inputrule in ipairs(mesecon.flattenrules(inputrules)) do
 		-- Check if input accepts from output
 		if  vector.equals(vector.add(input, inputrule), output) then
-			table.insert(rules, inputrule)
+			rules[#rules+1] = inputrule
 		end
 	end
 
@@ -511,7 +513,7 @@ function mesecon.rules_link_rule_all_inverted(input, rule)
 
 	for _, outputrule in ipairs(mesecon.flattenrules(outputrules)) do
 		if  vector.equals(vector.add(output, outputrule), input) then
-			table.insert(rules, mesecon.invertRule(outputrule))
+			rules[#rules+1] = mesecon.invertRule(outputrule)
 		end
 	end
 	return rules
@@ -534,7 +536,7 @@ function mesecon.is_powered(pos, rule)
 
 				if (mesecon.is_conductor_on(nn, mesecon.invertRule(rname))
 				or mesecon.is_receptor_on(nn.name)) then
-					table.insert(sourcepos, np)
+					sourcepos[#sourcepos+1] = np
 				end
 			end
 		end
@@ -545,7 +547,7 @@ function mesecon.is_powered(pos, rule)
 			local nn = mesecon.get_node_force(np)
 			if (mesecon.is_conductor_on (nn, mesecon.invertRule(rname))
 			or mesecon.is_receptor_on (nn.name)) then
-				table.insert(sourcepos, np)
+				sourcepos[#sourcepos+1] = np
 			end
 		end
 	end

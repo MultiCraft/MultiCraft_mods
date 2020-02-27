@@ -1,5 +1,4 @@
 -- Dig and place services
-
 mesecon.on_placenode = function (pos, node)
 	mesecon.execute_autoconnect_hooks_now(pos, node)
 
@@ -34,8 +33,8 @@ mesecon.on_placenode = function (pos, node)
 		-- for each input rule, check if powered
 		for _, r in ipairs(mesecon.effector_get_rules(node)) do
 			local powered = mesecon.is_powered(pos, r)
-			if powered then table.insert(powered_rules, r)
-			else table.insert(unpowered_rules, r) end
+			if powered then powered_rules[#powered_rules+1] = r
+			else unpowered_rules[#unpowered_rules+1] = r end
 
 			local state = powered and mesecon.state.on or mesecon.state.off
 			mesecon.changesignal(pos, node, r, state, 1)

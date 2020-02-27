@@ -38,6 +38,7 @@ local max_push = mesecon.setting("piston_max_push", 10)
 local max_pull = mesecon.setting("piston_max_pull", 10)
 
 -- Get mesecon rules of pistons
+local table_copy, table_remove = table.copy, table.remove
 local function piston_get_rules(node)
 	local dir = minetest.facedir_to_dir(node.param2)
 	for k, v in pairs(dir) do
@@ -46,10 +47,10 @@ local function piston_get_rules(node)
 			break
 		end
 	end
-	local rules = table.copy(mesecon.rules.default)
-	for i, rule in ipairs(rules) do
+	local rules = table_copy(mesecon.rules.default)
+	for i, rule in pairs(rules) do
 		if rule[dir[1]] == dir[2] then
-			table.remove(rules, i)
+			table_remove(rules, i)
 		end
 	end
 	return rules
@@ -124,11 +125,12 @@ local orientations = {
 	      {20, 15}
 }
 
+local deg = math.deg
 local function piston_orientate(pos, placer)
 	if not placer then
 		return
 	end
-	local pitch = math.deg(placer:get_look_vertical())
+	local pitch = deg(placer:get_look_vertical())
 	local node = minetest.get_node(pos)
 	if pitch > 55 then
 		node.param2 = orientations[node.param2][1]
@@ -434,7 +436,7 @@ local function piston_get_stopper(node, _, stack, stackid)
 	local pusherpos  = vector.add(stack[stackid].pos, dir)
 	local pushernode = minetest.get_node(pusherpos)
 	if pistonspec.pusher == pushernode.name then
-		for _, s in ipairs(stack) do
+		for _, s in pairs(stack) do
 			if  vector.equals(s.pos, pusherpos) -- pusher is also to be pushed
 			and s.node.param2 == node.param2 then
 				return false

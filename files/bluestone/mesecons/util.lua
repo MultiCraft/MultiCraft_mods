@@ -1,3 +1,5 @@
+local floor, pow = math.floor, math.pow
+
 function mesecon.move_node(pos, newpos)
 	local node = minetest.get_node(pos)
 	local meta = minetest.get_meta(pos):to_table()
@@ -10,11 +12,11 @@ end
 function mesecon.rotate_rules_right(rules)
 	local nr = {}
 	for _, rule in ipairs(rules) do
-		table.insert(nr, {
+		nr[#nr+1] = {
 			x = -rule.z,
 			y =  rule.y,
 			z =  rule.x,
-			name = rule.name})
+			name = rule.name}
 	end
 	return nr
 end
@@ -22,11 +24,11 @@ end
 function mesecon.rotate_rules_left(rules)
 	local nr = {}
 	for _, rule in ipairs(rules) do
-		table.insert(nr, {
+		nr[#nr+1] = {
 			x =  rule.z,
 			y =  rule.y,
 			z = -rule.x,
-			name = rule.name})
+			name = rule.name}
 	end
 	return nr
 end
@@ -34,11 +36,11 @@ end
 function mesecon.rotate_rules_down(rules)
 	local nr = {}
 	for _, rule in ipairs(rules) do
-		table.insert(nr, {
+		nr[#nr+1] = {
 			x = -rule.y,
 			y =  rule.x,
 			z =  rule.z,
-			name = rule.name})
+			name = rule.name}
 	end
 	return nr
 end
@@ -46,11 +48,11 @@ end
 function mesecon.rotate_rules_up(rules)
 	local nr = {}
 	for _, rule in ipairs(rules) do
-		table.insert(nr, {
+		nr[#nr+1] = {
 			x =  rule.y,
 			y = -rule.x,
 			z =  rule.z,
-			name = rule.name})
+			name = rule.name}
 	end
 	return nr
 end
@@ -77,7 +79,7 @@ function mesecon.flattenrules(allrules)
 	local shallowrules = {}
 	for _, metarule in ipairs( allrules) do
 	for _,	 rule in ipairs(metarule ) do
-		table.insert(shallowrules, rule)
+		shallowrules[#shallowrules+1] = rule
 	end
 	end
 	return shallowrules
@@ -141,13 +143,13 @@ else
 end
 
 function mesecon.dec2bin(n)
-		local x, y = math.floor(n / 2), n % 2
-		if (n > 1) then
-		return mesecon.dec2bin(x)..y
-		else
-			return ""..y
-		end
+	local x, y = math.floor(n / 2), n % 2
+	if (n > 1) then
+	return mesecon.dec2bin(x)..y
+	else
+		return ""..y
 	end
+end
 
 function mesecon.getstate(nodename, states)
 	for state, name in ipairs(states) do
@@ -171,24 +173,24 @@ end
 function mesecon.set_bit(binary,bit,value)
 	if value == "1" then
 		if not mesecon.get_bit(binary,bit) then
-			return mesecon.dec2bin(tonumber(binary,2)+math.pow(2,bit-1))
+			return mesecon.dec2bin(tonumber(binary,2)+pow(2,bit-1))
 		end
 	elseif value == "0" then
 		if mesecon.get_bit(binary,bit) then
-			return mesecon.dec2bin(tonumber(binary,2)-math.pow(2,bit-1))
+			return mesecon.dec2bin(tonumber(binary,2)-pow(2,bit-1))
 		end
 	end
 	return binary
-
 end
 
 function mesecon.invertRule(r)
 	return vector.multiply(r, -1)
 end
 
+local table_copy = table.copy
 function mesecon.tablecopy(obj) -- deep copy
 	if type(obj) == "table" then
-		return table.copy(obj)
+		return table_copy(obj)
 	end
 	return obj
 end
@@ -212,7 +214,7 @@ function mesecon.mergetable(source, dest)
 		rval[k] = dest[k] or mesecon.tablecopy(v)
 	end
 	for _, v in ipairs(source) do
-		table.insert(rval, mesecon.tablecopy(v))
+		rval[#rval+1] = mesecon.tablecopy(v)
 	end
 
 	return rval
@@ -268,9 +270,9 @@ local BLOCKSIZE = 16
 -- convert node position --> block hash
 local function hash_blockpos(pos)
 	return minetest.hash_node_position({
-		x = math.floor(pos.x/BLOCKSIZE),
-		y = math.floor(pos.y/BLOCKSIZE),
-		z = math.floor(pos.z/BLOCKSIZE)
+		x = floor(pos.x/BLOCKSIZE),
+		y = floor(pos.y/BLOCKSIZE),
+		z = floor(pos.z/BLOCKSIZE)
 	})
 end
 
