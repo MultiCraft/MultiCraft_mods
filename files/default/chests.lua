@@ -1,5 +1,5 @@
-local function get_chest_neighborpos(pos, param2, side)
-	if side == "right" then
+local function get_chest_neighborpos(pos, param2, right)
+	if right then
 		if param2 == 0 then
 			return {x = pos.x - 1, y = pos.y, z = pos.z}
 		elseif param2 == 1 then
@@ -19,6 +19,18 @@ local function get_chest_neighborpos(pos, param2, side)
 		elseif param2 == 3 then
 			return {x = pos.x, y = pos.y, z = pos.z + 1}
 		end
+	end
+end
+
+local function on_rightclick(pos)
+	minetest.sound_play("default_chest_open", {gain = 0.3,
+			pos = pos, max_hear_distance = 10})
+end
+
+local function on_receive_fields(pos, _, fields)
+	if fields.quit then
+		minetest.sound_play("default_chest_close", {gain = 0.3,
+				pos = pos, max_hear_distance = 10})
 	end
 end
 
@@ -73,9 +85,9 @@ minetest.register_node("default:chest", {
 		if not minetest.is_valid_pos(pos) then return end
 		local param2 = minetest.get_node(pos).param2
 		local meta = minetest.get_meta(pos)
-		if minetest.get_node(get_chest_neighborpos(pos, param2, "right")).name == "default:chest" then
+		if minetest.get_node(get_chest_neighborpos(pos, param2, true)).name == "default:chest" then
 			minetest.set_node(pos, {name="default:chest_right", param2 = param2})
-			local pos2 = get_chest_neighborpos(pos, param2, "right")
+			local pos2 = get_chest_neighborpos(pos, param2, true)
 			meta:set_string("formspec", large_chest_formspec ..
 				"list[nodemeta:" .. pos2.x .. "," .. pos2.y .. "," .. pos2.z .. ";main;0.01,0.4;9,3;]" ..
 				"list[current_name;main;0.01,3.39;9,3;]")
@@ -86,9 +98,9 @@ minetest.register_node("default:chest", {
 				"list[nodemeta:" .. pos.x .. "," .. pos.y .. "," .. pos.z .. ";main;0.01,3.39;9,3;]" ..
 				"list[current_name;main;0.01,0.4;9,3;]")
 			meta2:set_string("infotext", Sl("Large Chest"))
-		elseif minetest.get_node(get_chest_neighborpos(pos, param2, "left")).name == "default:chest" then
+		elseif minetest.get_node(get_chest_neighborpos(pos, param2)).name == "default:chest" then
 			minetest.set_node(pos, {name = "default:chest_left", param2 = param2})
-			local pos2 = get_chest_neighborpos(pos, param2, "left")
+			local pos2 = get_chest_neighborpos(pos, param2)
 			meta:set_string("formspec", large_chest_formspec ..
 				"list[nodemeta:" .. pos2.x .. "," .. pos2.y .. "," .. pos2.z .. ";main;0.01,3.39;9,3;]" ..
 				"list[current_name;main;0.01,0.4;9,3;]")
@@ -106,6 +118,8 @@ minetest.register_node("default:chest", {
 		meta:get_inventory():set_size("main", 9*3)
 	end,
 
+	on_rightclick = on_rightclick,
+	on_receive_fields = on_receive_fields,
 	can_dig = can_dig,
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_take = allow_metadata_inventory_take
@@ -125,7 +139,7 @@ minetest.register_node("default:chest_left", {
 
 	on_destruct = function(pos)
 		local param2 = minetest.get_node(pos).param2
-		local pos2 = get_chest_neighborpos(pos, param2, "left")
+		local pos2 = get_chest_neighborpos(pos, param2)
 		if not pos2 or minetest.get_node(pos2).name ~= "default:chest_right" then
 			return
 		end
@@ -135,6 +149,8 @@ minetest.register_node("default:chest_left", {
 		minetest.swap_node(pos2, {name = "default:chest", param2 = param2})
 	end,
 
+	on_rightclick = on_rightclick,
+	on_receive_fields = on_receive_fields,
 	can_dig = can_dig,
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_take = allow_metadata_inventory_take
@@ -154,7 +170,7 @@ minetest.register_node("default:chest_right", {
 
 	on_destruct = function(pos)
 		local param2 = minetest.get_node(pos).param2
-		local pos2 = get_chest_neighborpos(pos, param2, "right")
+		local pos2 = get_chest_neighborpos(pos, param2, true)
 		if not pos2 or minetest.get_node(pos2).name ~= "default:chest_left" then
 			return
 		end
@@ -164,6 +180,8 @@ minetest.register_node("default:chest_right", {
 		minetest.swap_node(pos2, {name = "default:chest", param2 = param2})
 	end,
 
+	on_rightclick = on_rightclick,
+	on_receive_fields = on_receive_fields,
 	can_dig = can_dig,
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_take = allow_metadata_inventory_take
@@ -183,4 +201,3 @@ minetest.register_craft({
 	recipe = "default:chest",
 	burntime = 15
 })
-
