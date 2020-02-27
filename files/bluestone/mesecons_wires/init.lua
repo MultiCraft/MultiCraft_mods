@@ -9,6 +9,7 @@
 -- #######################
 
 -- self_pos = pos of any mesecon node, from_pos = pos of conductor to getconnect for
+
 local wire_getconnect = function (from_pos, self_pos)
 	local node = minetest.get_node(self_pos)
 	if minetest.registered_nodes[node.name]
@@ -36,7 +37,7 @@ local wire_updateconnect = function (pos)
 
 	for _, r in ipairs(mesecon.rules.default) do
 		if wire_getconnect(pos, vector.add(pos, r)) then
-			table.insert(connections, r)
+			connections[#connections+1] = r
 		end
 	end
 
@@ -57,10 +58,10 @@ local wire_updateconnect = function (pos)
 		end
 	end
 
-	local nodeid = 	  (nid[0] or "0")..(nid[1] or "0")..(nid[2] or "0")..(nid[3] or "0")
+	local nodeid = (nid[0] or "0")..(nid[1] or "0")..(nid[2] or "0")..(nid[3] or "0")
 			..(nid[4] or "0")..(nid[5] or "0")..(nid[6] or "0")..(nid[7] or "0")
 
-	local state_suffix = string.find(minetest.get_node(pos).name, "_off") and "_off" or "_on"
+	local state_suffix = minetest.get_node(pos).name:find("_off") and "_off" or "_on"
 	minetest.set_node(pos, {name = "mesecons:wire_"..nodeid..state_suffix})
 end
 
@@ -149,16 +150,17 @@ local function register_wires()
 
 		-- Calculate nodebox
 		local nodebox = {type = "fixed", fixed={box_center}}
+		local fixed = nodebox.fixed
 		for i=0,7 do
 			if nid[i] == 1 then
-				table.insert(nodebox.fixed, nbox_nid[i])
+				fixed[#fixed+1] = nbox_nid[i]
 			end
 		end
 
 		-- Add bump to nodebox if curved
 		if (nid[0] == 1 and nid[1] == 1) or (nid[1] == 1 and nid[2] == 1)
 		or (nid[2] == 1 and nid[3] == 1) or (nid[3] == 1 and nid[0] == 1) then
-			table.insert(nodebox.fixed, box_bump1)
+			fixed[#fixed+1] = box_bump1
 		end
 
 		-- If nothing to connect to, still make a nodebox of a straight wire
@@ -167,20 +169,20 @@ local function register_wires()
 		end
 
 		local rules = {}
-		if (nid[0] == 1) then table.insert(rules, vector.new( 1,  0,  0)) end
-		if (nid[1] == 1) then table.insert(rules, vector.new( 0,  0,  1)) end
-		if (nid[2] == 1) then table.insert(rules, vector.new(-1,  0,  0)) end
-		if (nid[3] == 1) then table.insert(rules, vector.new( 0,  0, -1)) end
+		if (nid[0] == 1) then rules[#rules+1] = vector.new( 1,  0,  0) end
+		if (nid[1] == 1) then rules[#rules+1] = vector.new( 0,  0,  1) end
+		if (nid[2] == 1) then rules[#rules+1] = vector.new(-1,  0,  0) end
+		if (nid[3] == 1) then rules[#rules+1] = vector.new( 0,  0, -1) end
 
-		if (nid[0] == 1) then table.insert(rules, vector.new( 1, -1,  0)) end
-		if (nid[1] == 1) then table.insert(rules, vector.new( 0, -1,  1)) end
-		if (nid[2] == 1) then table.insert(rules, vector.new(-1, -1,  0)) end
-		if (nid[3] == 1) then table.insert(rules, vector.new( 0, -1, -1)) end
+		if (nid[0] == 1) then rules[#rules+1] = vector.new( 1, -1,  0) end
+		if (nid[1] == 1) then rules[#rules+1] = vector.new( 0, -1,  1) end
+		if (nid[2] == 1) then rules[#rules+1] = vector.new(-1, -1,  0) end
+		if (nid[3] == 1) then rules[#rules+1] = vector.new( 0, -1, -1) end
 
-		if (nid[4] == 1) then table.insert(rules, vector.new( 1,  1,  0)) end
-		if (nid[5] == 1) then table.insert(rules, vector.new( 0,  1,  1)) end
-		if (nid[6] == 1) then table.insert(rules, vector.new(-1,  1,  0)) end
-		if (nid[7] == 1) then table.insert(rules, vector.new( 0,  1, -1)) end
+		if (nid[4] == 1) then rules[#rules+1] = vector.new( 1,  1,  0) end
+		if (nid[5] == 1) then rules[#rules+1] = vector.new( 0,  1,  1) end
+		if (nid[6] == 1) then rules[#rules+1] = vector.new(-1,  1,  0) end
+		if (nid[7] == 1) then rules[#rules+1] = vector.new( 0,  1, -1) end
 
 		local meseconspec_off = { conductor = {
 			rules = rules,

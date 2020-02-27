@@ -25,7 +25,7 @@ Also note: Some of the guarantees here might be dropped at some time.
 
 -- localize for speed
 local queue = mesecon.queue
-local table_insert, table_remove, table_sort = table.insert, table.remove, table.sort
+local table_remove, table_sort = table.remove, table.sort
 
 queue.actions = {} -- contains all ActionQueue actions
 
@@ -62,7 +62,7 @@ function queue:add_action(pos, func, params, time, overwritecheck, priority)
 		end
 	end
 
-	table_insert(queue.actions, action)
+	queue.actions[#queue.actions+1] = action
 end
 
 -- execute the stored functions on a globalstep
@@ -90,11 +90,11 @@ local function globalstep_func(dtime)
 			-- action ac is to be executed later
 			-- ~> insert into queue.actions
 			ac.time = ac.time - dtime
-			table_insert(queue.actions, ac)
+			queue.actions[#queue.actions+1] = ac
 		else
 			-- action ac is to be executed now
 			-- ~> insert into actions_now
-			table_insert(actions_now, ac)
+			actions_now[#actions_now+1] = ac
 		end
 	end
 

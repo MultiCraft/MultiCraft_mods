@@ -3,6 +3,8 @@ mesecon.mvps_stoppers = {}
 mesecon.on_mvps_move = {}
 mesecon.mvps_unmov = {}
 
+local table_remove = table.remove
+
 --- Objects (entities) that cannot be moved
 function mesecon.register_mvps_unmov(objectname)
 	mesecon.mvps_unmov[objectname] = true;
@@ -71,7 +73,7 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 		local nn = minetest.get_node(np)
 
 		if not node_replaceable(nn.name) then
-			table.insert(nodes, {node = nn, pos = np})
+			nodes[#nodes+1] = {node = nn, pos = np}
 			if #nodes > maximum then return nil end
 
 			-- add connected nodes to frontiers, connected is a vector list
@@ -81,8 +83,7 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 			and minetest.registered_nodes[nn.name].mvps_sticky then
 				connected = minetest.registered_nodes[nn.name].mvps_sticky(np, nn)
 			end
-
-			table.insert(connected, vector.add(np, dir))
+			connected[#connected+1] = vector.add(np, dir)
 
 			-- If adjacent node is sticky block and connects add that
 			-- position to the connected table
@@ -97,14 +98,14 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 					-- connects to this position?
 					for _, link in ipairs(sticksto) do
 						if vector.equals(link, np) then
-							table.insert(connected, adjpos)
+							connected[#connected+1] = adjpos
 						end
 					end
 				end
 			end
 
 			if all_pull_sticky then
-				table.insert(connected, vector.subtract(np, dir))
+				connected[#connected+1] = vector.subtract(np, dir)
 			end
 
 			-- Make sure there are no duplicates in frontiers / nodes before
@@ -122,11 +123,11 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 					end
 				end
 				if not duplicate then
-					table.insert(frontiers, cp)
+					frontiers[#frontiers+1] = cp
 				end
 			end
 		end
-		table.remove(frontiers, 1)
+		table_remove(frontiers, 1)
 	end
 
 	return nodes
