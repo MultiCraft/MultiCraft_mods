@@ -200,17 +200,21 @@ end
 
 armor.serialize_inventory_list = function(_, list)
 	local list_table = {}
-	for _, stack in ipairs(list) do
-		table.insert(list_table, stack:to_string())
+	local count = 1
+	for _, stack in pairs(list) do
+		list_table[count] = stack:to_string()
+		count = count + 1
 	end
 	return minetest.serialize(list_table)
 end
 
 armor.deserialize_inventory_list = function(_, list_string)
-	local list_table = minetest.deserialize(list_string)
+	local list_table = minetest.deserialize(list_string) or {}
 	local list = {}
-	for _, stack in ipairs(list_table or {}) do
-		table.insert(list, ItemStack(stack))
+	local count = 1
+	for _, stack in pairs(list_table) do
+		list[count] = ItemStack(stack)
+		count = count + 1
 	end
 	return list
 end

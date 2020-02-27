@@ -68,16 +68,16 @@ function farming_addons.grow_block(pos)
 
 	-- make sure that at least one side of the plant has space to put fruit
 	if right.name == "air" then
-		table.insert(spawn_positions, right_pos)
+		spawn_positions[#spawn_positions+1] = right_pos
 	end
 	if front.name == "air" then
-		table.insert(spawn_positions, front_pos)
+		spawn_positions[#spawn_positions+1] = front_pos
 	end
 	if left.name == "air" then
-		table.insert(spawn_positions, left_pos)
+		spawn_positions[#spawn_positions+1] = left_pos
 	end
 	if back.name == "air" then
-		table.insert(spawn_positions, back_pos)
+		spawn_positions[#spawn_positions+1] = back_pos
 	end
 
 	-- plant is closed from all sides
