@@ -1,14 +1,13 @@
 function default.register_torch(name, def)
-	local torch = table.copy(def)
-	torch.drawtype = "mesh"
-	torch.paramtype = "light"
-	torch.paramtype2 = "wallmounted"
-	torch.sunlight_propagates = true
-	torch.walkable = false
-	torch.liquids_pointable = false
-	torch.drop = name
-	torch.floodable = true
-	torch.on_flood = function(pos, oldnode, newnode)
+	def.drawtype = "mesh"
+	def.paramtype = "light"
+	def.paramtype2 = "wallmounted"
+	def.sunlight_propagates = true
+	def.walkable = false
+	def.liquids_pointable = false
+	def.drop = name
+	def.floodable = true
+	def.on_flood = function(pos, oldnode, newnode)
 		oldnode.name = name or name .. "_wall" or name .. "_celling"
 		minetest.add_item(pos, ItemStack(oldnode))
 		-- Play flame-extinguish sound if liquid is not an 'igniter'
@@ -23,7 +22,7 @@ function default.register_torch(name, def)
 		-- Remove the torch node
 		return false
 	end
-	torch.on_place = function(itemstack, placer, pointed_thing)
+	def.on_place = function(itemstack, placer, pointed_thing)
 		local under = pointed_thing.under
 		local node = minetest.get_node(under)
 		local node_def = minetest.registered_nodes[node.name]
@@ -47,14 +46,14 @@ function default.register_torch(name, def)
 		return itemstack
 	end
 
-	local torch_floor = table.copy(torch)
-	torch_floor.mesh = "torch_floor.obj"
-	torch_floor.selection_box = {
+	def.mesh = "torch_floor.obj"
+	def.selection_box = {
 		type = "wallmounted",
 		wall_bottom = {-1/8, -1/2, -1/8, 1/8, 2/16, 1/8}
 	}
+	minetest.register_node(":" .. name, def)
 
-	local torch_wall = table.copy(torch)
+	local torch_wall = table.copy(def)
 	torch_wall.mesh = "torch_wall.obj"
 	torch_wall.selection_box = {
 		type = "wallmounted",
@@ -62,7 +61,7 @@ function default.register_torch(name, def)
 	}
 	torch_wall.groups.not_in_creative_inventory = 1
 
-	local torch_ceiling = table.copy(torch)
+	local torch_ceiling = table.copy(def)
 	torch_ceiling.mesh = "torch_ceiling.obj"
 	torch_ceiling.selection_box = {
 		type = "wallmounted",
@@ -70,7 +69,6 @@ function default.register_torch(name, def)
 	}
 	torch_ceiling.groups.not_in_creative_inventory = 1
 
-	minetest.register_node(":" .. name, torch_floor)
 	minetest.register_node(":" .. name .. "_wall", torch_wall)
 	minetest.register_node(":" .. name .. "_ceiling", torch_ceiling)
 end
