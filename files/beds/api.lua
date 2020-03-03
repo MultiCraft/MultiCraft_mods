@@ -12,13 +12,14 @@ function beds.register_bed(name, def)
 		stack_max = 1,
 		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, bed = 1},
 		sounds = def.sounds or default.node_sound_wood_defaults(),
+		node_placement_prediction = "",
 		selection_box = {
 			type = "fixed",
-			fixed = def.selectionbox,
+			fixed = def.selectionbox
 		},
 		collision_box = {
 			type = "fixed",
-			fixed = def.collisionbox,
+			fixed = def.collisionbox
 		},
 
 		on_place = function(itemstack, placer, pointed_thing)
@@ -78,6 +79,8 @@ function beds.register_bed(name, def)
 			end
 			return itemstack
 		end,
+
+		on_destruct = beds.remove_spawns_at,
 
 		on_rightclick = function(pos, _, clicker, itemstack)
 			beds.on_rightclick(pos, clicker)
