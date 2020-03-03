@@ -71,6 +71,7 @@ mobs:register_mob("mobs_animal:dog", {
 		war_cry = "mobs_wolf_attack",
 		death = "mobs_wolf_attack"
 	},
+	water_damage = 0,
 	fear_height = 4,
 	walk_chance = 75,
 	walk_velocity = 2,

@@ -27,21 +27,26 @@ local pi = math.pi
 local rad = math.rad
 local random = math.random
 local sin = math.sin
-
+local table_remove = table.remove
 
 -- Load settings
 local peaceful_only = false
 local disable_blood = true
 local mobs_griefing = true
 local creative = minetest.settings:get_bool("creative_mode")
-local spawn_protected = false
+local spawn_protected = true
 local remove_far = false
 local difficulty = tonumber(minetest.settings:get("mob_difficulty")) or 1.0
 local show_health = true
 local max_per_block = tonumber(minetest.settings:get("max_objects_per_block"))
 local singleplayer = minetest.is_singleplayer()
-local lifetime = 1200 -- 20 min
-local spawn_interval = 15
+local lifetime = 900 -- 15 min
+local spawn_interval = 20
+
+if not singleplayer then
+	lifetime = 300 -- 5 min
+	spawn_interval = 60
+end
 
 -- creative check
 function mobs.is_creative(name)
@@ -197,10 +202,12 @@ function mob_class:set_velocity(v)
 	end
 
 	local yaw = (self.object:get_yaw() or 0) + self.rotate
+
+	-- set velocity with hard limit of 10
 	self.object:set_velocity({
-		x = (sin(yaw) * -v) + c_x,
-		y = self.object:get_velocity().y,
-		z = (cos(yaw) * v) + c_y,
+		x = max(-10, min((sin(yaw) * -v) + c_x, 10)),
+		y = max(-10, min(self.object:get_velocity().y, 10)),
+		z = max(-10, min((cos(yaw) * v) + c_y, 10))
 	})
 end
 
@@ -1175,17 +1182,21 @@ function mob_class:replace(pos)
 	if #minetest.find_nodes_in_area(pos, pos, what) > 0 then
 		-- print ("replace node = ".. minetest.get_node(pos).name, pos.y)
 
-		local oldnode = {name = what}
-		local newnode = {name = with}
-		local on_replace_return
-
 		if self.on_replace then
-			on_replace_return = self:on_replace(pos, oldnode, newnode)
+			local oldnode = what
+			local newnode = with
+
+			-- convert any group: replacements to actual node name
+			if oldnode:find("group:") then
+				oldnode = minetest.get_node(pos).name
+			end
+
+			if self:on_replace(pos, oldnode, newnode) == false or newnode == "" then
+				return
+			end
 		end
 
-		if on_replace_return ~= false and with ~= "" then
-			minetest.set_node(pos, {name = with})
-		end
+		minetest.set_node(pos, {name = with})
 	end
 end
 
@@ -2080,7 +2091,7 @@ function mob_class:do_states(dtime)
 
 				if abs(p1.x - s.x) + abs(p1.z - s.z) < 0.6 then
 					-- reached waypoint, remove it from queue
-					table.remove(self.path.way, 1)
+					table_remove(self.path.way, 1)
 				end
 
 				-- set new temporary target
@@ -2675,7 +2686,7 @@ end
 
 -- handle mob lifetimer and expiration
 function mob_class:mob_expire(pos, dtime)
-	-- when lifetimer expires remove mob (except npc and tamed)
+	-- when lifetimer expires remove mob (except tamed)
 	if not self.tamed
 			and self.state ~= "attack"
 			and remove_far ~= true
@@ -2879,6 +2890,7 @@ function mobs:register_mob(name, def)
 		jump_height = def.jump_height,
 		drawtype = def.drawtype, -- DEPRECATED, use rotate instead
 		rotate = rad(def.rotate or 0), -- 0=front, 90=side, 180=back, 270=side2
+		glow = def.glow,
 		lifetimer = def.lifetimer,
 		hp_min = max(1, (def.hp_min or 5) * difficulty),
 		hp_max = max(1, (def.hp_max or 10) * difficulty),
@@ -3058,7 +3070,7 @@ interval, chance, aoc, min_height, max_height, day_toggle, on_spawn)
 			end
 
 			-- mobs cannot spawn in protected areas when enabled
-			if not spawn_protected
+			if spawn_protected
 					and minetest.is_protected(pos, "") then
 			-- print ("--- inside protected area", name)
 				return
