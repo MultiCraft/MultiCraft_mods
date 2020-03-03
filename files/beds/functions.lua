@@ -77,10 +77,13 @@ local function lay_down(player, pos, bed_pos, state, skip)
 		player_api.player_attached[name] = false
 		player:set_physics_override(1, 1, 1)
 		hud_flags.wielditem = true
-		player_api.set_animation(player, "stand" , 30)
+		player_api.set_animation(player, "stand", 30)
 
 	-- lay down
 	else
+		if vector.length(player:get_player_velocity()) > 0 then
+			return
+		end
 		beds.pos[name] = pos
 		beds.bed_position[name] = bed_pos
 		beds.player[name] = 1
@@ -95,7 +98,7 @@ local function lay_down(player, pos, bed_pos, state, skip)
 		player:set_pos(p)
 		player_api.player_attached[name] = true
 		hud_flags.wielditem = false
-		player_api.set_animation(player, "lay" , 0)
+		player_api.set_animation(player, "lay", 0)
 	end
 
 	player:hud_set_flags(hud_flags)
