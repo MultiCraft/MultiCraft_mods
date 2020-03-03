@@ -98,6 +98,7 @@ Potions = Зелья
 
 #craftguide
 Crafting Guide = Руководство Крафта
+Craft Guide = Руководство
 Usage: = Примен.:
 Recipe: = Рецепт:
 of = из
@@ -111,7 +112,7 @@ Burning time: = Время горения:
 Cooking time: = Время приготовления:
 No usages.\nClick again to show recipes. = Нет применений.\nНажмите снова для рецептов.
 No recipes.\nClick again to show usages. = Невозможно скрафтить.\nНажмите снова для применений.
-Select an item from the list\nto view recipes and usages. = Выбери предмет из списка,\nдля просмотра рецептов и применений.
+Select an item from the list\nto view recipes and usages. = Выберите предмет из списка,\nдля просмотра рецептов и применений.
 
 
 #default
@@ -182,7 +183,7 @@ Snow Block = Снежный Блок
 Ice = Лёд
 Packed Ice = Упакованный Лёд
 Apple Tree = Яблочное Дерево
-Apple Wood Planks = Доски Яблока
+Apple Wood Planks = Доски Яблони
 Apple Tree Sapling = Деревце Яблони
 Apple Tree Leaves = Яблочные Листья
 Apple = Яблоко
@@ -225,7 +226,7 @@ Dry Grass = Сухая Трава
 Bookshelf = Книжный Шкаф
 Wooden Ladder = Деревянная Лестница
 Grill = Решётка
-Apple Wood Fence = Забор из Дерева Яблока
+Apple Wood Fence = Забор из Дерева Яблони
 Acacia Wood Fence = Забор из Дерева Акации
 Birch Wood Fence = Забор из Дерева Берёзы
 Jungle Wood Fence = Забор из Джунгли-дерева
@@ -268,10 +269,10 @@ Fishing Pole = Удочка
 
 
 #doors
-Apple Wood Door = Дверь из Дерева Яблока
-Apple Wood Door with Glass = Дверь из Дерева Яблока со Стеклом
-Apple Wood Interior Door = Внутренняя Дверь из Дерева Яблока
-Apple Wood Interior Glass Door = Внутренняя Стеклянная Дверь из Дерева Яблока
+Apple Wood Door = Дверь из Дерева Яблони
+Apple Wood Door with Glass = Дверь из Дерева Яблони со Стеклом
+Apple Wood Interior Door = Внутренняя Дверь из Дерева Яблони
+Apple Wood Interior Glass Door = Внутренняя Стеклянная Дверь из Дерева Яблони
 Acacia Wood Door = Дверь из Дерева Акации
 Acacia Wood Door with Glass = Дверь из Дерева Акации со Стеклом
 Acacia Wood Interior Door = Внутренняя Дверь из Дерева Акации
@@ -292,7 +293,7 @@ Steel Door = Стальная Дверь
 Grilled Door = Решётчатая Дверь
 Wooden Trapdoor = Деревянный Люк
 Steel Trapdoor = Стальной Люк
-Apple Wood Fence Gate = Ворота из Дерева Яблока
+Apple Wood Fence Gate = Ворота из Дерева Яблони
 Acacia Wood Fence Gate = Ворота из Дерева Акации
 Birch Wood Fence Gate = Ворота из Дерева Берёзы
 Jungle Wood Fence Gate = Ворота из Дерева Джунгли-дерева
@@ -424,7 +425,7 @@ Turtle Egg = Яйцо Спавна Черепахи
 
 #mobs_water
 Aquarium = Аквариум
-Click a \"Fish in Bucket\" to settle a Fish = Нажмите \"Выдром с Рыбкой\" чтобы поселить Рыбку
+Click a \"Fish in Bucket\" to settle a Fish = Нажмите \"Ведром с Рыбкой\", чтобы поселить Рыбку
 You forgot about your Fish! = Вы забыли о своей Рыбке!
 Pick up the Fish with a \"Empty Bucket\" = Возьмите Рыбку \"Пустым Ведром\"
 Small Fish in Bucket = Маленькая Рыбка в Ведре
