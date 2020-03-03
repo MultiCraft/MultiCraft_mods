@@ -118,6 +118,8 @@ function player_api.preview(player, skin)
 
 		"([combine:32x64:-32,-24=" .. c .. "^[mask:player_api_chest.png)^" ..			-- Chest
 
+		"([combine:32x64:-72,-16=" .. c .. "^[mask:player_api_head.png)^" ..			-- Helmet
+
 		"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png)^" ..				-- Left Arm
 		"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png^[transformFX)" ..	-- Right Arm
 
