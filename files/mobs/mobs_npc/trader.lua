@@ -198,20 +198,33 @@ function mobs_trader(self, clicker, entity, race)
 				y = i - 3.2
 			end
 
+			local name_prices = self.trades[i][2]:match("%S*")
+			local amount_prices = self.trades[i][2]:match("%d")
+			local itemdef_prices = minetest.registered_items[name_prices]
+			local tooltip_prices = 
+					(itemdef_prices and itemdef_prices.description or "") .. " " ..
+					(amount_prices and amount_prices ~= "1" and amount_prices or "")
+
+			local name_goods = self.trades[i][1]:match("%S*")
+			local amount_goods = self.trades[i][1]:match("%d")
+			local itemdef_goods = minetest.registered_items[name_goods]
+			local tooltip_goods =
+					(itemdef_goods and itemdef_goods.description or "") .. " " ..
+					(amount_goods and amount_goods ~= "1" and amount_goods or "")
+
 			formspec_trade_list = formspec_trade_list ..
 					"item_image[" .. x .. "," .. y .. ";1,1;" .. self.trades[i][2] .. "]" ..
-					"image_button[" .. x .. "," .. y .. ";1,1;blank.png;prices#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]" ..
-				--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip.."]" ..
+					"image_button[" .. x .. "," .. y .. ";1,1;formspec_cell.png;prices#" .. i .. "#" .. self.id .. ";;;false;formspec_cell.png^default_item_pressed.png]" ..
+					"tooltip[prices#" .. i .. "#" .. self.id .. ";" .. tooltip_prices .. "]" ..
+					"image[".. x + 1 ..",".. y ..";1,1;default_arrow_bg.png^[transformR270]" ..
 					"item_image[" .. x + 2 .. "," .. y .. ";1,1;" .. self.trades[i][1] .. "]" ..
-					"image_button[" .. x + 2 .. "," .. y .. ";1,1;blank.png;goods#" .. i .. "#" .. self.id .. ";;;false;default_item_pressed.png]"
-				--	"tooltip[prices#".. i .. "#" .. self.id .. ";"..tooltip.."]"
+					"image_button[" .. x + 2 .. "," .. y .. ";1,1;formspec_cell.png;goods#" .. i .. "#" .. self.id .. ";;;false;formspec_cell.png^default_item_pressed.png]" ..
+					"tooltip[goods#" .. i .. "#" .. self.id .. ";" .. tooltip_goods .. "]"
 		end
 	end
 
 	minetest.show_formspec(player, "mobs_npc:trade",
 		default.gui ..
-		"background[7.95,3.1;1,1;default_background.png]" ..
-		"background[-0.2,-0.26;9.41,9.49;formspec_trader.png]" ..
 		"item_image[0,-0.1;1,1;default:emerald]" ..
 		"label[0.9,0.1;" .. S("Trader @1's stock", self.game_name) .. "]" ..
 		formspec_trade_list)
