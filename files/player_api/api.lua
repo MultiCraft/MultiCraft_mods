@@ -46,7 +46,7 @@ function player_api.set_model(player, model_name)
 		textures = player_textures[name] or model.textures,
 		visual = "mesh",
 		visual_size = model.visual_size or {x = 1, y = 1},
-		collisionbox = model.collisionbox, -- or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
+		collisionbox = model.collisionbox or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
 		stepheight = model.stepheight or 0.6,
 		eye_height = model.eye_height or 1.47
 	})
@@ -131,7 +131,6 @@ end
 -- Localize for better performance
 local player_set_animation = player_api.set_animation
 local player_attached = player_api.player_attached
-local update_wielded_item = player_api.update_wielded_item
 
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()

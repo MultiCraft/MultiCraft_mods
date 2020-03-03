@@ -129,7 +129,6 @@ armor.set_player_armor = function(self, player)
 		armor_groups.level = math.floor(armor_level / 20)
 		armor_groups.fleshy = 100 - armor_level
 	end
-	player:set_armor_groups(armor_groups)
 	player:set_physics_override(physics)
 	self.textures[name].armor = texture
 	self.def[name].state = state
@@ -142,6 +141,7 @@ armor.set_player_armor = function(self, player)
 	self:update_player_visuals(player)
 
 	if enable_damage then
+		player:set_armor_groups(armor_groups)
 		local max_level = 95 -- full diamond armor
 		local armor_lvl = math.floor(20 * (armor_level/max_level)) or 0
 		hud.change_item(player, "armor", {number = armor_lvl})

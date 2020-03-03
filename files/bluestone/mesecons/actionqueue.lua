@@ -71,7 +71,6 @@ end
 -- However, even that does not work in some cases, that's why we delay the time the globalsteps
 -- start to be execute by 4 seconds
 
-local timer = 0
 local delaytime =1 -- mesecon.setting("delaytime", core.settings:get("dedicated_server_step") * 2)
 if not minetest.is_singleplayer() then
 	delaytime = delaytime * 3
