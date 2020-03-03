@@ -468,6 +468,7 @@ Wet Sponge = Влажная Губка
 
 #player_api
 Your last coordinates: = Ваши последние координаты:
+Player = Игрок
 
 
 #player_skin

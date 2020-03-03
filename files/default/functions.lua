@@ -665,7 +665,7 @@ if core.is_singleplayer() then
 					minexptime = 2,
 					maxexptime = 4,
 					vertical = true,
-					texture = "default_water.png^[resize:17x16^[mask:default_liquid_drop.png"
+					texture = "default_water.png^[resize:16x16^[mask:default_liquid_drop.png"
 				})
 			end
 		end
@@ -692,7 +692,7 @@ if core.is_singleplayer() then
 					minexptime = 2,
 					maxexptime = 4,
 					vertical = true,
-					texture = "default_river_water.png^[resize:17x16^[mask:default_liquid_drop.png"
+					texture = "default_river_water.png^[resize:16x16^[mask:default_liquid_drop.png"
 				})
 			end
 		end
@@ -733,7 +733,7 @@ if core.is_singleplayer() then
 					minexptime = 2,
 					maxexptime = 4,
 					vertical = true,
-					texture = "default_lava.png^[resize:17x16^[mask:default_liquid_drop.png"
+					texture = "default_lava.png^[resize:16x16^[mask:default_liquid_drop.png"
 				})
 			end
 		end

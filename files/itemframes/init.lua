@@ -117,7 +117,7 @@ minetest.register_node("itemframes:frame",{
 		local meta = minetest.get_meta(pos)
 		local pn = placer:get_player_name()
 		meta:set_string("owner", pn)
-		meta:set_string("infotext", Sl("Item frame") .. "\n" .. Sl("Owned by @1", pn))
+		meta:set_string("infotext", Sl("Item frame") .. "\n" .. Sl("Owned by @1", Sl(pn)))
 	end,
 
 	on_rightclick = function(pos, node, clicker, itemstack)
