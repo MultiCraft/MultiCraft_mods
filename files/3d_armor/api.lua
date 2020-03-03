@@ -14,7 +14,7 @@ local armor_def = setmetatable({}, {
 				return 0
 			end
 		})
-	end,
+	end
 })
 local armor_textures = setmetatable({}, {
 	__index = function()
@@ -66,6 +66,7 @@ if enable_damage then
 	})
 end
 
+local floor = math.floor
 armor.set_player_armor = function(self, player)
 	local name = player:get_player_name()
 	local armor_inv = self:get_armor_inventory(player)
@@ -106,7 +107,7 @@ armor.set_player_armor = function(self, player)
 							local value = def.groups["physics_"..phys] or 0
 							physics[phys] = physics[phys] + value
 						end
-						local mat = string.match(item, "%:.+_(.+)$")
+						local mat = item:match("%:.+_(.+)$")
 						if material.name then
 							if material.name == mat then
 								material.count = material.count + 1
@@ -126,7 +127,7 @@ armor.set_player_armor = function(self, player)
 	armor_heal = armor_heal * ARMOR_HEAL_MULTIPLIER
 	local armor_groups = {fleshy = 100}
 	if armor_level > 0 then
-		armor_groups.level = math.floor(armor_level / 20)
+		armor_groups.level = floor(armor_level / 20)
 		armor_groups.fleshy = 100 - armor_level
 	end
 	player:set_physics_override(physics)
@@ -143,7 +144,7 @@ armor.set_player_armor = function(self, player)
 	if enable_damage then
 		player:set_armor_groups(armor_groups)
 		local max_level = 95 -- full diamond armor
-		local armor_lvl = math.floor(20 * (armor_level/max_level)) or 0
+		local armor_lvl = floor(20 * (armor_level/max_level)) or 0
 		hud.change_item(player, "armor", {number = armor_lvl})
 	end
 end
@@ -232,9 +233,35 @@ armor.load_armor_inventory = function(self, player)
 end
 
 armor.save_armor_inventory = function(self, player)
-	local inv = self:get_armor_inventory(player)
-	if inv then
+	local armor_inv = self:get_armor_inventory(player)
+
+	if armor_inv then
+		for i = 1, armor_inv:get_size("armor") do
+			local stack = armor_inv:get_stack("armor", i)
+
+			if stack:get_count() > 0 then
+				local item = minetest.registered_tools[stack:get_name()]
+				if not item or not item.groups then
+					return
+				end
+
+				if not item.groups.armor_head
+				and not item.groups.armor_torso
+				and not item.groups.armor_legs
+				and not item.groups.armor_feet then
+					local inv = player:get_inventory()
+					if inv:room_for_item("main", stack) then
+						inv:add_item("main", stack)
+					else
+						minetest.item_drop(stack, player, player:get_pos())
+					end
+
+					armor_inv:set_stack("armor", i, nil)
+				end
+			end
+		end
+
 		player:set_attribute("3d_armor_inventory",
-			self:serialize_inventory_list(inv:get_list("armor")))
+			self:serialize_inventory_list(armor_inv:get_list("armor")))
 	end
 end

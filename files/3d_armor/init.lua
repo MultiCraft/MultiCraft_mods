@@ -52,16 +52,7 @@ minetest.register_on_joinplayer(function(player)
 	}, name)
 
 	armor_inv:set_size("armor", 4)
-	if not armor:load_armor_inventory(player) then
-		local player_inv = player:get_inventory()
-		player_inv:set_size("armor", 4)
-		for i = 1, 4 do
-			local stack = player_inv:get_stack("armor", i)
-			armor_inv:set_stack("armor", i, stack)
-		end
-		armor:save_armor_inventory(player)
-		player_inv:set_size("armor", 0)
-	end
+	armor:load_armor_inventory(player)
 	armor.def[name] = {
 		level = 0,
 		state = 0,
@@ -91,22 +82,22 @@ minetest.register_on_dieplayer(function(player)
 			for i = 1, armor_inv:get_size("armor") do
 				local stack = armor_inv:get_stack("armor", i)
 				if stack:get_count() > 0 then
-					minetest.item_drop(stack, player, pos)
-					armor_inv:set_stack("armor", i, nil)
+					minetest.item_drop(stack, nil, pos)
 				end
 			end
+			armor_inv:set_list("armor", {})
 		end
-		armor:save_armor_inventory(player)
-		armor:set_player_armor(player)
+		handle_inventory(player)
 	end
 end)
 
+local random = math.random
 minetest.register_on_player_hpchange(function(player, hp_change)
 	if player and hp_change < 0 then
 		local name = player:get_player_name()
 		if name then
 			local heal = armor.def[name].heal
-			if heal >= math.random(100) then
+			if heal >= random(100) then
 				hp_change = 0
 			end
 		end
