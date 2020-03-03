@@ -1247,7 +1247,6 @@ minetest.register_node("default:lava_flowing", {
 
 local bookshelf_formspec =
 	default.gui ..
-	"background[-0.2,-0.26;9.41,9.49;formspec_shelf.png]" ..
 	"item_image[0,-0.1;1,1;default:bookshelf]" ..
 	"label[0.9,0.1;" .. Sl("Bookshelf") .. "]" ..
 	"list[context;books;0,1;9,2;]" ..
@@ -1269,6 +1268,8 @@ local function update_bookshelf(pos)
 			bx = 0
 			by = by + 1
 		end
+		formspec = formspec ..
+			"image[" .. bx .. "," .. by .. ";1,1;formspec_cell.png]"
 		local stack = invlist[i]
 		if stack:is_empty() then
 			formspec = formspec ..

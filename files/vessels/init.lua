@@ -1,6 +1,5 @@
 local vessels_shelf_formspec =
 	default.gui ..
-	"background[-0.2,-0.26;9.41,9.49;formspec_shelf.png]" ..
 	"item_image[0,-0.1;1,1;vessels:shelf]" ..
 	"label[0.9,0.1;" .. Sl("Potion Shelf") .. "]" ..
 	"list[context;vessels;0,1;9,2;]" ..
@@ -22,6 +21,8 @@ local function update_vessels_shelf(pos)
 			vx = 0
 			vy = vy + 1
 		end
+		formspec = formspec ..
+			"image[" .. vx .. "," .. vy .. ";1,1;formspec_cell.png]"
 		local stack = invlist[i]
 		if stack:is_empty() then
 			formspec = formspec ..

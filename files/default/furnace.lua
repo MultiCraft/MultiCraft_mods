@@ -2,27 +2,34 @@
 -- Formspecs
 --
 
-function default.get_furnace_active_formspec(fuel_percent)
+function default.get_furnace_active_formspec(fuel_percent, item_percent)
 	return default.gui ..
-		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]" ..
 		"item_image[0,-0.1;1,1;default:furnace_active]" ..
 		"label[0.9,0.1;" .. Sl("Furnace") .. "]" ..
+		"item_image[3,0.5;1,1;default:cell]" ..
 		"list[context;src;3,0.5;1,1;]" ..
+		"item_image[3,2.5;1,1;default:cell]" ..
 		"list[context;fuel;3,2.5;1,1;]" ..
 		"image[3,1.5;1,1;default_furnace_fire_bg.png^[lowpart:" ..
 		fuel_percent .. ":default_furnace_fire_fg.png]" ..
+		"image[4,1.5;1,1;default_arrow_bg.png^[lowpart:" ..
+		item_percent ..":default_arrow_fg.png^[transformR270]" ..
+		"item_image[4.925,1.425;1.2,1.2;default:cell]" ..
 		"list[context;dst;5,1.5;1,1;]" ..
 		"list[context;split;8,3.14;1,1;]"
 end
 
 function default.get_furnace_inactive_formspec()
 	return default.gui ..
-		"background[-0.2,-0.26;9.41,9.49;formspec_furnace.png]" ..
 		"item_image[0,-0.1;1,1;default:furnace]" ..
 		"label[0.9,0.1;" .. Sl("Furnace") .. "]" ..
+		"item_image[3,0.5;1,1;default:cell]" ..
 		"list[context;src;3,0.5;1,1;]" ..
+		"item_image[3,2.5;1,1;default:cell]" ..
 		"list[context;fuel;3,2.5;1,1;]" ..
 		"image[3,1.5;1,1;default_furnace_fire_bg.png]" ..
+		"image[4,1.5;1,1;default_arrow_bg.png^[transformR270]" ..
+		"item_image[4.925,1.425;1.2,1.2;default:cell]" ..
 		"list[context;dst;5,1.5;1,1;]" ..
 		"list[context;split;8,3.14;1,1;]"
 end
@@ -61,7 +68,11 @@ local function allow_metadata_inventory_put(pos, listname, _, stack, player)
 			return 0
 		end
 	elseif listname == "src" then
-		return stack:get_count()
+		if minetest.get_craft_result({method="cooking", width=1, items={stack}}).time ~= 0 then
+			return stack:get_count()
+		else
+			return 0
+		end
 	elseif listname == "dst" then
 		return 0
 	elseif listname == "split" then
