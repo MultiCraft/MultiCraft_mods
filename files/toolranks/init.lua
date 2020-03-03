@@ -74,12 +74,15 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 	itemmeta:set_string("description", newdesc)
 
 	-- Set wear level
-	local wear = digparams.wear
-	if level > 1 then
-		wear = digparams.wear * 4 / (4 + level)
+	if not (creative and creative.is_enabled_for
+			and creative.is_enabled_for(name)) then
+		local wear = digparams.wear
+		if level > 1 then
+			wear = digparams.wear * 4 / (4 + level)
+		end
+		itemstack:add_wear(wear)
 	end
 
-	itemstack:add_wear(wear)
 	return itemstack
 end
 
