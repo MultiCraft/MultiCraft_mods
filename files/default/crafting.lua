@@ -146,6 +146,14 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "default:redsandstone",
+	recipe = {
+		{"default:redsand", "default:redsand"},
+		{"default:redsand", "default:redsand"}
+	}
+})
+
+minetest.register_craft({
 	output = "default:cement 8",
 	recipe = {
 		{"default:gravel", "default:gravel", "default:sand"},

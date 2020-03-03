@@ -57,8 +57,8 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_abm(
-	{nodenames = {"mesecons_solarpanel:solar_panel_off"},
+minetest.register_abm({
+	nodenames = {"mesecons_solarpanel:solar_panel_off"},
 	interval = 3,
 	chance = 1,
 	catch_up = false,
@@ -73,8 +73,8 @@ minetest.register_abm(
 	end
 })
 
-minetest.register_abm(
-	{nodenames = {"mesecons_solarpanel:solar_panel_on"},
+minetest.register_abm({
+	nodenames = {"mesecons_solarpanel:solar_panel_on"},
 	interval = 3,
 	chance = 1,
 	catch_up = false,
