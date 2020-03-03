@@ -20,7 +20,8 @@ mobs:register_mob("mobs_monster:skeleton", {
 	},
 	hp_min = 10,
 	hp_max = 15,
-	light_damage = 1,
+	light_damage = 2,
+	water_damage = 2,
 	lava_damage = 5,
 	damage = 1,
 	group_attack = true,
@@ -55,7 +56,7 @@ mobs:register_mob("mobs_monster:skeleton", {
 mobs:spawn({
 	name = "mobs_monster:skeleton",
 	nodes = mobs_monster.spawn_nodes,
-	max_light = 8,
+	max_light = 6,
 	chance = 15000
 })
 

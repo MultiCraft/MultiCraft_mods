@@ -20,7 +20,8 @@ mobs:register_mob("mobs_monster:zombie", {
 	},
 	hp_min = 15,
 	hp_max = 25,
-	light_damage = 1,
+	water_damage = 2,
+	light_damage = 2,
 	damage = 2,
 	group_attack = true,
 	attack_npcs = true,
@@ -55,7 +56,7 @@ mobs:register_mob("mobs_monster:zombie", {
 mobs:spawn({
 	name = "mobs_monster:zombie",
 	nodes = mobs_monster.spawn_nodes,
-	max_light = 8,
+	max_light = 6,
 	chance = 15000
 })
 

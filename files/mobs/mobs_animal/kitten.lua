@@ -30,7 +30,6 @@ mobs:register_mob("mobs_animal:kitten", {
 			{name = "farming:string"}
 		}
 	end,
-	water_damage = 1,
 	fall_damage = 2,
 	fear_height = 3,
 	animation = {

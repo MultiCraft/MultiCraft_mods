@@ -27,7 +27,6 @@ mobs:register_mob("mobs_animal:bunny", {
 			{name = "mobs:rabbit_hide", min = 0, max = 1}
 		}
 	end,
-	water_damage = 1,
 	fear_height = 2,
 	animation = {
 		speed_normal = 15,
