@@ -463,7 +463,7 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "mesecons_pistons:piston_sticky_off",
 	recipe = {
-		{"mesecons_materials:glue"},
+		{"bluestone_materials:glue"},
 		{"mesecons_pistons:piston_normal_off"}
 	}
 })
