@@ -226,8 +226,9 @@ minetest.register_craftitem("mobs:rotten_flesh", {
 })
 
 minetest.register_alias("mobs_monster:rotten_flesh", "mobs:rotten_flesh")
-minetest.register_alias("mobs:magic_lasso", "farming:string")
-minetest.register_alias("mobs:lasso", "farming:string")
+minetest.register_alias("mobs:magic_lasso", "default:diamond")
+minetest.register_alias("mobs:lasso", "default:diamond")
+minetest.register_alias("mobs:protector", "default:goldblock")
 
 -- shears
 minetest.register_tool("mobs:shears", {

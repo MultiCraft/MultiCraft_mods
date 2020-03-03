@@ -19,7 +19,8 @@ player_api.register_model("character.b3d", {
 		sit       = {x = 81,  y = 160}
 	},
 	stepheight = 0.6,
-	eye_height = 1.47
+	eye_height = 1.47,
+--	collisionbox = {-0.3, -1.0, -0.3, 0.3, 0.7, 0.3}
 })
 
 -- Hand definition
@@ -65,7 +66,6 @@ else
 		},
 		damage_groups = {fleshy = 1}
 	}
-
 end
 
 minetest.register_node("player_api:hand", hand)
@@ -97,6 +97,7 @@ minetest.register_on_joinplayer(function(player)
 
 	local texture = "character" .. gender .. color .. skin .. ".png"
 	player_api.set_textures(player, texture)
+	player:get_inventory():set_size("hand", 1)
 	player:get_inventory():set_stack("hand", 1, "player_api:hand" .. gender .. color)
 end)
 
@@ -137,5 +138,5 @@ minetest.register_on_dieplayer(function(player)
 
 	-- Display death coordinates
 	minetest.chat_send_player(player:get_player_name(), Sl("Your last coordinates:") .. " "
-		.. minetest.pos_to_string(vector.round(pos)))
+		.. minetest.pos_to_string(pos, 1))
 end)

@@ -97,7 +97,7 @@ minetest.register_node(":mesecons_button:button_stone_on", {
 	sounds = default.node_sound_stone_defaults(),
 
 	mesecons = mesecons_on,
-	on_timer = function(pos, node)
+	on_timer = function(pos)
 		button_turnoff(pos, "stone")
 	end,
 	on_blast = mesecon.on_blastnode
@@ -151,7 +151,7 @@ minetest.register_node(":mesecons_button:button_wood_on", {
 	sounds = default.node_sound_stone_defaults(),
 
 	mesecons = mesecons_on,
-	on_timer = function(pos, node)
+	on_timer = function(pos)
 		button_turnoff(pos, "wood")
 	end,
 	on_blast = mesecon.on_blastnode

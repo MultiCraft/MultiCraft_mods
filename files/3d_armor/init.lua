@@ -9,10 +9,11 @@ local function handle_inventory(player)
 	if player and player:is_player() then
 		armor:save_armor_inventory(player)
 		armor:set_player_armor(player)
-		if creative and creative.is_enabled_for and creative.is_enabled_for(player) then
-			set_creative_inventory(player)
+		if creative and creative.is_enabled_for and
+				creative.is_enabled_for(player) then
+			local set = set_creative_inventory and set_creative_inventory(player)
 		else
-			set_survival_inventory(player)
+			local set = set_survival_inventory and set_survival_inventory(player)
 		end
 	end
 end
@@ -69,7 +70,6 @@ minetest.register_on_joinplayer(function(player)
 	}
 	armor.textures[name] = {armor = "blank.png"}
 	minetest.after(1, function()
-		armor:set_player_armor(player)
 		handle_inventory(player)
 	end)
 end)
