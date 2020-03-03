@@ -15,75 +15,72 @@ minetest.register_entity("itemframes:item", {
 	end
 })
 
-local facedir = {
-	[2] = {x =  1, y = 0, z =  0},
-	[3] = {x = -1, y = 0, z =  0},
-	[4] = {x =  0, y = 0, z =  1},
-	[5] = {x =  0, y = 0, z = -1}
+local pi = math.pi
+local postab = {
+	[2] = {{x =  1, y = 0, z =  0}, pi * 1.5},
+	[3] = {{x = -1, y = 0, z =  0}, pi * 0.5},
+	[4] = {{x =  0, y = 0, z =  1}, 0},
+	[5] = {{x =  0, y = 0, z = -1}, pi}
 }
 
 local update_item = function(pos, node)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
-	local posad = facedir[node.param2]
+	local param2 = node.param2
+	if param2 < 2 or param2 > 5 then return end
+	local posad = postab[param2][1]
 	if item == "" or not posad then return end
 
-	pos = vector.add(pos, vector.multiply(posad, 6.5/16))
+	pos.x = pos.x + posad.x * 0.4
+	pos.z = pos.z + posad.z * 0.4
 	local entity = minetest.add_entity(pos, "itemframes:item")
 	local ent = entity:get_luaentity()
 	local item_name = ItemStack(item):get_name()
 
 	ent.texture = item_name
 	ent.object:set_properties({textures = {item_name}})
-	if node.param2 == 2 or node.param2 == 3 then
-		entity:set_yaw(3.14 / 2 - node.param2 * 3.14 * 2)
-		entity:set_texture_mod(ItemStack(item):get_name())
+	if param2 ~= 4 then
+		entity:set_yaw(postab[param2][2])
 	end
 end
 
-local remove_item = function(pos)
-	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
-		local ent = obj:get_luaentity()
-		if ent and ent.name == "itemframes:item" then
-			obj:remove()
-			break
-		end
-	end
-end
-
-local drop_item = function(pos, node)
+local drop_item = function(pos)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
 	if item == "" then return end
 
 	minetest.add_item(pos, item)
 	meta:set_string("item", "")
-	remove_item(pos, node)
+
+	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+		local ent = obj:get_luaentity()
+		if ent and ent.name == "itemframes:item" then
+			obj:remove()
+			return
+		end
+	end
 end
 
 local function check_item(pos, node)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
 	if item == "" then return end
-	local found = false
 
 	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "itemframes:item" then
-			found = true
-			break
+			return
 		end
 	end
-	if not found then
-		update_item(pos, node)
-	end
+
+	update_item(pos, node)
 end
 
-local function after_dig_node(pos, node)
+local function after_dig_node(pos)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
 	if item == "" then return end
-	drop_item(pos, node and node or minetest.get_node(pos))
+	drop_item(pos)
 end
 
 minetest.register_node("itemframes:frame",{
@@ -108,6 +105,8 @@ minetest.register_node("itemframes:frame",{
 			local posy = pointed_thing.above.y
 			if undery == posy then -- allowed wall-mounted only
 				itemstack = minetest.item_place(itemstack, placer, pointed_thing)
+				minetest.sound_play({name = "default_place_node_hard", gain = 1},
+						{pos = pointed_thing.above})
 			end
 		end
 		return itemstack
@@ -124,7 +123,7 @@ minetest.register_node("itemframes:frame",{
 		if not clicker or
 		minetest.is_protected(pos, clicker:get_player_name()) then return end
 
-		drop_item(pos, node)
+		drop_item(pos)
 
 		if not itemstack or itemstack:get_name() == "" then return end
 		local item = clicker:get_wielded_item():get_name() -- get real item name
@@ -141,8 +140,6 @@ minetest.register_node("itemframes:frame",{
 		return itemstack
 	end,
 
-	on_punch = check_item,
-
 	can_dig = function(pos, player)
 		if minetest.is_protected(pos, player and player:get_player_name()) then
 			return false
@@ -150,6 +147,7 @@ minetest.register_node("itemframes:frame",{
 		return true
 	end,
 
+	on_punch = check_item,
 	after_dig_node = after_dig_node,
 	on_destruct = after_dig_node
 })
@@ -159,9 +157,7 @@ minetest.register_lbm({
 	name = "itemframes:item",
 	nodenames = {"itemframes:frame"},
 	run_at_every_load = true,
-	action = function(pos, node)
-		check_item(pos, node)
-	end
+	action = check_item
 })
 
 -- Craft
