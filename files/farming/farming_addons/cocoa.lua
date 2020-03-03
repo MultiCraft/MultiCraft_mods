@@ -13,8 +13,8 @@ function farming_addons.grow_cocoa_plant(pos)
 	local name = node.name
 	local def = minetest.registered_nodes[name]
 
+	-- disable timer for fully grown plant
 	if not def.next_plant then
-		-- disable timer for fully grown plant
 		return
 	end
 
@@ -48,10 +48,7 @@ end
 function farming_addons.place_cocoa_bean(itemstack, placer, pointed_thing)
 	local pt = pointed_thing
 	-- check if pointing at a node
-	if not pt then
-		return itemstack
-	end
-	if pt.type ~= "node" then
+	if not pt or pt.type ~= "node" then
 		return itemstack
 	end
 
@@ -66,15 +63,13 @@ function farming_addons.place_cocoa_bean(itemstack, placer, pointed_thing)
 			pointed_thing) or itemstack
 	end
 
-	local player_name = placer and placer:get_player_name() or ""
+	local player_name = placer and placer:get_player_name()
 
-	if minetest.is_protected(pt.under, player_name) then
+	if player_name and
+			(minetest.is_protected(pt.under, player_name) or
+			minetest.is_protected(pt.above, player_name)) then
 		minetest.record_protection_violation(pt.under, player_name)
-		return
-	end
-	if minetest.is_protected(pt.above, player_name) then
-		minetest.record_protection_violation(pt.above, player_name)
-		return
+		return itemstack
 	end
 
 	-- return if any of the nodes is not registered
@@ -90,7 +85,6 @@ function farming_addons.place_cocoa_bean(itemstack, placer, pointed_thing)
 		 pt.above.y == pt.under.y + 1 then
 		return itemstack
 	end
-
 	-- check if you can replace the node above the pointed node
 	if not minetest.registered_nodes[above.name].buildable_to then
 		return itemstack
@@ -108,7 +102,7 @@ function farming_addons.place_cocoa_bean(itemstack, placer, pointed_thing)
 	minetest.set_node(pt.above, {name = "farming_addons:cocoa_1", param2 = new_param2})
 
 	tick(pt.above)
-	if not (creative and creative.is_enabled_for
+	if player_name and not (creative and creative.is_enabled_for
 			and creative.is_enabled_for(player_name)) then
 		itemstack:take_item()
 	end
@@ -168,11 +162,11 @@ minetest.register_node("farming_addons:cocoa_1", {
 			{-0.125, -0.0625, 0.1875, 0.125, 0.5, 0.5}
 		}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1},
+	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_wood_defaults(),
 	next_plant = "farming_addons:cocoa_2",
 	on_timer = farming_addons.grow_cocoa_plant,
-	minlight = 12
+	minlight = 10
 })
 
 -- 2
@@ -218,11 +212,11 @@ minetest.register_node("farming_addons:cocoa_2", {
 			{-0.1875, -0.1875, 0.0625, 0.1875, 0.5, 0.5}
 		}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1},
+	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_wood_defaults(),
 	next_plant = "farming_addons:cocoa_3",
 	on_timer = farming_addons.grow_cocoa_plant,
-	minlight = 12
+	minlight = 10
 })
 
 -- 3
@@ -245,6 +239,7 @@ minetest.register_node("farming_addons:cocoa_3", {
 	drop = {
 		items = {
 			{items = {"farming_addons:cocoa_bean"}, rarity = 1},
+			{items = {"farming_addons:cocoa_bean"}, rarity = 2},
 			{items = {"farming_addons:cocoa_bean"}, rarity = 2}
 		}
 	},
@@ -252,9 +247,9 @@ minetest.register_node("farming_addons:cocoa_3", {
 		type = "fixed",
 		fixed = {
 			{-0.25, -0.3125, -0.0625, 0.25, 0.25, 0.4375},
-			{-0.0624999, 0.25, 0.25, 0.0625, 0.375, 0.4375},
+			{-0.0625, 0.25, 0.25, 0.0625, 0.375, 0.4375},
 			{-0.0625, 0.375, 0.375, 0.0625, 0.5, 0.5},
-			{-0.0624999, 0.375, 0.3125, 0.0625, 0.4375, 0.375}
+			{-0.0625, 0.375, 0.3125, 0.0625, 0.4375, 0.375}
 		}
 	},
 	collision_box = {
@@ -269,10 +264,10 @@ minetest.register_node("farming_addons:cocoa_3", {
 			{-0.25, -0.3125, -0.0625, 0.25, 0.5, 0.5}
 		}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1},
+	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_wood_defaults(),
 	on_timer = farming_addons.grow_cocoa_plant,
-	minlight = 12
+	minlight = 10
 })
 
 -- replacement LBM for pre-nodetimer plants
@@ -285,9 +280,45 @@ minetest.register_lbm({
 	action = tick_again
 })
 
+-- grow cocoa in jungletrees
+local find_node_near = minetest.find_node_near
+local get_node = minetest.get_node
+local get_time = minetest.get_timeofday
+minetest.register_abm({
+	name = "farming_addons:grow_cocoa",
+	nodenames = "default:jungletree",
+	neighbors = {"default:jungletree"},
+	interval = 5,
+	chance = 50,
+	catch_up = false,
+	action = function(pos)
+		if get_time() >= 0.25 and get_time() < 0.8 then
+			if find_node_near(pos, 3, "group:cocoa")
+			then return end
+
+			local apos = {x = pos.x, y = pos.y, z = pos.z}
+			if get_node({x = pos.x + 1, y = pos.y, z = pos.z}).name == "air" then
+				apos.x = apos.x + 1
+			elseif get_node({x = pos.x - 1, y = pos.y, z = pos.z}).name == "air" then
+				apos.x = apos.x - 1
+			elseif get_node({x = pos.x, y = pos.y, z = pos.z + 1}).name == "air" then
+				apos.z = apos.z + 1
+			elseif get_node({x = pos.x, y = pos.y, z = pos.z - 1}).name == "air" then
+				apos.z = apos.z - 1
+			else return end
+
+			if get_node({x = apos.x, y = apos.y - 2, z = apos.z}).name ~= "air"
+			then return end
+
+			farming_addons.place_cocoa_bean(
+				ItemStack("farming_addons:cocoa_1"), nil, {type = "node", under = pos, above = apos})
+		end
+	end
+})
+
 -- Cocoa
 minetest.register_craft( {
-	output = "dye:brown",
+	output = "dye:brown 2",
 	recipe = {
 		{"farming_addons:cocoa_bean"}
 	}
@@ -311,7 +342,7 @@ minetest.register_craftitem("farming_addons:chocolate", {
 	description = "Chocolate",
 	inventory_image = "farming_addons_chocolate.png",
 	on_use = minetest.item_eat(3),
-	groups = {food = 1},
+	groups = {food = 1}
 })
 
 minetest.register_craft( {

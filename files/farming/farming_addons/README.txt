@@ -15,7 +15,20 @@ Credits:
 "farming_addons" by SaKeL (LGPLv3.0+)
 https://bitbucket.org/minetest_gamers/farming_addons
 
-### Textures
+Authors of media (textures)
+---------------------------
+Copyright (C) MultiCraft Development Team
+
+farming_addons_corn_*.png
+farming_addons_cocoa_*.png
+farming_addons_chocolate.png
+farming_addons_potato_seed.png
+farming_addons_carrot_seed.png
+
+Graphics in this mod is NOT free and can be used only as part of the official MultiCraft build.
+Allowed to be used in non-official builds ONLY for personal use.
+
+--------
 
 **Industrial Craft 2**, https://forum.industrial-craft.net/
 
@@ -28,9 +41,10 @@ https://bitbucket.org/minetest_gamers/farming_addons
 - farming_addons_pumpkin_7.png
 - farming_addons_pumpkin_8.png
 
+-------
+
 **CC BY-SA 4.0, Pixel Perfection by XSSheep**, https://minecraft.curseforge.com/projects/pixel-perfection-freshly-updated
 
-- farming_addons_pumpkin_pie.png
 - farming_addons_melon_1.png - modified by SaKeL
 - farming_addons_melon_2.png - modified by SaKeL
 - farming_addons_melon_3.png - modified by SaKeL
@@ -44,11 +58,3 @@ https://bitbucket.org/minetest_gamers/farming_addons
 - farming_addons_wart_brick.png
 - farming_addons_wartrack.png
 - farming_addons_wart_red_brick_block.png
-- farming_addons_cookie.png
-- farming_addons_cocoa_1.png
-- farming_addons_cocoa_2.png
-- farming_addons_cocoa_3.png
-
-**Created by Itsoo1**
-
-- farming_addons_chocolate.png
