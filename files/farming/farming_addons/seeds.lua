@@ -41,13 +41,3 @@ minetest.override_item("default:dry_shrub", {drop = {
 		{items = {"default:dry_shrub"}}
 	}
 }})
-
--- Cocoa Bean
-minetest.override_item("default:jungleleaves", {drop = {
-	max_items = 1,
-	items = {
-		{items = {"farming_addons:cocoa_bean"}, rarity = 10},
-		{items = {"default:junglesapling"}, rarity = 20},
-		{items = {"default:jungleleaves"}}
-	}
-}})
