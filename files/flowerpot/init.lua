@@ -1,7 +1,7 @@
 --[[
 
   Copyright (C) 2015-2017 Auke Kok <sofar@foo-projects.org>
-  Copyright (C) 2019 MultiCraft Development Team
+  Copyright (C) 2019-2020 MultiCraft Development Team
 
   "flowerpot" is free software; you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
@@ -69,35 +69,25 @@ end
 function flowerpot.register_node(nodename)
 	local nodedef = minetest.registered_nodes[nodename]
 	local name = nodedef.name:gsub(":", "_")
-	local tiles = {}
-
-	if nodedef.drawtype == "plantlike" then
-		tiles = {
-			{name = "flowerpot.png"},
-			{name = get_tile(nodedef)},
-			{name = "blank.png"}
-		}
-	else
-		tiles = {
-			{name = "flowerpot.png"},
-			{name = "blank.png"},
-			{name = get_tile(nodedef)}
-		}
-	end
+	local plantlike = nodedef.drawtype == "plantlike" and true or false
 
 	minetest.register_node("flowerpot:" .. name, {
 		drawtype = "mesh",
 		mesh = "flowerpot.obj",
-		tiles = tiles,
+		tiles = {
+			{name = "flowerpot.png"},
+			{name = plantlike and get_tile(nodedef) or "blank.png"},
+			{name = not plantlike and get_tile(nodedef) or "blank.png"}
+		},
 		paramtype = "light",
 		sunlight_propagates = true,
 		collision_box = {
 			type = "fixed",
-			fixed = {-1/4, -1/2, -1/4, 1/4, -1/8, 1/4},
+			fixed = {-1/4, -1/2, -1/4, 1/4, -1/8, 1/4}
 		},
 		selection_box = {
 			type = "fixed",
-			fixed = {-1/4, -1/2, -1/4, 1/4, 7/16, 1/4},
+			fixed = {-1/4, -1/2, -1/4, 1/4, 7/16, 1/4}
 		},
 		sounds = default.node_sound_defaults(),
 		groups = {attached_node = 1, oddly_breakable_by_hand = 1, snappy = 3, not_in_creative_inventory = 1},
@@ -129,11 +119,11 @@ minetest.register_node("flowerpot:empty", {
 	sunlight_propagates = true,
 	collision_box = {
 		type = "fixed",
-		fixed = {-1/4, -1/2, -1/4, 1/4, -1/8, 1/4},
+		fixed = {-1/4, -1/2, -1/4, 1/4, -1/8, 1/4}
 	},
 	selection_box = {
 		type = "fixed",
-		fixed = {-1/4, -1/2, -1/4, 1/4, -1/16, 1/4},
+		fixed = {-1/4, -1/2, -1/4, 1/4, -1/16, 1/4}
 	},
 	sounds = default.node_sound_defaults(),
 	groups = {attached_node = 1, oddly_breakable_by_hand = 3, cracky = 1},
@@ -150,13 +140,9 @@ minetest.register_craft({
 	}
 })
 
-local nodes = {}
+local register_pot = flowerpot.register_node
 for node, def in pairs(minetest.registered_nodes) do
 	if def.groups.flora or def.groups.sapling then
-		nodes[#nodes+1] = node
+		flowerpot.register_node(node)
 	end
-end
-
-for _, node in pairs(nodes) do
-	flowerpot.register_node(node)
 end
