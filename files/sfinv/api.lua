@@ -13,7 +13,9 @@ function sfinv.register_page(name, def)
 
 	sfinv.pages[name] = def
 	def.name = name
-	table.insert(sfinv.pages_unordered, def)
+
+	local unpages = sfinv.pages_unordered
+	unpages[#unpages+1] = def
 end
 
 function sfinv.override_page(name, def)
@@ -37,9 +39,9 @@ end
 end]]
 
 local theme_inv = [[
-		list[current_player;main;0.01,4.51;9,3;9]
-		list[current_player;main;0.01,7.74;9,1;]
-	]]
+	list[current_player;main;0.01,4.51;9,3;9]
+	list[current_player;main;0.01,7.74;9,1;]
+]]
 
 function sfinv.make_formspec(_, _, content, show_inv, size)
 	local tmp = {
@@ -170,11 +172,6 @@ end)
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "" or not sfinv.enabled then
-		return false
-	end
-
-	if fields.quit then
-		sfinv.reset_context(player)
 		return false
 	end
 
