@@ -10,7 +10,8 @@ default = {
 		green = minetest.get_color_escape_sequence("#1eff00"),
 		gold = minetest.get_color_escape_sequence("#ffdf00"),
 		white = minetest.get_color_escape_sequence("#ffffff"),
-		emerald = minetest.get_color_escape_sequence("#00e87e")
+		emerald = minetest.get_color_escape_sequence("#00e87e"),
+		ruby = minetest.get_color_escape_sequence("#d80a1b")
 	}
 }
 

@@ -11,7 +11,7 @@ minetest.register_tool("default:pick_wood", {
 		full_punch_interval = 1.2,
 		max_drop_level = 0,
 		groupcaps = {
-			cracky = {times = {[3]=2.50}, uses = 20, maxlevel = 1}
+			cracky = {times = {[3]=2.5}, uses = 20, maxlevel = 1}
 		},
 		damage_groups = {fleshy = 2}
 	},
@@ -89,6 +89,20 @@ minetest.register_tool("default:pick_emerald", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
+minetest.register_tool("default:pick_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Pickaxe"),
+	inventory_image = "default_tool_rubypick.png",
+	tool_capabilities = {
+		full_punch_interval = 0.9,
+		max_drop_level = 3,
+		groupcaps = {
+			cracky = {times = {[1]=2.3, [2]=1.7, [3]=1.4}, uses = 0, maxlevel = 3}
+		},
+		damage_groups = {fleshy = 5}
+	},
+	sound = {breaks = "default_tool_breaks"}
+})
+	
 --
 -- Shovels
 --
@@ -132,7 +146,7 @@ minetest.register_tool("default:shovel_steel", {
 		full_punch_interval = 1.1,
 		max_drop_level = 1,
 		groupcaps = {
-			crumbly = {times = {[1]=1.80, [2]=1.50, [3]=1.75}, uses = 60, maxlevel = 2}
+			crumbly = {times = {[1]=1.8, [2]=1.5, [3]=1.75}, uses = 60, maxlevel = 2}
 		},
 		damage_groups = {fleshy = 3}
 	},
@@ -147,7 +161,7 @@ minetest.register_tool("default:shovel_gold", {
 		full_punch_interval = 1.0,
 		max_drop_level = 3,
 		groupcaps = {
-			crumbly = {times = {[1]=1.50, [2]=1.20, [3]=1.5}, uses = 40, maxlevel = 3}
+			crumbly = {times = {[1]=1.5, [2]=1.2, [3]=1.5}, uses = 40, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 3}
 	},
@@ -162,7 +176,7 @@ minetest.register_tool("default:shovel_diamond", {
 		full_punch_interval = 1.0,
 		max_drop_level = 1,
 		groupcaps = {
-			crumbly = {times = {[1]=1.30, [2]=1.5, [3]=1.0}, uses = 60, maxlevel = 3}
+			crumbly = {times = {[1]=1.3, [2]=1.0, [3]=1.0}, uses = 60, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 4}
 	},
@@ -177,7 +191,22 @@ minetest.register_tool("default:shovel_emerald", {
 		full_punch_interval = 1.0,
 		max_drop_level = 1,
 		groupcaps = {
-			crumbly = {times = {[1]=1.30, [2]=1.5, [3]=1.0}, uses = 80, maxlevel = 3}
+			crumbly = {times = {[1]=1.3, [2]=1.0, [3]=1.0}, uses = 80, maxlevel = 3}
+		},
+		damage_groups = {fleshy = 4}
+	},
+	sound = {breaks = "default_tool_breaks"}
+})
+
+minetest.register_tool("default:shovel_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Shovel"),
+	inventory_image = "default_tool_rubyshovel.png",
+	wield_image = "default_tool_rubyshovel.png^[transformR90",
+	tool_capabilities = {
+		full_punch_interval = 1.0,
+		max_drop_level = 1,
+		groupcaps = {
+			crumbly = {times = {[1]=1.4, [2]=1.1, [3]=1.4}, uses = 0, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 4}
 	},
@@ -273,6 +302,20 @@ minetest.register_tool("default:axe_emerald", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
+minetest.register_tool("default:axe_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Axe"),
+	inventory_image = "default_tool_rubyaxe.png",
+	tool_capabilities = {
+		full_punch_interval = 0.9,
+		max_drop_level = 1,
+		groupcaps = {
+			choppy={times = {[1]=2.9, [2]=1.65, [3]=1.15}, uses = 0, maxlevel = 3}
+		},
+		damage_groups = {fleshy = 6}
+	},
+	sound = {breaks = "default_tool_breaks"}
+})
+
 --
 -- Swords
 --
@@ -344,6 +387,18 @@ minetest.register_tool("default:sword_emerald", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
+minetest.register_tool("default:sword_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Sword"),
+	inventory_image = "default_tool_rubysword.png",
+	tool_capabilities = {
+		full_punch_interval = 0.7,
+		max_drop_level = 1,
+		damage_groups = {fleshy = 7},
+		punch_attack_uses = 0
+	},
+	sound = {breaks = "default_tool_breaks"}
+})
+
 --
 -- Register Craft Recipies
 --
@@ -354,7 +409,8 @@ local craft_ingreds = {
 	steel = "default:steel_ingot",
 	gold = "default:gold_ingot",
 	diamond = "default:diamond",
-	emerald = "default:emerald"
+	emerald = "default:emerald",
+	ruby = "default:ruby"
 }
 
 for name, mat in pairs(craft_ingreds) do
