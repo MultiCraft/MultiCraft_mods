@@ -95,13 +95,6 @@ minetest.register_node("default:redsandstonesmooth", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node("default:redsandstonecarved", {
-	description = "Red Sandstone Carved",
-	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png", "default_redsandstone_carved.png"},
-	groups = {crumbly = 2, cracky = 2},
-	sounds = default.node_sound_stone_defaults()
-})
-
 minetest.register_node("default:obsidian", {
 	description = "Obsidian",
 	tiles = {"default_obsidian.png"},
