@@ -238,12 +238,13 @@ minetest.register_node("default:snow", {
 	paramtype = "light",
 	buildable_to = true,
 	floodable = true,
+	walkable = false,
 	drawtype = "nodebox",
 	stack_max = 16,
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, -0.5+2/16, 0.5}
+			{-0.5, -0.5, -0.5, 0.5, -0.5+1/16, 0.5}
 		}
 	},
 	groups = {crumbly = 3, falling_node = 1, snowy = 1, puts_out_fire = 1, misc = 1, speed = -30, not_in_creative_inventory = 1},
@@ -252,8 +253,9 @@ minetest.register_node("default:snow", {
 
 	on_construct = function(pos)
 		pos.y = pos.y - 1
-		if minetest.get_node(pos).name == "default:dirt_with_grass" then
-			minetest.set_node(pos, {name = "default:dirt_with_snow"})
+		local name = minetest.get_node(pos).name
+		if name == "default:dirt_with_grass" or name == "default:dirt_with_dry_grass" then
+			minetest.swap_node(pos, {name = "default:dirt_with_snow"})
 		end
 	end,
 
@@ -1404,7 +1406,7 @@ minetest.register_node("default:grill_bar", {
 		fixed = {{-1/2, -1/2, -1/2, 1/2, 1/2, -6/16}}
 	},
 	groups = {choppy = 2, oddly_breakable_by_hand = 3},
-	sounds = default.node_sound_wood_defaults()
+	sounds = default.node_sound_metal_defaults()
 })
 
 default.register_fence("default:fence_wood", {
