@@ -10,6 +10,7 @@ function beds.register_bed(name, def)
 		paramtype2 = "facedir",
 		is_ground_content = false,
 		stack_max = 1,
+		drop = def.drop or name, 
 		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, bed = 1},
 		sounds = def.sounds or default.node_sound_wood_defaults(),
 		node_placement_prediction = "",
@@ -70,7 +71,7 @@ function beds.register_bed(name, def)
 				end
 			end
 
-			minetest.set_node(pos, {name = name, param2 = dir})
+			minetest.set_node(pos, {name = itemstack:get_name(), param2 = dir})
 
 			if not (creative and creative.is_enabled_for
 					and creative.is_enabled_for(player_name)) or
@@ -83,18 +84,19 @@ function beds.register_bed(name, def)
 		on_destruct = beds.remove_spawns_at,
 
 		on_rightclick = function(pos, _, clicker, itemstack)
-			beds.on_rightclick(pos, clicker)
+			if not def.on_rightclick(pos, _, clicker, itemstack) then
+				beds.on_rightclick(pos, clicker)
+			end
 			return itemstack
 		end,
 
 		can_dig = beds.can_dig
 	})
 
-	minetest.register_alias(name .. "_bottom", name)
-	minetest.register_alias(name .. "_top", "air")
-
-	minetest.register_craft({
-		output = name,
-		recipe = def.recipe
-	})
+	if def.recipe then
+		minetest.register_craft({
+			output = name,
+			recipe = def.recipe
+		})
+	end
 end
