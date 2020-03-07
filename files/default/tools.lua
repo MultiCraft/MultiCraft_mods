@@ -115,7 +115,7 @@ minetest.register_tool("default:shovel_wood", {
 		full_punch_interval = 1.2,
 		max_drop_level = 0,
 		groupcaps = {
-			crumbly = {times = {[1]=3.0, [2]=2.5, [3]=2.0}, uses = 20, maxlevel = 1}
+			crumbly = {times = {[1]=3.0, [2]=2.5, [3]=1.5}, uses = 20, maxlevel = 1}
 		},
 		damage_groups = {fleshy = 2}
 	},
@@ -131,7 +131,7 @@ minetest.register_tool("default:shovel_stone", {
 		full_punch_interval = 1.4,
 		max_drop_level = 0,
 		groupcaps = {
-			crumbly = {times = {[1]=2.0, [2]=1.75, [3]=2.0}, uses = 40, maxlevel = 1}
+			crumbly = {times = {[1]=2.0, [2]=1.75, [3]=1.25}, uses = 40, maxlevel = 1}
 		},
 		damage_groups = {fleshy = 2}
 	},
@@ -146,7 +146,7 @@ minetest.register_tool("default:shovel_steel", {
 		full_punch_interval = 1.1,
 		max_drop_level = 1,
 		groupcaps = {
-			crumbly = {times = {[1]=1.8, [2]=1.5, [3]=1.75}, uses = 60, maxlevel = 2}
+			crumbly = {times = {[1]=1.8, [2]=1.5, [3]=1.1}, uses = 60, maxlevel = 2}
 		},
 		damage_groups = {fleshy = 3}
 	},
@@ -161,7 +161,7 @@ minetest.register_tool("default:shovel_gold", {
 		full_punch_interval = 1.0,
 		max_drop_level = 3,
 		groupcaps = {
-			crumbly = {times = {[1]=1.5, [2]=1.2, [3]=1.5}, uses = 40, maxlevel = 3}
+			crumbly = {times = {[1]=1.5, [2]=1.2, [3]=1.0}, uses = 40, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 3}
 	},
@@ -176,7 +176,7 @@ minetest.register_tool("default:shovel_diamond", {
 		full_punch_interval = 1.0,
 		max_drop_level = 1,
 		groupcaps = {
-			crumbly = {times = {[1]=1.3, [2]=1.0, [3]=1.0}, uses = 60, maxlevel = 3}
+			crumbly = {times = {[1]=1.3, [2]=1.0, [3]=0.9}, uses = 60, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 4}
 	},
@@ -191,7 +191,7 @@ minetest.register_tool("default:shovel_emerald", {
 		full_punch_interval = 1.0,
 		max_drop_level = 1,
 		groupcaps = {
-			crumbly = {times = {[1]=1.3, [2]=1.0, [3]=1.0}, uses = 80, maxlevel = 3}
+			crumbly = {times = {[1]=1.3, [2]=1.0, [3]=0.9}, uses = 80, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 4}
 	},
@@ -206,7 +206,7 @@ minetest.register_tool("default:shovel_ruby", {
 		full_punch_interval = 1.0,
 		max_drop_level = 1,
 		groupcaps = {
-			crumbly = {times = {[1]=1.4, [2]=1.1, [3]=1.4}, uses = 0, maxlevel = 3}
+			crumbly = {times = {[1]=1.4, [2]=1.1, [3]=1.0}, uses = 0, maxlevel = 3}
 		},
 		damage_groups = {fleshy = 4}
 	},
