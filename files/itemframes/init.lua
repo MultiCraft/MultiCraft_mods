@@ -5,13 +5,22 @@ minetest.register_entity("itemframes:item", {
 	physical = false,
 
 	on_activate = function(self, staticdata)
+		local ent = self.object
+
+		-- remove entity for missing frames
+		local node = minetest.get_node_or_nil(ent:get_pos())
+		if not node or node.name ~= "itemframes:frame" then
+			ent:remove()
+			return
+		end
+
 		local data = staticdata:split(";")
 		self.texture = data and data[2] or "air"
-		self.object:set_properties({textures = {self.texture}})
+		ent:set_properties({textures = {self.texture}})
 	end,
 
 	get_staticdata = function(self)
-		return self.texture and " " .. ";" .. self.texture or ""
+		return self.texture and " ;" .. self.texture or ""
 	end
 })
 
@@ -47,10 +56,11 @@ end
 local drop_item = function(pos)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
-	if item == "" then return end
 
-	minetest.add_item(pos, item)
-	meta:set_string("item", "")
+	if item ~= "" then
+		minetest.add_item(pos, item)
+		meta:set_string("item", "")
+	end
 
 	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
 		local ent = obj:get_luaentity()
