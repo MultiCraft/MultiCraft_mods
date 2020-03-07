@@ -45,3 +45,11 @@ farming.register_hoe("farming:hoe_emerald", {
 	material = "default:emerald",
 	groups = {hoe = 1}
 })
+
+farming.register_hoe("farming:hoe_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Hoe"),
+	inventory_image = "farming_tool_rubyhoe.png",
+	max_uses = -1,
+	material = "default:ruby",
+	groups = {hoe = 1}
+})

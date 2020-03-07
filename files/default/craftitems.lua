@@ -206,6 +206,11 @@ minetest.register_craftitem("default:emerald", {
 	inventory_image = "default_emerald.png"
 })
 
+minetest.register_craftitem("default:ruby", {
+	description = default.colors.ruby .. Sl("Ruby"),
+	inventory_image = "default_ruby.png"
+})
+
 minetest.register_craftitem("default:clay_brick", {
 	description = "Clay Brick",
 	inventory_image = "default_clay_brick.png"

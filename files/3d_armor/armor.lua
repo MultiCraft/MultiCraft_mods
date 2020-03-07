@@ -30,6 +30,12 @@ armor:register_armor("3d_armor:helmet_emerald", {
 	groups = {armor_head = 20, armor_heal = 15, armor_use = 1000}
 })
 
+armor:register_armor("3d_armor:helmet_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Helmet"),
+	inventory_image = "3d_armor_inv_helmet_ruby.png",
+	groups = {armor_head = 15, armor_heal = 20}
+})
+
 armor:register_armor("3d_armor:helmet_chain", {
 	description = "Chain Helmet",
 	inventory_image = "3d_armor_inv_helmet_chain.png",
@@ -66,6 +72,12 @@ armor:register_armor("3d_armor:chestplate_emerald", {
 	description = default.colors.emerald .. Sl("Emerald Chestplate"),
 	inventory_image = "3d_armor_inv_chestplate_emerald.png",
 	groups = {armor_torso = 30, armor_heal = 15, armor_use = 1000}
+})
+
+armor:register_armor("3d_armor:chestplate_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Chestplate"),
+	inventory_image = "3d_armor_inv_chestplate_ruby.png",
+	groups = {armor_torso = 25, armor_heal = 15}
 })
 
 armor:register_armor("3d_armor:chestplate_chain", {
@@ -106,6 +118,12 @@ armor:register_armor("3d_armor:leggings_emerald", {
 	groups = {armor_legs = 25, armor_heal = 15, armor_use = 1000}
 })
 
+armor:register_armor("3d_armor:leggings_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Leggings"),
+	inventory_image = "3d_armor_inv_leggings_ruby.png",
+	groups = {armor_legs = 20, armor_heal = 15}
+})
+
 armor:register_armor("3d_armor:leggings_chain", {
 	description = "Chain Leggings",
 	inventory_image = "3d_armor_inv_leggings_chain.png",
@@ -144,6 +162,12 @@ armor:register_armor("3d_armor:boots_emerald", {
 	groups = {armor_feet = 20, armor_heal = 15, armor_use = 1000}
 })
 
+armor:register_armor("3d_armor:boots_ruby", {
+	description = default.colors.ruby .. Sl("Ruby Boots"),
+	inventory_image = "3d_armor_inv_boots_ruby.png",
+	groups = {armor_feet = 15, armor_heal = 15}
+})
+
 armor:register_armor("3d_armor:boots_chain", {
 	description = "Chain Boots",
 	inventory_image = "3d_armor_inv_boots_chain.png",
@@ -154,11 +178,12 @@ armor:register_armor("3d_armor:boots_chain", {
 
 local craft_ingreds = {
 	leather = "mobs:leather",
-	steel = "default:steel_ingot",
-	gold = "default:gold_ingot",
+	steel   = "default:steel_ingot",
+	gold    = "default:gold_ingot",
 	diamond = "default:diamond",
 	emerald = "default:emerald",
-	chain = "fire:basic_flame"
+	ruby    = "default:ruby",
+	chain   = "fire:basic_flame"
 }
 
 for k, v in pairs(craft_ingreds) do
