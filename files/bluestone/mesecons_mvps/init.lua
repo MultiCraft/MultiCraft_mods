@@ -7,7 +7,7 @@ local table_remove = table.remove
 
 --- Objects (entities) that cannot be moved
 function mesecon.register_mvps_unmov(objectname)
-	mesecon.mvps_unmov[objectname] = true;
+	mesecon.mvps_unmov[objectname] = true
 end
 
 function mesecon.is_mvps_unmov(objectname)
@@ -22,7 +22,7 @@ function mesecon.is_mvps_stopper(node, pushdir, stack, stackid)
 	end
 
 	local get_stopper = mesecon.mvps_stoppers[node.name]
-	if type (get_stopper) == "function" then
+	if type(get_stopper) == "function" then
 		get_stopper = get_stopper(node, pushdir, stack, stackid)
 	end
 
@@ -31,7 +31,7 @@ end
 
 function mesecon.register_mvps_stopper(nodename, get_stopper)
 	if get_stopper == nil then
-			get_stopper = true
+		get_stopper = true
 	end
 	mesecon.mvps_stoppers[nodename] = get_stopper
 end
@@ -265,6 +265,9 @@ mesecon.register_mvps_stopper("doors:door_steel_b_1")
 mesecon.register_mvps_stopper("doors:door_steel_t_1")
 mesecon.register_mvps_stopper("doors:door_steel_b_2")
 mesecon.register_mvps_stopper("doors:door_steel_t_2")
+mesecon.register_mvps_stopper("default:chest")
+mesecon.register_mvps_stopper("default:chest_left")
+mesecon.register_mvps_stopper("default:chest_right")
 mesecon.register_mvps_stopper("default:furnace")
 mesecon.register_mvps_stopper("itemframes:frame")
 
