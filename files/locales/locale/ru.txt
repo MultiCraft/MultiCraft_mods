@@ -357,6 +357,7 @@ Allium = Аллиум
 White Oxeye = Белый Нивяник
 Red Mushroom = Красный Гриб
 Brown Mushroom = Коричневый Гриб
+Waterlily = Кувшинка
 
 
 #flowerpot
