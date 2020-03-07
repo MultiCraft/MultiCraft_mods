@@ -102,18 +102,28 @@ mobs.human = {
 		{"farming:bread 8", "default:emerald 2", 5},
 		{"default:clay 8", "default:emerald 1", 12},
 		{"default:brick 8", "default:emerald 2", 17},
-		{"default:glass 8", "default:emerald 2", 17},
+		{"default:glass 8", "default:gold_ingot 2", 17},
 		{"default:obsidian 16", "default:emerald 8", 50},
 		{"default:diamond 1", "default:emerald 2", 40},
 		{"farming:wheat 8", "default:emerald 2", 17},
-		{"default:tree 4", "default:emerald 1", 20},
-		{"default:stone 8", "default:emerald 2", 17},
+		{"default:tree 16", "default:gold_ingot 2", 20},
+		{"default:stone 8", "default:emerald 1", 17},
 		{"default:sapling 1", "default:emerald 1", 7},
 		{"default:pick_gold 1", "default:emerald 2", 7},
 		{"default:sword_gold 1", "default:emerald 2", 17},
 		{"default:shovel_gold 1", "default:emerald 1", 17},
 		{"default:cactus 4", "default:emerald 2", 40},
-		{"default:sugarcane 4", "default:emerald 2", 40}
+		{"default:sugarcane 4", "default:emerald 2", 40},
+		{"default:ruby 1", "default:emerald 4", 20},
+		{"default:ruby 2", "default:emerald 7", 20},
+		{"default:ruby 1", "default:diamond 5", 30},
+		{"default:ruby 2", "default:diamond 9", 30},
+		{"default:obsidian 32", "default:emerald 1", 25},
+		{"default:emerald 1", "default:obsidian 32", 25},
+		{"farming_addons:carrot_golden 2", "default:diamond 1", 25},
+		{"farming_addons:seed_melon 1", "default:diamond 1", 30},
+		{"farming_addons:seed_pumpkin 1", "default:diamond 1", 30},
+		{"default:gold_ingot 2", "farming_addons:potato 1", 25}
 	}
 }
 
@@ -148,7 +158,7 @@ function mobs.add_goods(self, _, race)
 			end
 		end
 
-		if math.random(0, 100) > race.items[random_trade][3] then
+		if math.random(100) > race.items[random_trade][3] then
 			self.trades[trade_index] = {
 				race.items[random_trade][1],
 				race.items[random_trade][2]

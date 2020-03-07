@@ -60,7 +60,10 @@ dungeon_loot.registered_loot = {
 	{name = "default:sandstonesmooth", chance = 0.8, count = {4, 32}, y = {-64, 256}, types = {"sandstone"}},
 	{name = "default:mossycobble", chance = 0.8, count = {4, 32}, types = {"desert"}},
 	{name = "default:dirt", chance = 0.6, count = {2, 16}, y = {-64, 256}},
-	{name = "default:obsidian", chance = 0.25, count = {1, 3}, y = {-32, -64}}
+	{name = "default:obsidian", chance = 0.25, count = {1, 3}, y = {-32, -64}},
+
+	-- ruby
+	{name = "default:ruby", chance = 0.2, count = {1, 2}}
 }
 
 function dungeon_loot.register(t)

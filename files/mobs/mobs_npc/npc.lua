@@ -10,6 +10,22 @@ mobs.npc_drops = {
 	"default:shovel_steel", "farming:bread", "bucket:bucket_water"
 }
 
+local mtextures = {}
+local mcount = 1
+for i = 1, 3 do
+for j = 1, 3 do
+for k = 1, 3 do
+	mtextures[mcount] = {
+		"mobs_npc_man.png" .. "^" ..
+		"mobs_npc_man_hair" .. i .. ".png" .. "^" ..
+		"mobs_npc_man_pants" .. j .. ".png" .. "^" ..
+		"mobs_npc_man_shirt" .. k .. ".png", b, b, b
+	}
+	mcount = mcount + 1
+end
+end
+end
+
 mobs:register_mob("mobs_npc:npc_man", {
 	type = "npc",
 	damage = 2,
@@ -23,44 +39,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
 	visual = "mesh",
 	mesh = "character.b3d",
-	drawtype = "front",
-	textures = {
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair1.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", b, b, b},
---===--
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair2.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", b, b, b},
---===--
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants1.png^mobs_npc_man_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants2.png^mobs_npc_man_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt1.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt2.png", b, b, b},
-		{"mobs_npc_man.png^mobs_npc_man_hair3.png^mobs_npc_man_pants3.png^mobs_npc_man_shirt3.png", b, b, b}
-	},
+	textures = mtextures,
 --[[child_texture = {
 		{"mobs_npc_baby.png", b, b, b}
 	},]]
@@ -119,6 +98,22 @@ mobs:register_mob("mobs_npc:npc_man", {
 	end]]
 })
 
+local wtextures = {}
+local wcount = 1
+for i = 1, 3 do
+for j = 1, 3 do
+for k = 1, 3 do
+	wtextures[wcount] = {
+		"mobs_npc_woman.png" .. "^" ..
+		"mobs_npc_woman_hair" .. i .. ".png" .. "^" ..
+		"mobs_npc_woman_pants" .. j .. ".png" .. "^" ..
+		"mobs_npc_woman_shirt" .. k .. ".png", b, b, b
+	}
+	wcount = wcount + 1
+end
+end
+end
+
 mobs:register_mob("mobs_npc:npc_woman", {
 	type = "npc",
 	damage = 1,
@@ -132,44 +127,7 @@ mobs:register_mob("mobs_npc:npc_woman", {
 	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
 	visual = "mesh",
 	mesh = "character.b3d",
-	drawtype = "front",
-	textures = {
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair1.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", b, b, b},
---===--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair2.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", b, b, b},
---===--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants1.png^mobs_npc_woman_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants2.png^mobs_npc_woman_shirt3.png", b, b, b},
---=--
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt1.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt2.png", b, b, b},
-		{"mobs_npc_woman.png^mobs_npc_woman_hair3.png^mobs_npc_woman_pants3.png^mobs_npc_woman_shirt3.png", b, b, b}
-	},
+	textures = wtextures,
 --[[child_texture = {
 		{"mobs_npc_baby.png", b, b, b}
 	},]]

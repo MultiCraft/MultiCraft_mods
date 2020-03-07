@@ -2,10 +2,11 @@
 -- {item_name, minimum, maximum}
 
 local items_ore = {
+	{"default:steel_ingot", 1, 3},
+	{"default:gold_ingot", 1, 3},
 	{"default:diamond", 1, 1},
 	{"default:emerald", 1, 1},
-	{"default:gold_ingot", 1, 3},
-	{"default:steel_ingot", 1, 3}
+	{"default:ruby", 1, 1}
 }
 
 local items_food = {
