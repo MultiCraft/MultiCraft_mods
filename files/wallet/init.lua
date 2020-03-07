@@ -33,7 +33,7 @@ function update_wall(pos)
 
 	local node = minetest.get_node({x = pos.x, y = pos.y+1, z = pos.z})
 	if sum == 5 or sum == 10 then
-		if minetest.registered_nodes[node.name].walkable or node.name == "torches:floor" then
+		if minetest.registered_nodes[node.name].walkable then
 			sum = sum + 11
 		end
 	end
@@ -169,16 +169,15 @@ minetest.register_node("wallet:wall", {
 	description = "Cobblestone Wall",
 	paramtype = "light",
 	tiles = {"default_cobble.png"},
-	inventory_image = "cobblestone_wallet.png",
 	groups = {cracky = 3, wall = 1, stone = 2},
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
-		fixed = pillar
-	},
-	collision_box = {
-		type = "fixed",
-		fixed = collision
+		fixed = {
+			pillar,
+			half_blocks[1],
+			half_blocks[3],
+		}
 	},
 	on_construct = update_wall
 })
@@ -294,12 +293,15 @@ minetest.register_node("wallet:wallmossy", {
 		fixed = collision
 	},
 	tiles = {"default_mossycobble.png"},
-	inventory_image = "cobblestonemossy_wallet.png",
 	groups = {cracky = 3, wall = 1, stone = 2},
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
-		fixed = pillar
+		fixed = {
+			pillar,
+			half_blocks[1],
+			half_blocks[3],
+		}
 	},
 	on_construct = update_wall
 })

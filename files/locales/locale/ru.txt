@@ -163,8 +163,7 @@ Mossy Stone Brick = Мшистый Каменный Кирпич
 Sandstone = Песчаник
 Smooth Sandstone = Гладкий Песчаник
 Red Sandstone = Красный Песчаник
-Red Sandstone Smooth = Красный Гладкий Песчаник
-Red Sandstone Carved = Красный Нарезной Песчаник
+Red Sandstone Smooth = Гладкий Красный Песчаник
 Obsidian = Обсидиан
 Bedrock = Коренная Порода
 Dirt = Земля
@@ -480,7 +479,6 @@ Black Mode = Чёрный Режим
 Light Mode = Светлый Режим
 
 
-
 #throwing
 Bow = Лук
 Bow with arrow = Лук со Стрелой
@@ -490,6 +488,8 @@ Arrow = Стрела
 #walls
 Cobblestone Wall = Стена из Булыжника
 Mossy Cobblestone Wall = Стена из Мшистого Булыжника
+Sandstone Wall = Стена из Песчаника
+Red Sandstone Wall = Стена из Красного Песчаника
 
 
 #watch
