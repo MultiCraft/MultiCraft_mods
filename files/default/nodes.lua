@@ -836,6 +836,13 @@ minetest.register_node("default:emeraldblock", {
 	sounds = default.node_sound_stone_defaults()
 })
 
+minetest.register_node("default:rubyblock", {
+	description = default.colors.ruby .. Sl("Ruby Block"),
+	tiles = {"default_ruby_block.png"},
+	groups = {cracky = 1},
+	sounds = default.node_sound_stone_defaults()
+})
+
 minetest.register_node("default:stone_with_diamond", {
 	description = "Diamonds in Stone",
 	tiles = {"default_stone.png^default_mineral_diamond.png"},
