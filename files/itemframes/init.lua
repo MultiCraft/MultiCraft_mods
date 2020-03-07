@@ -31,8 +31,8 @@ local update_item = function(pos, node)
 	local posad = postab[param2][1]
 	if item == "" or not posad then return end
 
-	pos.x = pos.x + posad.x * 0.4
-	pos.z = pos.z + posad.z * 0.4
+	pos.x = pos.x + posad.x * 0.41
+	pos.z = pos.z + posad.z * 0.41
 	local entity = minetest.add_entity(pos, "itemframes:item")
 	local ent = entity:get_luaentity()
 	local item_name = ItemStack(item):get_name()
@@ -87,11 +87,12 @@ minetest.register_node("itemframes:frame",{
 	description = "Item frame",
 	drawtype = "nodebox",
 	node_box = {
-		type = "wallmounted"
+		type = "wallmounted",
+		wall_side = {-0.5, -15/32, -15/32, -7/16, 15/32, 15/32}
 	},
-	tiles = {"itemframe_background.png"},
-	inventory_image = "itemframe_background.png",
-	wield_image = "itemframe_background.png",
+	tiles = {"itemframe.png"},
+	inventory_image = "itemframe.png",
+	wield_image = "itemframe.png",
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	node_placement_prediction = "",
