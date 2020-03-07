@@ -146,11 +146,23 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	type = "cooking",
+	output = "default:sandstonesmooth",
+	recipe = "default:sandstone"
+})
+
+minetest.register_craft({
 	output = "default:redsandstone",
 	recipe = {
 		{"default:redsand", "default:redsand"},
 		{"default:redsand", "default:redsand"}
 	}
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:redsandstonesmooth",
+	recipe = "default:redsandstone"
 })
 
 minetest.register_craft({
@@ -268,6 +280,22 @@ minetest.register_craft({
 	output = "default:emerald 9",
 	recipe = {
 		{"default:emeraldblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:rubyblock",
+	recipe = {
+		{"default:ruby", "default:ruby", "default:ruby"},
+		{"default:ruby", "default:ruby", "default:ruby"},
+		{"default:ruby", "default:ruby", "default:ruby"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:ruby 9",
+	recipe = {
+		{"default:rubyblock"}
 	}
 })
 
