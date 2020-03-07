@@ -231,7 +231,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:grill_bar",
+	output = "default:grill_bar 4",
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
 		{"", "default:steel_ingot", ""},
