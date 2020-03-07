@@ -19,8 +19,7 @@ player_api.register_model("character.b3d", {
 		sit       = {x = 81,  y = 160}
 	},
 	stepheight = 0.6,
-	eye_height = 1.47,
---	collisionbox = {-0.3, -1.0, -0.3, 0.3, 0.7, 0.3}
+	eye_height = 1.47
 })
 
 -- Hand definition
@@ -58,7 +57,7 @@ else
 		full_punch_interval = 0.5,
 		max_drop_level = 0,
 		groupcaps = {
-			crumbly = {times = {[1]=5.0, [2]=3.0, [3]=0.7}, uses = 0, maxlevel = 1},
+			crumbly = {times = {[1]=5.0, [2]=3.0, [3]=2.0}, uses = 0, maxlevel = 1},
 			snappy  = {times = {[1]=0.5, [2]=0.5, [3]=0.5}, uses = 0, maxlevel = 1},
 			choppy  = {times = {[1]=6.0, [2]=4.0, [3]=3.0}, uses = 0, maxlevel = 1},
 			cracky  = {times = {[1]=7.0, [2]=5.0, [3]=4.0}, uses = 0, maxlevel = 1},
@@ -131,8 +130,12 @@ minetest.register_on_dieplayer(function(player)
 	local inv = player:get_inventory()
 
 	-- Drop inventory items
-	for _, stack in pairs(inv:get_list("main")) do
-		minetest.item_drop(stack, nil, pos)
+	local stack
+	for i = 1, inv:get_size("main") do
+		stack = inv:get_stack("main", i)
+		if stack:get_count() > 0 then
+			minetest.item_drop(stack, nil, pos)
+		end
 	end
 	inv:set_list("main", {})
 
