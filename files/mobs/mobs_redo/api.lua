@@ -1,7 +1,7 @@
 -- Mobs API
 mobs = {
 	mod = "redo",
-	version = "20191116",
+	version = "20200306",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -463,7 +463,7 @@ function mob_class:attempt_flight_correction()
 		return false
 	end
 
-	local escape_target = flyable_nodes[random(1, #flyable_nodes)]
+	local escape_target = flyable_nodes[random(#flyable_nodes)]
 	local escape_direction = get_direction(pos, escape_target)
 
 	self.object:set_velocity(multiply(escape_direction, self.run_velocity))
@@ -505,7 +505,7 @@ function mob_class:do_stay_near()
 	local searchnodes = self.stay_near[1]
 	local chance = self.stay_near[2] or 10
 
-	if random(1, chance) > 1 then
+	if random(chance) > 1 then
 		return false
 	end
 
@@ -523,7 +523,7 @@ function mob_class:do_stay_near()
 		return false
 	end
 
-	local target = nearby_nodes[random(1, #nearby_nodes)]
+	local target = nearby_nodes[random(#nearby_nodes)]
 	local direction = get_direction(pos, target)
 	local vec = {x = target.x - pos.x, z = target.z - pos.z}
 
@@ -611,7 +611,7 @@ function mob_class:item_drop()
 	local obj, item, num
 
 	for n = 1, #self.drops do
-		if random(1, self.drops[n].chance or 1) == 1 then
+		if random(self.drops[n].chance or 1) == 1 then
 			num = random(self.drops[n].min or 1, self.drops[n].max or 1)
 			item = self.drops[n].name
 
@@ -656,7 +656,9 @@ end
 -- check if mob is dead or only hurt
 function mob_class:check_for_death(cmi_cause)
 	-- has health actually changed?
-	if self.health == self.old_health and self.health > 0 then return end
+	if self.health == self.old_health and self.health > 0 then
+		return false
+	end
 
 	self.old_health = self.health
 
@@ -782,7 +784,7 @@ function mob_class:do_env_damage()
 	-- remove mob if standing inside ignore node
 	if self.standing_in == "ignore" then
 		self.object:remove()
-		return
+		return true
 	end
 
 	-- is mob light sensative, or scared of the dark :P
@@ -796,7 +798,7 @@ function mob_class:do_env_damage()
 				self.nametag = S("Health:") .. " " .. self.health .. " / " .. self.hp_max
 				self:update_tag()
 			end
-			if self:check_for_death({type = "light"}) then return end
+			if self:check_for_death({type = "light"}) then return true end
 		end
 	end
 
@@ -827,12 +829,10 @@ function mob_class:do_env_damage()
 			effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
 
 			if self:check_for_death({
-				type = "environment",
-				pos = pos,
-				node = self.standing_in,
-				hot = true
-			}) then return
-			end
+					type = "environment",
+					pos = pos,
+					node = self.standing_in,
+					hot = true}) then return true end
 		end
 
 	-- damage_per_second node check
@@ -841,11 +841,9 @@ function mob_class:do_env_damage()
 		effect(pos, 5, "item_smoke.png")
 
 		if self:check_for_death({
-			type = "environment",
-			pos = pos,
-			node = self.standing_in
-		}) then return
-		end
+				type = "environment",
+				pos = pos,
+				node = self.standing_in}) then return true end
 	end
 
 
@@ -856,10 +854,10 @@ function mob_class:do_env_damage()
 	and nodef.drawtype == "normal" then
 		self.health = self.health - self.suffocation
 		if self:check_for_death({type = "environment",
-				pos = pos, node = self.standing_in}) then return end
+				pos = pos, node = self.standing_in}) then return true end
 	end
 
-	self:check_for_death({type = "unknown"})
+	return self:check_for_death({type = "unknown"})
 end
 
 
@@ -1163,7 +1161,7 @@ function mob_class:replace(pos)
 			or not self.replace_what
 			or self.child
 			or self.object:get_velocity().y ~= 0
-			or random(1, self.replace_rate) > 1 then
+			or random(self.replace_rate) > 1 then
 		return
 	end
 
@@ -1540,7 +1538,7 @@ function mob_class:general_attack()
 	end
 
 	-- attack closest player or mob
-	if min_player and random(1, 100) > self.attack_chance then
+	if min_player and random(100) > self.attack_chance then
 		self:do_attack(min_player)
 	end
 end
@@ -1775,7 +1773,7 @@ end
 function mob_class:do_states(dtime)
 	local yaw = self.object:get_yaw() or 0
 	if self.state == "stand" then
-		if random(1, 4) == 1 then
+		if random(4) == 1 then
 			local s, lp = self.object:get_pos()
 			local objs = minetest.get_objects_inside_radius(s, 3)
 
@@ -1810,7 +1808,7 @@ function mob_class:do_states(dtime)
 		if self.order ~= "stand"
 				and self.walk_chance ~= 0
 				and self.facing_fence ~= true
-				and random(1, 100) <= self.walk_chance
+				and random(100) <= self.walk_chance
 				and not self.at_cliff then
 
 			self:set_velocity(self.walk_velocity)
@@ -1871,14 +1869,14 @@ function mob_class:do_states(dtime)
 			yaw = self:set_yaw(yaw, 8)
 
 		-- otherwise randomly turn
-		elseif random(1, 10) <= 3 then
+		elseif random(10) <= 3 then
 			yaw = yaw + random(-0.5, 0.5)
 			yaw = self:set_yaw(yaw, 8)
 		end
 
 		-- stand for great fall in front
 		if self.facing_fence or self.at_cliff
-				or random(1, 100) <= self.stand_chance then
+				or random(100) <= self.stand_chance then
 			self:set_velocity(0)
 			self.state = "stand"
 			self:set_animation("stand", true)
@@ -2197,7 +2195,7 @@ function mob_class:do_states(dtime)
 
 			if self.shoot_interval
 					and self.timer > self.shoot_interval
-					and random(1, 10) <= 6 then
+					and random(10) <= 6 then
 				self.timer = 0
 				self:set_animation("shoot")
 
@@ -2390,7 +2388,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir)
 
 			-- do we have a single blood texture or multiple?
 			if type(self.blood_texture) == "table" then
-				local blood = self.blood_texture[random(1, #self.blood_texture)]
+				local blood = self.blood_texture[random(#self.blood_texture)]
 				effect(pos, self.blood_amount, blood, nil, nil, 1, nil)
 			else
 				effect(pos, self.blood_amount, self.blood_texture, nil, nil, 1, nil)
@@ -2580,7 +2578,7 @@ function mob_class:mob_activate(staticdata, def, dtime)
 			def.textures = {def.textures}
 		end
 
-		self.base_texture = def.textures and def.textures[random(1, #def.textures)]
+		self.base_texture = def.textures and def.textures[random(#def.textures)]
 		self.base_mesh = def.mesh
 		self.base_size = self.visual_size
 		self.base_colbox = self.collisionbox
@@ -2826,7 +2824,7 @@ function mob_class:on_step(dtime)
 	end
 
 	-- mob plays random sound at times
-	if random(1, 100) == 1 then
+	if random(100) == 1 then
 		self:mob_sound(self.sounds.random)
 	end
 
@@ -2838,7 +2836,7 @@ function mob_class:on_step(dtime)
 		self.env_damage_timer = 0
 
 		-- check for environmental damage (water, fire, lava etc.)
-		self:do_env_damage()
+		if self:do_env_damage() then return end
 
 		-- node replace check (cow eats grass etc.)
 		self:replace(pos)
@@ -2869,7 +2867,8 @@ function mob_class:on_blast(damage)
 		damage_groups = {fleshy = damage},
 	}, nil)
 
-	return false, true, {}
+	-- return no damage, no knockback, no item drops, mob api handles all
+	return false, false, {}
 end
 
 
@@ -3519,7 +3518,7 @@ force_take, replacewith)
 		end
 
 		-- calculate chance.. add to inventory if successful?
-		if chance and chance > 0 and random(1, 100) <= chance then
+		if chance and chance > 0 and random(100) <= chance then
 			-- default mob egg
 			local new_stack = ItemStack(mobname)
 

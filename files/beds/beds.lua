@@ -1,6 +1,11 @@
 beds.box = {-0.5, -0.5, -0.5, 0.5, 0.06, 1.5}
 
 function beds.dyeing(pos, _, clicker, itemstack)
+	local player_name = clicker:get_player_name()
+	if minetest.is_protected(pos, player_name) then
+		return
+	end
+
 	local itemname = itemstack:get_name()
 	if itemname:find("dye:") then
 		minetest.swap_node(pos, {
@@ -9,7 +14,7 @@ function beds.dyeing(pos, _, clicker, itemstack)
 		})
 
 		if not (creative and creative.is_enabled_for and
-				creative.is_enabled_for(clicker:get_player_name())) then
+				creative.is_enabled_for(player_name)) then
 			itemstack:take_item()
 		end
 
