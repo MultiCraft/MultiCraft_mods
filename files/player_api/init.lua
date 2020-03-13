@@ -72,6 +72,7 @@ minetest.register_node("player_api:hand", hand)
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
+	local inv = player:get_inventory()
 
 	player_api.player_attached[name] = false
 	player_api.set_model(player, "character.b3d")
@@ -85,6 +86,7 @@ minetest.register_on_joinplayer(function(player)
 	player:hud_set_hotbar_itemcount(9)
 	player:hud_set_hotbar_image("gui_hotbar.png")
 	player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
+	inv:set_size("main", 36)
 
 	local gender = player:get_attribute("gender")
 	local color  = player:get_attribute("color")
@@ -96,8 +98,8 @@ minetest.register_on_joinplayer(function(player)
 
 	local texture = "character" .. gender .. color .. skin .. ".png"
 	player_api.set_textures(player, texture)
-	player:get_inventory():set_size("hand", 1)
-	player:get_inventory():set_stack("hand", 1, "player_api:hand" .. gender .. color)
+	inv:set_size("hand", 1)
+	inv:set_stack("hand", 1, "player_api:hand" .. gender .. color)
 end)
 
 -- Temporary solution to the problem of loading yaw 'nul' on iOS
