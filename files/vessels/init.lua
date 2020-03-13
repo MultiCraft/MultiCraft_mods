@@ -66,8 +66,9 @@ minetest.register_node("vessels:shelf", {
 		local inv = minetest.get_meta(pos):get_inventory()
 		return inv:is_empty("vessels")
 	end,
-	allow_metadata_inventory_put = function(_, listname, _, stack)
-		if minetest.get_item_group(stack:get_name(), "vessel") ~= 0 then
+	allow_metadata_inventory_put = function(pos, listname, _, stack, player)
+		if not minetest.is_protected(pos, player:get_player_name()) and
+				minetest.get_item_group(stack:get_name(), "vessel") ~= 0 then
 			if listname == "split" then
 				return 1
 			else
@@ -76,8 +77,16 @@ minetest.register_node("vessels:shelf", {
 		end
 		return 0
 	end,
-	allow_metadata_inventory_move = function(_, _, _, to_list, _, count)
-		if to_list == "split" then
+	allow_metadata_inventory_take = function(pos, _, _, stack, player)
+		if minetest.is_protected(pos, player:get_player_name()) then
+			return 0
+		end
+		return stack:get_count()
+	end,
+	allow_metadata_inventory_move = function(pos, _, _, to_list, _, count, player)
+		if minetest.is_protected(pos, player:get_player_name()) then
+			return 0
+		elseif to_list == "split" then
 			return 1
 		end
 		return count

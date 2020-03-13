@@ -393,12 +393,12 @@ end
 
 -- New emergent jungle tree
 
---[[function default.grow_new_emergent_jungle_tree(pos)
+function default.grow_new_emergent_jungle_tree(pos)
 	local path = modpath ..
 		"/schematics/emergent_jungle_tree_from_sapling.mts"
 	minetest.place_schematic({x = pos.x - 3, y = pos.y - 5, z = pos.z - 3},
 		path, "random", nil, false)
-end]]
+end
 
 
 -- New pine tree

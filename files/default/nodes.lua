@@ -755,7 +755,6 @@ minetest.register_node("default:stone_with_iron", {
 	description = "Iron Ore",
 	tiles = {"default_stone.png^default_mineral_iron.png"},
 	groups = {cracky = 2},
-	drop = "default:stone_with_iron",
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -804,7 +803,6 @@ minetest.register_node("default:stone_with_gold", {
 	description = "Gold Ore",
 	tiles = {"default_stone.png^default_mineral_gold.png"},
 	groups = {cracky = 2},
-	drop = "default:stone_with_gold",
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -842,7 +840,6 @@ minetest.register_node("default:stone_with_diamond", {
 	description = "Diamonds in Stone",
 	tiles = {"default_stone.png^default_mineral_diamond.png"},
 	groups = {cracky = 1},
-	drop = "default:diamond",
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -1315,8 +1312,9 @@ minetest.register_node("default:bookshelf", {
 		local inv = minetest.get_meta(pos):get_inventory()
 		return inv:is_empty("books")
 	end,
-	allow_metadata_inventory_put = function(_, listname, _, stack)
-		if minetest.get_item_group(stack:get_name(), "book") ~= 0 then
+	allow_metadata_inventory_put = function(pos, listname, _, stack, player)
+		if not minetest.is_protected(pos, player:get_player_name()) and
+				minetest.get_item_group(stack:get_name(), "book") ~= 0 then
 			if listname == "split" then
 				return 1
 			else
@@ -1325,8 +1323,16 @@ minetest.register_node("default:bookshelf", {
 		end
 		return 0
 	end,
-	allow_metadata_inventory_move = function(_, _, _, to_list, _, count)
-		if to_list == "split" then
+	allow_metadata_inventory_take = function(pos, _, _, stack, player)
+		if minetest.is_protected(pos, player:get_player_name()) then
+			return 0
+		end
+		return stack:get_count()
+	end,
+	allow_metadata_inventory_move = function(pos, _, _, to_list, _, count, player)
+		if minetest.is_protected(pos, player:get_player_name()) then
+			return 0
+		elseif to_list == "split" then
 			return 1
 		end
 		return count
@@ -1359,19 +1365,19 @@ minetest.register_node("default:ladder_wood", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.375, -0.5, -0.5,  -0.25,  -0.375, 0.5}, -- Strut Left
-			{ 0.25,  -0.5, -0.5,   0.375, -0.375, 0.5}, -- Strut Right
-			{-0.438, -0.5,  0.312, 0.438, -0.35,  0.435}, -- Rung 1
-			{-0.438, -0.5,  0.06, 0.438, -0.35,  0.185}, -- Rung 2
-			{-0.438, -0.5, -0.185, 0.438, -0.35, -0.06}, -- Rung 3
-			{-0.438, -0.5, -0.435, 0.438, -0.35, -0.31} -- Rung 4
+			{-0.375, -0.5, -0.5,  -0.25,  -0.375, 0.5},		-- Strut Left
+			{ 0.25,  -0.5, -0.5,   0.375, -0.375, 0.5},		-- Strut Right
+			{-0.438, -0.5,  0.312, 0.438, -0.35,  0.435},	-- Rung 1
+			{-0.438, -0.5,  0.06,  0.438, -0.35,  0.185},	-- Rung 2
+			{-0.438, -0.5, -0.185, 0.438, -0.35, -0.06},	-- Rung 3
+			{-0.438, -0.5, -0.435, 0.438, -0.35, -0.31}		-- Rung 4
 		}
 	},
 	selection_box = {
 		type = "wallmounted",
-		wall_top    = {-0.438,  0.35, -0.5,    0.438,  0.5,   0.5},
+		wall_top    = {-0.438,  0.35, -0.5,    0.438,  0.5,  0.5},
 		wall_bottom = {-0.438, -0.5,  -0.5,    0.438, -0.35, 0.5},
-		wall_side   = {-0.5,   -0.5,  -0.438, -0.35,  0.5,   0.438}
+		wall_side   = {-0.5,   -0.5,  -0.438, -0.35,   0.5,  0.438}
 	},
 	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1},
 	sounds = default.node_sound_wood_defaults()
@@ -1396,7 +1402,7 @@ minetest.register_node("default:grill_bar", {
 	is_ground_content = false,
 	node_box = {
 		type = "fixed",
-		fixed = {{-1/2, -1/2, -1/2, 1/2, 1/2, -6/16}}
+		fixed = {-1/2, -1/2, -1/2, 1/2, 1/2, -6/16}
 	},
 	groups = {choppy = 2, oddly_breakable_by_hand = 3},
 	sounds = default.node_sound_metal_defaults()
@@ -1519,16 +1525,16 @@ minetest.register_node("default:glowstone", {
 	tiles = {"default_glowstone.png"},
 	paramtype = "light",
 	groups = {cracky = 3},
---[[drop = {
-	max_items = 1,
-	items = {
-			{items = {"default:glowdust 9"}, rarity = 7},
-			{items = {"default:glowdust 6"}, rarity = 5},
-			{items = {"default:glowdust 4"}, rarity = 3},
-			{items = {"default:glowdust 3"}, rarity = 2},
-			{items = {"default:glowdust 2"}}
+	drop = {
+		max_items = 1,
+		items = {
+			{items = {"default:glowstone_dust 8"}, rarity = 7},
+			{items = {"default:glowstone_dust 6"}, rarity = 5},
+			{items = {"default:glowstone_dust 4"}, rarity = 3},
+			{items = {"default:glowstone_dust 3"}, rarity = 2},
+			{items = {"default:glowstone_dust 2"}}
 		}
-	},]]
+	},
 	light_source = minetest.LIGHT_MAX - 3
 })
 
