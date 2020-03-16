@@ -5,6 +5,11 @@ doors.registered_doors = {}
 doors.registered_trapdoors = {}
 doors.registered_fencegates = {}
 
+-- Intllib
+local S = intllib.make_gettext_pair()
+
+local table_copy = table.copy
+
 local function replace_old_owner_information(pos)
 	local meta = minetest.get_meta(pos)
 	local owner = meta:get_string("doors_owner")
@@ -205,9 +210,9 @@ function doors.register(name, def)
 	end
 
 	minetest.register_craftitem(":" .. name, {
-		description = def.description,
+		description = S(def.description),
 		inventory_image = def.inventory_image,
-		groups = table.copy(def.groups),
+		groups = table_copy(def.groups),
 
 		on_place = function(itemstack, placer, pointed_thing)
 			local pos
@@ -277,7 +282,7 @@ function doors.register(name, def)
 
 			if def.protected then
 				meta:set_string("owner", pn)
-				meta:set_string("infotext", Sl(def.description) .. "\n" .. Sl("Owned by @1", Sl(pn)))
+				meta:set_string("infotext", S(def.description) .. "\n" .. S("Owned by @1", S(pn)))
 			end
 
 			if not (creative and creative.is_enabled_for and creative.is_enabled_for(pn)) then
@@ -383,8 +388,10 @@ function doors.register(name, def)
 	def.walkable = true
 	def.is_ground_content = false
 	def.buildable_to = false
-	def.selection_box = {type = "fixed", fixed = {-1/2,-1/2,-1/2,1/2,3/2,-6/16}}
-	def.collision_box = {type = "fixed", fixed = {-1/2,-1/2,-1/2,1/2,3/2,-6/16}}
+
+	local box = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, 1.5, -3/8}}
+	def.selection_box = box
+	def.collision_box = box
 
 	def.mesh = "door_a.obj"
 	minetest.register_node(":" .. name .. "_a", def)
@@ -409,11 +416,11 @@ function doors.trapdoor_toggle(pos, node, clicker)
 
 	local def = minetest.registered_nodes[node.name]
 
-	if string.sub(node.name, -5) == "_open" then
+	if node.name:sub(-5) == "_open" then
 		minetest.sound_play(def.sound_close,
 			{pos = pos, gain = 0.3, max_hear_distance = 10})
-		minetest.swap_node(pos, {name = string.sub(node.name, 1,
-			string.len(node.name) - 5), param1 = node.param1, param2 = node.param2})
+		minetest.swap_node(pos, {name = node.name:sub(1,
+			node.name:len() - 5), param1 = node.param1, param2 = node.param2})
 	else
 		minetest.sound_play(def.sound_open,
 			{pos = pos, gain = 0.3, max_hear_distance = 10})
@@ -430,6 +437,8 @@ function doors.register_trapdoor(name, def)
 	local name_closed = name
 	local name_opened = name .. "_open"
 
+	def.description = S(def.description)
+	
 	def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		doors.trapdoor_toggle(pos, node, clicker)
 		return itemstack
@@ -461,7 +470,7 @@ function doors.register_trapdoor(name, def)
 			local pn = placer:get_player_name()
 			local meta = minetest.get_meta(pos)
 			meta:set_string("owner", pn)
-			meta:set_string("infotext", Sl(def.description) .. "\n" .. Sl("Owned by @1", Sl(pn)))
+			meta:set_string("infotext", S(def.description) .. "\n" .. S("Owned by @1", S(pn)))
 
 			return (creative and creative.is_enabled_for and creative.is_enabled_for(pn))
 		end
@@ -487,25 +496,52 @@ function doors.register_trapdoor(name, def)
 		def.sound_close = "doors_door_close"
 	end
 
-	local def_opened = table.copy(def)
-	local def_closed = table.copy(def)
+	local def_opened = table_copy(def)
+	local def_closed = table_copy(def)
 
-	def_closed.node_box = {
+	def_closed.node_box = def.node_box_close or {
 		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -6/16, 0.5}
+		fixed = {
+			{-3/8,  -0.5,  5/16, 3/8,  -3/8,  0.5},  -- top
+			{-5/16, -0.5, -1/8,  5/16, -3/8,  1/8},  -- middle
+			{-3/8,  -0.5, -0.5,  3/8,  -3/8, -5/16}, -- bottom
+			{-0.5,  -0.5, -0.5, -5/16, -3/8,  0.5},  -- left
+			{ 5/16, -0.5, -0.5,  0.5,  -3/8,  0.5},  -- right
+			{-1/8,  -0.5,  1/8, 1/8,   -3/8,  5/16}, -- middle top
+			{-1/8,  -0.5, -5/16, 1/8,  -3/8, -1/8}   -- middle bottom
+
+		}
 	}
+	def_closed.selection_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -3/8, 0.5}
+	}
+	def.tile_bottom = def.tile_bottom or def.tile_front
 	def_closed.tiles = {
 		def.tile_front,
-		def.tile_front .. "^[transformFY",
+		def.tile_bottom .. "^[transformFY",
 		def.tile_side,
 		def.tile_side,
 		def.tile_side,
 		def.tile_side
 	}
 
-	def_opened.node_box = {
+	def_opened.node_box = def.node_box_open or {
 		type = "fixed",
-		fixed = {-0.5, -0.5, 6/16, 0.5, 0.5, 0.5}
+		fixed = {
+			{-5/16,  5/16, 3/8,  5/16,  0.5,  0.5}, -- top
+			{-5/16, -1/8,  3/8,  5/16,  1/8,  0.5}, -- middle
+			{-5/16, -0.5,  3/8,  5/16, -5/16, 0.5}, -- bottom
+			{-0.5,  -0.5,  3/8, -5/16,  0.5,  0.5}, -- left
+			{ 5/16, -0.5,  3/8,  0.5,   0.5,  0.5}, -- right
+			{-1/8,   1/8,  3/8,  1/8,   5/16, 0.5}, -- middle top
+			{-1/8,  -5/16, 3/8,  1/8,  -1/8,  0.5}  -- middle bottom
+		
+		}
+	}
+	def_opened.selection_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, 3/8, 0.5, 0.5, 0.5}
 	}
 	def_opened.tiles = {
 		def.tile_side,
@@ -513,7 +549,7 @@ function doors.register_trapdoor(name, def)
 		def.tile_side .. "^[transform3",
 		def.tile_side .. "^[transform1",
 		def.tile_front .. "^[transform46",
-		def.tile_front .. "^[transform6"
+		def.tile_bottom .. "^[transform6"
 	}
 
 	def_opened.drop = name_closed
@@ -524,6 +560,22 @@ function doors.register_trapdoor(name, def)
 
 	doors.registered_trapdoors[name_opened] = true
 	doors.registered_trapdoors[name_closed] = true
+	
+	minetest.register_craft({
+		output = name_closed .. " 2",
+		recipe = {
+			{def.material, def.material, def.material},
+			{def.material, def.material, def.material}
+		}
+	})
+	
+	if def.fuel then
+		minetest.register_craft({
+			type = "fuel",
+			recipe = name_closed,
+			burntime = def.fuel
+		})
+	end
 end
 
 ---- Fence Gate ----
@@ -539,11 +591,11 @@ function doors.fencegate_toggle(pos, node, clicker)
 
 	local def = minetest.registered_nodes[node.name]
 
-	if string.sub(node.name, -5) == "_open" then
+	if node.name:sub(-5) == "_open" then
 		minetest.sound_play(def.sound_close,
 			{pos = pos, gain = 0.3, max_hear_distance = 10})
-		minetest.swap_node(pos, {name = string.sub(node.name, 1,
-			string.len(node.name) - 5), param1 = node.param1, param2 = node.param2})
+		minetest.swap_node(pos, {name = node.name:sub(1,
+			node.name:len() - 5), param1 = node.param1, param2 = node.param2})
 	else
 		minetest.sound_play(def.sound_open,
 			{pos = pos, gain = 0.3, max_hear_distance = 10})
@@ -556,6 +608,8 @@ function doors.register_fencegate(name, def)
 	if not name:find(":") then
 		name = "doors:" .. name
 	end
+
+	def.description = S(def.description)
 
 	local name_closed = name
 	local name_opened = name .. "_open"
@@ -595,7 +649,7 @@ function doors.register_fencegate(name, def)
 	if type(def.texture) == "string" then
 		def.tiles[1] = {name = def.texture, backface_culling = true}
 	elseif def.texture.backface_culling == nil then
-		def.tiles[1] = table.copy(def.texture)
+		def.tiles[1] = table_copy(def.texture)
 		def.tiles[1].backface_culling = true
 	else
 		def.tiles[1] = def.texture
@@ -609,55 +663,53 @@ function doors.register_fencegate(name, def)
 		def.sound_close = "doors_fencegate_close"
 	end
 
-	local def_opened = table.copy(def)
-	local def_closed = table.copy(def)
+	local def_opened = table_copy(def)
+	local def_closed = table_copy(def)
 
 	def_closed.node_box = {
 		type = "fixed",
 		fixed = {
-			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/16},		-- Left completion
-			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},		-- Right completion
-			{-2/16, -1/2+6/16, -1/16, 0, 1/2-1/16, 1/16},		-- Center Left
-			{0, -1/2+6/16, -1/16, 2/16, 1/2-1/16, 1/16},		-- Center Right
-			{-2/16, 1/2-4/16, 1/16, -1/2, 1/2-1/16, -1/16},		-- Above (cross) -z
-			{-2/16, -1/2+6/16, 1/16, -1/2, -1/2+9/16, -1/16},	-- Bottom (cross) -z
-			{2/16, 1/2-4/16, -1/16, 1/2, 1/2-1/16, 1/16},		-- Above (transverse) z
-			{2/16, -1/2+6/16, -1/16, 1/2, -1/2+9/16, 1/16},		-- Below (across) z
-			{-2/16, 1/2, -2/16, -2/16, 1/2+8/16, -2/16},
-			{-2/16, 1/2, 2/16, -2/16, 1/2+8/16, 2/16},
-			{2/16, 1/2, -2/16, 2/16, 1/2+8/16, -2/16},
-			{2/16, 1/2, 2/16, 2/16, 1/2+8/16, 2/16},
-			{-6/16, 1/2-1/16, 1/16, -6/16, 1/2+8/16, 1/16},		-- Top block (cross) -x 1 side
-			{-6/16, 1/2-1/16, -1/16, -6/16, 1/2+8/16, -1/16},	-- Top block (cross) -x 2 side
-			{5/16, 1/2-1/16, 1/16, 5/16, 1/2+8/16, 1/16},		-- Top block (cross) x 1 side
-			{5/16, 1/2-1/16, -1/16, 5/16, 1/2+8/16, -1/16}		-- Top block (cross) x 2 side
+			{-1/2,  -3/16, -1/16, -3/8,  1/2,   1/16}, -- Left completion
+			{ 3/8,  -3/16, -1/16,  1/2,  1/2,   1/16}, -- Right completion
+			{-1/8,  -1/8,  -1/16,  0,    7/16,  1/16}, -- Center Left
+			{ 0,    -1/8,  -1/16,  2/16, 7/16,  1/16}, -- Center Right
+			{-1/8,   1/4,   1/16, -1/2,  7/16, -1/16}, -- Above  (cross) -z
+			{-1/8,  -1/8,   1/16, -1/2,  1/16, -1/16}, -- Bottom (cross) -z
+			{ 2/16,  1/4,  -1/16,  1/2,  7/16,  1/16}, -- Above  (transverse) z
+			{ 2/16, -1/8,  -1/16,  1/2,  1/16,  1/16}, -- Below  (across) z
 		}
 	}
 	def_closed.selection_box = {
 		type = "fixed",
 		fixed = {
-			{-1/2, -1/2+5/16, -1/16, 1/2, 1/2, 1/16}			-- Gate
+			{-1/2, -3/16, -1/16, 1/2, 1/2, 1/16}
+		}
+	}
+	def_closed.collision_box = {
+		type = "fixed",
+		fixed = {
+			{-1/2, -3/16, -1/16, 1/2, 1, 1/16}
 		}
 	}
 
 	def_opened.node_box = {
 		type = "fixed",
 		fixed = {
-			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/16},		-- Left completion
-			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/16},		-- Right completion
-			{-1/2, 1/2-4/16, 1/16, -1/2+2/16, 1/2-1/16, 1/2-2/16}, -- Top-left (transverse) x
-			{-1/2, -1/2+6/16, 1/16, -1/2+2/16, -1/2+9/16, 1/2-2/16}, -- Bottom-left (transverse) x
-			{1/2-2/16, 1/2-4/16, 1/16, 1/2, 1/2-1/16, 1/2},		-- Top-right (transverse) x
-			{1/2-2/16, -1/2+6/16, 1/16, 1/2, -1/2+9/16, 1/2},	-- Bottom-right (transverse) x
-			{-1/2, -1/2+6/16, 6/16, -1/2+2/16, 1/2-1/16, 1/2},	-- Center Left
-			{1/2-2/16, 1/2-4/16, 1/2, 1/2, -1/2+9/16, 6/16}		-- Center Right
+			{-1/2, -3/16, -1/16, -3/8, 1/2, 1/16}, -- Left completion
+			{ 3/8, -3/16, -1/16,  1/2, 1/2, 1/16}, -- Right completion
+			{-1/2,  1/4,   1/16, -3/8, 7/16, 3/8}, -- Top-left     (transverse) x
+			{-1/2, -1/8,   1/16, -3/8, 1/16, 3/8}, -- Bottom-left  (transverse) x
+			{ 3/8,  1/4,   1/16,  1/2, 7/16, 1/2}, -- Top-right    (transverse) x
+			{ 3/8, -1/8,   1/16,  1/2, 1/16, 1/2}, -- Bottom-right (transverse) x
+			{-1/2, -1/8,   3/8,  -3/8, 7/16, 1/2}, -- Center Left
+			{ 3/8,  1/4,   1/2,   1/2, 1/16, 3/8}  -- Center Right
 		}
 	}
 	def_opened.selection_box = {
 		type = "fixed",
 		fixed = {
-			{-1/2, -1/2+5/16, -1/16, -1/2+2/16, 1/2, 1/2},		-- Left
-			{1/2-2/16, -1/2+5/16, -1/16, 1/2, 1/2, 1/2}			-- Right
+			{-1/2, -3/16, -1/16, -3/8, 1/2, 1/2}, -- Left
+			{ 3/8, -3/16, -1/16,  1/2, 1/2, 1/2}  -- Right
 		}
 	}
 
