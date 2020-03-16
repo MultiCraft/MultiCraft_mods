@@ -15,6 +15,12 @@ http://www.gnu.org/licenses/lgpl-3.0.html
 
 License of model
 ----------------
-Copyright (C) 2015-2017 Auke Kok <sofar@foo-projects.org>
+Copyright (C) 2015-2017 Auke Kok <sofar@foo-projects.org> (CC-BY-SA-3.0)
+Copyright (C) 2020 MultiCraft Development Team (CC-BY-SA-3.0)
 
-CC-BY-SA-3.0
+License of textures
+-------------------
+Copyright (C) 2020 MultiCraft Development Team
+
+Graphics in this mod is NOT free and can only be used as part of the official MultiCraft build.
+Allowed to be used in non-official builds ONLY for personal use.

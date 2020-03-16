@@ -60,80 +60,98 @@ end
 
 local function get_tile(def)
 	local tile = def.tiles[1]
-	if type (tile) == "table" then
-		return tile.name
+	if type(tile) == "table" then
+		tile = tile.name
 	end
-	return tile
+
+	local tiles = {"flowerpot.png"}
+	if def.drawtype == "plantlike" then
+		tiles[2] = tile
+		tiles[3] = "blank.png"
+	else
+		tiles[2] = "blank.png"
+		tiles[3] = tile
+	end
+
+	return tiles
 end
+
+local pot = {
+	drawtype = "mesh",
+	paramtype = "light",
+	sunlight_propagates = true,
+	sounds = default.node_sound_defaults(),
+	groups = {falling_node = 1, oddly_breakable_by_hand = 3, cracky = 1}
+}
+
+local collision_box = {
+	type = "fixed",
+	fixed = {-0.25, -0.5, -0.25, 0.25, -0.125, 0.25}
+}
 
 function flowerpot.register_node(nodename)
 	local nodedef = minetest.registered_nodes[nodename]
 	local name = nodedef.name:gsub(":", "_")
-	local plantlike = nodedef.drawtype == "plantlike" and true or false
 
-	minetest.register_node("flowerpot:" .. name, {
-		drawtype = "mesh",
-		mesh = "flowerpot.obj",
-		tiles = {
-			{name = "flowerpot.png"},
-			{name = plantlike and get_tile(nodedef) or "blank.png"},
-			{name = not plantlike and get_tile(nodedef) or "blank.png"}
-		},
-		paramtype = "light",
-		sunlight_propagates = true,
-		collision_box = {
-			type = "fixed",
-			fixed = {-1/4, -1/2, -1/4, 1/4, -1/8, 1/4}
-		},
-		selection_box = {
-			type = "fixed",
-			fixed = {-1/4, -1/2, -1/4, 1/4, 7/16, 1/4}
-		},
-		sounds = default.node_sound_defaults(),
-		groups = {attached_node = 1, oddly_breakable_by_hand = 1, snappy = 3, not_in_creative_inventory = 1},
-		drop = {
-			items = {
-				{items = {"flowerpot:empty", nodename}}
-			}
-		},
+	local node = table.copy(pot)
+	node.mesh = "flowerpot.obj"
+	node.tiles = get_tile(nodedef)
+	node.collision_box = collision_box
+	node.selection_box = {
+		type = "fixed",
+		fixed = {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25}
+	}
+	node.groups.not_in_creative_inventory = 1
+	node.drop = {items = {{items = {"flowerpot:pot", nodename}}}}
+	node.flowerpot_plantname = nodename
+	node.on_punch = flowerpot_on_punch
 
-		flowerpot_plantname = nodename,
-
-		on_punch = flowerpot_on_punch
-	})
+	minetest.register_node("flowerpot:" .. name, node)
 end
 
 -- Empty Flowerpot
-minetest.register_node("flowerpot:empty", {
-	description = "Flowerpot",
-	drawtype = "mesh",
-	mesh = "flowerpot.obj",
-	inventory_image = "flowerpot_item.png",
-	wield_image = "flowerpot_item.png",
-	tiles = {
-		{name = "flowerpot.png"},
-		{name = "blank.png"},
-		{name = "blank.png"}
-	},
-	paramtype = "light",
-	sunlight_propagates = true,
-	collision_box = {
-		type = "fixed",
-		fixed = {-1/4, -1/2, -1/4, 1/4, -1/8, 1/4}
-	},
-	selection_box = {
-		type = "fixed",
-		fixed = {-1/4, -1/2, -1/4, 1/4, -1/16, 1/4}
-	},
-	sounds = default.node_sound_defaults(),
-	groups = {attached_node = 1, oddly_breakable_by_hand = 3, cracky = 1},
-	
-	on_rightclick = flowerpot_on_rightclick
-})
+local empty = table.copy(pot)
+empty.description = "Flowerpot"
+empty.mesh = "flowerpot.obj"
+empty.tiles = {"flowerpot.png", "blank.png", "blank.png"}
+empty.collision_box = collision_box
+empty.selection_box = {
+	type = "fixed",
+	fixed = {-0.25, -0.5, -0.25, 0.25, -0.0625, 0.25}
+}
+empty.groups.not_in_creative_inventory = 1
+empty.drop = "flowerpot:pot"
+empty.on_rightclick = flowerpot_on_rightclick
+
+minetest.register_node("flowerpot:empty", empty)
+
+-- Inventory Flowerpot
+local inv = table.copy(pot)
+inv.description = "Flowerpot"
+inv.mesh = "flowerpot_inv.obj"
+inv.tiles = {"flowerpot.png"}
+inv.node_placement_prediction = ""
+inv.on_place = function(itemstack, placer, pointed_thing)
+	local under = pointed_thing.under
+	local node = minetest.get_node(under)
+	local node_def = minetest.registered_nodes[node.name]
+	if node_def and node_def.on_rightclick and
+			not (placer and placer:is_player() and
+			placer:get_player_control().sneak) then
+		return node_def.on_rightclick(under, node, placer, itemstack,
+			pointed_thing) or itemstack
+	end
+
+	itemstack = minetest.item_place(ItemStack("flowerpot:empty"), placer, pointed_thing)
+	itemstack:set_name("flowerpot:pot")
+	return itemstack
+end
+
+minetest.register_node("flowerpot:pot", inv)
 
 -- Craft
 minetest.register_craft({
-	output = "flowerpot:empty",
+	output = "flowerpot:pot",
 	recipe = {
 		{"default:clay_brick", "", "default:clay_brick"},
 		{"", "default:clay_brick", ""}
