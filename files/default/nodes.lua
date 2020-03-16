@@ -1008,7 +1008,7 @@ minetest.register_node("default:water_source", {
 	liquid_alternative_flowing = "default:water_flowing",
 	liquid_alternative_source = "default:water_source",
 	liquid_viscosity = 1,
-	post_effect_color = {a = 103, r = 30, g = 60, b = 90},
+	post_effect_color = {a = 90, r = 30, g = 60, b = 90},
 	groups = {water = 3, liquid = 3, cools_lava = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_water_defaults()
 })
@@ -1053,7 +1053,7 @@ minetest.register_node("default:water_flowing", {
 	liquid_alternative_flowing = "default:water_flowing",
 	liquid_alternative_source = "default:water_source",
 	liquid_viscosity = 1,
-	post_effect_color = {a = 103, r = 30, g = 60, b = 90},
+	post_effect_color = {a = 90, r = 30, g = 60, b = 90},
 	groups = {water = 3, liquid = 3, not_in_creative_inventory = 1,
 		cools_lava = 1},
 	sounds = default.node_sound_water_defaults()
@@ -1099,7 +1099,7 @@ minetest.register_node("default:river_water_source", {
 	liquid_viscosity = 1,
 	liquid_renewable = false,
 	liquid_range = 2,
-	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
+	post_effect_color = {a = 90, r = 30, g = 76, b = 90},
 	groups = {water = 3, liquid = 3, cools_lava = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_water_defaults()
 })
@@ -1145,7 +1145,7 @@ minetest.register_node("default:river_water_flowing", {
 	liquid_viscosity = 1,
 	liquid_renewable = false,
 	liquid_range = 2,
-	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
+	post_effect_color = {a = 90, r = 30, g = 76, b = 90},
 	groups = {water = 3, liquid = 3, not_in_creative_inventory = 1,
 		cools_lava = 1},
 	sounds = default.node_sound_water_defaults()
@@ -1191,7 +1191,7 @@ minetest.register_node("default:lava_source", {
 	liquid_viscosity = 7,
 	liquid_renewable = false,
 	damage_per_second = 4,
-	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
+	post_effect_color = {a = 180, r = 255, g = 64, b = 0},
 	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1}
 })
 
@@ -1236,7 +1236,7 @@ minetest.register_node("default:lava_flowing", {
 	liquid_viscosity = 7,
 	liquid_renewable = false,
 	damage_per_second = 4,
-	post_effect_color = {a = 191, r = 255, g = 64, b = 0},
+	post_effect_color = {a = 180, r = 255, g = 64, b = 0},
 	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1}
 })
 
