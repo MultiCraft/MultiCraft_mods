@@ -10,16 +10,6 @@ dofile(minetest.get_modpath("flowers") .. "/mapgen.lua")
 -- Flowers
 --
 
--- Aliases for original flowers mod
-
-minetest.register_alias("flowers:flower_rose", "flowers:rose")
-minetest.register_alias("flowers:flower_tulip", "flowers:tulip")
-minetest.register_alias("flowers:flower_dandelion_yellow", "flowers:dandelion_yellow")
-minetest.register_alias("flowers:flower_orchid", "flowers:orchid")
-minetest.register_alias("flowers:flower_allium", "flowers:allium")
-minetest.register_alias("flowers:flower_dandelion_white", "flowers:oxeye_daisy")
-minetest.register_alias("flowers:dandelion_white", "flowers:oxeye_daisy")
-
 -- Flower registration
 
 local function add_simple_flower(name, desc, box, f_groups)
@@ -53,37 +43,61 @@ flowers.datas = {
 	{
 		"rose",
 		"Red Rose",
-		{-2 / 16, -0.5, -2 / 16, 2 / 16, 5 / 16, 2 / 16},
+		{-1 / 8, -0.5, -1 / 8, 1 / 8, 3 / 16, 1 / 8},
 		{color_red = 1, flammable = 1}
 	},
 	{
 		"tulip",
 		"Orange Tulip",
-		{-2 / 16, -0.5, -2 / 16, 2 / 16, 3 / 16, 2 / 16},
+		{-1 / 8, -0.5, -1 / 8, 1 / 8, 5 / 16, 1 / 8},
 		{color_orange = 1, flammable = 1}
+	},
+	{
+		"tulip_pink",
+		"Pink Tulip",
+		{-1 / 8, -0.5, -1 / 8, 1 / 8, 5 / 16, 1 / 8},
+		{color_pink = 1, flammable = 1}
+	},
+	{
+		"tulip_red",
+		"Red Tulip",
+		{-1 / 8, -0.5, -1 / 8, 1 / 8, 5 / 16, 1 / 8},
+		{color_red = 1, flammable = 1}
+	},
+	{
+		"tulip_white",
+		"White Tulip",
+		{-1 / 8, -0.5, -1 / 8, 1 / 8, 5 / 16, 1 / 8},
+		{color_white = 1, flammable = 1}
 	},
 	{
 		"dandelion_yellow",
 		"Yellow Dandelion",
-		{-2 / 16, -0.5, -2 / 16, 2 / 16, 4 / 16, 2 / 16},
+		{-1 / 8, -0.5, -1 / 8, 1 / 8, 0, 1 / 8},
 		{color_yellow = 1, flammable = 1}
+	},
+	{
+		"houstonia",
+		"Houstonia",
+		{-1 / 5, -0.5, -1 / 5, 1 / 5, 1 / 10, 1 / 5},
+		{color_white = 1, flammable = 1}
 	},
 	{
 		"orchid",
 		"Blue Orchid",
-		{-2 / 16, -0.5, -2 / 16, 2 / 16, 2 / 16, 2 / 16},
+		{-1 / 4, -0.5, -1 / 4, 1 / 4, 1 / 3, 1 / 4},
 		{color_blue = 1, flammable = 1}
 	},
 	{
 		"allium",
 		"Allium",
-		{-5 / 16, -0.5, -5 / 16, 5 / 16, -1 / 16, 5 / 16},
+		{-3 / 16, -0.5, -3 / 16, 3 / 16, 6 / 16, 3 / 16},
 		{color_violet = 1, flammable = 1}
 	},
 	{
 		"oxeye_daisy",
 		"White Oxeye",
-		{-5 / 16, -0.5, -5 / 16, 5 / 16, -2 / 16, 5 / 16},
+		{-3 / 16, -0.5, -3 / 16, 3 / 16, 2 / 6, 3 / 16},
 		{color_white = 1, flammable = 1}
 	}
 }
@@ -114,7 +128,7 @@ function flowers.flower_spread(pos, node)
 	end
 
 	local light = minetest.get_node_light(pos)
-	if not light or light < 13 then
+	if not light or light < 12 then
 		return
 	end
 
@@ -138,12 +152,19 @@ function flowers.flower_spread(pos, node)
 			local soil_name = minetest.get_node(soil).name
 			local soil_above = {x = soil.x, y = soil.y + 1, z = soil.z}
 			light = minetest.get_node_light(soil_above)
-			if light and light >= 13 and
+			if light and light >= 12 and
 					-- Only spread to same surface node
 					soil_name == under.name and
 					-- Desert sand is in the soil group
-					soil_name ~= "default:desert_sand" then
-				minetest.set_node(soil_above, {name = node.name})
+					soil_name ~= "default:redsand" then
+					-- Spread also other flowers.
+				local flower = node.name
+				if math.random(3) == 1 then
+					local fdata = flowers.datas
+					flower = "flowers:" .. fdata[math.random(#fdata)][1]
+				end
+
+				minetest.set_node(soil_above, {name = flower})
 			end
 		end
 	end
@@ -195,7 +216,7 @@ minetest.register_node("flowers:mushroom_brown", {
 	buildable_to = true,
 	groups = {food_mushroom = 1, snappy = 3, attached_node = 1, flammable = 1, food = 1, flora = 1},
 	sounds = default.node_sound_leaves_defaults(),
-	on_use = minetest.item_eat(1),
+	on_use = minetest.item_eat(3),
 	selection_box = {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
