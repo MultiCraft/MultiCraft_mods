@@ -67,6 +67,7 @@ Milk Bucket = Ведро Молока
 
 #carts
 Cart (Sneak+Click to pick up) = Вагонетка (Приседание+Нажатие чтобы взять)
+You cannot pick up a Cart! = Вы не можете забрать Вагонетку!
 Rail = Рельсы
 Powered Rail = Электрические Рельсы
 Brake Rail = Рельсы Торможения
