@@ -98,32 +98,38 @@ mobs.human = {
 
 	-- Item for sale, price, chance of appearing in trader's inventory
 	items = {
-		{"default:apple 8", "default:emerald 1", 10},
+		{"mobs:nametag 1", "default:emerald 1", 10},
 		{"farming:bread 8", "default:emerald 2", 5},
 		{"default:clay 8", "default:emerald 1", 12},
 		{"default:brick 8", "default:emerald 2", 17},
-		{"default:glass 8", "default:gold_ingot 2", 17},
+		{"carts:cart 1", "default:gold_ingot 2", 17},
+		{"boats:boat 1", "default:gold_ingot 1", 17},
 		{"default:obsidian 16", "default:emerald 8", 50},
 		{"default:diamond 1", "default:emerald 2", 40},
 		{"farming:wheat 8", "default:emerald 2", 17},
-		{"default:tree 16", "default:gold_ingot 2", 20},
-		{"default:stone 8", "default:emerald 1", 17},
-		{"default:sapling 1", "default:emerald 1", 7},
-		{"default:pick_gold 1", "default:emerald 2", 7},
+		{"default:tree 16", "default:gold_ingot 2", 15},
+		{"pep:speedplus 1", "default:gold_ingot 2", 20},
+		{"pep:jumpplus 1", "default:gold_ingot 2", 20},
+		{"default:birch_sapling 3", "default:gold_ingot 2", 20},
+		{"default:stone 16", "default:emerald 1", 17},
+		{"watch:0 1", "default:emerald 1", 7},
+		{"mobs_water:fish_small 1", "default:emerald 2", 25},
 		{"default:sword_gold 1", "default:emerald 2", 17},
-		{"default:shovel_gold 1", "default:emerald 1", 17},
+		{"bucket:bucket_lava 1", "default:emerald 1", 17},
+		{"default:quartz_crystal 8", "default:emerald 1", 17},
+		{"farming:hoe_ruby 1", "default:emerald 1", 17},
 		{"default:cactus 4", "default:emerald 2", 40},
 		{"default:sugarcane 4", "default:emerald 2", 40},
 		{"default:ruby 1", "default:emerald 4", 20},
 		{"default:ruby 2", "default:emerald 7", 20},
 		{"default:ruby 1", "default:diamond 5", 30},
 		{"default:ruby 2", "default:diamond 9", 30},
-		{"default:obsidian 32", "default:emerald 1", 25},
-		{"default:emerald 1", "default:obsidian 32", 25},
+		{"default:obsidian 32", "default:emerald 1", 40},
+		{"default:emerald 1", "default:obsidian 64", 45},
 		{"farming_addons:carrot_golden 2", "default:diamond 1", 25},
-		{"farming_addons:seed_melon 1", "default:diamond 1", 30},
-		{"farming_addons:seed_pumpkin 1", "default:diamond 1", 30},
-		{"default:gold_ingot 2", "farming_addons:potato 1", 25}
+		{"farming_addons:seed_melon 1", "default:diamond 1", 25},
+		{"farming_addons:seed_pumpkin 1", "default:diamond 1", 25},
+		{"farming_addons:potato 1", "default:gold_ingot 2", 20}
 	}
 }
 
@@ -167,6 +173,8 @@ function mobs.add_goods(self, _, race)
 			trade_index = trade_index + 1
 		end
 	end
+
+	self.version = 2
 end
 
 function mobs_trader(self, clicker, entity, race)
@@ -184,7 +192,9 @@ function mobs_trader(self, clicker, entity, race)
 		})
 	end
 
-	if self.trades == nil then
+	local version = self.version
+
+	if self.trades == nil or not version or version < 2 then
 		mobs.add_goods(self, entity, race)
 	end
 
@@ -210,7 +220,7 @@ function mobs_trader(self, clicker, entity, race)
 			local name_prices = self.trades[i][2]:match("%S*")
 			local amount_prices = self.trades[i][2]:match("%d")
 			local itemdef_prices = minetest.registered_items[name_prices]
-			local tooltip_prices = 
+			local tooltip_prices =
 					(itemdef_prices and itemdef_prices.description or "") .. " " ..
 					(amount_prices and amount_prices ~= "1" and amount_prices or "")
 
