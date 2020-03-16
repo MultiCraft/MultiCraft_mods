@@ -10,7 +10,7 @@ farming.register_plant("farming_addons:corn", {
 
 -- place corn
 minetest.override_item("farming_addons:corn", {
-	on_use = minetest.item_eat(2, nil, -1),
+	on_use = minetest.item_eat(2),
 	on_place = function(itemstack, placer, pointed_thing)
 		local under = pointed_thing.under
 		local node = minetest.get_node(under)

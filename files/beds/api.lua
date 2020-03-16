@@ -1,4 +1,10 @@
 function beds.register_bed(name, def)
+	def.groups = def.groups or {}
+	def.groups.choppy = 2
+	def.groups.oddly_breakable_by_hand = 2
+	def.groups.flammable = 3
+	def.groups.bed = 1
+
 	minetest.register_node(name, {
 		description = def.description,
 		inventory_image = def.inventory_image,
@@ -11,7 +17,7 @@ function beds.register_bed(name, def)
 		is_ground_content = false,
 		stack_max = 1,
 		drop = def.drop or name, 
-		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, bed = 1},
+		groups = def.groups,
 		sounds = def.sounds or default.node_sound_wood_defaults(),
 		node_placement_prediction = "",
 		selection_box = {
@@ -95,7 +101,7 @@ function beds.register_bed(name, def)
 
 	if def.recipe then
 		minetest.register_craft({
-			output = name,
+			output = name:sub(1, 1):gsub(":", "") .. name:sub(2),
 			recipe = def.recipe
 		})
 	end

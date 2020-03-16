@@ -162,7 +162,7 @@ minetest.register_node("farming_addons:cocoa_1", {
 			{-0.125, -0.0625, 0.1875, 0.125, 0.5, 0.5}
 		}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, not_in_creative_inventory = 1},
+	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, attached_node2 = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_wood_defaults(),
 	next_plant = "farming_addons:cocoa_2",
 	on_timer = farming_addons.grow_cocoa_plant,
@@ -212,7 +212,7 @@ minetest.register_node("farming_addons:cocoa_2", {
 			{-0.1875, -0.1875, 0.0625, 0.1875, 0.5, 0.5}
 		}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, not_in_creative_inventory = 1},
+	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, attached_node2 = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_wood_defaults(),
 	next_plant = "farming_addons:cocoa_3",
 	on_timer = farming_addons.grow_cocoa_plant,
@@ -264,7 +264,7 @@ minetest.register_node("farming_addons:cocoa_3", {
 			{-0.25, -0.3125, -0.0625, 0.25, 0.5, 0.5}
 		}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, not_in_creative_inventory = 1},
+	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, attached_node2 = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_wood_defaults(),
 	on_timer = farming_addons.grow_cocoa_plant,
 	minlight = 10

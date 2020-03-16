@@ -32,10 +32,6 @@ beds.register_bed("beds:bed", {
 	mesh = "beds_bed.obj",
 	selectionbox = beds.box,
 	collisionbox = beds.box,
-	recipe = {
-		{"group:wool", "group:wool", "group:wool"},
-		{"group:wood", "group:wood", "group:wood"}
-	},
 
 	on_rightclick = beds.dyeing
 })
