@@ -1,8 +1,11 @@
+local abs, floor, min = math.abs, math.floor, math.min
+local vector_add, vector_equals, vector_new, vector_round = vector.add, vector.equals, vector.new, vector.round
+
 function carts:get_sign(z)
 	if z == 0 then
 		return 0
 	else
-		return z / math.abs(z)
+		return z / abs(z)
 	end
 end
 
@@ -29,7 +32,7 @@ function carts:manage_attachment(player, obj)
 end
 
 function carts:velocity_to_dir(v)
-	if math.abs(v.x) > math.abs(v.z) then
+	if abs(v.x) > abs(v.z) then
 		return {x=self:get_sign(v.x), y=self:get_sign(v.y), z=0}
 	else
 		return {x=0, y=self:get_sign(v.y), z=self:get_sign(v.z)}
@@ -61,26 +64,26 @@ function carts:is_rail(pos, railtype)
 end
 
 function carts:check_front_up_down(pos, dir_, check_up, railtype)
-	local dir = vector.new(dir_)
+	local dir = vector_new(dir_)
 	local cur
 
 	-- Front
 	dir.y = 0
-	cur = vector.add(pos, dir)
+	cur = vector_add(pos, dir)
 	if carts:is_rail(cur, railtype) then
 		return dir
 	end
 	-- Up
 	if check_up then
 		dir.y = 1
-		cur = vector.add(pos, dir)
+		cur = vector_add(pos, dir)
 		if carts:is_rail(cur, railtype) then
 			return dir
 		end
 	end
 	-- Down
 	dir.y = -1
-	cur = vector.add(pos, dir)
+	cur = vector_add(pos, dir)
 	if carts:is_rail(cur, railtype) then
 		return dir
 	end
@@ -88,7 +91,7 @@ function carts:check_front_up_down(pos, dir_, check_up, railtype)
 end
 
 function carts:get_rail_direction(pos_, dir, ctrl, old_switch, railtype)
-	local pos = vector.round(pos_)
+	local pos = vector_round(pos_)
 	local cur
 	local left_check, right_check = true, true
 
@@ -177,28 +180,28 @@ end
 function carts:pathfinder(pos_, old_pos, old_dir, distance, ctrl,
 		pf_switch, railtype)
 
-	local pos = vector.round(pos_)
-	if vector.equals(old_pos, pos) then
+	local pos = vector_round(pos_)
+	if vector_equals(old_pos, pos) then
 		return
 	end
 
-	local pf_pos = vector.round(old_pos)
-	local pf_dir = vector.new(old_dir)
-	distance = math.min(carts.path_distance_max,
-		math.floor(distance + 1))
+	local pf_pos = vector_round(old_pos)
+	local pf_dir = vector_new(old_dir)
+	distance = min(carts.path_distance_max,
+		floor(distance + 1))
 
 	for i = 1, distance do
 		pf_dir, pf_switch = self:get_rail_direction(
 			pf_pos, pf_dir, ctrl, pf_switch or 0, railtype)
 
-		if vector.equals(pf_dir, {x=0, y=0, z=0}) then
+		if vector_equals(pf_dir, {x=0, y=0, z=0}) then
 			-- No way forwards
 			return pf_pos, pf_dir
 		end
 
-		pf_pos = vector.add(pf_pos, pf_dir)
+		pf_pos = vector_add(pf_pos, pf_dir)
 
-		if vector.equals(pf_pos, pos) then
+		if vector_equals(pf_pos, pos) then
 			-- Success! Cart moved on correctly
 			return
 		end
