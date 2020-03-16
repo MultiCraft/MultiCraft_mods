@@ -156,49 +156,40 @@ minetest.register_alias("doors:hidden", "air")
 --
 
 doors.register_trapdoor("doors:trapdoor", {
-	description = "Wooden Trapdoor",
-	inventory_image = "doors_trapdoor.png",
-	wield_image = "doors_trapdoor.png",
-	tile_front = "doors_trapdoor.png",
-	tile_side = "doors_trapdoor_side.png",
+	description = "Apple Wood Trapdoor",
+	inventory_image = "doors_trapdoor_wood_top.png",
+	wield_image = "doors_trapdoor_wood_top.png",
+	tile_front = "doors_trapdoor_wood_top.png",
+	tile_bottom = "doors_trapdoor_wood_bottom.png",
+	tile_side = "doors_trapdoor_wood_side.png",
+	material = "default:wood",
+	fuel = 7,
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, door = 1}
 })
 
 doors.register_trapdoor("doors:trapdoor_steel", {
 	description = "Steel Trapdoor",
-	inventory_image = "doors_trapdoor_steel.png",
-	wield_image = "doors_trapdoor_steel.png",
-	tile_front = "doors_trapdoor_steel.png",
+	inventory_image = "doors_trapdoor_steel_top.png",
+	wield_image = "doors_trapdoor_steel_top.png",
+	tile_front = "doors_trapdoor_steel_top.png",
+	tile_bottom = "doors_trapdoor_steel_bottom.png",
 	tile_side = "doors_trapdoor_steel_side.png",
+	node_box_open = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, 3/8, 0.5, 0.5, 0.5}
+		
+	},
+	node_box_close = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -3/8, 0.5}
+	},
 	protected = true,
 	sounds = default.node_sound_metal_defaults(),
 	sound_open = "doors_steel_door_open",
 	sound_close = "doors_steel_door_close",
+	material = "default:steel_ingot",
 	groups = {cracky = 1, level = 2, door = 1}
 })
-
-minetest.register_craft({
-	output = "doors:trapdoor 2",
-	recipe = {
-		{"group:wood", "group:wood", "group:wood"},
-		{"group:wood", "group:wood", "group:wood"}
-	}
-})
-
-minetest.register_craft({
-	output = "doors:trapdoor_steel",
-	recipe = {
-		{"default:steel_ingot", "default:steel_ingot"},
-		{"default:steel_ingot", "default:steel_ingot"}
-	}
-})
-
-minetest.register_craft({
-	type = "fuel",
-	recipe = "doors:trapdoor",
-	burntime = 7
-})
-
 
 --
 -- Fencegates
