@@ -1,3 +1,6 @@
+-- Intllib
+local S = intllib.make_gettext_pair()
+
 minetest.register_alias("bucket", "bucket:bucket_empty")
 minetest.register_alias("bucket_water", "bucket:bucket_water")
 minetest.register_alias("bucket_lava", "bucket:bucket_lava")
@@ -13,8 +16,7 @@ minetest.register_craft({
 bucket = {}
 bucket.liquids = {}
 
--- Intllib
-local S = intllib.make_gettext_pair()
+local singleplayer = minetest.is_singleplayer()
 
 local function check_protection(pos, name, text)
 	if minetest.is_protected_action(pos, name) then
@@ -98,13 +100,16 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				end
 
 				local player_name = user:get_player_name()
-				if not minetest.is_singleplayer() and pointed_thing.under.y >= 8 then
+				local itemname = itemstack:get_name()
+
+				if itemname ~= "default:river_water_flowing" and
+				not singleplayer and pointed_thing.under.y >= 8 then
 					minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"))
 					return itemstack
 				end
 
 				if check_protection(lpos, user
-						and user:get_player_name()
+						and player_name
 						or "", "place " .. source) then
 					return itemstack
 				end
@@ -112,7 +117,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				minetest.set_node(lpos, {name = source})
 				if not (creative and creative.is_enabled_for
 						and creative.is_enabled_for(player_name)) or
-						not minetest.is_singleplayer() then
+						not singleplayer then
 					return ItemStack("bucket:bucket_empty")
 				else
 					return itemstack
@@ -125,8 +130,8 @@ end
 minetest.register_craftitem("bucket:bucket_empty", {
 	description = "Empty Bucket",
 	inventory_image = "bucket.png",
-	liquids_pointable = true,
 	groups = {tool = 1},
+	liquids_pointable = true,
 
 	on_use = function(_, user, pointed_thing)
 		if pointed_thing.type == "object" then
@@ -176,8 +181,9 @@ minetest.register_craftitem("bucket:bucket_empty", {
 					minetest.find_node_near(pointed_thing.under, 1, liquiddef.source)
 			end
 			if not (source_neighbor and liquiddef.force_renew) then
-			minetest.add_node(pointed_thing.under, {name = "air"})
+				minetest.add_node(pointed_thing.under, {name = "air"})
 			end
+
 			return ItemStack(giving_back)
 		else
 			-- non-liquid nodes will have their on_punch triggered
