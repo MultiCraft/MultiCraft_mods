@@ -71,6 +71,7 @@ local mob_class = {
 	stepheight = 1.1,
 	fly_in = "air",
 	owner = "",
+	infotext = "",
 	order = "",
 	jump_height = 4,
 	lifetimer = lifetime,
@@ -1076,12 +1077,12 @@ function mob_class:breed()
 				if ent.name == self.name then
 					canmate = true
 				else
-					local entname = string.split(ent.name, ":")
-					local selfname = string.split(self.name, ":")
+					local entname = ent.name:split(":")
+					local selfname = self.name:split(":")
 
 					if entname[1] == selfname[1] then
-						entname = string.split(entname[2], "_")
-						selfname = string.split(selfname[2], "_")
+						entname = entname[2]:split("_")
+						selfname = selfname[2]:split("_")
 
 						if entname[1] == selfname[1] then
 							canmate = true
@@ -1123,7 +1124,9 @@ function mob_class:breed()
 					if self.child_texture then
 						textures = self.child_texture[1]
 					end
-
+					
+					local infotext = Sl("Owned by @1", Sl(self.owner))
+					
 					-- and resize to half height
 					mob:set_properties({
 						textures = textures,
@@ -1146,12 +1149,14 @@ function mob_class:breed()
 							self.base_selbox[4] * .5,
 							self.base_selbox[5] * .5,
 							self.base_selbox[6] * .5
-						}
+						},
+						infotext = infotext
 					})
 					-- tamed and owned by parents' owner
 					ent2.child = true
 					ent2.tamed = true
 					ent2.owner = self.owner
+					ent2.infotext = infotext
 				end, self, ent)
 				num = 0
 				break
@@ -3319,8 +3324,14 @@ local function spawn_mob(pos, mob, data, placer)
 		if ent then
 			-- set owner if not a monster
 			if ent.type ~= "monster" then
-				ent.owner = placer:get_player_name()
+				local pn = placer:get_player_name()
+				ent.owner = pn
 				ent.tamed = true
+				local infotext = Sl("Owned by @1", Sl(pn)) 
+				ent.infotext = infotext
+				obj:set_properties({
+					infotext = infotext
+				})
 			end
 			return true
 		else
@@ -3633,9 +3644,15 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 				end
 
 				self.tamed = true
-
 				if not self.owner or self.owner == "" then
-					self.owner = clicker:get_player_name()
+					local pn = clicker:get_player_name()
+					self.owner = pn
+
+					local infotext = Sl("Owned by @1", Sl(pn))
+					self.infotext = infotext
+					self.object:set_properties({
+						infotext = infotext
+					})
 				end
 			end
 
@@ -3682,8 +3699,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if item:get_name() ~= "mobs:nametag" then return end
 
 		-- limit name entered to 64 characters long
-		if string.len(fields.name) > 64 then
-			fields.name = string.sub(fields.name, 1, 64)
+		if fields.name:len() > 64 then
+			fields.name = fields.name:sub(1, 64)
 		end
 
 		-- update nametag
