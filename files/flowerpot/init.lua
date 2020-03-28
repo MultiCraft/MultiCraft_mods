@@ -132,18 +132,28 @@ inv.mesh = "flowerpot_inv.obj"
 inv.tiles = {"flowerpot.png"}
 inv.node_placement_prediction = ""
 inv.on_place = function(itemstack, placer, pointed_thing)
-	local under = pointed_thing.under
-	local node = minetest.get_node(under)
-	local node_def = minetest.registered_nodes[node.name]
-	if node_def and node_def.on_rightclick and
-			not (placer and placer:is_player() and
-			placer:get_player_control().sneak) then
-		return node_def.on_rightclick(under, node, placer, itemstack,
-			pointed_thing) or itemstack
+	if pointed_thing.type == "node" then
+		local under = pointed_thing.under
+		local node = minetest.get_node(under)
+		local node_def = minetest.registered_nodes[node.name]
+		if node_def and node_def.on_rightclick and
+				not (placer and placer:is_player() and
+				placer:get_player_control().sneak) then
+			return node_def.on_rightclick(under, node, placer, itemstack,
+				pointed_thing) or itemstack
+		end
+
+		local _, result = minetest.item_place(ItemStack("flowerpot:empty"),
+				placer, pointed_thing)
+
+		if result and not (creative and creative.is_enabled_for and
+				creative.is_enabled_for(placer)) then
+			itemstack:take_item()
+			minetest.sound_play({name = "default_place_node_hard", gain = 1},
+					{pos = pointed_thing.above})
+		end
 	end
 
-	itemstack = minetest.item_place(ItemStack("flowerpot:empty"), placer, pointed_thing)
-	itemstack:set_name("flowerpot:pot")
 	return itemstack
 end
 
