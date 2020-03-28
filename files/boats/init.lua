@@ -26,9 +26,9 @@ end
 local boat = {
 	initial_properties = {
 		physical = true,
-		collisionbox = {-0.5, -0.4, -0.5, 0.5, 0.3, 0.5},
+		collisionbox = {-0.6, -0.4, -0.6, 0.6, 0.3, 0.6},
 		visual = "mesh",
-		mesh = "boats_boat.x",
+		mesh = "boats_boat.obj",
 		textures = {"default_acacia_wood.png"}
 	},
 	driver = nil,
@@ -53,9 +53,8 @@ function boat.on_rightclick(self, clicker)
 		local pos = clicker:get_pos()
 		pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
 		minetest.after(0.1, function()
-			local player = minetest.get_player_by_name(name)
-			if player then
-				player:set_pos(pos)
+			if clicker then
+				clicker:set_pos(pos)
 			end
 		end)
 	elseif not self.driver then
@@ -69,12 +68,11 @@ function boat.on_rightclick(self, clicker)
 		end
 		self.driver = name
 		clicker:set_attach(self.object, "",
-			{x = 0.5, y = 11, z = -3}, {x = 0, y = 0, z = 0})
+			{x = 0, y = 11, z = -2}, {x = 0, y = 0, z = 0})
 		player_api.player_attached[name] = true
-		minetest.after(0.2, function()
-			local player = minetest.get_player_by_name(name)
-			if player then
-				player_api.set_animation(player, "sit" , 30)
+		minetest.after(0.1, function()
+			if clicker then
+				player_api.set_animation(clicker, "sit", 30)
 			end
 		end)
 		clicker:set_look_horizontal(self.object:get_yaw())
@@ -90,7 +88,7 @@ end
 
 
 function boat.on_activate(self, staticdata)
-	self.object:set_armor_groups({fleshy = 100}) -- {immortal = 1}
+	self.object:set_armor_groups({immortal = 1})
 	if staticdata then
 		self.v = tonumber(staticdata)
 	end
@@ -318,8 +316,7 @@ minetest.register_craftitem("boats:boat", {
 			end
 			local player_name = placer and placer:get_player_name() or ""
 			if not (creative and creative.is_enabled_for and
-					creative.is_enabled_for(player_name)) or
-					not minetest.is_singleplayer() then
+					creative.is_enabled_for(player_name)) or not sp then
 				itemstack:take_item()
 			end
 		end
