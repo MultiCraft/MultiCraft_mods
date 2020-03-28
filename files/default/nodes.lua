@@ -1453,6 +1453,15 @@ default.register_fence("default:fence_pine_wood", {
 	sounds = default.node_sound_wood_defaults()
 })
 
+default.register_fence("default:fence_ice", {
+	description = "Ice Fence",
+	texture = "default_ice.png",
+	inventory_image = "default_fence_ice.png",
+	material = "default:ice",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	sounds = default.node_sound_glass_defaults()
+})
+
 
 minetest.register_node("default:vine", {
 	description = "Vines",
