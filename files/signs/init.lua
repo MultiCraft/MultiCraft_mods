@@ -15,8 +15,9 @@ local wall_sign_positions = {
 	[3] = {{x =  0,    y = -0.005, z = -0.43}, 0}
 }
 
-local function generate_sign_line_texture(str, texture, row)
+local function generate_sign_line_texture(str, row)
 	local leftover = floor((20 - #str) * 16 / 2) or 0
+	local texture = ""
 	for i = 1, 20 do
 		local char = str:byte(i)
 		if char and (char >= 32 and char <= 126) then
@@ -24,16 +25,14 @@ local function generate_sign_line_texture(str, texture, row)
 					.. row * 20 .. "=signs_" .. char .. ".png"
 		end
 	end
+
 	return texture
 end
 
-local function find_any(haystack, needles, start)
-	local start = start or 0
+local function find_any(str, pair, start)
 	local ret = 0 -- 0 if not found (indices start at 1)
-	for _, needle in pairs(needles) do
-		local first
-		local last
-		first, last = haystack:find(needle, start)
+	for _, needle in pairs(pair) do
+		local first = str:find(needle, start)
 		if first then
 			if ret == 0 or first < ret then
 				ret = first
@@ -45,12 +44,19 @@ end
 
 local disposable_chars = {["\n"] = true, ["\r"] = true, ["\t"] = true, [" "] = true}
 local wrap_chars = {"\n", "\r", "\t", " ", "-", "/", ";", ":", ","}
+local slugify = dofile(minetest.get_modpath("signs") .. "/slugify.lua")
+
 local function generate_sign_texture(str)
 	if not str then
 		return "blank.png"
 	end
 	local row = 0
 	local texture = "[combine:" .. 16 * 20 .. "x100"
+	local result = {}
+
+	-- Transliterate text
+	str = slugify(str)
+
 	while #str > 0 do
 		if row > 4 then
 			break
@@ -98,10 +104,22 @@ local function generate_sign_texture(str)
 		local line_string = str:sub(1 + start_remove, wrap_i - end_remove)
 		str = str:sub(wrap_i + 1)
 		if line_string ~= "" then
-			texture = generate_sign_line_texture(line_string, texture, row)
+			result[row] = line_string
 		end
 		row = row + 1
 	end
+
+	local empty = 0
+	if row == 1 then
+		empty = 2
+	elseif row < 4 then
+		empty = 1
+	end
+
+	for r, s in pairs(result) do
+		texture = texture .. generate_sign_line_texture(s, r + empty)
+	end
+
 	return texture
 end
 
@@ -252,6 +270,7 @@ minetest.register_node("signs:sign", {
 						{pos = pointed_thing.above})
 			end
 		end
+
 		return itemstack
 	end,
 
