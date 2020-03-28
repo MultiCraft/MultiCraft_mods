@@ -130,7 +130,16 @@ minetest.register_entity("signs:sign_text", {
 	collisionbox = {0},
 	pointable = false,
 	on_activate = function(self, staticdata)
-		self.object:set_properties({
+		local ent = self.object
+
+		-- remove entity for missing sign
+		local node = minetest.get_node_or_nil(ent:get_pos())
+		if not node or not (node.name == "signs:sign" or node.name == "signs:wall_sign") then
+			ent:remove()
+			return
+		end
+
+		ent:set_properties({
 			textures = {generate_sign_texture(staticdata), "blank.png"}
 		})
 	end,
@@ -192,7 +201,6 @@ local function destruct(pos)
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "signs:sign_text" then
 			obj:remove()
-			break
 		end
 	end
 end
@@ -251,8 +259,19 @@ minetest.register_node("signs:sign", {
 
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type == "node" then
+			local under = pointed_thing.under
+			local node = minetest.get_node(under)
+			local node_def = minetest.registered_nodes[node.name]
+			if node_def and node_def.on_rightclick and
+					not (placer and placer:is_player() and
+					placer:get_player_control().sneak) then
+				return node_def.on_rightclick(under, node, placer, itemstack,
+					pointed_thing) or itemstack
+			end
+
 			local undery = pointed_thing.under.y
 			local posy = pointed_thing.above.y
+
 			local _, result
 			if undery < posy then -- Floor sign
 				itemstack, result = minetest.item_place(itemstack,
@@ -266,7 +285,7 @@ minetest.register_node("signs:sign", {
 				end
 			end
 			if result then
-				minetest.sound_play({name = "default_place_node_hard", gain = 1},
+				minetest.sound_play({name = "default_place_node_hard"},
 						{pos = pointed_thing.above})
 			end
 		end
