@@ -33,7 +33,6 @@ mobs:register_mob("mobs_npc:npc_man", {
 	attack_players = false,
 --	owner_loyal = true,
 --	pathfinding = true,
-	armor = 0,
 	hp_min = 15,
 	hp_max = 20,
 	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
@@ -58,6 +57,12 @@ mobs:register_mob("mobs_npc:npc_man", {
 		run_start = 168,	run_end = 187,
 		punch_start = 189,	punch_end = 198
 	},
+	
+	do_punch = function(self, hitter)
+		if not hitter or not hitter:is_player() then
+			return true
+		end
+	end,
 
 --[[on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
@@ -121,7 +126,6 @@ mobs:register_mob("mobs_npc:npc_woman", {
 	attack_players = false,
 --	owner_loyal = true,
 --	pathfinding = true,
-	armor = 0,
 	hp_min = 15,
 	hp_max = 20,
 	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
@@ -146,6 +150,12 @@ mobs:register_mob("mobs_npc:npc_woman", {
 		run_start = 168,	run_end = 187,
 		punch_start = 189,	punch_end = 198
 	},
+
+	do_punch = function(self, hitter)
+		if not hitter or not hitter:is_player() then
+			return true
+		end
+	end,
 
 --[[on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end

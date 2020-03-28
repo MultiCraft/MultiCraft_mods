@@ -7,7 +7,6 @@ mobs:register_mob("mobs_npc:trader", {
 	type = "npc",
 	damage = 1,
 	attacks_monsters = true,
-	armor = 0,
 	hp_min = 15,
 	hp_max = 20,
 	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
@@ -36,11 +35,11 @@ mobs:register_mob("mobs_npc:trader", {
 	},
 
 	on_punch = function(self, clicker)
-		mobs_trader(self, clicker, nil, mobs.human)
+		mobs_trader(self, clicker, mobs.human)
 	end,
 
 	on_rightclick = function(self, clicker)
-		mobs_trader(self, clicker, nil, mobs.human)
+		mobs_trader(self, clicker, mobs.human)
 	end,
 
 	on_spawn = function(self)
@@ -92,8 +91,8 @@ mobs:register_mob("mobs_npc:trader", {
 -- Define tabe containing names for use and shop items for sale
 mobs.human = {
 	names = {
-		"Bob", "Duncan", "Bill", "Tom", "James", "Ian", "Lenny",
-		"Dylan", "Ethan"
+		"Bill", "Clark", "Donald", "Duncan", "Dylan", "Ethan", "Gower",
+		"James", "Lenny", "Ralph", "Rodman", "Scott", "Tom", "Winslow"
 	},
 
 	-- Item for sale, price, chance of appearing in trader's inventory
@@ -104,8 +103,7 @@ mobs.human = {
 		{"default:brick 8", "default:emerald 2", 17},
 		{"carts:cart 1", "default:gold_ingot 2", 17},
 		{"boats:boat 1", "default:gold_ingot 1", 17},
-		{"default:obsidian 16", "default:emerald 8", 50},
-		{"default:diamond 1", "default:emerald 2", 40},
+		{"default:diamond 1", "default:emerald 2", 30},
 		{"farming:wheat 8", "default:emerald 2", 17},
 		{"default:tree 16", "default:gold_ingot 2", 15},
 		{"pep:speedplus 1", "default:gold_ingot 2", 20},
@@ -114,8 +112,8 @@ mobs.human = {
 		{"default:stone 16", "default:emerald 1", 17},
 		{"watch:0 1", "default:emerald 1", 7},
 		{"mobs_water:fish_small 1", "default:emerald 2", 25},
-		{"default:sword_gold 1", "default:emerald 2", 17},
-		{"bucket:bucket_lava 1", "default:emerald 1", 17},
+		{"default:sword_gold 1", "default:emerald 1", 17},
+		{"bucket:bucket_lava 1", "default:emerald 1", 15},
 		{"default:quartz_crystal 8", "default:emerald 1", 17},
 		{"farming:hoe_ruby 1", "default:emerald 1", 17},
 		{"default:cactus 4", "default:emerald 2", 40},
@@ -133,14 +131,15 @@ mobs.human = {
 	}
 }
 
-function mobs.add_goods(self, _, race)
+local random = math.random
+
+function mobs.add_goods(self, race)
 	local trade_index = 1
 	local trades_already_added = {}
 	local trader_pool_size = 6
 	local item_pool_size = #race.items -- get number of items on list
 
-	self.trades = {}
-
+	local trades = {}
 	if item_pool_size < trader_pool_size then
 		trader_pool_size = item_pool_size
 	end
@@ -155,7 +154,7 @@ function mobs.add_goods(self, _, race)
 			random_trade = i
 		else
 			while random_trade == nil do
-				local num = math.random(item_pool_size)
+				local num = random(item_pool_size)
 
 				if trades_already_added[num] == nil then
 					trades_already_added[num] = true
@@ -164,8 +163,8 @@ function mobs.add_goods(self, _, race)
 			end
 		end
 
-		if math.random(100) > race.items[random_trade][3] then
-			self.trades[trade_index] = {
+		if random(100) > race.items[random_trade][3] then
+			trades[trade_index] = {
 				race.items[random_trade][1],
 				race.items[random_trade][2]
 			}
@@ -174,17 +173,18 @@ function mobs.add_goods(self, _, race)
 		end
 	end
 
+	self.trades = trades
 	self.version = 2
 end
 
-function mobs_trader(self, clicker, entity, race)
+function mobs_trader(self, clicker, race)
 	if not self.id then
-		self.id = (math.random(1000) * math.random(10000))
-				.. self.name .. (math.random(1000) ^ 2)
+		self.id = (random(1000) * random(10000))
+				.. self.name .. (random(1000) ^ 2)
 	end
 
 	if not self.game_name then
-		self.game_name = tostring(S(race.names[math.random(#race.names)]))
+		self.game_name = tostring(S(race.names[random(#race.names)]))
 		self.nametag = S("Trader @1", self.game_name)
 		self.object:set_properties({
 			nametag = self.nametag,
@@ -195,7 +195,7 @@ function mobs_trader(self, clicker, entity, race)
 	local version = self.version
 
 	if self.trades == nil or not version or version < 2 then
-		mobs.add_goods(self, entity, race)
+		mobs.add_goods(self, race)
 	end
 
 	local player = clicker:get_player_name()
