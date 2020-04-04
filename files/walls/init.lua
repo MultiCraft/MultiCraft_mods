@@ -29,7 +29,7 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 		groups = {cracky = 3, wall = 1, stone = 2, not_in_creative_inventory = 1},
 		sounds = wall_sounds,
 		drop = wall_name .. "_inv",
-		after_place_node = function(pos, placer, itemstack, pointed_thing)
+		after_place_node = function(pos)
 			local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
 			local pos_above = {x = pos.x, y = pos.y + 1, z = pos.z}
 			local node_under = minetest.get_node(pos_under).name
@@ -43,7 +43,7 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 				minetest.set_node(pos, {name = wall_name .. "_full"})
 			end
 		end,
-		after_dig_node = function(pos, oldnode, oldmetadata, digger)
+		after_dig_node = function(pos, _, _, digger)
 			local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
 			local node_under = string.gsub(minetest.get_node(pos_under).name, "_full$", "")
 			if minetest.get_item_group(node_under, "wall") == 1 and
@@ -70,7 +70,7 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 		groups = {cracky = 3, wall = 1, stone = 2, not_in_creative_inventory = 1},
 		sounds = wall_sounds,
 		drop = wall_name .. "_inv",
-		after_dig_node = function(pos, oldnode, oldmetadata, digger)
+		after_dig_node = function(pos, _, _, digger)
 			local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
 			local node_under = (minetest.get_node(pos_under).name):gsub("_full$", "")
 			if minetest.get_item_group(node_under, "wall") == 1 and
@@ -123,3 +123,6 @@ walls.register("walls:sandstone", "Sandstone Wall", {"default_sandstone_normal.p
 
 walls.register("walls:redsandstone", "Red Sandstone Wall", {"default_redsandstone_normal.png"},
 		"default:redsandstone", default.node_sound_stone_defaults())
+
+-- Legacy, but more beautiful walls
+dofile(minetest.get_modpath("walls") .. "/legacy.lua")
