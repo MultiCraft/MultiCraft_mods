@@ -77,59 +77,52 @@ for i = 1, #dyes do
 			local item = clicker:get_wielded_item()
 			local itemname = item:get_name()
 			local player = clicker:get_player_name()
+			local pos = self.object:get_pos()
 
-			-- are we giving a haircut?
-			if itemname == "mobs:shears" then
-				if self.gotten or self.child
-						or player ~= self.owner then
-					return
-				end
-				self.gotten = true -- shaved
-				local obj = minetest.add_item(self.object:get_pos(),
-					ItemStack("wool:" .. name .. " " .. math.random(3)))
-				if obj then
-					obj:set_velocity({
-						x = math.random(-1, 1),
-						y = 5,
-						z = math.random(-1, 1)
-					})
-				end
-				item:add_wear(650) -- 100 uses
+			-- haircut
+			if itemname == "mobs:shears"
+					and not self.gotten
+					and not self.child
+					and self.tamed
+					and player == self.owner then
+				minetest.item_drop(
+					ItemStack("wool:" .. name .. " " .. math.random(3)), nil, pos)
+				item:add_wear(65535/100) -- 100 uses
 				clicker:set_wielded_item(item)
 				self.object:set_properties({
 					textures = {"mobs_sheep.png^mobs_sheep_shaved.png"},
 					mesh = "mobs_sheep_shaved.b3d"
 				})
+				self.gotten = true -- shaved
 				return
 			end
 
-			-- are we coloring?
-			if itemname:find("dye:") then
-				if not self.gotten
-						and not self.child
-						and self.tamed
-						and player == self.owner then
-					local color = itemname:split(":")[2]
-					for i = 1, #dyes do
-						local name = unpack(dyes[i])
+			-- coloring
+			if itemname:find("dye:")
+					and not self.gotten
+					and not self.child
+					and self.tamed
+					and player == self.owner then
+				local color = itemname:split(":")[2]
+				if name == color then return end
+				local mob = minetest.add_entity(pos, "mobs_animal:sheep_" .. color)
+				local infotext, nametag = self.infotext or "", self.nametag or ""
+				self.object:remove()
+				local ent = mob:get_luaentity()
+				ent.object:set_properties({
+					infotext = infotext,
+					nametag = nametag
+				})
+				ent.infotext = infotext
+				ent.nametag = nametag
+				ent.owner = player
+				ent.tamed = true
 
-						if name == color then
-							local pos = self.object:get_pos()
-							self.object:remove()
-							local mob = minetest.add_entity(pos, "mobs_animal:sheep_" .. color)
-							local ent = mob:get_luaentity()
-							ent.owner = player
-							ent.tamed = true
-
-							-- take item
-							if not mobs.is_creative(player) or
-									not minetest.is_singleplayer() then
-								item:take_item()
-								clicker:set_wielded_item(item)
-							end
-							break
-						end
-					end
+				-- take item
+				if not mobs.is_creative(player) or
+						not minetest.is_singleplayer() then
+					item:take_item()
+					clicker:set_wielded_item(item)
 				end
 				return
 			end
@@ -170,9 +163,11 @@ mobs:spawn({
 	day_toggle = true
 })
 
+local nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass", "default:dirt_with_grass"}
+
 mobs:spawn({
 	name = "mobs_animal:sheep_black",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass", "default:dirt_with_grass"},
+	nodes = nodes,
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
@@ -181,7 +176,7 @@ mobs:spawn({
 
 mobs:spawn({
 	name = "mobs_animal:sheep_brown",
-	nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass", "default:dirt_with_grass"},
+	nodes = nodes,
 	min_light = 7,
 	chance = 100000,
 	min_height = 0,
