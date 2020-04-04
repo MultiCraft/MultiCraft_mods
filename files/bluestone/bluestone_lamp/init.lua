@@ -1,37 +1,33 @@
-minetest.register_node(":mesecons_lightstone:lightstone_off", {
+mesecon.register_node("bluestone_lamp:lightstone", {
+	is_ground_content = false,
+	sounds = default.node_sound_glass_defaults(),
+	on_blast = mesecon.on_blastnode
+},{
 	description = "Lamp",
 	tiles = {"bluestone_lamp_off.png"},
-	is_ground_content = false,
-	groups = {cracky = 2, mesecon_effector_off = 1, mesecon = 2},
-	sounds = default.node_sound_glass_defaults(),
-	mesecons = {effector = {
-		action_on = function(pos, node)
-			minetest.swap_node(pos, {name = "mesecons_lightstone:lightstone_on", param2 = node.param2})
-		end,
-	}},
-	on_blast = mesecon.on_blastnode,
-})
+	groups = {cracky = 2, mesecon = 2},
 
-minetest.register_node(":mesecons_lightstone:lightstone_on", {
-	tiles = {"bluestone_lamp_on.png"},
-	is_ground_content = false,
-	groups = {cracky = 2, not_in_creative_inventory = 1, mesecon = 2},
-	drop = "mesecons_lightstone:lightstone_off",
-	light_source = minetest.LIGHT_MAX,
-	sounds = default.node_sound_glass_defaults(),
 	mesecons = {effector = {
-		action_off = function(pos, node)
-			minetest.swap_node(pos, {name = "mesecons_lightstone:lightstone_off", param2 = node.param2})
-		end,
-	}},
-	on_blast = mesecon.on_blastnode,
+		action_on = mesecon.flipstate
+	}}
+},{
+	tiles = {"bluestone_lamp_on.png"},
+	groups = {cracky = 2, mesecon = 2, not_in_creative_inventory = 1},
+	light_source = minetest.LIGHT_MAX,
+
+	mesecons = {effector = {
+		action_off = mesecon.flipstate
+	}}
 })
 
 minetest.register_craft({
-	output = "mesecons_lightstone:lightstone_off",
+	output = "bluestone_lamp:lightstone_off",
 	recipe = {
 		{"", "mesecons:wire_00000000_off", ""},
 		{"mesecons:wire_00000000_off", "default:glowstone","mesecons:wire_00000000_off"},
 		{"", "mesecons:wire_00000000_off", ""},
 	}
 })
+
+minetest.register_alias("mesecons_lightstone:lightstone_off", "bluestone_lamp:lightstone_off")
+minetest.register_alias("mesecons_lightstone:lightstone_on", "bluestone_lamp:lightstone_on")
