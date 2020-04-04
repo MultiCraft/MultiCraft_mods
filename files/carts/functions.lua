@@ -21,7 +21,7 @@ function carts:manage_attachment(player, obj)
 	player_api.player_attached[player_name] = status
 
 	if status then
-		player:set_attach(obj, "", {x=0, y=0, z=0}, {x=0, y=0, z=0})
+		player:set_attach(obj, "", {x=0, y=7, z=-2}, {x=0, y=0, z=0})
 		player:set_eye_offset({x=0, y=-4, z=0},{x=0, y=-4, z=0})
 	else
 		player:set_detach()
