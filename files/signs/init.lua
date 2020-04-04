@@ -39,15 +39,16 @@ local function find_any(str, pair, start)
 			end
 		end
 	end
+
 	return ret
 end
 
 local disposable_chars = {["\n"] = true, ["\r"] = true, ["\t"] = true, [" "] = true}
-local wrap_chars = {"\n", "\r", "\t", " ", "-", "/", ";", ":", ","}
+local wrap_chars = {"\n", "\r", "\t", " ", "-", "/", ";", ":", ",", ".", "?", "!"}
 local slugify = dofile(minetest.get_modpath("signs") .. "/slugify.lua")
 
 local function generate_sign_texture(str)
-	if not str then
+	if not str or str == "" then
 		return "blank.png"
 	end
 	local row = 0
@@ -125,44 +126,59 @@ end
 
 minetest.register_entity("signs:sign_text", {
 	visual = "upright_sprite",
-	textures = {"blank.png", "blank.png"},
 	visual_size = {x = 0.7, y = 0.6},
 	collisionbox = {0},
 	pointable = false,
-	on_activate = function(self, staticdata)
+	on_activate = function(self)
 		local ent = self.object
+		local pos = ent:get_pos()
 
 		-- remove entity for missing sign
-		local node = minetest.get_node_or_nil(ent:get_pos())
-		if not node or not (node.name == "signs:sign" or node.name == "signs:wall_sign") then
+		local node_name = minetest.get_node(pos).name
+		if not node_name == "signs:sign" and not node_name == "signs:wall_sign" then
 			ent:remove()
 			return
 		end
 
+		local meta = minetest.get_meta(pos)
+		local meta_texture = meta:get_string("sign_texture")
+
+		local texture
+		if meta_texture and meta_texture ~= "" then
+			texture = meta_texture
+		else
+			local meta_text = meta:get_string("sign_text")
+			if meta_text and meta_text ~= "" then
+				texture = generate_sign_texture(meta_text)
+			else
+				texture = "blank.png"
+			end
+			meta:set_string("sign_texture", texture)
+		end
+
 		ent:set_properties({
-			textures = {generate_sign_texture(staticdata), "blank.png"}
+			textures = {texture, "blank.png"}
 		})
-	end,
-	get_staticdata = function(self)
-		local meta = minetest.get_meta(self.object:get_pos())
-		local text = meta:get_string("sign_text") or ""
-		return text
 	end
 })
 
 local function check_text(pos)
 	local meta = minetest.get_meta(pos)
 	local text = meta:get_string("sign_text")
+	local objects = minetest.get_objects_inside_radius(pos, 0.5)
+
 	if text and text ~= "" then
-		local found = false
-		for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+		local count = 0
+		for _, obj in pairs(objects) do
 			local ent = obj:get_luaentity()
 			if ent and ent.name == "signs:sign_text" then
-				found = true
-				break
+				count = count + 1
+				if count > 1 then
+					obj:remove()
+				end
 			end
 		end
-		if not found then
+		if count == 0 then
 			local node = minetest.get_node(pos)
 			local p2 = node.param2 or -1
 			local sign_pos = sign_positions
@@ -171,12 +187,16 @@ local function check_text(pos)
 				sign_pos = wall_sign_positions
 			end
 			if p2 > 3 or p2 < 0 then return end
-			local obj = minetest.add_entity(vadd(pos,
-				sign_pos[p2][1]), "signs:sign_text")
-			obj:set_properties({
-				textures = {generate_sign_texture(text), "blank.png"}
-			})
+			local obj = minetest.add_entity(
+				vadd(pos, sign_pos[p2][1]), "signs:sign_text")
 			obj:set_yaw(sign_pos[p2][2])
+		end
+	else
+		for _, obj in pairs(objects) do
+			local ent = obj:get_luaentity()
+			if ent and ent.name == "signs:sign_text" then
+				obj:remove()
+			end
 		end
 	end
 end
@@ -206,7 +226,8 @@ local function destruct(pos)
 end
 
 local function receive_fields(pos, _, fields, sender, wall)
-	if not fields.Dtext then return end
+	local text = fields.Dtext
+	if not text then return end
 	if minetest.is_protected(pos, sender:get_player_name()) then
 		return
 	end
@@ -226,18 +247,20 @@ local function receive_fields(pos, _, fields, sender, wall)
 		end
 	end
 	if not sign then
-		sign = minetest.add_entity(vadd(pos,
-				sign_pos[p2][1]), "signs:sign_text")
+		sign = minetest.add_entity(
+			vadd(pos, sign_pos[p2][1]), "signs:sign_text")
 	else
 		sign:set_pos(vadd(pos, sign_pos[p2][1]))
 	end
+	local texture = generate_sign_texture(text)
 	sign:set_properties({
-		textures = {generate_sign_texture(fields.Dtext), "blank.png"}
+		textures = {texture, "blank.png"}
 	})
 	sign:set_yaw(sign_pos[p2][2])
 	local meta = minetest.get_meta(pos)
-	meta:set_string("sign_text", fields.Dtext)
-	meta:set_string("infotext", fields.Dtext)
+	meta:set_string("sign_text", text)
+	meta:set_string("sign_texture", texture)
+	meta:set_string("infotext", text)
 end
 
 minetest.register_node("signs:sign", {
