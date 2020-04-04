@@ -33,10 +33,11 @@ function cart_entity:on_rightclick(clicker)
 	elseif not self.driver then
 		self.driver = player_name
 		carts:manage_attachment(clicker, self.object)
-
-			-- player_api does not update the animation
-			-- when the player is attached, reset to default animation
-		player_api.set_animation(clicker, "stand")
+		minetest.after(0.1, function()
+			if clicker then
+				player_api.set_animation(clicker, "sit", 30)
+			end
+		end)
 	end
 end
 
@@ -217,6 +218,7 @@ local function rail_on_step(self, dtime)
 	end
 
 	local vel = self.object:get_velocity()
+	if not minetest.is_valid_pos(vel) then return end
 	if self.punched then
 		vel = vector.add(vel, self.velocity)
 		self.object:set_velocity(vel)
@@ -448,36 +450,41 @@ end
 
 minetest.register_entity("carts:cart", cart_entity)
 
-minetest.register_craftitem("carts:cart", {
+minetest.register_node("carts:cart", {
 	description = "Cart (Sneak+Click to pick up)",
-	inventory_image = "carts_cart_inv.png",
+	drawtype = "mesh",
+	mesh = "carts_cart.b3d",
+	tiles = {"carts_cart.png"},
+	visual_scale = 0.1,
+	wield_scale = {x = 0.1, y = 0.1, z = 0.1},
+	node_placement_prediction = "",
 	stack_max = 1,
 	sounds = default.node_sound_metal_defaults(),
 	on_place = function(itemstack, placer, pointed_thing)
-		if not pointed_thing.type == "node" then
-			return
-		end
-		local cart
-		if carts:is_rail(pointed_thing.under) then
-			cart = minetest.add_entity(pointed_thing.under, "carts:cart")
-		elseif carts:is_rail(pointed_thing.above) then
-			cart = minetest.add_entity(pointed_thing.above, "carts:cart")
-		else
-			return
+		if pointed_thing.type == "node" then
+			local cart
+			if carts:is_rail(pointed_thing.under) then
+				cart = minetest.add_entity(pointed_thing.under, "carts:cart")
+			elseif carts:is_rail(pointed_thing.above) then
+				cart = minetest.add_entity(pointed_thing.above, "carts:cart")
+			else
+				return itemstack
+			end
+
+			cart:get_luaentity().owner = placer:get_player_name()
+
+			minetest.sound_play({name = "default_place_node_metal", gain = 0.5},
+				{pos = pointed_thing.above})
+
+			if not (creative and creative.is_enabled_for and
+					creative.is_enabled_for(placer)) or
+					not sp then
+				itemstack:take_item()
+			end
 		end
 
-		cart:get_luaentity().owner = placer:get_player_name()
-
-		minetest.sound_play({name = "default_place_node_metal", gain = 0.5},
-			{pos = pointed_thing.above})
-
-		if not (creative and creative.is_enabled_for and
-				creative.is_enabled_for(placer)) or
-				not sp then
-			itemstack:take_item()
-		end
 		return itemstack
-	end,
+	end
 })
 
 minetest.register_craft({
