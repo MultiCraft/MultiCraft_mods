@@ -215,7 +215,7 @@ function mesecon.mvps_move_objects(pos, dir, nodestack, movefactor)
 	end
 	movefactor = movefactor or 1
 	dir = vector.multiply(dir, movefactor)
-	for _, obj in pairs(minetest.object_refs) do
+	for _, obj in pairs(minetest.get_objects_inside_radius(pos, #nodestack + 1)) do
 		local obj_pos = obj:get_pos()
 		local cbox = obj:get_properties().collisionbox
 		local min_pos = vector.add(obj_pos, vector.new(cbox[1], cbox[2], cbox[3]))
