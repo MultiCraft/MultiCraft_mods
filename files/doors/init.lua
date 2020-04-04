@@ -669,14 +669,14 @@ function doors.register_fencegate(name, def)
 	def_closed.node_box = {
 		type = "fixed",
 		fixed = {
-			{-1/2,  -3/16, -1/16, -3/8,  1/2,   1/16}, -- Left completion
-			{ 3/8,  -3/16, -1/16,  1/2,  1/2,   1/16}, -- Right completion
-			{-1/8,  -1/8,  -1/16,  0,    7/16,  1/16}, -- Center Left
-			{ 0,    -1/8,  -1/16,  2/16, 7/16,  1/16}, -- Center Right
-			{-1/8,   1/4,   1/16, -1/2,  7/16, -1/16}, -- Above  (cross) -z
-			{-1/8,  -1/8,   1/16, -1/2,  1/16, -1/16}, -- Bottom (cross) -z
-			{ 2/16,  1/4,  -1/16,  1/2,  7/16,  1/16}, -- Above  (transverse) z
-			{ 2/16, -1/8,  -1/16,  1/2,  1/16,  1/16}, -- Below  (across) z
+			{-1/2, -3/16, -1/16, -3/8, 1/2,   1/16}, -- Left completion
+			{ 3/8, -3/16, -1/16,  1/2, 1/2,   1/16}, -- Right completion
+			{-1/8, -1/8,  -1/16,  0,   7/16,  1/16}, -- Center Left
+			{ 0,   -1/8,  -1/16,  1/8, 7/16,  1/16}, -- Center Right
+			{-1/8,  1/4,   1/16, -3/8, 7/16, -1/16}, -- Above  (cross) -z
+			{-1/8, -1/8,   1/16, -3/8, 1/16, -1/16}, -- Bottom (cross) -z
+			{ 1/8,  1/4,  -1/16,  3/8, 7/16,  1/16}, -- Above  (transverse) z
+			{ 1/8, -1/8,  -1/16,  3/8, 1/16,  1/16}  -- Below  (across) z
 		}
 	}
 	def_closed.selection_box = {
