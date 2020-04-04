@@ -234,15 +234,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:ladder_wood",
-	recipe = {
-		{"default:stick", "", "default:stick"},
-		{"default:stick", "default:stick", "default:stick"},
-		{"default:stick", "", "default:stick"}
-	}
-})
-
-minetest.register_craft({
 	output = "default:grill_bar 4",
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
@@ -545,4 +536,10 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "default:stick",
 	burntime = 3
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "group:wood_ladder",
+	burntime = 8
 })
