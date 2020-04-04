@@ -157,7 +157,6 @@ minetest.register_alias("doors:hidden", "air")
 
 doors.register_trapdoor("doors:trapdoor", {
 	description = "Apple Wood Trapdoor",
-	inventory_image = "doors_trapdoor_wood_top.png",
 	wield_image = "doors_trapdoor_wood_top.png",
 	tile_front = "doors_trapdoor_wood_top.png",
 	tile_bottom = "doors_trapdoor_wood_bottom.png",
@@ -169,7 +168,6 @@ doors.register_trapdoor("doors:trapdoor", {
 
 doors.register_trapdoor("doors:trapdoor_steel", {
 	description = "Steel Trapdoor",
-	inventory_image = "doors_trapdoor_steel_top.png",
 	wield_image = "doors_trapdoor_steel_top.png",
 	tile_front = "doors_trapdoor_steel_top.png",
 	tile_bottom = "doors_trapdoor_steel_bottom.png",
@@ -177,7 +175,6 @@ doors.register_trapdoor("doors:trapdoor_steel", {
 	node_box_open = {
 		type = "fixed",
 		fixed = {-0.5, -0.5, 3/8, 0.5, 0.5, 0.5}
-		
 	},
 	node_box_close = {
 		type = "fixed",

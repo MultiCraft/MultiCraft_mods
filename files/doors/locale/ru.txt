@@ -34,4 +34,6 @@ Acacia Wood Fence Gate = Ворота из Дерева Акации
 Birch Wood Fence Gate = Ворота из Дерева Берёзы
 Jungle Wood Fence Gate = Ворота из Дерева Джунгли-дерева
 Pine Wood Fence Gate = Ворота из Дерева Сосны
+Ice Fence Gate = Ворота изо Льда
+
 Owned by @1 = Владелец: @1
