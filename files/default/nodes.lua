@@ -1350,38 +1350,77 @@ minetest.register_node("default:bookshelf", {
 })
 
 
-minetest.register_node("default:ladder_wood", {
-	description = "Wooden Ladder",
-	drawtype = "nodebox",
+default.register_ladder("default:ladder_wood", {
+	description = "Apple Wood Ladder",
 	tiles = {"default_wood.png"},
 	inventory_image = "default_ladder_wood.png",
 	wield_image = "default_ladder_wood.png",
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	walkable = false,
-	climbable = true,
-	is_ground_content = false,
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.375, -0.5, -0.5,  -0.25,  -0.375, 0.5},		-- Strut Left
-			{ 0.25,  -0.5, -0.5,   0.375, -0.375, 0.5},		-- Strut Right
-			{-0.438, -0.5,  0.312, 0.438, -0.35,  0.435},	-- Rung 1
-			{-0.438, -0.5,  0.06,  0.438, -0.35,  0.185},	-- Rung 2
-			{-0.438, -0.5, -0.185, 0.438, -0.35, -0.06},	-- Rung 3
-			{-0.438, -0.5, -0.435, 0.438, -0.35, -0.31}		-- Rung 4
-		}
-	},
-	selection_box = {
-		type = "wallmounted",
-		wall_top    = {-0.438,  0.35, -0.5,    0.438,  0.5,  0.5},
-		wall_bottom = {-0.438, -0.5,  -0.5,    0.438, -0.35, 0.5},
-		wall_side   = {-0.5,   -0.5,  -0.438, -0.35,   0.5,  0.438}
-	},
-	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1},
-	sounds = default.node_sound_wood_defaults()
+	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:wood"
 })
+
+default.register_ladder("default:ladder_acacia_wood", {
+	description = "Acacia Wood Ladder",
+	tiles = {"default_acacia_wood.png"},
+	inventory_image = "default_ladder_acacia_wood.png",
+	wield_image = "default_ladder_acacia_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:acacia_wood"
+})
+
+default.register_ladder("default:ladder_birch_wood", {
+	description = "Birch Wood Ladder",
+	tiles = {"default_birch_wood.png"},
+	inventory_image = "default_ladder_birch_wood.png",
+	wield_image = "default_ladder_birch_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:birch_wood"
+})
+
+default.register_ladder("default:ladder_jungle_wood", {
+	description = "Jungle Wood Ladder",
+	tiles = {"default_junglewood.png"},
+	inventory_image = "default_ladder_jungle_wood.png",
+	wield_image = "default_ladder_jungle_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:junglewood"
+})
+
+default.register_ladder("default:ladder_pine_wood", {
+	description = "Pine Wood Ladder",
+	tiles = {"default_pine_wood.png"},
+	inventory_image = "default_ladder_pine_wood.png",
+	wield_image = "default_ladder_pine_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:pine_wood"
+})
+
+default.register_ladder("default:ladder_steel", {
+	description = "Steel Ladder",
+	tiles = {"default_ladder_steel_tile.png"},
+	inventory_image = "default_ladder_steel.png",
+	wield_image = "default_ladder_steel.png",
+	groups = {cracky = 1, level = 2, attached_node = 1},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:steel_ingot"
+})
+
+default.register_ladder("default:ladder_ice", {
+	description = "Ice Ladder",
+	tiles = {"default_ice.png"},
+	inventory_image = "default_ladder_ice.png",
+	wield_image = "default_ladder_ice.png",
+	use_texture_alpha = true,
+	groups = {cracky = 3, cools_lava = 1, melting = 1, attached_node = 1},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:ice"
+})
+
 
 minetest.register_node("default:grill_bar", {
 	description = "Grill",
@@ -1395,18 +1434,18 @@ minetest.register_node("default:grill_bar", {
 		"default_grill_bar.png^[transform6"
 	},
 	inventory_image = "default_grill_bar.png",
-	wield_image = "default_grill_bar.png",
 	paramtype = "light",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
 	is_ground_content = false,
 	node_box = {
 		type = "fixed",
-		fixed = {-1/2, -1/2, -1/2, 1/2, 1/2, -6/16}
+		fixed = {-0.5, -0.5, -0.5, 0.5, 0.5, -3/8}
 	},
 	groups = {choppy = 2, oddly_breakable_by_hand = 3},
 	sounds = default.node_sound_metal_defaults()
 })
+
 
 default.register_fence("default:fence_wood", {
 	description = "Apple Wood Fence",
@@ -1457,8 +1496,9 @@ default.register_fence("default:fence_ice", {
 	description = "Ice Fence",
 	texture = "default_ice.png",
 	inventory_image = "default_fence_ice.png",
+	use_texture_alpha = true,
 	material = "default:ice",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	groups = {cracky = 3, cools_lava = 1, melting = 1, flammable = 2},
 	sounds = default.node_sound_glass_defaults()
 })
 
