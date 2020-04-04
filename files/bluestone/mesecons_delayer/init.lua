@@ -33,33 +33,33 @@ end
 
 -- Register the 2 (states) x 4 (delay times) delayers
 
-local delaytime = { 0.1, 0.3, 0.5, 1.0 }
+local delaytime = {0.1, 0.3, 0.5, 1.0}
 
 for i = 1, 4 do
 	local boxes
 	if i == 1 then
 		boxes = {
-			{ -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },	 -- the main slab
-			{  6/16, -6/16, -1/16, 4/16, -1/16, 1/16 },	 -- still torch
-			{  0/16, -6/16, -1/16, 2/16, -1/16, 1/16 }	 -- moved torch
+			{-8/16, -8/16, -8/16, 8/16, -6/16, 8/16},	 -- the main slab
+			{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	 -- still torch
+			{ 0/16, -6/16, -1/16, 2/16, -1/16, 1/16}	 -- moved torch
 		}
 	elseif i == 2 then
 		boxes = {
-			{ -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },	 -- the main slab
-			{  6/16, -6/16, -1/16, 4/16, -1/16, 1/16 },	 -- still torch
-			{ -2/16, -6/16, -1/16, 0/16, -1/16, 1/16 }	 -- moved torch
+			{-8/16, -8/16, -8/16, 8/16, -6/16, 8/16},	 -- the main slab
+			{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	 -- still torch
+			{-2/16, -6/16, -1/16, 0/16, -1/16, 1/16}	 -- moved torch
 		}
 	elseif i == 3 then
 		boxes = {
-			{ -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },	 -- the main slab
-			{  6/16, -6/16, -1/16, 4/16, -1/16, 1/16 },	 -- still torch
-			{ -4/16, -6/16, -1/16, -2/16, -1/16, 1/16}	 -- moved torch
+			{-8/16, -8/16, -8/16, 8/16,  -6/16, 8/16},	 -- the main slab
+			{ 6/16, -6/16, -1/16, 4/16,  -1/16, 1/16},	 -- still torch
+			{-4/16, -6/16, -1/16, -2/16, -1/16, 1/16}	 -- moved torch
 		}
 	elseif i == 4 then
 		boxes = {
-			{ -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 },	 -- the main slab
-			{  6/16, -6/16, -1/16, 4/16, -1/16, 1/16 },	 -- still torch
-			{ -6/16, -6/16, -1/16, -4/16, -1/16, 1/16}	 -- moved torch
+			{-8/16, -8/16, -8/16,  8/16, -6/16, 8/16},	 -- the main slab
+			{ 6/16, -6/16, -1/16,  4/16, -1/16, 1/16},	 -- still torch
+			{-6/16, -6/16, -1/16, -4/16, -1/16, 1/16}	 -- moved torch
 		}
 	end
 
@@ -68,7 +68,7 @@ local def = {
 	drawtype = "nodebox",
 	selection_box = {
 		type = "fixed",
-		fixed = { -8/16, -8/16, -8/16, 8/16, -6/16, 8/16 }
+		fixed = {-8/16, -8/16, -8/16, 8/16, -6/16, 8/16}
 	},
 	node_box = {
 		type = "fixed",
@@ -165,11 +165,11 @@ local on_state = {
 	}
 }
 
-for k, v in pairs(def) do
-	on_state[k] = on_state[k] or v
-end
+	for k, v in pairs(def) do
+		on_state[k] = on_state[k] or v
+	end
 
-minetest.register_node("mesecons_delayer:delayer_on_" .. tostring(i), on_state)
+	minetest.register_node("mesecons_delayer:delayer_on_" .. tostring(i), on_state)
 end
 
 minetest.register_craft({

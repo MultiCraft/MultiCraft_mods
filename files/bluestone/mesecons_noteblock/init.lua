@@ -11,7 +11,7 @@ minetest.register_node("mesecons_noteblock:noteblock", {
 	end,
 	sounds = default.node_sound_wood_defaults(),
 	mesecons = {effector = { -- play sound when activated
-		action_on = function (pos, node)
+		action_on = function(pos, node)
 			mesecon.noteblock_play(pos, node.param2)
 		end
 	}},
@@ -36,7 +36,6 @@ local soundnames = {
 	"mesecons_noteblock_fsharp",
 	"mesecons_noteblock_g",
 	"mesecons_noteblock_gsharp",
-
 	"mesecons_noteblock_a",
 	"mesecons_noteblock_asharp",
 	"mesecons_noteblock_b",
@@ -53,20 +52,18 @@ local node_sounds = {
 	["default:coalblock"] = "tnt_explode"
 }
 
-mesecon.noteblock_play = function (pos, param2)
-	pos.y = pos.y-1
-	local nodeunder = minetest.get_node(pos).name
+mesecon.noteblock_play = function(pos, param2)
+	local nodeunder = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z}).name
 	local soundname = node_sounds[nodeunder]
 	if not soundname then
 		soundname = soundnames[param2]
 		if not soundname then
 			minetest.log("error", "[mesecons_noteblock] No soundname found, test param2")
 			return
-	end
+		end
 		if nodeunder == "default:steelblock" then
-			soundname = soundname.. 2
+			soundname = soundname .. 2
+		end
 	end
-	end
-	pos.y = pos.y+1
 	minetest.sound_play(soundname, {pos = pos})
 end

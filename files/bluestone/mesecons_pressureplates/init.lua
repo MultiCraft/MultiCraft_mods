@@ -1,22 +1,22 @@
 local pp_box_off = {
 	type = "fixed",
-	fixed = { -7/16, -8/16, -7/16, 7/16, -7/16, 7/16 },
+	fixed = {-7/16, -8/16, -7/16, 7/16, -7/16, 7/16}
 }
 
 local pp_box_on = {
 	type = "fixed",
-	fixed = { -7/16, -8/16, -7/16, 7/16, -7.5/16, 7/16 },
+	fixed = {-7/16, -8/16, -7/16, 7/16, -7.5/16, 7/16}
 }
 
 local function pp_on_timer(pos)
-	local node   = minetest.get_node(pos)
+	local node = minetest.get_node(pos)
 	local basename = minetest.registered_nodes[node.name].pressureplate_basename
 
 	-- This is a workaround for a strange bug that occurs when the server is started
 	-- For some reason the first time on_timer is called, the pos is wrong
 	if not basename then return end
 
-	local objs   = minetest.get_objects_inside_radius(pos, 1)
+	local objs = minetest.get_objects_inside_radius(pos, 0.8)
 
 	if objs[1] == nil and node.name == basename .. "_on" then
 		minetest.set_node(pos, {name = basename .. "_off"})
@@ -44,8 +44,7 @@ end
 -- groups:	groups
 -- sounds:	sound table
 
-function mesecon.register_pressure_plate(basename, description, textures_off, textures_on, --[[image_w, image_i,]] recipe, groups, sounds)
-	local groups_off, groups_on
+function mesecon.register_pressure_plate(basename, description, tile, recipe, groups, sounds)
 	if not groups then
 		groups = {}
 	end
@@ -55,34 +54,36 @@ function mesecon.register_pressure_plate(basename, description, textures_off, te
 
 	mesecon.register_node(basename, {
 		drawtype = "nodebox",
-	--	inventory_image = image_i,
-	--	wield_image = image_w,
+		tiles = tile,
 		paramtype = "light",
 		is_ground_content = false,
 		description = description,
 		pressureplate_basename = basename,
+		sounds = sounds,
 		on_timer = pp_on_timer,
+
 		on_construct = function(pos)
 			minetest.get_node_timer(pos):start(mesecon.setting("pplate_interval", 0.1))
-		end,
-		sounds = sounds,
+		end
 	},{
-		mesecons = {receptor = { state = mesecon.state.off, rules = mesecon.rules.pplate }},
+		mesecons = {receptor = {
+			state = mesecon.state.off, rules = mesecon.rules.pplate
+		}},
 		node_box = pp_box_off,
 		selection_box = pp_box_off,
-		groups = groups_off,
-		tiles = textures_off
+		groups = groups_off
 	},{
-		mesecons = {receptor = { state = mesecon.state.on, rules = mesecon.rules.pplate }},
+		mesecons = {receptor = {
+			state = mesecon.state.on, rules = mesecon.rules.pplate
+		}},
 		node_box = pp_box_on,
 		selection_box = pp_box_on,
-		groups = groups_on,
-		tiles = textures_on
+		groups = groups_on
 	})
 
 	minetest.register_craft({
 		output = basename .. "_off",
-		recipe = recipe,
+		recipe = recipe
 	})
 end
 
@@ -90,16 +91,14 @@ mesecon.register_pressure_plate(
 	"mesecons_pressureplates:pressure_plate_wood",
 	"Wooden Pressure Plate",
 	{"default_wood.png"},
-	{"default_wood.png"},
 	{{"default:wood", "default:wood"}},
-	{ choppy = 3, oddly_breakable_by_hand = 3, attached_node = 1 },
+	{choppy = 3, oddly_breakable_by_hand = 3, attached_node = 1},
 	default.node_sound_wood_defaults())
 
 mesecon.register_pressure_plate(
 	"mesecons_pressureplates:pressure_plate_stone",
 	"Stone Pressure Plate",
 	{"default_stone.png"},
-	{"default_stone.png"},
 	{{"default:cobble", "default:cobble"}},
-	{ cracky = 3, oddly_breakable_by_hand = 3, attached_node = 1 },
+	{cracky = 3, oddly_breakable_by_hand = 3, attached_node = 1},
 	default.node_sound_stone_defaults())
