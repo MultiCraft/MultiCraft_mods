@@ -1,6 +1,5 @@
 -- Solar Panel
 mesecon.register_node("mesecons_solarpanel:solar_panel", {
-	description = "Solar Panel",
 	drawtype = "nodebox",
 	tiles = {"mesecons_solarpanel.png"},
 	inventory_image = "mesecons_solarpanel.png",
@@ -15,8 +14,31 @@ mesecon.register_node("mesecons_solarpanel:solar_panel", {
 		wall_side	= {-1/7, -0.5, -0.5, -0.5,  0.5, 0.5}
 	},
 	sounds = default.node_sound_glass_defaults(),
-	on_blast = mesecon.on_blastnode
+
+	on_blast = mesecon.on_blastnode,
+
+	on_timer = function(pos)
+		local light = minetest.get_node_light(pos)
+		local node = minetest.get_node(pos)
+
+		if light >= 10 and node.name == "mesecons_solarpanel:solar_panel_off" then
+			node.name = "mesecons_solarpanel:solar_panel_on"
+			minetest.swap_node(pos, node)
+			mesecon.receptor_on(pos, mesecon.rules.wallmounted_get(node))
+		elseif light < 10 and node.name == "mesecons_solarpanel:solar_panel_on" then
+			node.name = "mesecons_solarpanel:solar_panel_off"
+			minetest.swap_node(pos, node)
+			mesecon.receptor_off(pos, mesecon.rules.wallmounted_get(node))
+		end
+
+		return true
+	end,
+	
+	on_construct = function(pos)
+		minetest.get_node_timer(pos):start(mesecon.setting("spanel_interval", 1))
+	end
 },{
+	description = "Solar Panel",
 	groups = {dig_immediate = 3, attached_node = 1},
 	mesecons = {receptor = {
 		state = mesecon.state.off,
@@ -38,29 +60,3 @@ minetest.register_craft({
 		{"group:wood", "group:wood", "group:wood"}
 	}
 })
-
-minetest.register_abm({
-	label = "Solar Panel On/Off",
-	nodenames = {
-		"mesecons_solarpanel:solar_panel_off",
-		"mesecons_solarpanel:solar_panel_on"
-	},
-	interval = 3,
-	chance = 1,
-	catch_up = false,
-	action = function(pos, node)
-		local light = minetest.get_node_light(pos)
-		if light >= 10 and node.name == "mesecons_solarpanel:solar_panel_off" then
-			node.name = "mesecons_solarpanel:solar_panel_on"
-			minetest.swap_node(pos, node)
-			mesecon.receptor_on(pos, mesecon.rules.wallmounted_get(node))
-		elseif light < 10 and node.name == "mesecons_solarpanel:solar_panel_on" then
-			node.name = "mesecons_solarpanel:solar_panel_off"
-			minetest.swap_node(pos, node)
-			mesecon.receptor_off(pos, mesecon.rules.wallmounted_get(node))
-		end
-	end
-})
-
-minetest.register_alias("mesecons_solarpanel:solar_panel_inverted_on", "mesecons_solarpanel:solar_panel_on")
-minetest.register_alias("mesecons_solarpanel:solar_panel_inverted_off", "mesecons_solarpanel:solar_panel_off")
