@@ -352,8 +352,6 @@ function default.register_fence(name, def)
 			connect_right = { 1/8, -1/2, -1/8,  1/2, 7/8,  1/8}
 		},
 		connects_to = {"group:fence", "group:wood", "group:tree", "group:wall"},
-	--	inventory_image = fence_texture,
-	--	wield_image = fence_texture,
 		tiles = {def.texture},
 		sunlight_propagates = true,
 		is_ground_content = false,
@@ -369,6 +367,64 @@ function default.register_fence(name, def)
 	def.groups.fence = 1
 
 	def.texture = nil
+	def.material = nil
+
+	minetest.register_node(name, def)
+end
+
+
+--
+-- Ladder registration helper
+--
+
+function default.register_ladder(name, def)
+	minetest.register_craft({
+		output = name .. " 2",
+		recipe = {
+			{def.material, "", def.material},
+			{def.material, def.material, def.material},
+			{def.material, "", def.material}
+		}
+	})
+
+	-- Allow almost everything to be overridden
+	local default_fields = {
+		paramtype = "light",
+		drawtype = "nodebox",
+		paramtype = "light",
+		paramtype2 = "wallmounted",
+		node_box = {
+			type = "fixed",
+			fixed = {
+				{-0.375, -0.5, -0.5,  -0.25,  -0.375, 0.5},		-- Strut Left
+				{ 0.25,  -0.5, -0.5,   0.375, -0.375, 0.5},		-- Strut Right
+				{-0.438, -0.5,  0.312, 0.438, -0.35,  0.435},	-- Rung 1
+				{-0.438, -0.5,  0.06,  0.438, -0.35,  0.185},	-- Rung 2
+				{-0.438, -0.5, -0.185, 0.438, -0.35, -0.06},	-- Rung 3
+				{-0.438, -0.5, -0.435, 0.438, -0.35, -0.31}		-- Rung 4
+			}
+		},
+		selection_box = {
+			type = "wallmounted",
+			wall_top    = {-0.438,  0.35, -0.5,    0.438,  0.5,  0.5},
+			wall_bottom = {-0.438, -0.5,  -0.5,    0.438, -0.35, 0.5},
+			wall_side   = {-0.5,   -0.5,  -0.438, -0.35,   0.5,  0.438}
+		},
+		sunlight_propagates = true,
+		walkable = false,
+		climbable = true,
+		is_ground_content = false,
+		groups = {}
+	}
+	for k, v in pairs(default_fields) do
+		if def[k] == nil then
+			def[k] = v
+		end
+	end
+
+	-- Always add to the fence group, even if no group provided
+	def.groups.ladder = 1
+
 	def.material = nil
 
 	minetest.register_node(name, def)
