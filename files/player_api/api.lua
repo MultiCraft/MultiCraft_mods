@@ -46,7 +46,7 @@ function player_api.set_model(player, model_name)
 		textures = player_textures[name] or model.textures,
 		visual = "mesh",
 		visual_size = model.visual_size or {x = 1, y = 1},
-		collisionbox = model.collisionbox or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
+		collisionbox = model.collisionbox or {-0.3, 0.0, -0.3, 0.3, 1.75, 0.3},
 		stepheight = model.stepheight or 0.6,
 		eye_height = model.eye_height or 1.47
 	})
@@ -168,11 +168,6 @@ minetest.register_playerstep(function(_, playernames)
 				-- Determine if the player is sneaking, and reduce animation speed if so
 				if controls.sneak then
 					animation_speed_mod = animation_speed_mod / 2
-					player:set_eye_offset({x = 0, y = -3, z = 0}, {x = 0, y = -3, z = 0})
-					player_sneak[name] = controls.sneak
-				elseif player_sneak[name] then
-					player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
-					player_sneak[name] = controls.sneak
 				end
 
 				-- Apply animations based on what the player is doing
