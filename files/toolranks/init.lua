@@ -11,15 +11,19 @@ local function create_description(name, uses, level)
 end
 
 function toolranks.get_level(uses)
-	if uses >= 3200 then
+	if uses >= 16384 then
+		return 8
+	elseif uses >= 8192 then
+		return 7
+	elseif uses >= 4096 then
 		return 6
-	elseif uses >= 1600 then
+	elseif uses >= 2048 then
 		return 5
-	elseif uses >= 800 then
+	elseif uses >= 1024 then
 		return 4
-	elseif uses >= 400 then
+	elseif uses >= 512 then
 		return 3
-	elseif uses >= 200 then
+	elseif uses >= 256 then
 		return 2
 	else
 		return 1
@@ -29,14 +33,14 @@ end
 function toolranks.new_afteruse(itemstack, user, _, digparams)
 	-- Get tool metadata and number of times used
 	local itemmeta = itemstack:get_meta()
-	local dugnodes = tonumber(itemmeta:get_string("dug")) or 1
+	local dugnodes = tonumber(itemmeta:get_string("dug")) or 0
 
 	-- Only count nodes that spend the tool
 	if digparams.wear > 0 then
 		dugnodes = dugnodes + 1
 		itemmeta:set_string("dug", dugnodes)
 	else
-		return
+		return itemstack
 	end
 
 	-- Get tool description and last level
@@ -59,13 +63,9 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 
 	-- Alert player when tool got a new level
 	if lastlevel < level then
-		minetest.chat_send_player(name, S("Your") .. " "
-			.. default.colors.green .. itemdesc
-			.. default.colors.white .. " " .. S("got a new level!"))
-		minetest.sound_play("toolranks_levelup", {
-			to_player = name,
-			gain = 1.0
-		})
+		minetest.chat_send_player(name, S("Your tool \"@1\" ot a new level!",
+				(default.colors.green .. itemdesc .. default.colors.white)))
+		minetest.sound_play("toolranks_levelup", {to_player = name})
 		itemmeta:set_string("lastlevel", level)
 	end
 
@@ -92,7 +92,6 @@ minetest.after(0, function()
 		if not def.groups.armor_use then
 			minetest.override_item(name, {
 				original_description = def.description,
-				description = create_description(def.description),
 				after_use = toolranks.new_afteruse
 			})
 		end
