@@ -44,6 +44,7 @@ minetest.register_alias("mesecons_solarpanel:solar_panel_inverted_off", "mesecon
 minetest.register_alias("mesecons_solarpanel:solar_panel_inverted_on", "mesecons_solarpanel:solar_panel_on")
 
 --== Potions ==--
+minetest.register_alias("potions:glass_bottle", "vessels:glass_bottle")
 minetest.register_alias("potionspack:antigravity", "pep:grav0")
 minetest.register_alias("potionspack:antigravityii", "pep:gravreset")
 minetest.register_alias("potionspack:speed", "pep:speedminus")

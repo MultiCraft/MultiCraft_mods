@@ -28,8 +28,7 @@ local function update_vessels_shelf(pos)
 			formspec = formspec ..
 				"image[" .. vx .. "," .. vy .. ";1,1;vessels_shelf_slot.png]"
 		else
-			local vessel = minetest.registered_items[stack:get_name()] or {}
-			if vessel and vessel.groups and vessel.groups.potion then
+			if minetest.get_item_group(stack:get_name(), "potion") > 0 then
 				n_potions = n_potions + stack:get_count()
 			else
 				n_empty = n_empty + stack:get_count()
@@ -115,22 +114,21 @@ minetest.register_craft({
 minetest.register_node("vessels:glass_bottle", {
 	description = "Empty Glass Bottle",
 	drawtype = "plantlike",
-	tiles = {"vessels_glass_bottle.png"},
+	tiles = {"[combine:32x32:0,2=vessels_glass_bottle.png"},
+	wield_image = "vessels_glass_bottle.png",
 	inventory_image = "vessels_glass_bottle.png",
 	paramtype = "light",
 	is_ground_content = false,
 	walkable = false,
 	selection_box = {
 		type = "fixed",
-		fixed = {-0.25, -0.5, -0.25, 0.25, 0.3, 0.25}
+		fixed = {-0.25, -0.5, -0.25, 0.25, 0.35, 0.25}
 	},
 	groups = {vessel = 1, dig_immediate = 3, attached_node = 1},
 	sounds = default.node_sound_glass_defaults()
 })
 
-minetest.register_alias("potions:glass_bottle", "vessels:glass_bottle")
-
-minetest.register_craft( {
+minetest.register_craft({
 	output = "vessels:glass_bottle 4",
 	recipe = {
 		{"", "", ""},
