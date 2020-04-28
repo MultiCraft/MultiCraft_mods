@@ -59,19 +59,27 @@ local function flowerpot_on_rightclick(pos, _, clicker, itemstack)
 end
 
 local function get_tile(def)
-	local tile = def.tiles[1]
-	if type(tile) == "table" then
-		tile = tile.name
-	end
-
 	local tiles = {"flowerpot.png"}
-	if def.drawtype == "plantlike" then
-		tiles[2] = tile
+	local drawtype = def.drawtype
+
+	if drawtype == "mesh" then
+		tiles[2] = "[combine:64x64:0,10=" .. def.inventory_image
 		tiles[3] = "blank.png"
 	else
-		tiles[2] = "blank.png"
-		tiles[3] = tile
+		local tile = def.tiles[1]
+		if type(tile) == "table" then
+			tile = tile.name
+		end
+
+		if drawtype == "plantlike" then
+			tiles[2] = tile
+			tiles[3] = "blank.png"
+		else
+			tiles[2] = "blank.png"
+			tiles[3] = tile
+		end
 	end
+
 
 	return tiles
 end
@@ -149,7 +157,7 @@ inv.on_place = function(itemstack, placer, pointed_thing)
 		if result and not (creative and creative.is_enabled_for and
 				creative.is_enabled_for(placer)) then
 			itemstack:take_item()
-			minetest.sound_play({name = "default_place_node_hard", gain = 1},
+			minetest.sound_play({name = "default_place_node_hard"},
 					{pos = pointed_thing.above})
 		end
 	end
@@ -171,6 +179,6 @@ minetest.register_craft({
 local register_pot = flowerpot.register_node
 for node, def in pairs(minetest.registered_nodes) do
 	if def.groups.flora or def.groups.sapling then
-		flowerpot.register_node(node)
+		register_pot(node)
 	end
 end

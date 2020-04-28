@@ -228,8 +228,8 @@ minetest.register_node("flowers:mushroom_brown", {
 
 function flowers.mushroom_spread(pos, node)
 	if minetest.get_node_light(pos, 0.5) > 3 then
-	if minetest.get_node_light(pos, nil) == 15 then
-		minetest.remove_node(pos)
+		if minetest.get_node_light(pos, nil) == 15 then
+			minetest.remove_node(pos)
 		end
 		return
 	end
@@ -250,8 +250,8 @@ end
 minetest.register_abm({
 	label = "Mushroom spread",
 	nodenames = {"flowers:mushroom_brown", "flowers:mushroom_red"},
-	interval = 20,
-	chance = 100,
+	interval = 15,
+	chance = 150,
 	action = function(...)
 		flowers.mushroom_spread(...)
 	end
@@ -300,7 +300,6 @@ minetest.register_node("flowers:waterlily", {
 		local pos = pointed_thing.above
 		local node = minetest.get_node(pointed_thing.under)
 		local def = minetest.registered_nodes[node.name]
-		local player_name = placer and placer:get_player_name() or ""
 
 		if def and def.on_rightclick then
 			return def.on_rightclick(pointed_thing.under, node, placer, itemstack,
@@ -309,6 +308,7 @@ minetest.register_node("flowers:waterlily", {
 
 		if def and def.liquidtype == "source" and
 				minetest.get_item_group(node.name, "water") > 0 then
+			local player_name = placer and placer:get_player_name() or ""
 			if not minetest.is_protected(pos, player_name) then
 				minetest.set_node(pos, {name = "flowers:waterlily",
 					param2 = math.random(0, 3)})
