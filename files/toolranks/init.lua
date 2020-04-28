@@ -1,14 +1,9 @@
 -- Intllib
 local S = intllib.make_gettext_pair()
 
-toolranks = {}
+local C = default.colors
 
-local function create_description(name, uses, level)
-	if not uses then return name end
-	return default.colors.green .. name .. "\n"
-		.. default.colors.gold .. S("Level") .. ": " .. (level or 1) .. "\n"
-		.. default.colors.grey .. S("Uses") .. ": " .. (uses or 0)
-end
+toolranks = {}
 
 function toolranks.get_level(uses)
 	if uses >= 16384 then
@@ -50,28 +45,31 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 	local name = user:get_player_name()
 
 	-- Warn player when tool is almost broken
-	if itemstack:get_wear() > 60100 then
+	if itemstack:get_wear() > 63500 then
 		minetest.chat_send_player(name,
-			default.colors.gold .. S("Your tool is almost broken!"))
-		minetest.sound_play("default_tool_breaks", {
-			to_player = name,
-			gain = 2.0
-		})
+			C.gold .. S("Your tool \"@1\" is almost broken!",
+			(C.ruby .. itemdesc .. C.gold)))
+
+		minetest.sound_play("default_tool_breaks", {to_player = name})
 	end
 
 	local level = toolranks.get_level(dugnodes)
 
 	-- Alert player when tool got a new level
 	if lastlevel < level then
-		minetest.chat_send_player(name, S("Your tool \"@1\" ot a new level!",
-				(default.colors.green .. itemdesc .. default.colors.white)))
+		minetest.chat_send_player(name,
+			S("Your tool \"@1\" ot a new level!",
+			(C.green .. itemdesc .. C.white)))
+
 		minetest.sound_play("toolranks_levelup", {to_player = name})
 		itemmeta:set_string("lastlevel", level)
 	end
 
-	-- Set new meta
-	local newdesc = create_description(itemdesc, dugnodes, level)
-	itemmeta:set_string("description", newdesc)
+	-- Set new description
+	itemmeta:set_string("description", 
+		C.green .. itemdesc .. "\n" ..
+		C.gold .. S("Level: @1", level) .. "\n" ..
+		C.grey .. S("Uses: @1", dugnodes))
 
 	-- Set wear level
 	if not (creative and creative.is_enabled_for
