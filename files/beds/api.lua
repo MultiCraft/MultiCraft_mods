@@ -16,7 +16,7 @@ function beds.register_bed(name, def)
 		paramtype2 = "facedir",
 		is_ground_content = false,
 		stack_max = 1,
-		drop = def.drop or name, 
+		drop = def.drop or nil, 
 		groups = def.groups,
 		sounds = def.sounds or default.node_sound_wood_defaults(),
 		node_placement_prediction = "",
@@ -100,8 +100,11 @@ function beds.register_bed(name, def)
 	})
 
 	if def.recipe then
+		if name:sub(1,1) == ":" then
+			name = name:sub(2)
+		end
 		minetest.register_craft({
-			output = name:sub(1, 1):gsub(":", "") .. name:sub(2),
+			output = name,
 			recipe = def.recipe
 		})
 	end

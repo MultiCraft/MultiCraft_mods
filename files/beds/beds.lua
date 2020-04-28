@@ -20,6 +20,7 @@ function beds.dyeing(pos, _, clicker, itemstack)
 
 		return true
 	end
+
 	return false
 end
 
@@ -32,13 +33,17 @@ beds.register_bed("beds:bed", {
 	mesh = "beds_bed.obj",
 	selectionbox = beds.box,
 	collisionbox = beds.box,
+	recipe = {
+		{"group:wool", "group:wool", "group:wool"},
+		{"group:wood", "group:wood", "group:wood"}
+	},
 
 	on_rightclick = beds.dyeing
 })
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "beds:bed_bottom",
+	recipe = "group:bed",
 	burntime = 12
 })
 
