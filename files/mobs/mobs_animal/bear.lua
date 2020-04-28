@@ -72,17 +72,6 @@ mobs:register_mob("mobs_animal:bear", {
 			return
 		end
 		--mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
-	end,
-
-	after_activate = function(self)
-		-- replace bear using the old directx model
-		if self.mesh == "mobs_bear.x" then
-			local pos = self.object:get_pos()
-			if pos then
-				minetest.add_entity(pos, self.name)
-				self.object:remove()
-			end
-		end
 	end
 })
 

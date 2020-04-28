@@ -39,17 +39,6 @@ mobs:register_mob("mobs_monster:zombie", {
 			{name = "mobs_monster:rotten_flesh", chance = 2},
 			{name = "mobs_monster:rotten_flesh", chance = 2}
 		}
-	end,
-
-	after_activate = function(self)
-	-- replace zombies using the old directx model
-		if self.mesh == "mobs_zombie.x" then
-			local pos = self.object:get_pos()
-			if pos then
-				minetest.add_entity(pos, self.name)
-				self.object:remove()
-			end
-		end
 	end
 })
 
