@@ -47,24 +47,11 @@ mobs:register_mob("mobs_monster:spider", {
 		walk_start = 1,		walk_end = 21,
 		run_start = 1,		run_end = 21,
 		punch_start = 25,	punch_end = 45,
-	},
-
-	after_activate = function(self)
-		-- replace spider using the old directx model
-		if self.mesh == "mobs_spider.x" then
-			local pos = self.object:get_pos()
-			if pos then
-				minetest.add_entity(pos, self.name)
-				self.object:remove()
-			end
-		end
-	end
+	}
 })
 
 -- Small spider
-
 mobs:register_mob("mobs_monster:small_spider", {
-	--docile_by_day = true,
 	group_attack = true,
 	type = "animal",
 	passive = false,
@@ -102,18 +89,7 @@ mobs:register_mob("mobs_monster:small_spider", {
 		walk_start = 1,		walk_end = 21,
 		run_start = 1,		run_end = 21,
 		punch_start = 25,	punch_end = 45
-	},
-
-	after_activate = function(self)
-		-- replace spider using the old directx model
-		if self.mesh == "mobs_spider.x" then
-			local pos = self.object:get_pos()
-			if pos then
-				minetest.add_entity(pos, self.name)
-				self.object:remove()
-			end
-		end
-	end
+	}
 })
 
 mobs:register_egg("mobs_monster:spider", "Spider Egg", "mobs_monster_egg.png^mobs_spider_egg.png")
