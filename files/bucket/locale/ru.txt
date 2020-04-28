@@ -1,1 +1,7 @@
-Too much liquid is bad, right? = Слишком много жидкости это плохо, верно?
+Empty Bucket=Пустое Ведро
+Water Bucket=Ведро Воды
+River Water Bucket=Ведро Речной Воды
+Lava Bucket=Ведро Лавы
+Milk Bucket=Ведро Молока
+Too much Lava is bad, right?=Слишком много Лавы это плохо, верно?
+Too much liquid is bad, right?=Слишком много жидкости это плохо, верно?
