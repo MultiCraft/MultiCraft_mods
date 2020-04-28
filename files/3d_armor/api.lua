@@ -84,11 +84,9 @@ armor.set_player_armor = function(self, player)
 	local texture = "blank.png"
 	local physics = {speed = 1, gravity = 1, jump = 1}
 	local material = {type = nil, count = 1}
-	local list = {"1", "3", "2", "4"}
-	for _, number in pairs(list) do
+	for _, number in pairs({"1", "3", "2", "4"}) do
 		local stack = armor_inv:get_stack("armor", number)
 		if stack:get_count() == 1 then
-			local stack = armor_inv:get_stack("armor", number)
 			local item = stack:get_name()
 			if stack:get_count() == 1 then
 				local def = stack:get_definition()
@@ -143,9 +141,19 @@ armor.set_player_armor = function(self, player)
 
 	if enable_damage then
 		player:set_armor_groups(armor_groups)
-		local max_level = 95 -- full diamond armor
+		local max_level = 100 -- full diamond armor
 		local armor_lvl = floor(20 * (armor_level/max_level)) or 0
 		hud.change_item(player, "armor", {number = armor_lvl})
+	end
+end
+
+-- Register Callbacks
+
+armor.handle_inventory = function(self, player)
+	if player and player:is_player() then
+		armor:save_armor_inventory(player)
+		armor:set_player_armor(player)
+		sfinv.set_player_inventory_formspec(player)
 	end
 end
 
@@ -164,14 +172,12 @@ armor.update_armor = function(self, player)
 		minetest.log("error", "Failed to read detached inventory")
 		return
 	end
+
 	local state = 0
 	local count = 0
-	local list = armor_inv:get_list("armor")
-	if type(list) ~= "table" then
-		return
-	end
-	for i, stack in pairs(list) do
-		if stack:get_count() == 1 then
+	for i = 1, armor_inv:get_size("armor") do
+		local stack = armor_inv:get_stack("armor", i)
+		if stack:get_count() > 0 then
 			local use = stack:get_definition().groups["armor_use"] or 0
 			local item = stack:get_name()
 			stack:add_wear(use)
@@ -180,31 +186,28 @@ armor.update_armor = function(self, player)
 			count = count + 1
 			if stack:get_count() == 0 then
 				local desc = minetest.registered_tools[item].description
-				if name and desc then
+				if desc then
 					minetest.chat_send_player(name, Sl("Your @1 got destroyed!", desc))
 				end
-				self:set_player_armor(player)
 			end
 		end
 	end
-	self:save_armor_inventory(player)
 	self.def[name].state = state
 	self.def[name].count = count
+	self:handle_inventory(player)
 end
 
 armor.get_armor_inventory = function(_, player)
 	local name = player:get_player_name()
 	if name then
-		return minetest.get_inventory({type = "detached", name = name.."_armor"})
+		return minetest.get_inventory({type = "detached", name = name .. "_armor"})
 	end
 end
 
 armor.serialize_inventory_list = function(_, list)
 	local list_table = {}
-	local count = 1
-	for _, stack in pairs(list) do
-		list_table[count] = stack:to_string()
-		count = count + 1
+	for i, stack in pairs(list) do
+		list_table[i] = stack:to_string()
 	end
 	return minetest.serialize(list_table)
 end
@@ -212,10 +215,8 @@ end
 armor.deserialize_inventory_list = function(_, list_string)
 	local list_table = minetest.deserialize(list_string) or {}
 	local list = {}
-	local count = 1
-	for _, stack in pairs(list_table) do
-		list[count] = ItemStack(stack)
-		count = count + 1
+	for i, stack in pairs(list_table) do
+		list[i] = ItemStack(stack)
 	end
 	return list
 end
@@ -238,24 +239,20 @@ armor.save_armor_inventory = function(self, player)
 	if armor_inv then
 		for i = 1, armor_inv:get_size("armor") do
 			local stack = armor_inv:get_stack("armor", i)
-
 			if stack:get_count() > 0 then
 				local item = minetest.registered_tools[stack:get_name()]
-				if not item or not item.groups then
-					return
-				end
-
-				if not item.groups.armor_head
-				and not item.groups.armor_torso
-				and not item.groups.armor_legs
-				and not item.groups.armor_feet then
+				local group = item and item.groups
+				if not group
+						or (not group.armor_head
+						and not group.armor_torso
+						and not group.armor_legs
+						and not group.armor_feet) then
 					local inv = player:get_inventory()
 					if inv:room_for_item("main", stack) then
 						inv:add_item("main", stack)
 					else
 						minetest.item_drop(stack, player, player:get_pos())
 					end
-
 					armor_inv:set_stack("armor", i, nil)
 				end
 			end
