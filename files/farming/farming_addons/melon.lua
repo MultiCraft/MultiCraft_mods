@@ -14,15 +14,20 @@ minetest.override_item("farming_addons:melon", {
 	on_use = minetest.item_eat(2)
 })
 
+-- how often node timers for plants will tick
+local function tick(pos)
+	minetest.get_node_timer(pos):start(math.random(512, 1024))
+end
+
 -- MELON FRUIT - HARVEST
 minetest.register_node("farming_addons:melon_fruit", {
 	description = "Melon",
-	tiles = {"farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_side.png", "farming_addons_melon_fruit_side.png", "farming_addons_melon_fruit_side.png", "farming_addons_melon_fruit_side.png"},
+	tiles = {"farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_side.png"},
+	paramtype2 = "facedir",
 	sounds = default.node_sound_wood_defaults(),
 	is_ground_content = false,
 	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1, not_cuttable = 1},
 	drop = {
-		max_items = 7,
 		items = {
 			{items = {"farming_addons:melon"}},
 			{items = {"farming_addons:melon"}},
@@ -33,7 +38,7 @@ minetest.register_node("farming_addons:melon_fruit", {
 			{items = {"farming_addons:melon"}, rarity = 3}
 		}
 	},
-	after_dig_node = function(_, _, oldmetadata, _)
+	after_dig_node = function(_, _, oldmetadata)
 		local parent = oldmetadata.fields.parent
 		local parent_pos_from_child = minetest.string_to_pos(parent)
 		local parent_node
@@ -46,8 +51,8 @@ minetest.register_node("farming_addons:melon_fruit", {
 
 		-- tick parent if parent stem still exists
 		if parent_node ~= nil
-			and parent_node.name == "farming_addons:melon_8" then
-			farming_addons.tick(parent_pos_from_child)
+				and parent_node.name == "farming_addons:melon_8" then
+			tick(parent_pos_from_child)
 		end
 	end
 })
@@ -56,13 +61,6 @@ minetest.register_node("farming_addons:melon_fruit", {
 minetest.override_item("farming_addons:melon_8", {
 	next_plant = "farming_addons:melon_fruit",
 	on_timer = farming_addons.grow_block
-})
-
--- replacement LBM for pre-nodetimer plants
-minetest.register_lbm({
-	name = "farming_addons:start_nodetimer_melon",
-	nodenames = {"farming_addons:melon_8"},
-	action = farming_addons.tick_short
 })
 
 -- Melon

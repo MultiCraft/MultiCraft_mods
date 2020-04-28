@@ -23,7 +23,7 @@ minetest.override_item("farming_addons:carrot", {
 				pointed_thing) or itemstack
 		end
 
-		return farming.place_seed(itemstack, placer, pointed_thing, "farming_addons:seed_carrot")
+		return farming.place_seed(itemstack, placer, pointed_thing, "farming_addons:seed_carrot") or itemstack
 	end
 })
 
