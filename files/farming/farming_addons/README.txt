@@ -7,7 +7,7 @@ Extends MultiCraft default farming mod with new plants and crops using only mine
 Authors of source code
 ----------------------
 Copyright (C) 2017-2018 SaKeL
-Copyright (C) 2019 MultiCraft Development Team
+Copyright (C) 2019-2020 MultiCraft Development Team
 
 GNU Lesser General Public License v3.0 or later
 
@@ -53,8 +53,3 @@ Allowed to be used in non-official builds ONLY for personal use.
 - farming_addons_melon_6.png - modified by SaKeL
 - farming_addons_melon_7.png - modified by SaKeL
 - farming_addons_melon_8.png - modified by SaKeL
-- farming_addons_wart_block.png
-- farming_addons_wart_brick_block.png
-- farming_addons_wart_brick.png
-- farming_addons_wartrack.png
-- farming_addons_wart_red_brick_block.png

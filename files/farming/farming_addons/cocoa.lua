@@ -238,7 +238,7 @@ minetest.register_node("farming_addons:cocoa_3", {
 	is_ground_content = false,
 	drop = {
 		items = {
-			{items = {"farming_addons:cocoa_bean"}, rarity = 1},
+			{items = {"farming_addons:cocoa_bean"}},
 			{items = {"farming_addons:cocoa_bean"}, rarity = 2},
 			{items = {"farming_addons:cocoa_bean"}, rarity = 2}
 		}
@@ -270,16 +270,6 @@ minetest.register_node("farming_addons:cocoa_3", {
 	minlight = 10
 })
 
--- replacement LBM for pre-nodetimer plants
-minetest.register_lbm({
-	name = "farming_addons:start_nodetimer_cocoa",
-	nodenames = {
-		"farming_addons:cocoa_1",
-		"farming_addons:cocoa_2"
-	},
-	action = tick_again
-})
-
 -- grow cocoa in jungletrees
 local find_node_near = minetest.find_node_near
 local get_node = minetest.get_node
@@ -292,8 +282,8 @@ minetest.register_abm({
 	chance = 50,
 	catch_up = false,
 	action = function(pos)
-		if get_time() >= 0.25 and get_time() < 0.8 then
-			if find_node_near(pos, 3, "group:cocoa")
+		if get_time() > 0.25 and get_time() < 0.8 then
+			if find_node_near(pos, 4, "group:cocoa")
 			then return end
 
 			local apos = {x = pos.x, y = pos.y, z = pos.z}
@@ -317,7 +307,7 @@ minetest.register_abm({
 })
 
 -- Cocoa
-minetest.register_craft( {
+minetest.register_craft({
 	output = "dye:brown 2",
 	recipe = {
 		{"farming_addons:cocoa_bean"}
@@ -331,7 +321,7 @@ minetest.register_craftitem("farming_addons:cookie", {
 	on_use = minetest.item_eat(2)
 })
 
-minetest.register_craft( {
+minetest.register_craft({
 	output = "farming_addons:cookie 8",
 	recipe = {
 		{"farming:wheat", "farming_addons:cocoa_bean", "farming:wheat"}
@@ -345,7 +335,7 @@ minetest.register_craftitem("farming_addons:chocolate", {
 	groups = {food = 1}
 })
 
-minetest.register_craft( {
+minetest.register_craft({
 	output = "farming_addons:chocolate",
 	recipe = {
 		{"", "", "farming_addons:cocoa_bean"},
