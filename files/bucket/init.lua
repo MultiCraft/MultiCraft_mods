@@ -54,7 +54,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 
 	if itemname ~= nil then
 		minetest.register_craftitem(itemname, {
-			description = name,
+			description = S(name),
 			inventory_image = inventory_image,
 			stack_max = 1,
 			liquids_pointable = true,
@@ -66,17 +66,16 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 					return itemstack
 				end
 
-				local node = minetest.get_node_or_nil(pointed_thing.under)
+				local under = pointed_thing.under
+				local node = minetest.get_node_or_nil(under)
 				local ndef = node and minetest.registered_nodes[node.name]
 
 				-- Call on_rightclick if the pointed node defines it
 				if ndef and ndef.on_rightclick and
 						not (user and user:is_player() and
 						user:get_player_control().sneak) then
-					return ndef.on_rightclick(
-						pointed_thing.under,
-						node, user,
-						itemstack)
+					return ndef.on_rightclick(under, node, user, itemstack,
+						pointed_thing) or itemstack
 				end
 
 				local lpos
@@ -84,7 +83,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				-- Check if pointing to a buildable node
 				if ndef and ndef.buildable_to then
 					-- buildable; replace the node
-					lpos = pointed_thing.under
+					lpos = under
 				else
 					-- not buildable to; place the liquid above
 					-- check if the node above can be replaced
@@ -100,24 +99,33 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				end
 
 				local player_name = user:get_player_name()
-				local itemname = itemstack:get_name()
 
-				if itemname ~= "default:river_water_flowing" and
-				not singleplayer and pointed_thing.under.y >= 8 then
-					minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"))
-					return itemstack
+				if not singleplayer then
+					local height = under.y
+					if height > 8 then
+						if source == "default:lava_source" then
+							minetest.chat_send_player(player_name, S("Too much Lava is bad, right?"))
+							return itemstack
+						elseif height > 64 then
+							minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"))
+							return itemstack
+						elseif source == "default:water_source" then
+							source = "default:water_source_poured"
+						elseif source == "default:river_water_source" then
+							source = "default:river_water_source_poured"
+						end
+					end
 				end
 
-				if check_protection(lpos, user
-						and player_name
-						or "", "place " .. source) then
+				if check_protection(lpos, user and player_name or "",
+						"place " .. source) then
 					return itemstack
 				end
 
 				minetest.set_node(lpos, {name = source})
-				if not (creative and creative.is_enabled_for
-						and creative.is_enabled_for(player_name)) or
-						not singleplayer then
+				if not singleplayer
+						or not (creative and creative.is_enabled_for
+						and creative.is_enabled_for(player_name)) then
 					return ItemStack("bucket:bucket_empty")
 				else
 					return itemstack
@@ -128,7 +136,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 end
 
 minetest.register_craftitem("bucket:bucket_empty", {
-	description = "Empty Bucket",
+	description = S("Empty Bucket"),
 	inventory_image = "bucket.png",
 	groups = {tool = 1},
 	liquids_pointable = true,
@@ -141,16 +149,18 @@ minetest.register_craftitem("bucket:bucket_empty", {
 			-- do nothing if it's neither object nor node
 			return
 		end
+
+		local under = pointed_thing.under
+
 		-- Check if pointing to a liquid source
-		local node = minetest.get_node(pointed_thing.under)
+		local node = minetest.get_node(under)
 		local liquiddef = bucket.liquids[node.name]
 		local item_count = user:get_wielded_item():get_count()
 
 		if liquiddef ~= nil
 		and liquiddef.itemname ~= nil
 		and node.name == liquiddef.source then
-			if check_protection(pointed_thing.under,
-					user:get_player_name(),
+			if check_protection(under, user:get_player_name(),
 					"take " .. node.name) then
 				return
 			end
@@ -162,7 +172,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 			if item_count > 1 then
 				-- if space in inventory add filled bucked, otherwise drop as item
 				local inv = user:get_inventory()
-				if inv:room_for_item("main", {name=liquiddef.itemname}) then
+				if inv:room_for_item("main", {name = liquiddef.itemname}) then
 					inv:add_item("main", liquiddef.itemname)
 				else
 					local pos = user:get_pos()
@@ -178,10 +188,10 @@ minetest.register_craftitem("bucket:bucket_empty", {
 			local source_neighbor = false
 			if liquiddef.force_renew then
 				source_neighbor =
-					minetest.find_node_near(pointed_thing.under, 1, liquiddef.source)
+					minetest.find_node_near(under, 1, liquiddef.source)
 			end
 			if not (source_neighbor and liquiddef.force_renew) then
-				minetest.add_node(pointed_thing.under, {name = "air"})
+				minetest.add_node(under, {name = "air"})
 			end
 
 			return ItemStack(giving_back)
@@ -189,7 +199,7 @@ minetest.register_craftitem("bucket:bucket_empty", {
 			-- non-liquid nodes will have their on_punch triggered
 			local node_def = minetest.registered_nodes[node.name]
 			if node_def then
-				node_def.on_punch(pointed_thing.under, node, user, pointed_thing)
+				node_def.on_punch(under, node, user, pointed_thing)
 			end
 			return user:get_wielded_item()
 		end
@@ -204,6 +214,21 @@ bucket.register_liquid(
 	"Water Bucket",
 	{water_bucket = 1}
 )
+
+bucket.register_liquid(
+	"default:water_source",
+	"default:water_flowing",
+	"bucket:bucket_water",
+	"bucket.png^bucket_water.png",
+	"Water Bucket",
+	{water_bucket = 1}
+)
+
+-- Poured water for multiplayer
+bucket.liquids["default:water_source_poured"] = {
+	source = "default:water_source_poured",
+	itemname = "bucket:bucket_water"
+}
 
 -- River water source is 'liquid_renewable = false' to avoid horizontal spread
 -- of water sources in sloping rivers that can cause water to overflow
@@ -220,6 +245,12 @@ bucket.register_liquid(
 	{water_bucket = 1},
 	true
 )
+
+-- Poured river water for multiplayer
+bucket.liquids["default:river_water_source_poured"] = {
+	source = "default:river_water_source_poured",
+	itemname = "bucket:bucket_river_water"
+}
 
 bucket.register_liquid(
 	"default:lava_source",
