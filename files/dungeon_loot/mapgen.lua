@@ -75,8 +75,8 @@ local function populate_chest(pos, rand, dungeontype)
 
 	local item_list = dungeon_loot._internal_get_loot(pos.y, dungeontype)
 	-- take random (partial) sample of all possible items
-	assert(#item_list >= dungeon_loot.STACKS_PER_CHEST_MAX)
-	item_list = random_sample(rand, item_list, dungeon_loot.STACKS_PER_CHEST_MAX)
+	local sample_n = math.min(#item_list, dungeon_loot.STACKS_PER_CHEST_MAX)
+	item_list = random_sample(rand, item_list, sample_n)
 
 	-- apply chances / randomized amounts and collect resulting items
 	local items = {}
@@ -88,20 +88,20 @@ local function populate_chest(pos, rand, dungeontype)
 				amount = rand:next(loot.count[1], loot.count[2])
 			end
 
-			if itemdef then
-				if itemdef.tool_capabilities then
-					for n = 1, amount do
-						local wear = rand:next(0.20 * 65535, 0.75 * 65535) -- 20% to 75% wear
-						table.insert(items, ItemStack({name = loot.name, wear = wear}))
-					end
-				elseif itemdef.stack_max == 1 then
-					-- not stackable, add separately
-					for n = 1, amount do
-						table.insert(items, loot.name)
-					end
-				else
-					table.insert(items, ItemStack({name = loot.name, count = amount}))
+			if not itemdef then
+				minetest.log("warning", "Registered loot item " .. loot.name .. " does not exist")
+			elseif itemdef.tool_capabilities then
+				for n = 1, amount do
+					local wear = rand:next(0.20 * 65535, 0.75 * 65535) -- 20% to 75% wear
+					table.insert(items, ItemStack({name = loot.name, wear = wear}))
 				end
+			elseif itemdef.stack_max == 1 then
+				-- not stackable, add separately
+				for n = 1, amount do
+					table.insert(items, loot.name)
+				end
+			else
+				table.insert(items, ItemStack({name = loot.name, count = amount}))
 			end
 		end
 	end
