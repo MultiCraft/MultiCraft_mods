@@ -944,7 +944,7 @@ function default.register_mgv6_decorations()
 	minetest.register_decoration({
 		name = "default:cactus",
 		deco_type = "simple",
-		place_on = {"default:redsand"},
+		place_on = {"default:sand", "default:redsand"},
 		sidelen = 16,
 		noise_params = {
 			offset = -0.012,
@@ -979,7 +979,8 @@ function default.register_mgv6_decorations()
 	minetest.register_decoration({
 		name = "default:dry_shrub",
 		deco_type = "simple",
-		place_on = {"default:redsand", "default:dirt_with_snow"},
+		place_on = {"default:redsand",
+			"default:sand", "default:dirt_with_snow"},
 		sidelen = 16,
 		noise_params = {
 			offset = 0,
@@ -1259,50 +1260,26 @@ function default.register_decorations()
 		num_spawn_by = 8,
 	})
 
-	-- Large cactus
-
-	minetest.register_decoration({
-		name = "default:large_cactus",
-		deco_type = "schematic",
-		place_on = {"default:redsand"},
-		sidelen = 16,
-		noise_params = {
-			offset = -0.0003,
-			scale = 0.0009,
-			spread = {x = 200, y = 200, z = 200},
-			seed = 230,
-			octaves = 3,
-			persist = 0.6
-		},
-		biomes = {"desert"},
-		y_max = 31000,
-		y_min = 4,
-		schematic = modpath .. "/schematics/large_cactus.mts",
-		flags = "place_center_x, place_center_z",
-		rotation = "random",
-	})
-
 	-- Cactus
 
 	minetest.register_decoration({
 		name = "default:cactus",
 		deco_type = "simple",
-		place_on = {"default:redsand"},
+		place_on = {"default:redsand", "default:sand"},
 		sidelen = 16,
 		noise_params = {
-			offset = -0.0003,
-			scale = 0.0009,
+			offset = -0.0009,
+			scale = 0.0045,
 			spread = {x = 200, y = 200, z = 200},
 			seed = 230,
 			octaves = 3,
 			persist = 0.6
 		},
-		biomes = {"desert"},
 		y_max = 31000,
-		y_min = 4,
+		y_min = 2,
 		decoration = "default:cactus",
 		height = 2,
-		height_max = 5,
+		height_max = 4,
 	})
 
 	-- Sugar Cane
