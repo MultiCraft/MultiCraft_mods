@@ -1,0 +1,27 @@
+# Effects
+High Speed=Ускорение
+Low Speed=Замедление
+Perfect Breath=Дыхание
+Regeneration=Регенерация
+Regeneration II=Регенерация II
+No Gravity=Невесомость
+Gravity Neutralizer=Нейтрализ. Невесомости
+High Jump=Сильный Прыжок
+Low Jump=Слабый Прыжок
+Night Vision=Ночное Видение
+Invisible=Невидимость
+Autodig Mode=Режим Автодобычи
+
+# Potions
+Running Potion=Зелье Ускорения
+Slug Potion=Зелье Замедления
+Air Potion=Зелье Дыхания
+Healing Potion=Зелье Регенерации
+Healing Potion II=Зелье Регенерации II
+Non-Gravity Potion=Зелье Невесомости
+Gravity Neutralizer Potion=Зелье Нейтрализации Невесомости
+High Jumping Potion=Зелье Сильных Прыжков
+Low Jumping Potion=Зелье Слабых Прыжков
+Night Vision Potion=Зелье Ночного Видения
+Invisible Potion=Зелье Невидимости
+Autodig Potion=Зелье Автодобычи
