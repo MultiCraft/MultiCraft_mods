@@ -7,3 +7,4 @@ Authors of source code
 Originally by PilzAdam (MIT)
 webdesigner97 (MIT)
 Various Minetest developers and contributors (MIT)
+MultiCraft Development Team (MIT)

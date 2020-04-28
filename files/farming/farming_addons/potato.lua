@@ -23,19 +23,19 @@ minetest.override_item("farming_addons:potato", {
 				pointed_thing) or itemstack
 		end
 
-		return farming.place_seed(itemstack, placer, pointed_thing, "farming_addons:seed_potato")
-	end,
+		return farming.place_seed(itemstack, placer, pointed_thing, "farming_addons:seed_potato") or itemstack
+	end
 })
 
 -- add poisonous potato to drops
 minetest.override_item("farming_addons:potato_4", {
 	drop = {
 		items = {
-			{items = {"farming_addons:potato"}, rarity = 1},
+			{items = {"farming_addons:potato"}},
 			{items = {"farming_addons:potato"}, rarity = 2},
 			{items = {"farming_addons:potato"}, rarity = 2},
 			{items = {"farming_addons:potato_poisonous"}, rarity = 5},
-			{items = {"farming_addons:seed_potato"}, rarity = 1},
+			{items = {"farming_addons:seed_potato"}},
 			{items = {"farming_addons:seed_potato"}, rarity = 2}
 		}
 	}

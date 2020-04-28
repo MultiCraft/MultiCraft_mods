@@ -44,12 +44,3 @@ minetest.register_craft({
 		{"", "farming_addons:bowl", ""}
 	}
 })
-
-minetest.register_craft({
-	output = "farming_addons:bowl_hog_stew",
-	recipe = {
-		{"", "mobs:pork_raw", ""},
-		{"farming_addons:carrot", "farming_addons:potato_baked", "flowers:mushroom_red"},
-		{"", "farming_addons:bowl", ""}
-	}
-})

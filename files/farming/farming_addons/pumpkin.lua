@@ -1,6 +1,6 @@
 -- spawn snow golem
--- local function pumpkin_on_construct(pos)
---[[if not minetest.get_modpath("mobs_npc") then return end
+--[[local function pumpkin_on_construct(pos)
+	if not minetest.get_modpath("mobs_npc") then return end
 
 	for i = 1, 2 do
  		if minetest.get_node({x = pos.x, y = pos.y - i, z=pos.z}).name ~= "default:snowblock" then
@@ -14,7 +14,7 @@
 	end
 
 	minetest.add_entity({x = pos.x, y = pos.y - 1, z = pos.z}, "mobs_npc:snow_golem")
--- end]]
+end]]
 
 farming.register_plant("farming_addons:pumpkin", {
 	description = "Pumpkin Seed",
@@ -22,8 +22,13 @@ farming.register_plant("farming_addons:pumpkin", {
 	steps = 8,
 	minlight = 12,
 	fertility = {"grassland", "desert"},
-	groups = {flammable = 4, food = 1},
+	groups = {flammable = 4, food = 1}
 })
+
+-- how often node timers for plants will tick
+local function tick(pos)
+	minetest.get_node_timer(pos):start(math.random(512, 1024))
+end
 
 -- PUMPKIN FRUIT - HARVEST
 minetest.register_node("farming_addons:pumpkin_fruit", {
@@ -46,27 +51,26 @@ minetest.register_node("farming_addons:pumpkin_fruit", {
 
 		-- tick parent if parent stem still exists
 		if parent_node ~= nil
-			and parent_node.name == "farming_addons:pumpkin_8" then
-			farming_addons.tick(parent_pos_from_child)
+				and parent_node.name == "farming_addons:pumpkin_8" then
+			tick(parent_pos_from_child)
 		end
 	end,
 --	on_construct = pumpkin_on_construct
 })
 
--- drop blocks instead of items
-minetest.register_alias_force("farming_addons:pumpkin", "farming_addons:pumpkin_fruit")
+minetest.register_alias_force("farming_addons:pumpkin", "farming_addons:seed_pumpkin")
 
--- take over the growth from minetest_game farming from here
+-- take over the growth from farming from here
 minetest.override_item("farming_addons:pumpkin_8", {
 	next_plant = "farming_addons:pumpkin_fruit",
-	on_timer = farming_addons.grow_block
-})
-
--- replacement LBM for pre-nodetimer plants
-minetest.register_lbm({
-	name = "farming_addons:start_nodetimer_pumpkin",
-	nodenames = {"farming_addons:pumpkin_8"},
-	action = farming_addons.tick_short
+	on_timer = farming_addons.grow_block,
+	drop = {
+		items = {
+			{items = {"farming_addons:seed_pumpkin"}},
+			{items = {"farming_addons:seed_pumpkin"}, rarity = 2},
+			{items = {"farming_addons:seed_pumpkin"}, rarity = 3}
+		}
+	}
 })
 
 -- pumpkin as fuel

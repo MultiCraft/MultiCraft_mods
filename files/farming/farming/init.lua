@@ -60,7 +60,7 @@ minetest.register_craftitem("farming:string",{
 
 minetest.register_craft({
 	output = "farming:string",
-	recipe = {{"default:paper", "default:paper"}},
+	recipe = {{"default:paper", "default:paper"}}
 })
 
 -- Straw
@@ -76,9 +76,7 @@ minetest.register_craft({
 
 minetest.register_craft({
 	output = "farming:wheat 3",
-	recipe = {
-		{"farming:straw"}
-	}
+	recipe = {{"farming:straw"}}
 })
 
 
