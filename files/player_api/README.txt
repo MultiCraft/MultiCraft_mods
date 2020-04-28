@@ -8,7 +8,7 @@ Also sets the default model, texture, and player flags.
 Authors of source code
 ----------------------
 Originally by celeron55, Perttu Ahola <celeron55@gmail.com> (LGPLv3.0+)
-Various Minetest developers and contributors (LGPLv3.0+),
+Various Minetest developers and contributors (LGPLv3.0+)
 stujones11, Stuart Jones (LGPLv3.0+, with the permission of the author)
 MultiCraft Development Team (LGPLv3.0+)
 
