@@ -119,7 +119,7 @@ end
 
 -- Items for the new player
 if not creative_mode_cache and minetest.is_singleplayer() then
-	minetest.register_on_newplayer(function (player)
+	minetest.register_on_newplayer(function(player)
 		player:get_inventory():add_item("main", "default:sword_steel")
 		player:get_inventory():add_item("main", "default:torch 8")
 		player:get_inventory():add_item("main", "default:wood 32")
@@ -142,6 +142,11 @@ minetest.register_on_dieplayer(function(player)
 	inv:set_list("main", {})
 
 	-- Display death coordinates
-	minetest.chat_send_player(player:get_player_name(), Sl("Your last coordinates:") .. " "
-		.. minetest.pos_to_string(pos, 1))
+	local name = player:get_player_name()
+	local pos_string = minetest.pos_to_string(pos, 1)
+
+	minetest.chat_send_player(name, Sl("Your last coordinates:") .. " "
+		.. pos_string)
+
+	minetest.log("action", name .. " died at " .. pos_string)
 end)
