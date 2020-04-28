@@ -16,7 +16,7 @@ dungeon_loot.registered_loot = {
 	{name = "farming:string", chance = 0.5, count = {1, 8}},
 	{name = "farming:wheat", chance = 0.5, count = {2, 5}},
 	{name = "farming_addons:seed_carrot", chance = 0.5, count = {2, 4}},
-	{name = "farming_addons:cocoa", chance = 0.5, count = {2, 4}},
+	{name = "farming_addons:cocoa_3", chance = 0.5, count = {2, 4}},
 	{name = "farming_addons:corn", chance = 0.5, count = {1, 2}},
 	{name = "farming_addons:melon", chance = 0.5, count = {1, 2}},
 	{name = "farming_addons:seed_potato", chance = 0.5, count = {2, 4}},
