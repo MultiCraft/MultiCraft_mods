@@ -2,6 +2,7 @@
 -- {item_name, minimum, maximum}
 
 local items_ore = {
+	{"mesecons:wire_00000000_off", 4, 16},
 	{"default:steel_ingot", 1, 3},
 	{"default:gold_ingot", 1, 3},
 	{"default:diamond", 1, 1},
@@ -13,14 +14,16 @@ local items_food = {
 	{"default:apple", 2, 6},
 	{"mobs:pork", 1, 3},
 	{"mobs:meat", 1, 3},
-	{"mobs:chicken_cooked", 1, 3}
+	{"mobs:chicken_cooked", 1, 3},
+	{"farming_addons:chocolate", 1, 2}
 }
 
 local items_material = {
-	{"default:wood", 8, 64},
+	{"default:wood", 8, 32},
 	{"default:cobble", 8, 64},
 	{"default:obsidian", 2, 8},
-	{"default:tree", 4, 16}
+	{"default:tree", 4, 16},
+	{"tnt:tnt", 1, 2}
 }
 
 local random = math.random
@@ -31,12 +34,19 @@ local item_spawn = function(pos, node)
 	item2 = item2[1] .. " " .. random(item2[2], item2[3])
 	local item3 = items_material[random(#items_material)]
 	item3 = item3[1] .. " " .. random(item3[2], item3[3])
-	minetest.spawn_item({x = pos.x - 0.4, y = pos.y + 0.58, z = pos.z - 0.2}, item1)
-	minetest.spawn_item({x = pos.x, y = pos.y + 0.58, z = pos.z}, item2)
-	minetest.spawn_item({x = pos.x + 0.4, y = pos.y + 0.58, z = pos.z - 0.2}, item3)
 
-	minetest.set_node(pos, {name = "bonusbox:chest_open", param2 = node.param2})
-	minetest.set_node({x = pos.x, y = pos.y + 1, z = pos.z}, {name = "bonusbox:chest_cap", param2 = node.param2})
+	node.name = "bonusbox:chest_open"
+	minetest.set_node(pos, node)
+	node.name = "bonusbox:chest_cap"
+	pos.y = pos.y + 1
+	minetest.set_node(pos, node)
+	minetest.sound_play("default_chest_open",
+		{gain = 0.3, pos = pos, max_hear_distance = 10})
+
+	pos.y = pos.y - 0.4
+	minetest.add_item({x = pos.x - 0.4, y = pos.y, z = pos.z - 0.2}, item1)
+	minetest.add_item({x = pos.x, y = pos.y, z = pos.z}, item2)
+	minetest.add_item({x = pos.x + 0.4, y = pos.y, z = pos.z - 0.2}, item3)
 end
 
 minetest.register_node("bonusbox:chest", {
@@ -106,8 +116,8 @@ minetest.register_node("bonusbox:chest_cap", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, 0.1722, 0.5, -0.1288, 0.25},
-			{-0.4852, -0.5, 0.25, 0.4852, -0.1449, 0.5}
+			{-0.5, -0.5, 0.1722, 0.5, -0.129, 0.25},
+			{-0.485, -0.5, 0.25, 0.485, -0.145, 0.5}
 		}
 	},
 	selection_box = {
