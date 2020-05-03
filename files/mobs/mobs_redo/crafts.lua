@@ -104,22 +104,22 @@ minetest.register_craft({
 })
 
 -- chicken egg
-local function mobs_shoot_egg(itemstack, thrower)
+local function chicken_egg_shoot(itemstack, thrower)
 	local playerpos = thrower:get_pos()
 	if not minetest.is_valid_pos(playerpos) then
 		return
 	end
-	local obj = minetest.item_throw("mobs:chicken_egg", thrower, 19, -3, egg_impact)
+	local obj = minetest.item_throw("mobs:chicken_egg", thrower, 19, -3, mobs_animal and mobs_animal.egg_impact)
 	if obj then
 		obj:set_properties({
 			visual = "sprite",
 			visual_size = {x = 0.5, y = 0.5},
-			textures = {"mobs_chicken_egg.png"},
+			textures = {"mobs_chicken_egg.png"}
 		})
 		minetest.sound_play("throwing_sound", {
 			pos = playerpos,
 			gain = 0.7,
-			max_hear_distance = 10,
+			max_hear_distance = 10
 		})
 		if not mobs.is_creative(thrower) or
 				not minetest.is_singleplayer() then
@@ -133,8 +133,8 @@ minetest.register_craftitem("mobs:chicken_egg", {
 	description = "Egg",
 	inventory_image = "mobs_chicken_egg.png",
 	visual_scale = 0.7,
-	on_use = mobs_shoot_egg,
-	groups = {food = 1}
+	groups = {food = 1},
+	on_use = chicken_egg_shoot
 })
 
 minetest.register_alias("mobs:egg", "air")
