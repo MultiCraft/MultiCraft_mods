@@ -154,11 +154,13 @@ inv.on_place = function(itemstack, placer, pointed_thing)
 		local _, result = minetest.item_place(ItemStack("flowerpot:empty"),
 				placer, pointed_thing)
 
-		if result and not (creative and creative.is_enabled_for and
-				creative.is_enabled_for(placer)) then
-			itemstack:take_item()
+		if result then
 			minetest.sound_play({name = "default_place_node_hard"},
 					{pos = pointed_thing.above})
+			if not (creative and creative.is_enabled_for and
+					creative.is_enabled_for(placer)) then
+				itemstack:take_item()
+			end
 		end
 	end
 
