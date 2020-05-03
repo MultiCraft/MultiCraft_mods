@@ -161,8 +161,8 @@ if minetest.settings:get_bool("enable_lavacooling") ~= false then
 		label = "Lava cooling",
 		nodenames = {"default:lava_source", "default:lava_flowing"},
 		neighbors = {"group:cools_lava", "group:water"},
-		interval = 4,
-		chance = 1,
+		interval = 3,
+		chance = 2,
 		catch_up = false,
 		action = function(...)
 			default.cool_lava(...)
@@ -257,7 +257,7 @@ minetest.register_abm({
 })
 
 if not minetest.settings:get_bool("creative_mode") then
-local objects = minetest.get_objects_inside_radius
+	local objects = minetest.get_objects_inside_radius
 	minetest.register_abm({
 		label = "Cactus damage",
 		nodenames = {"default:cactus"},
@@ -565,7 +565,7 @@ minetest.register_abm({
 	interval = 10,
 	chance = 40,
 	catch_up = false,
-	action = function(pos, node)
+	action = function(pos)
 		local above = {x = pos.x, y = pos.y + 1, z = pos.z}
 		local name = minetest.get_node(above).name
 		local nodedef = minetest.registered_nodes[name]
@@ -607,6 +607,41 @@ minetest.register_abm({
 		end
 	end
 })
+
+--
+-- Register a craft to copy the metadata of items
+--
+
+function default.register_craft_metadata_copy(ingredient, result)
+	minetest.register_craft({
+		type = "shapeless",
+		output = result,
+		recipe = {ingredient, result}
+	})
+
+	minetest.register_on_craft(function(itemstack, _, old_craft_grid, craft_inv)
+		if itemstack:get_name() ~= result then
+			return
+		end
+
+		local original
+		local index
+		for i = 1, #old_craft_grid do
+			if old_craft_grid[i]:get_name() == result then
+				original = old_craft_grid[i]
+				index = i
+			end
+		end
+		if not original then
+			return
+		end
+		local copymeta = original:get_meta():to_table()
+		itemstack:get_meta():from_table(copymeta)
+		-- put the book with metadata back in the craft grid
+		craft_inv:set_stack("craft", index, original)
+	end)
+end
+
 
 function default.can_interact_with_node(player, pos)
 	if player and player:is_player() then
@@ -708,7 +743,7 @@ minetest.register_abm({
 	label = "Liquid particles",
 	nodenames = {"group:liquid"},
 	interval = 15,
-	chance = 2,
+	chance = 3,
 	catch_up = false,
 	action = function(pos, node)
 		local nname = node.name

@@ -216,15 +216,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:book",
-	recipe = {
-		{"default:paper"},
-		{"default:paper"},
-		{"default:paper"}
-	}
-})
-
-minetest.register_craft({
 	output = "default:bookshelf",
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},

@@ -11,13 +11,9 @@ function default.register_torch(name, def)
 		oldnode.name = name or name .. "_wall" or name .. "_celling"
 		minetest.add_item(pos, ItemStack(oldnode))
 		-- Play flame-extinguish sound if liquid is not an 'igniter'
-		local nodedef = minetest.registered_nodes[newnode.name]
-		if not (nodedef and nodedef.groups and
-				nodedef.groups.igniter and nodedef.groups.igniter > 0) then
-			minetest.sound_play(
-				"default_cool_lava",
-				{pos = pos, max_hear_distance = 16, gain = 0.1}
-			)
+		if minetest.get_item_group(newnode.name, "igniter") == 0 then
+			minetest.sound_play("default_cool_lava",
+				{pos = pos, max_hear_distance = 16, gain = 0.1})
 		end
 		-- Remove the torch node
 		return false
@@ -60,6 +56,7 @@ function default.register_torch(name, def)
 		wall_side = {-1/2, -1/2, -1/8, -1/8, 1/8, 1/8}
 	}
 	torch_wall.groups.not_in_creative_inventory = 1
+	minetest.register_node(":" .. name .. "_wall", torch_wall)
 
 	local torch_ceiling = table.copy(def)
 	torch_ceiling.mesh = "torch_ceiling.obj"
@@ -68,8 +65,6 @@ function default.register_torch(name, def)
 		wall_top = {-1/8, -1/16, -5/16, 1/8, 1/2, 1/8}
 	}
 	torch_ceiling.groups.not_in_creative_inventory = 1
-
-	minetest.register_node(":" .. name .. "_wall", torch_wall)
 	minetest.register_node(":" .. name .. "_ceiling", torch_ceiling)
 end
 

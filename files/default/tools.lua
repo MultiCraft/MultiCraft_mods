@@ -98,7 +98,8 @@ minetest.register_tool("default:pick_ruby", {
 		groupcaps = {
 			cracky = {times = {[1]=2.3, [2]=1.7, [3]=1.4}, uses = 0, maxlevel = 3}
 		},
-		damage_groups = {fleshy = 5}
+		damage_groups = {fleshy = 5},
+		punch_attack_uses = 0
 	},
 	sound = {breaks = "default_tool_breaks"}
 })
@@ -208,7 +209,8 @@ minetest.register_tool("default:shovel_ruby", {
 		groupcaps = {
 			crumbly = {times = {[1]=1.4, [2]=1.1, [3]=1.0}, uses = 0, maxlevel = 3}
 		},
-		damage_groups = {fleshy = 4}
+		damage_groups = {fleshy = 4},
+		punch_attack_uses = 0
 	},
 	sound = {breaks = "default_tool_breaks"}
 })
@@ -311,7 +313,8 @@ minetest.register_tool("default:axe_ruby", {
 		groupcaps = {
 			choppy={times = {[1]=2.9, [2]=1.65, [3]=1.15}, uses = 0, maxlevel = 3}
 		},
-		damage_groups = {fleshy = 6}
+		damage_groups = {fleshy = 6},
+		punch_attack_uses = 0
 	},
 	sound = {breaks = "default_tool_breaks"}
 })
@@ -451,26 +454,21 @@ for name, mat in pairs(craft_ingreds) do
 	})
 end
 
-minetest.register_craft({
-	type = "fuel",
-	recipe = "default:pick_wood",
-	burntime = 6
-})
+--
+-- Fuel
+--
 
-minetest.register_craft({
-	type = "fuel",
-	recipe = "default:shovel_wood",
-	burntime = 4
-})
+local wood_tool_fuel = {
+	pick = 6,
+	shovel = 4,
+	axe = 6,
+	sword = 5
+}
 
-minetest.register_craft({
-	type = "fuel",
-	recipe = "default:axe_wood",
-	burntime = 6
-})
-
-minetest.register_craft({
-	type = "fuel",
-	recipe = "default:sword_wood",
-	burntime = 5
-})
+for tool, burn in pairs(wood_tool_fuel) do
+	minetest.register_craft({
+		type = "fuel",
+		recipe = "default:" .. tool .. "_wood",
+		burntime = burn
+	})
+end
