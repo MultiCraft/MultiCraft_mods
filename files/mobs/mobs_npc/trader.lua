@@ -35,11 +35,11 @@ mobs:register_mob("mobs_npc:trader", {
 	},
 
 	on_punch = function(self, clicker)
-		mobs_trader(self, clicker, mobs.human)
+		mobs.trader_show_goods(self, clicker, mobs.human)
 	end,
 
 	on_rightclick = function(self, clicker)
-		mobs_trader(self, clicker, mobs.human)
+		mobs.trader_show_goods(self, clicker, mobs.human)
 	end,
 
 	on_spawn = function(self)
@@ -133,7 +133,7 @@ mobs.human = {
 
 local random = math.random
 
-function mobs.add_goods(self, race)
+function mobs.trader_add_goods(self, race)
 	local trade_index = 1
 	local trades_already_added = {}
 	local trader_pool_size = 6
@@ -177,7 +177,7 @@ function mobs.add_goods(self, race)
 	self.version = 2
 end
 
-function mobs_trader(self, clicker, race)
+function mobs.trader_show_goods(self, clicker, race)
 	if not self.id then
 		self.id = (random(1000) * random(10000))
 				.. self.name .. (random(1000) ^ 2)
@@ -195,7 +195,7 @@ function mobs_trader(self, clicker, race)
 	local version = self.version
 
 	if self.trades == nil or not version or version < 2 then
-		mobs.add_goods(self, race)
+		mobs.trader_add_goods(self, race)
 	end
 
 	local player = clicker:get_player_name()

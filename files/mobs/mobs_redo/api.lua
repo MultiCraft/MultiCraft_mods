@@ -1,7 +1,7 @@
 -- Mobs API
 mobs = {
 	mod = "redo",
-	version = "20200312",
+	version = "20200427",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -226,6 +226,8 @@ end
 -- calculate mob velocity
 function mob_class:get_velocity()
 	local v = self.object:get_velocity()
+	if not v then return 0 end
+
 	return (v.x * v.x + v.z * v.z) ^ 0.5
 end
 
@@ -416,10 +418,10 @@ local ray_line_of_sight = function(self, pos1, pos2)
 	local thing = ray:next()
 
 	while thing do
-		if thing.type == "object"
-				and thing.ref ~= self.object
-				and not thing.ref:is_player() then return false
-		end
+--		if thing.type == "object"
+--				and thing.ref ~= self.object
+--				and not thing.ref:is_player() then return false
+--		end
 
 		if thing.type == "node" then
 			local name = minetest.get_node(thing.under).name
@@ -545,13 +547,13 @@ end
 
 -- custom particle effects
 local effect = function(pos, amount, texture, min_size, max_size, radius, gravity, glow)
+	if not minetest.is_valid_pos(pos) then return end
+
 	radius = radius or 2
-	min_size = min_size or 0.5
+	min_size = min_size or 1
 	max_size = max_size or 1
 	gravity = gravity or -9.81
 	glow = glow or 0
-
-	if not minetest.is_valid_pos(pos) then return end
 
 	minetest.add_particlespawner({
 		amount = amount,
@@ -562,7 +564,7 @@ local effect = function(pos, amount, texture, min_size, max_size, radius, gravit
 		maxvel = {x = radius, y = radius, z = radius},
 		minacc = {x = 0, y = gravity, z = 0},
 		maxacc = {x = 0, y = gravity, z = 0},
-		minexptime = 0.1,
+		minexptime = 0.25,
 		maxexptime = 1,
 		minsize = min_size,
 		maxsize = max_size,
@@ -732,6 +734,39 @@ function mob_class:check_for_death(cmi_cause)
 end
 
 
+-- get node but use fallback for nil or unknown
+local node_ok = function(pos, fallback)
+	fallback = fallback or mobs.fallback_node
+	local node = minetest.get_node_or_nil(pos)
+
+	if node and minetest.registered_nodes[node.name] then
+		return node
+	end
+
+	return minetest.registered_nodes[fallback]
+end
+
+
+-- Returns true is node can deal damage to self
+local is_node_dangerous = function(self, nodename)
+	if self.water_damage > 0
+	and minetest.get_item_group(nodename, "water") ~= 0 then
+		return true
+	end
+
+	if self.lava_damage > 0
+	and minetest.get_item_group(nodename, "igniter") ~= 0 then
+		return true
+	end
+
+	if minetest.registered_nodes[nodename].damage_per_second > 0 then
+		return true
+	end
+
+	return false
+end
+
+
 -- is mob facing a cliff
 function mob_class:is_at_cliff()
 	if self.fear_height == 0 then -- 0 for no falling protection!
@@ -749,25 +784,26 @@ function mob_class:is_at_cliff()
 	local pos = self.object:get_pos()
 	local ypos = pos.y + self.collisionbox[2] -- just above floor
 
-	if minetest.line_of_sight(
+	local free_fall, blocker = minetest.line_of_sight(
 		{x = pos.x + dir_x, y = ypos, z = pos.z + dir_z},
-		{x = pos.x + dir_x, y = ypos - self.fear_height, z = pos.z + dir_z}, 1) then
+		{x = pos.x + dir_x, y = ypos - self.fear_height, z = pos.z + dir_z})
+
+	-- check for straight drop, drop onto danger or walkable node
+	if free_fall then
 		return true
+	else
+		local bnode = node_ok(blocker)
+
+		if is_node_dangerous(self, bnode.name) then
+			return true
+		else
+			local def = minetest.registered_nodes[bnode.name]
+
+			return (not def and def.walkable)
+		end
 	end
+
 	return false
-end
-
-
--- get node but use fallback for nil or unknown
-local node_ok = function(pos, fallback)
-	fallback = fallback or mobs.fallback_node
-	local node = minetest.get_node_or_nil(pos)
-
-	if node and minetest.registered_nodes[node.name] then
-		return node
-	end
-
-	return minetest.registered_nodes[fallback]
 end
 
 
@@ -801,7 +837,7 @@ function mob_class:do_env_damage()
 		if light >= self.light_damage_min
 				and light <= self.light_damage_max then
 			self.health = self.health - self.light_damage
-			effect(pos, 5, "heart.png")
+			effect(pos, 3, "fire_basic_flame.png", 4, 4, 2, nil, 5)
 			if show_health then
 				self.nametag = S("Health:") .. " " .. self.health .. " / " .. self.hp_max
 				self:update_tag()
@@ -891,6 +927,9 @@ function mob_class:do_jump()
 	local pos = self.object:get_pos()
 	local yaw = self.object:get_yaw()
 
+	-- sanity check
+	if not yaw then return false end
+
 	-- what is mob standing on?
 	pos.y = pos.y + self.collisionbox[2] - 0.2
 	local nod = node_ok(pos)
@@ -910,6 +949,18 @@ function mob_class:do_jump()
 		z = pos.z + dir_z
 	})
 
+	-- what is above and in front?
+	local nodt = node_ok({
+		x = pos.x + dir_x,
+		y = pos.y + 1.5,
+		z = pos.z + dir_z
+	})
+
+	-- is there space to jump up?
+	if minetest.registered_nodes[nodt.name].walkable == true then
+		return false
+	end
+
 	-- thin blocks that do not need to be jumped
 	if nod.name == node_snow then
 		return false
@@ -919,7 +970,9 @@ function mob_class:do_jump()
 
 	if self.walk_chance == 0
 			or minetest.registered_items[nod.name].walkable then
-		if not nod.name:find("fence") and not nod.name:find("gate") then
+		if not nod.name:find("fence")
+				and not nod.name:find("gate")
+				and not nod.name:find("wall") then
 			local v = self.object:get_velocity()
 			v.y = self.jump_height
 
@@ -942,6 +995,8 @@ function mob_class:do_jump()
 			end
 		else
 			self.facing_fence = true
+
+			return false
 		end
 
 		-- if we jumped against a block/wall 4 times then turn
@@ -1124,9 +1179,13 @@ function mob_class:breed()
 					if self.child_texture then
 						textures = self.child_texture[1]
 					end
-					
-					local infotext = Sl("Owned by @1", Sl(self.owner))
-					
+
+					local infotext = ""
+					local owner = (self.owner ~= nil and self.owner) or ""
+					if owner and owner ~= "" then
+						infotext = Sl("Owned by @1", Sl(owner and owner or ""))
+					end
+
 					-- and resize to half height
 					mob:set_properties({
 						textures = textures,
@@ -1485,6 +1544,7 @@ end
 function mob_class:general_attack()
 	-- return if already attacking, passive or docile during day
 	if self.passive
+			or self.state == "runaway"
 			or self.state == "attack"
 			or self:day_docile() then
 		return
@@ -1833,19 +1893,16 @@ function mob_class:do_states(dtime)
 		-- is there something I need to avoid?
 		if self.water_damage > 0
 				and self.lava_damage > 0 then
-			lp = minetest.find_node_near(s, 1, {"group:water", "group:lava"})
+			lp = minetest.find_node_near(s, 1, {"group:water", "group:igniter"})
 		elseif self.water_damage > 0 then
 			lp = minetest.find_node_near(s, 1, {"group:water"})
 		elseif self.lava_damage > 0 then
-			lp = minetest.find_node_near(s, 1, {"group:lava"})
+			lp = minetest.find_node_near(s, 1, {"group:igniter"})
 		end
 
 		if lp then
-			-- if mob in water or lava then look for land
-			if (self.lava_damage
-					and minetest.registered_nodes[self.standing_in].groups.lava)
-					or (self.water_damage
-					and minetest.registered_nodes[self.standing_in].groups.water) then
+			-- if mob in dangerous node then look for land
+			if is_node_dangerous(self, self.standing_in) then
 				lp = minetest.find_node_near(s, 5, {
 					"group:soil", "group:stone",
 					"group:sand", node_ice, node_snowblock
@@ -2248,6 +2305,9 @@ function mob_class:falling(pos)
 	-- floating in water (or falling)
 	local v = self.object:get_velocity()
 
+	-- sanity check
+	if not v then return end
+
 	if v.y > 0 then
 		-- apply gravity when moving up
 		self.object:set_acceleration({
@@ -2287,7 +2347,7 @@ function mob_class:falling(pos)
 				self.health = self.health - floor(d - 5)
 			--	effect(pos, 5, "item_smoke.png", 1, 2, 2, nil)
 				if self:check_for_death({type = "fall"}) then
-					return
+					return true
 				end
 			end
 
@@ -2435,6 +2495,10 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir)
 	-- knock back effect (only on full punch)
 	if self.knock_back and tflp >= punch_interval then
 		local v = self.object:get_velocity()
+
+		-- sanity check
+		if not v then return end
+
 		local kb = damage or 1
 		local up = 2
 
@@ -2728,7 +2792,10 @@ end
 -- main mob function
 function mob_class:on_step(dtime)
 	local pos = self.object:get_pos()
-	local yaw = 0
+	local yaw = self.object:get_yaw()
+
+	-- early warning check, if no yaw then no entity, skip rest of function
+	if not yaw then return end
 
 	-- get node at foot level every quarter second
 	self.node_timer = (self.node_timer or 0) + dtime
@@ -2769,14 +2836,13 @@ function mob_class:on_step(dtime)
 		self:mob_expire(pos, 0.25)
 	end
 
-	-- check if falling, flying, floating
-	self:falling(pos)
+	-- check if falling, flying, floating and return if player died
+	if self:falling(pos) then
+		return
+	end
 
 	-- smooth rotation by ThomasMonroe314
-
 	if self.delay and self.delay > 0 then
-		local yaw = self.object:get_yaw()
-
 		if self.delay == 1 then
 			yaw = self.target_yaw
 		else
@@ -2805,7 +2871,6 @@ function mob_class:on_step(dtime)
 		self.delay = self.delay - 1
 		self.object:set_yaw(yaw)
 	end
-
 	-- end rotation
 
 	-- knockback timer
@@ -3327,7 +3392,7 @@ local function spawn_mob(pos, mob, data, placer)
 				local pn = placer:get_player_name()
 				ent.owner = pn
 				ent.tamed = true
-				local infotext = Sl("Owned by @1", Sl(pn)) 
+				local infotext = Sl("Owned by @1", Sl(pn))
 				ent.infotext = infotext
 				obj:set_properties({
 					infotext = infotext
