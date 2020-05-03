@@ -61,14 +61,6 @@ Boat: cruise mode off = Лодка: круизный режим выключен
 Bone Meal = Костная Мука
 
 
-#bucket
-Empty Bucket = Пустое Ведро
-Water Bucket = Ведро Воды
-River Water Bucket = Ведро Речной Воды
-Lava Bucket = Ведро Лавы
-Milk Bucket = Ведро Молока
-
-
 #carts
 Cart (Sneak+Click to pick up) = Вагонетка (Приседание+Нажатие чтобы взять)
 You cannot pick up a Cart! = Вы не можете забрать Вагонетку!
@@ -106,8 +98,6 @@ Crafting Guide = Руководство Крафта
 Craft Guide = Руководство
 Usage: = Примен.:
 Recipe: = Рецепт:
-of = из
-Page: = Страница:
 Clear = Очистить
 Search = Искать
 Previous page = Предыдущая страница
@@ -137,7 +127,11 @@ Torch = Факел
 Empty Bookshelf = Пустой Книжный Шкаф
 Books: = Книг:
 Empty Books: = Пустых Книг:
-
+Title: = Название:
+Contents: = Содержание:
+by @1 = автор: @1
+Page: @1 of @2 = Страница: @1 из @2
+"@1" by @2 = "@1", автор: @2
 Stick = Палка
 Paper = Бумага
 Book = Книга
@@ -341,7 +335,11 @@ Flint and Steel = Огниво
 #flowers
 Red Rose = Красная Роза
 Orange Tulip = Оранжевый Тюльпан
+Pink Tulip = Розовый Тюльпан
+Red Tulip = Красный Тюльпан
+White Tulip = Белый Тюльпан
 Yellow Dandelion = Желтый Одуванчик
+Houstonia = Хоустония
 Blue Orchid = Голубая Орхидея
 Allium = Аллиум
 White Oxeye = Белый Нивяник
