@@ -1,5 +1,5 @@
 local abs, floor, min, pi = math.abs, math.floor, math.min, math.pi
-local vector_equals, vector_length, vector_multiply, vector_round = vector.equals, vector.length, vector.multiply, vector.round
+local vector_add, vector_equals, vector_length, vector_multiply, vector_round = vector.add, vector.equals, vector.length, vector.multiply, vector.round
 local sp = minetest.is_singleplayer()
 
 local cart_entity = {
@@ -57,6 +57,7 @@ function cart_entity:on_activate(staticdata, dtime_s)
 	if self.old_pos and carts:is_rail(self.old_pos, self.railtype) then
 		self.object:set_pos(self.old_pos)
 	end
+	self.owner = data.owner
 	self.age = (data.age or 0) + dtime_s
 end
 
@@ -65,6 +66,7 @@ function cart_entity:get_staticdata()
 		railtype = self.railtype,
 		old_dir = self.old_dir,
 		old_pos = self.old_pos,
+		owner = self.owner,
 		age = self.age
 	})
 end
@@ -76,7 +78,7 @@ function cart_entity:on_detach_child(child)
 	end
 end
 
-function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities, direction)
+function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities)
 	local pos = self.object:get_pos()
 	local vel = self.object:get_velocity()
 	if not self.railtype or vector_equals(vel, {x=0, y=0, z=0}) then
@@ -186,19 +188,22 @@ local function rail_sound(self, dtime)
 	end
 end
 
+local drop_timer = 180 -- 3 min
 local function rail_on_step(self, dtime)
 	-- Drop cart if there is no player or items inside.
-	if not sp and not self.driver and #self.attached_items == 0 then
-		local drop_timer = 120 -- 2 min
-
-		self.age = (self.age or 0) + dtime
-		if self.age > drop_timer then
-			minetest.add_item(self.object:get_pos(), "carts:cart")
-			if self.sound_handle then
-				minetest.sound_stop(self.sound_handle)
+	if not sp then
+		if not self.driver and #self.attached_items == 0 then
+			self.age = (self.age or 0) + dtime
+			if self.age > drop_timer then
+				if self.sound_handle then
+					minetest.sound_stop(self.sound_handle)
+				end
+				minetest.add_item(self.object:get_pos(), "carts:cart")
+				self.object:remove()
+				return
 			end
-			self.object:remove()
-			return
+		else
+			self.age = 0
 		end
 	end
 
@@ -218,9 +223,15 @@ local function rail_on_step(self, dtime)
 	end
 
 	local vel = self.object:get_velocity()
-	if not minetest.is_valid_pos(vel) then return end
+
 	if self.punched then
-		vel = vector.add(vel, self.velocity)
+		vel = vector_add(vel, self.velocity)
+
+		if not minetest.is_valid_pos(vel) then
+			core.log("error", "carts: vel")
+			return
+		end
+
 		self.object:set_velocity(vel)
 		self.old_dir.y = 0
 	elseif vector_equals(vel, {x=0, y=0, z=0}) then
@@ -437,7 +448,7 @@ local function rail_on_step(self, dtime)
 	end
 end
 
-function carts:on_rail_step(entity, pos, distance)
+function carts:on_rail_step(_, pos)
 	if minetest.global_exists("mesecon") then
 		carts:signal_detector_rail(pos)
 	end
