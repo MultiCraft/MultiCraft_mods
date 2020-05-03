@@ -12,6 +12,6 @@ local name = {
 	"kitten", "pig", "sheep"
 }
 
-for _, name in pairs(name) do
-	dofile(path .. "/" .. name .. ".lua")
+for _, mob in pairs(name) do
+	dofile(path .. "/" .. mob .. ".lua")
 end
