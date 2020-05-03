@@ -42,6 +42,11 @@ end
 local get_node = minetest.get_node
 local get_item_group = minetest.get_item_group
 function carts:is_rail(pos, railtype)
+	if not minetest.is_valid_pos(pos) then
+		core.log("error", "carts: is_rail")
+		return false
+	end
+
 	local node = get_node(pos).name
 	if node == "ignore" then
 		local vm = minetest.get_voxel_manip()
@@ -52,7 +57,7 @@ function carts:is_rail(pos, railtype)
 		}
 		local data = vm:get_data()
 		local vi = area:indexp(pos)
-		node = minetest.get_name_from_content_id(data[vi])
+		node = minetest.get_name_from_content_id(data[vi] or 0)
 	end
 	if get_item_group(node, "rail") == 0 then
 		return false
