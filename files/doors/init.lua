@@ -337,20 +337,20 @@ function doors.register(name, def)
 	}
 
 	if not def.on_rightclick then
-		def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+		def.on_rightclick = function(pos, node, clicker, itemstack)
 			doors.door_toggle(pos, node, clicker)
 			return itemstack
 		end
 	end
 
 	def.mesecons = {effector = {
-		action_on = function(pos, node)
+		action_on = function(pos)
 			local door = doors.get(pos)
 			if door then
 				door:open()
 			end
 		end,
-		action_off = function(pos, node)
+		action_off = function(pos)
 			local door = doors.get(pos)
 			if door then
 				door:close()
@@ -358,12 +358,12 @@ function doors.register(name, def)
 		end
 	}}
 
-	def.after_dig_node = function(pos, node, meta, digger)
+	def.after_dig_node = function(pos)
 		minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
 		minetest.check_for_falling({x = pos.x, y = pos.y + 1, z = pos.z})
 	end
 
-	def.on_rotate = function(pos, node, user, mode, new_param2)
+	def.on_rotate = function()
 		return false
 	end
 
@@ -371,7 +371,7 @@ function doors.register(name, def)
 		def.on_blast = function() end
 		def.node_dig_prediction = ""
 	else
-		def.on_blast = function(pos, intensity)
+		def.on_blast = function(pos)
 			minetest.remove_node(pos)
 			return {name}
 		end
@@ -439,19 +439,19 @@ function doors.register_trapdoor(name, def)
 
 	def.description = S(def.description)
 	
-	def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+	def.on_rightclick = function(pos, node, clicker, itemstack)
 		doors.trapdoor_toggle(pos, node, clicker)
 		return itemstack
 	end
 
 	def.mesecons = {effector = {
-		action_on = function(pos, node)
+		action_on = function(pos)
 			local door = doors.get(pos)
 			if door then
 				door:open()
 			end
 		end,
-		action_off = function(pos, node)
+		action_off = function(pos)
 			local door = doors.get(pos)
 			if door then
 				door:close()
@@ -466,7 +466,7 @@ function doors.register_trapdoor(name, def)
 	def.is_ground_content = false
 
 	if def.protected then
-		def.after_place_node = function(pos, placer, itemstack, pointed_thing)
+		def.after_place_node = function(pos, placer)
 			local pn = placer:get_player_name()
 			local meta = minetest.get_meta(pos)
 			meta:set_string("owner", pn)
@@ -478,7 +478,7 @@ function doors.register_trapdoor(name, def)
 		def.on_blast = function() end
 		def.node_dig_prediction = ""
 	else
-		def.on_blast = function(pos, intensity)
+		def.on_blast = function(pos)
 			minetest.remove_node(pos)
 			return {name}
 		end
@@ -614,19 +614,19 @@ function doors.register_fencegate(name, def)
 	local name_closed = name
 	local name_opened = name .. "_open"
 
-	def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+	def.on_rightclick = function(pos, node, clicker, itemstack)
 		doors.fencegate_toggle(pos, node, clicker)
 		return itemstack
 	end
 
 	def.mesecons = {effector = {
-		action_on = function(pos, node)
+		action_on = function(pos)
 			local door = doors.get(pos)
 			if door then
 				door:open()
 			end
 		end,
-		action_off = function(pos, node)
+		action_off = function(pos)
 			local door = doors.get(pos)
 			if door then
 				door:close()
