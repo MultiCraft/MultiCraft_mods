@@ -1,18 +1,5 @@
 -- mods/default/craftitems.lua
 
-minetest.register_craftitem("default:stick", {
-	description = "Stick",
-	inventory_image = "default_stick.png",
-	groups = {stick = 1, flammable = 2}
-})
-
-minetest.register_craftitem("default:paper", {
-	description = "Paper",
-	inventory_image = "default_paper.png",
-	groups = {flammable = 3}
-})
-
-
 local lpp = 14 -- Lines per book's page
 local function book_on_use(itemstack, user)
 	local player_name = user:get_player_name()
@@ -49,23 +36,24 @@ local function book_on_use(itemstack, user)
 	end
 
 	local formspec
+	local esc = minetest.formspec_escape
 	if owner == player_name then
 		formspec = "size[8,8]" ..
-			"field[0.5,1;7.5,0;title;Title:;" ..
-				minetest.formspec_escape(title) .. "]" ..
-			"textarea[0.5,1.5;7.5,7;text;Contents:;" ..
-				minetest.formspec_escape(text) .. "]" ..
-			"button_exit[2.5,7.5;3,1;save;Save]"
+			"field[0.5,1;7.5,0;title;" .. Sl("Title:") .. ";" ..
+				esc(title) .. "]" ..
+			"textarea[0.5,1.5;7.5,7;text;" .. Sl("Contents:") .. ";" ..
+				esc(text) .. "]" ..
+			"button_exit[2.5,7.5;3,1;save;" .. Sl("Save") .. "]"
 	else
 		formspec = "size[8,8]" ..
-			"label[0.5,0.5;by " .. owner .. "]" ..
+			"label[0.5,0.5;" .. Sl("by @1", owner) .. "]" ..
 			"tablecolumns[color;text]" ..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
-			"table[0.4,0;7,0.5;title;#FFFF00," .. minetest.formspec_escape(title) .. "]" ..
+			"table[0.4,0;7,0.5;title;#FFFF00," .. esc(title) .. "]" ..
 			"textarea[0.5,1.5;7.5,7;;" ..
 				minetest.formspec_escape(string ~= "" and string or text) .. ";]" ..
 			"button[2.4,7.6;0.8,0.8;book_prev;<]" ..
-			"label[3.2,7.7;Page " .. page .. " of " .. page_max .. "]" ..
+			"label[3.2,7.7;" .. Sl("Page: @1 of @2", page, page_max) .. "]" ..
 			"button[4.9,7.6;0.8,0.8;book_next;>]"
 	end
 
@@ -108,7 +96,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if #short_title > short_title_size + 3 then
 			short_title = short_title:sub(1, short_title_size) .. "..."
 		end
-		data.description = "\""..short_title.."\" by "..data.owner
+		data.description = Sl("\"@1\" by @2", short_title, data.owner)
 		data.text = fields.text:sub(1, max_text_size)
 		data.text = data.text:gsub("\r\n", "\n"):gsub("\r", "\n")
 		data.page = 1
@@ -191,10 +179,23 @@ minetest.register_craftitem("default:clay_lump", {
 	inventory_image = "default_clay_lump.png"
 })
 
+minetest.register_craftitem("default:paper", {
+	description = "Paper",
+	inventory_image = "default_paper.png",
+	groups = {flammable = 3}
+})
+
 minetest.register_craftitem("default:steel_ingot", {
 	description = "Steel Ingot",
 	inventory_image = "default_steel_ingot.png"
 })
+
+minetest.register_craftitem("default:stick", {
+	description = "Stick",
+	inventory_image = "default_stick.png",
+	groups = {stick = 1, flammable = 2}
+})
+
 
 minetest.register_craftitem("default:gold_ingot", {
 	description = "Gold Ingot",
@@ -276,3 +277,18 @@ minetest.register_craftitem("default:snowball", {
 		return itemstack
 	end
 })
+
+--
+-- Crafting recipes
+--
+
+minetest.register_craft({
+	output = "default:book",
+	recipe = {
+		{"default:paper"},
+		{"default:paper"},
+		{"default:paper"},
+	}
+})
+
+default.register_craft_metadata_copy("default:book", "default:book_written")

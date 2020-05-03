@@ -9,8 +9,8 @@ Various Minetest developers and contributors (LGPLv3.0+)
 MoNTE48, Maksim D. Gamarnik <MoNTE48@mail.ua> (LGPLv3.0+)
 MultiCraft Development Team (LGPLv3.0+)
 
-The torch code was derived by sofar from the 'torches' mod by
-BlockMen (LGPLv3.0+)
+The torch code was derived by sofar from the 'torches' mod by BlockMen (LGPLv3.0+)
+The torch API by MoNTE48 (LGPLv3.0+)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
