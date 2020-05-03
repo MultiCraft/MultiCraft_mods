@@ -99,13 +99,38 @@ flowers.datas = {
 		"White Oxeye",
 		{-3 / 16, -0.5, -3 / 16, 3 / 16, 2 / 6, 3 / 16},
 		{color_white = 1, flammable = 1}
-	}
+	},
+	{
+		"sunflower",
+		"Sunflower",
+		{-3 / 9, -0.5, -3 / 9, 3 / 9, 15 / 16, 3 / 9},
+		{color_yellow = 1, flammable = 1}
+	},
 }
 
 for _, item in pairs(flowers.datas) do
 	add_simple_flower(unpack(item))
 end
 
+-- set sunflower scale and drop
+local sunflower_drops = {
+	{items = {"flowers:sunflower"}}
+}
+
+if minetest.get_modpath("farming_plants") then
+	sunflower_drops = {
+		{items = {"flowers:sunflower"}, rarity = 2},
+		{items = {"farming_plants:seed_sunflower"}}
+	}
+end
+
+minetest.override_item("flowers:sunflower", {
+	visual_scale = 1.5,
+	drop = {
+		max_items = 1,
+		items = sunflower_drops
+	}
+})
 
 -- Flower spread
 -- Public function to enable override by mods
