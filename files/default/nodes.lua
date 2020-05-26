@@ -1328,7 +1328,7 @@ local function update_bookshelf(pos)
 		meta:set_string("infotext", Sl("Empty Bookshelf"))
 	else
 		meta:set_string("infotext", Sl("Bookshelf") .. "\n(" ..
-			 Sl("Books:") .. " " .. n_written .. ", " .. Sl("Empty Books:") .. " " .. n_empty .. ")")
+			Sl("Books:") .. " " .. n_written .. ", " .. Sl("Empty Books:") .. " " .. n_empty .. ")")
 	end
 end
 
@@ -1652,7 +1652,6 @@ minetest.register_node("default:quartz_ore", {
 	description = "Quartz Ore",
 	tiles = {"default_quartz_ore.png"},
 	groups = {cracky = 3, quartz = 1},
-	drop = "default:quartz_crystal",
 	sounds = default.node_sound_stone_defaults()
 })
 

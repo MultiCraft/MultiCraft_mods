@@ -391,7 +391,6 @@ function default.register_ladder(name, def)
 	local default_fields = {
 		paramtype = "light",
 		drawtype = "nodebox",
-		paramtype = "light",
 		paramtype2 = "wallmounted",
 		node_box = {
 			type = "fixed",

@@ -103,7 +103,7 @@ minetest.register_tool("default:pick_ruby", {
 	},
 	sound = {breaks = "default_tool_breaks"}
 })
-	
+
 --
 -- Shovels
 --
