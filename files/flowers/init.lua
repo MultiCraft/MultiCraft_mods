@@ -2,9 +2,14 @@
 
 flowers = {}
 
+-- Intllib
+local S = intllib.make_gettext_pair()
+
 -- Map Generation
 
 dofile(minetest.get_modpath("flowers") .. "/mapgen.lua")
+
+local min, random = math.min, math.random
 
 --
 -- Flowers
@@ -12,20 +17,24 @@ dofile(minetest.get_modpath("flowers") .. "/mapgen.lua")
 
 -- Flower registration
 
-local function add_simple_flower(name, desc, box, f_groups)
+local function add_simple_flower(name, desc, box, f_groups, inv)
 	-- Common flowers' groups
 	f_groups.snappy = 3
 	f_groups.flower = 1
 	f_groups.flora = 1
 	f_groups.attached_node = 1
+	f_groups.flammable = 1
+
+	local image = "flowers_" .. name .. ".png"
+	local inventory_image = inv and "flowers_" .. name .. "_inv.png" or image
 
 	minetest.register_node("flowers:" .. name, {
-		description = desc,
+		description = S(desc),
 		drawtype = "plantlike",
 		waving = 1,
-		tiles = {"flowers_" .. name .. ".png"},
-		inventory_image = "flowers_" .. name .. ".png",
-		wield_image = "flowers_" .. name .. ".png",
+		tiles = {image},
+		inventory_image = inventory_image,
+		wield_image = inventory_image,
 		sunlight_propagates = true,
 		paramtype = "light",
 		walkable = false,
@@ -39,84 +48,196 @@ local function add_simple_flower(name, desc, box, f_groups)
 	})
 end
 
+local rose_size			= {-0.18, -0.5, -0.18, 0.18, 0.27, 0.18}
+local tulip_size		= {-0.16, -0.5, -0.16, 0.16, 0.18, 0.16}
+local houstonia_size	= {-0.23, -0.5, -0.23, 0.23, 0.06, 0.23}
+local orchid_size		= {-0.31, -0.5, -0.31, 0.31, 0.37, 0.31}
+local allium_size		= {-0.19, -0.5, -0.19, 0.19, 0.38, 0.19}
+local oxeye_daisy_size	= {-0.19, -0.5, -0.19, 0.19, 0.33, 0.19}
+
 flowers.datas = {
+	-- Rose
 	{
 		"rose",
 		"Red Rose",
-		{-1 / 8, -0.5, -1 / 8, 1 / 8, 3 / 16, 1 / 8},
-		{color_red = 1, flammable = 1}
+		rose_size,
+		{color_red = 1}
 	},
+	{
+		"rose_burgundy",
+		"Burgundy Rose",
+		rose_size,
+		{color_red = 1}
+	},
+	{
+		"rose_pink",
+		"Pink Rose",
+		rose_size,
+		{color_pink = 1}
+	},
+	{
+		"rose_white",
+		"White Rose",
+		rose_size,
+		{color_white = 1}
+	},
+	{
+		"rose_yellow",
+		"Yellow Rose",
+		rose_size,
+		{color_yellow = 1}
+	},
+
+	-- Tulip
 	{
 		"tulip",
 		"Orange Tulip",
-		{-1 / 8, -0.5, -1 / 8, 1 / 8, 5 / 16, 1 / 8},
-		{color_orange = 1, flammable = 1}
+		tulip_size,
+		{color_orange = 1}
+	},
+	{
+		"tulip_burgundy",
+		"Burgundy Tulip",
+		tulip_size,
+		{color_red = 1}
 	},
 	{
 		"tulip_pink",
 		"Pink Tulip",
-		{-1 / 8, -0.5, -1 / 8, 1 / 8, 5 / 16, 1 / 8},
-		{color_pink = 1, flammable = 1}
+		tulip_size,
+		{color_pink = 1}
 	},
 	{
 		"tulip_red",
 		"Red Tulip",
-		{-1 / 8, -0.5, -1 / 8, 1 / 8, 5 / 16, 1 / 8},
-		{color_red = 1, flammable = 1}
+		tulip_size,
+		{color_red = 1}
+	},
+	{
+		"tulip_violet",
+		"Violet Tulip",
+		tulip_size,
+		{color_violet = 1}
 	},
 	{
 		"tulip_white",
 		"White Tulip",
-		{-1 / 8, -0.5, -1 / 8, 1 / 8, 5 / 16, 1 / 8},
-		{color_white = 1, flammable = 1}
+		tulip_size,
+		{color_white = 1}
 	},
+	{
+		"tulip_yellow",
+		"Yellow Tulip",
+		tulip_size,
+		{color_yellow = 1}
+	},
+
+	-- Dandelion
 	{
 		"dandelion_yellow",
 		"Yellow Dandelion",
-		{-1 / 8, -0.5, -1 / 8, 1 / 8, 0, 1 / 8},
-		{color_yellow = 1, flammable = 1}
+		{-0.25, -0.5, -0.25, 0.25, 0, 0.25},
+		{color_yellow = 1}, true
 	},
+
+	-- Houstonia
 	{
 		"houstonia",
-		"Houstonia",
-		{-1 / 5, -0.5, -1 / 5, 1 / 5, 1 / 10, 1 / 5},
-		{color_white = 1, flammable = 1}
+		"White Houstonia",
+		houstonia_size,
+		{color_white = 1}
 	},
+	{
+		"houstonia_blue",
+		"Blue Houstonia",
+		houstonia_size,
+		{color_blue = 1}
+	},
+	{
+		"houstonia_pink",
+		"Pink Houstonia",
+		houstonia_size,
+		{color_pink = 1}
+	},
+
+
+	-- Orchid
 	{
 		"orchid",
 		"Blue Orchid",
-		{-1 / 4, -0.5, -1 / 4, 1 / 4, 1 / 3, 1 / 4},
-		{color_blue = 1, flammable = 1}
+		orchid_size,
+		{color_blue = 1}
 	},
 	{
-		"allium",
-		"Allium",
-		{-3 / 16, -0.5, -3 / 16, 3 / 16, 6 / 16, 3 / 16},
-		{color_violet = 1, flammable = 1}
+		"orchid_pink",
+		"Pink Orchid",
+		orchid_size,
+		{color_pink = 1}
 	},
+	{
+		"orchid_white",
+		"White Orchid",
+		orchid_size,
+		{color_white = 1}
+	},
+
+	-- Allium
+	{
+		"allium",
+		"Violet Allium",
+		allium_size,
+		{color_violet = 1}
+	},
+	{
+		"allium_blue",
+		"Blue Allium",
+		allium_size,
+		{color_blue = 1}
+	},
+	{
+		"allium_white",
+		"White Allium",
+		allium_size,
+		{color_white = 1}
+	},
+	{
+		"allium_magenta",
+		"Magenta Allium",
+		allium_size,
+		{color_magenta = 1}
+	},
+
+	-- Oxeye
 	{
 		"oxeye_daisy",
 		"White Oxeye",
-		{-3 / 16, -0.5, -3 / 16, 3 / 16, 2 / 6, 3 / 16},
-		{color_white = 1, flammable = 1}
+		oxeye_daisy_size,
+		{color_white = 1}
 	},
+	{
+		"oxeye_daisy_pink",
+		"Pink Oxeye",
+		oxeye_daisy_size,
+		{color_pink = 1}
+	},
+
+	-- Sunflower
 	{
 		"sunflower",
 		"Sunflower",
-		{-3 / 9, -0.5, -3 / 9, 3 / 9, 15 / 16, 3 / 9},
-		{color_yellow = 1, flammable = 1}
-	},
+		{-0.33, -0.5, -0.33, 0.33, 0.95, 0.33},
+		{color_yellow = 1}
+	}
 }
 
 for _, item in pairs(flowers.datas) do
 	add_simple_flower(unpack(item))
 end
 
--- set sunflower scale and drop
+-- Set sunflower scale and drop
 local sunflower_drops = {
 	{items = {"flowers:sunflower"}}
 }
-
 if minetest.get_modpath("farming_plants") then
 	sunflower_drops = {
 		{items = {"flowers:sunflower"}, rarity = 2},
@@ -136,9 +257,7 @@ minetest.override_item("flowers:sunflower", {
 -- Public function to enable override by mods
 
 function flowers.flower_spread(pos, node)
-	pos.y = pos.y - 1
-	local under = minetest.get_node(pos)
-	pos.y = pos.y + 1
+	local under = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z})
 	-- Replace flora with dry shrub in desert sand and silver sand,
 	-- as this is the only way to generate them.
 	-- However, preserve grasses in sand dune biomes.
@@ -172,8 +291,8 @@ function flowers.flower_spread(pos, node)
 		pos0, pos1, "group:soil")
 	local num_soils = #soils
 	if num_soils >= 1 then
-		for si = 1, math.min(3, num_soils) do
-			local soil = soils[math.random(num_soils)]
+		for _ = 1, min(3, num_soils) do
+			local soil = soils[random(num_soils)]
 			local soil_name = minetest.get_node(soil).name
 			local soil_above = {x = soil.x, y = soil.y + 1, z = soil.z}
 			light = minetest.get_node_light(soil_above)
@@ -184,9 +303,9 @@ function flowers.flower_spread(pos, node)
 					soil_name ~= "default:redsand" then
 					-- Spread also other flowers.
 				local flower = node.name
-				if math.random(3) == 1 then
+				if random(3) == 1 then
 					local fdata = flowers.datas
-					flower = "flowers:" .. fdata[math.random(#fdata)][1]
+					flower = "flowers:" .. fdata[random(#fdata)][1]
 				end
 
 				minetest.set_node(soil_above, {name = flower})
@@ -211,11 +330,11 @@ minetest.register_abm({
 --
 
 minetest.register_node("flowers:mushroom_red", {
-	description = "Red Mushroom",
-	tiles = {"3dmushrooms_red.png"},
-	inventory_image = "3dmushrooms_red_inv.png",
+	description = S"Red Mushroom",
+	tiles = {"flowers_mushroom_red.png"},
+	inventory_image = "flowers_mushroom_red_inv.png",
 	drawtype = "mesh",
-	mesh = "3dmushrooms.obj",
+	mesh = "flowers_mushroom.obj",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -230,11 +349,11 @@ minetest.register_node("flowers:mushroom_red", {
 })
 
 minetest.register_node("flowers:mushroom_brown", {
-	description = "Brown Mushroom",
-	tiles = {"3dmushrooms_brown.png"},
-	inventory_image = "3dmushrooms_brown_inv.png",
+	description = S"Brown Mushroom",
+	tiles = {"flowers_mushroom_brown.png"},
+	inventory_image = "flowers_mushroom_brown_inv.png",
 	drawtype = "mesh",
-	mesh = "3dmushrooms.obj",
+	mesh = "flowers_mushroom.obj",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -265,7 +384,7 @@ function flowers.mushroom_spread(pos, node)
 	if #positions == 0 then
 		return
 	end
-	local pos2 = positions[math.random(#positions)]
+	local pos2 = positions[random(#positions)]
 	pos2.y = pos2.y + 1
 	if minetest.get_node_light(pos2, 0.5) <= 3 then
 		minetest.set_node(pos2, {name = node.name})
@@ -298,7 +417,7 @@ minetest.register_alias("mushroom:red_natural", "flowers:mushroom_red")
 --
 
 minetest.register_node("flowers:waterlily", {
-	description = "Waterlily",
+	description = S"Waterlily",
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",
@@ -314,11 +433,11 @@ minetest.register_node("flowers:waterlily", {
 	node_placement_prediction = "",
 	node_box = {
 		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -15 / 32, 0.5}
+		fixed = {-0.5, -0.5, -0.5, 0.5, -15/32, 0.5}
 	},
 	selection_box = {
 		type = "fixed",
-		fixed = {-7 / 16, -0.5, -7 / 16, 7 / 16, -15 / 32, 7 / 16}
+		fixed = {-7/16, -0.5, -7/16, 7/16, -15/32, 7/16}
 	},
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -327,8 +446,8 @@ minetest.register_node("flowers:waterlily", {
 		local def = minetest.registered_nodes[node.name]
 
 		if def and def.on_rightclick then
-			return def.on_rightclick(pointed_thing.under, node, placer, itemstack,
-					pointed_thing)
+			return def.on_rightclick(pointed_thing.under, node, placer,
+					itemstack, pointed_thing) or itemstack
 		end
 
 		if def and def.liquidtype == "source" and
@@ -336,14 +455,11 @@ minetest.register_node("flowers:waterlily", {
 			local player_name = placer and placer:get_player_name() or ""
 			if not minetest.is_protected(pos, player_name) then
 				minetest.set_node(pos, {name = "flowers:waterlily",
-					param2 = math.random(0, 3)})
+					param2 = random(0, 3)})
 				if not (creative and creative.is_enabled_for
 						and creative.is_enabled_for(player_name)) then
 					itemstack:take_item()
 				end
-			else
-				minetest.chat_send_player(player_name, "Node is protected")
-				minetest.record_protection_violation(pos, player_name)
 			end
 		end
 
