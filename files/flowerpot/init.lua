@@ -13,8 +13,9 @@
 flowerpot = {}
 
 -- Handle plant removal from flowerpot
-local function flowerpot_on_punch(pos, node, puncher)
-	if puncher and not minetest.check_player_privs(puncher, "protection_bypass") then
+local function on_punch(pos, node, puncher)
+	if puncher and not
+			minetest.check_player_privs(puncher, "protection_bypass") then
 		local name = puncher:get_player_name()
 		if minetest.is_protected(pos, name) then
 			minetest.record_protection_violation(pos, name)
@@ -31,8 +32,9 @@ local function flowerpot_on_punch(pos, node, puncher)
 end
 
 -- Handle plant insertion into flowerpot
-local function flowerpot_on_rightclick(pos, _, clicker, itemstack)
-	if clicker and not minetest.check_player_privs(clicker, "protection_bypass") then
+local function on_rightclick(pos, _, clicker, itemstack)
+	if clicker and not
+			minetest.check_player_privs(clicker, "protection_bypass") then
 		local name = clicker:get_player_name()
 		if minetest.is_protected(pos, name) then
 			minetest.record_protection_violation(pos, name)
@@ -89,22 +91,19 @@ local pot = {
 	paramtype = "light",
 	sunlight_propagates = true,
 	sounds = default.node_sound_defaults(),
-	groups = {falling_node = 1, oddly_breakable_by_hand = 3, cracky = 1}
-}
-
-local collision_box = {
-	type = "fixed",
-	fixed = {-0.25, -0.5, -0.25, 0.25, -0.125, 0.25}
+	groups = {falling_node = 1, oddly_breakable_by_hand = 3, cracky = 1},
+	collision_box = {
+		type = "fixed",
+		fixed = {-0.25, -0.5, -0.25, 0.25, -0.125, 0.25}
+	}
 }
 
 function flowerpot.register_node(nodename)
-	local nodedef = minetest.registered_nodes[nodename]
-	local name = nodedef.name:gsub(":", "_")
+	local def = minetest.registered_nodes[nodename]
 
 	local node = table.copy(pot)
 	node.mesh = "flowerpot.obj"
-	node.tiles = get_tile(nodedef)
-	node.collision_box = collision_box
+	node.tiles = get_tile(def)
 	node.selection_box = {
 		type = "fixed",
 		fixed = {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25}
@@ -112,9 +111,9 @@ function flowerpot.register_node(nodename)
 	node.groups.not_in_creative_inventory = 1
 	node.drop = {items = {{items = {"flowerpot:pot", nodename}}}}
 	node.flowerpot_plantname = nodename
-	node.on_punch = flowerpot_on_punch
+	node.on_punch = on_punch
 
-	minetest.register_node("flowerpot:" .. name, node)
+	minetest.register_node(":flowerpot:" .. def.name:gsub(":", "_"), node)
 end
 
 -- Empty Flowerpot
@@ -122,14 +121,13 @@ local empty = table.copy(pot)
 empty.description = "Flowerpot"
 empty.mesh = "flowerpot.obj"
 empty.tiles = {"flowerpot.png", "blank.png", "blank.png"}
-empty.collision_box = collision_box
 empty.selection_box = {
 	type = "fixed",
 	fixed = {-0.25, -0.5, -0.25, 0.25, -0.0625, 0.25}
 }
 empty.groups.not_in_creative_inventory = 1
 empty.drop = "flowerpot:pot"
-empty.on_rightclick = flowerpot_on_rightclick
+empty.on_rightclick = on_rightclick
 
 minetest.register_node("flowerpot:empty", empty)
 
@@ -171,16 +169,18 @@ minetest.register_node("flowerpot:pot", inv)
 
 -- Craft
 minetest.register_craft({
-	output = "flowerpot:pot",
+	output = "flowerpot:pot 2",
 	recipe = {
 		{"default:clay_brick", "", "default:clay_brick"},
 		{"", "default:clay_brick", ""}
 	}
 })
 
-local register_pot = flowerpot.register_node
-for node, def in pairs(minetest.registered_nodes) do
-	if def.groups.flora or def.groups.sapling then
-		register_pot(node)
+minetest.after(0, function()
+	local register_pot = flowerpot.register_node
+	for node, def in pairs(minetest.registered_nodes) do
+		if def.groups.flora or def.groups.sapling then
+			register_pot(node)
+		end
 	end
-end
+end)
