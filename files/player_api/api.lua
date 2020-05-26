@@ -16,6 +16,7 @@ local player_model = {}
 local player_textures = {}
 local player_anim = {}
 local player_sneak = {}
+local player_sneak_nametag = {}
 
 local player_skin = {}
 local player_armor = {}
@@ -146,6 +147,7 @@ minetest.register_on_leaveplayer(function(player)
 
 	player_attached[name] = nil
 	player_sneak[name] = nil
+	player_sneak_nametag[name] = nil
 end)
 
 -- Check each player and apply animations
@@ -162,6 +164,20 @@ minetest.register_playerstep(function(_, playernames)
 				-- Determine if the player is sneaking, and reduce animation speed if so
 				if controls.sneak then
 					animation_speed_mod = animation_speed_mod / 2
+
+					if not player_sneak_nametag[name] then
+						local nametag = player:get_nametag_attributes()
+						nametag.color.a = 0
+						player:set_nametag_attributes(nametag)
+						player_sneak_nametag[name] = true
+					end
+				else
+					if player_sneak_nametag[name] then
+						local nametag = player:get_nametag_attributes()
+						nametag.color.a = 255
+						player:set_nametag_attributes(nametag)
+						player_sneak_nametag[name] = false
+					end
 				end
 
 				-- Apply animations based on what the player is doing
