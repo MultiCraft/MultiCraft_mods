@@ -130,7 +130,7 @@ minetest.register_node("bonusbox:chest_cap", {
 minetest.register_decoration({
 	deco_type = "simple",
 	place_on = {"default:sand", "default:dirt_with_snow", "default:gravel",
- 		"default:snowblock", "default:dirt_with_grass", "default:redsand",
+		"default:snowblock", "default:dirt_with_grass", "default:redsand",
 		"default:redsandstone", "default:dirt_with_dry_grass"},
 	sidelen = 80,
 	fill_ratio = 0.0001,

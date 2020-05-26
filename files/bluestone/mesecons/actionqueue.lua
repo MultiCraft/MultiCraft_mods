@@ -50,7 +50,7 @@ function queue:add_action(pos, func, params, time, overwritecheck, priority)
 		priority = priority
 	}
 
-	 -- check if old action has to be overwritten / removed:
+	-- check if old action has to be overwritten / removed:
 	if overwritecheck then
 		for i, ac in pairs(queue.actions) do
 			if vector.equals(pos, ac.pos)
@@ -70,11 +70,6 @@ end
 -- this makes sure that resuming mesecons circuits when restarting minetest works fine (hm, where do we do this?)
 -- However, even that does not work in some cases, that's why we delay the time the globalsteps
 -- start to be execute by 4 seconds
-
-local delaytime =1 -- mesecon.setting("delaytime", core.settings:get("dedicated_server_step") * 2)
-if not minetest.is_singleplayer() then
-	delaytime = delaytime * 3
-end
 
 local function globalstep_func(dtime)
 	local actions = queue.actions

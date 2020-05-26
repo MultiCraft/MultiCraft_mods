@@ -89,7 +89,7 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 		player_api.player_attached[name] = false
 		player:set_physics_override(1, 1, 1)
 		hud_flags.wielditem = true
-		player_api.set_animation(player, "stand", 30)	
+		player_api.set_animation(player, "stand", 30)
 	else -- sit or lay down
 		if vector.length(player:get_player_velocity()) > 0 then
 			return

@@ -232,7 +232,7 @@ function playereffects.cancel_effect(effect_id)
 	if effect ~= nil then
 		local player = minetest.get_player_by_name(effect.playername)
 		local hudinfo = playereffects.hudinfos[effect.playername][effect_id]
-		if hudinfo ~= nil then
+		if player and hudinfo then
 			if hudinfo.text_id ~= nil then
 				player:hud_remove(hudinfo.text_id)
 			end
@@ -240,8 +240,8 @@ function playereffects.cancel_effect(effect_id)
 				player:hud_remove(hudinfo.icon_id)
 			end
 			playereffects.hudinfos[effect.playername][effect_id] = nil
+			playereffects.effect_types[effect.effect_type_id].cancel(effect, player)
 		end
-		playereffects.effect_types[effect.effect_type_id].cancel(effect, player)
 		playereffects.effects[effect_id] = nil
 	end
 end

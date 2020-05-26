@@ -82,7 +82,7 @@ function farming_addons.place_cocoa_bean(itemstack, placer, pointed_thing)
 
 	-- check if NOT pointing at the top/below of the node
 	if pt.above.y == pt.under.y - 1 or
-		 pt.above.y == pt.under.y + 1 then
+		pt.above.y == pt.under.y + 1 then
 		return itemstack
 	end
 	-- check if you can replace the node above the pointed node
