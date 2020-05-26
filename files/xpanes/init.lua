@@ -88,6 +88,9 @@ xpanes = {}
 function xpanes.register_pane(name, def)
 	local flatgroups = table.copy(def.groups)
 	flatgroups.pane = 1
+
+	def.drop = def.drop or "xpanes:" .. name .. "_flat"
+
 	minetest.register_node(":xpanes:" .. name .. "_flat", {
 		description = def.description,
 		drawtype = "nodebox",
@@ -102,7 +105,7 @@ function xpanes.register_pane(name, def)
 			def.textures[2], def.textures[1], def.textures[1]
 		},
 		groups = flatgroups,
-		drop = "xpanes:" .. name .. "_flat",
+		drop = def.drop,
 		sounds = def.sounds,
 		use_texture_alpha = def.use_texture_alpha or false,
 		node_box = {
@@ -126,7 +129,7 @@ function xpanes.register_pane(name, def)
 			def.textures[1], def.textures[1], def.textures[1]
 		},
 		groups = groups,
-		drop = "xpanes:" .. name .. "_flat",
+		drop = def.drop,
 		sounds = def.sounds,
 		use_texture_alpha = def.use_texture_alpha or false,
 		node_box = {
@@ -146,7 +149,7 @@ function xpanes.register_pane(name, def)
 			recipe = def.recipe
 		})
 	end
-	
+
 	for i = 1, 15 do
 		minetest.register_alias("xpanes:" .. name .. "_" .. i, "xpanes:" .. name .. "_flat")
 	end
@@ -157,6 +160,7 @@ xpanes.register_pane("pane", {
 	textures = {"default_glass.png", "xpanes_top_glass.png"},
 	sounds = default.node_sound_glass_defaults(),
 	groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3, glasspane = 1},
+	drop = "",
 	recipe = {
 		{"default:glass", "default:glass", "default:glass"},
 		{"default:glass", "default:glass", "default:glass"}
