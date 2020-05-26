@@ -428,6 +428,12 @@ minetest.register_craft({
 	recipe = "default:stonebrick"
 })
 
+minetest.register_craft({
+	type = "cooking",
+	output = "default:quartz_crystal",
+	recipe = "default:quartz_ore"
+})
+
 
 --
 -- Fuels
