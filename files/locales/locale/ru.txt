@@ -299,7 +299,7 @@ Emerald Hoe = Изумрудная Мотыга
 Ruby Hoe = Рубиновая Мотыга
 
 
-#farming
+#farming_addons
 Carrot = Морковка
 Golden Carrot = Золотая Морковка
 Carrot Seed = Семена Морковки
@@ -328,24 +328,16 @@ Pumpkin Seed = Семена Тыквы
 Empty Bowl = Пустая Миска
 Stewed Pork Bowl = Миска Тушёной Свинины
 
+
+#farming
+Sunflower Seed = Семена Подсолнуха
+Fried Sunflower Seeds = Жареные Семена Подсолнуха
+Sunflower Head = Голова Подсолнуха
+Oil Bottle = Бутыль с Маслом
+
+
 #fire
 Flint and Steel = Огниво
-
-
-#flowers
-Red Rose = Красная Роза
-Orange Tulip = Оранжевый Тюльпан
-Pink Tulip = Розовый Тюльпан
-Red Tulip = Красный Тюльпан
-White Tulip = Белый Тюльпан
-Yellow Dandelion = Желтый Одуванчик
-Houstonia = Хоустония
-Blue Orchid = Голубая Орхидея
-Allium = Аллиум
-White Oxeye = Белый Нивяник
-Red Mushroom = Красный Гриб
-Brown Mushroom = Коричневый Гриб
-Waterlily = Кувшинка
 
 
 #flowerpot
