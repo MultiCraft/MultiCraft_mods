@@ -43,7 +43,7 @@ local get_node = minetest.get_node
 local get_item_group = minetest.get_item_group
 function carts:is_rail(pos, railtype)
 	if not minetest.is_valid_pos(pos) then
-		core.log("error", "carts: is_rail")
+		minetest.log("error", "carts: is_rail")
 		return false
 	end
 
@@ -195,7 +195,7 @@ function carts:pathfinder(pos_, old_pos, old_dir, distance, ctrl,
 	distance = min(carts.path_distance_max,
 		floor(distance + 1))
 
-	for i = 1, distance do
+	for _ = 1, distance do
 		pf_dir, pf_switch = self:get_rail_direction(
 			pf_pos, pf_dir, ctrl, pf_switch or 0, railtype)
 

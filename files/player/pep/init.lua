@@ -438,16 +438,16 @@ function pep.moledig(playername)
 	local digpos1 = vector.add(pos, dir)
 	local digpos2 = {x = digpos1.x, y = digpos1.y + 1, z = digpos1.z}
 
-	local function dig(pos)
-		if not minetest.is_protected(pos, playername) then
-			local node = minetest.get_node(pos)
+	local function dig(digpos)
+		if not minetest.is_protected(digpos, playername) then
+			local node = minetest.get_node(digpos)
 			local def = minetest.registered_nodes[node.name]
 			if def.walkable and def.diggable and
-					(def.can_dig == nil or def.can_dig(pos, player)) then
-				minetest.node_dig(pos, node, player)
+					(def.can_dig == nil or def.can_dig(digpos, player)) then
+				minetest.node_dig(digpos, node, player)
 
 				if def.sounds and def.sounds.dug then
-					minetest.sound_play(def.sounds.dug, {pos = pos})
+					minetest.sound_play(def.sounds.dug, {pos = digpos})
 				end
 			end
 		end

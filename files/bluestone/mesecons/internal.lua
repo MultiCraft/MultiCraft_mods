@@ -24,7 +24,7 @@
 -- SIGNALS
 -- mesecon.activate(pos, node, depth)				--> Activates   the effector node at the specific pos (calls nodedef.mesecons.effector.action_on), higher depths are executed later
 -- mesecon.deactivate(pos, node, depth)				--> Deactivates the effector node at the specific pos (calls nodedef.mesecons.effector.action_off), higher depths are executed later
--- mesecon.changesignal(pos, node, rulename, newstate, depth)	--> Changes	 the effector node at the specific pos (calls nodedef.mesecons.effector.action_change), higher depths are executed later
+-- mesecon.changesignal(pos, node, rulename, newstate, depth)	--> Changes the effector node at the specific pos (calls nodedef.mesecons.effector.action_change), higher depths are executed later
 
 -- CONDUCTORS
 -- mesecon.is_conductor(nodename)	--> Returns true if nodename is a conductor
@@ -182,7 +182,7 @@ end
 -- #######################
 
 -- Delay
-local delaytime = mesecon.setting("delaytime", core.settings:get("dedicated_server_step") * 2)
+local delaytime = mesecon.setting("delaytime", minetest.settings:get("dedicated_server_step") * 2)
 if not minetest.is_singleplayer() then
 	delaytime = delaytime * 3
 end
@@ -221,7 +221,7 @@ mesecon.queue:add_function("deactivate", function (pos, rulename)
 		effector.action_off (pos, node, rulename)
 	end
 end)
-	
+
 function mesecon.deactivate(pos, node, rulename, depth)
 		if rulename == nil then
 		for _,rule in ipairs(mesecon.effector_get_rules(node)) do
@@ -526,10 +526,10 @@ function mesecon.is_powered(pos, rule)
 
 	-- List of nodes that send out power to pos
 	local sourcepos = {}
-	
+
 	if not rule then
-		for _, rule in ipairs(mesecon.flattenrules(rules)) do
-			local rulenames = mesecon.rules_link_rule_all_inverted(pos, rule)
+		for _, r in ipairs(mesecon.flattenrules(rules)) do
+			local rulenames = mesecon.rules_link_rule_all_inverted(pos, r)
 			for _, rname in ipairs(rulenames) do
 				local np = vector.add(pos, rname)
 				local nn = mesecon.get_node_force(np)

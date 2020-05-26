@@ -16,7 +16,7 @@ function beds.register_bed(name, def)
 		paramtype2 = "facedir",
 		is_ground_content = false,
 		stack_max = 1,
-		drop = def.drop or nil, 
+		drop = def.drop or nil,
 		groups = def.groups,
 		sounds = def.sounds or default.node_sound_wood_defaults(),
 		node_placement_prediction = "",

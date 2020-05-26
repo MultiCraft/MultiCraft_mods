@@ -57,7 +57,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 		run_start = 168,	run_end = 187,
 		punch_start = 189,	punch_end = 198
 	},
-	
+
 	do_punch = function(_, hitter)
 		if not hitter or not hitter:is_player() then
 			return true

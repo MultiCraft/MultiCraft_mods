@@ -66,7 +66,7 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 	end
 
 	-- Set new description
-	itemmeta:set_string("description", 
+	itemmeta:set_string("description",
 		C.green .. itemdesc .. "\n" ..
 		C.gold .. S("Level: @1", level) .. "\n" ..
 		C.grey .. S("Uses: @1", dugnodes))

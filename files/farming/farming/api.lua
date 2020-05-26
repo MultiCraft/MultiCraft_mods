@@ -257,6 +257,7 @@ function farming.register_plant(name, def)
 		place_param2 = def.place_param2 or nil, -- this isn't actually used for placement
 		walkable = false,
 		sunlight_propagates = true,
+		node_placement_prediction = "",
 		selection_box = {
 			type = "fixed",
 			fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}

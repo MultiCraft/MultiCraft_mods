@@ -438,7 +438,7 @@ function doors.register_trapdoor(name, def)
 	local name_opened = name .. "_open"
 
 	def.description = S(def.description)
-	
+
 	def.on_rightclick = function(pos, node, clicker, itemstack)
 		doors.trapdoor_toggle(pos, node, clicker)
 		return itemstack
@@ -536,7 +536,7 @@ function doors.register_trapdoor(name, def)
 			{ 5/16, -0.5,  3/8,  0.5,   0.5,  0.5}, -- right
 			{-1/8,   1/8,  3/8,  1/8,   5/16, 0.5}, -- middle top
 			{-1/8,  -5/16, 3/8,  1/8,  -1/8,  0.5}  -- middle bottom
-		
+
 		}
 	}
 	def_opened.selection_box = {
@@ -560,7 +560,7 @@ function doors.register_trapdoor(name, def)
 
 	doors.registered_trapdoors[name_opened] = true
 	doors.registered_trapdoors[name_closed] = true
-	
+
 	minetest.register_craft({
 		output = name_closed .. " 2",
 		recipe = {
@@ -568,7 +568,7 @@ function doors.register_trapdoor(name, def)
 			{def.material, def.material, def.material}
 		}
 	})
-	
+
 	if def.fuel then
 		minetest.register_craft({
 			type = "fuel",

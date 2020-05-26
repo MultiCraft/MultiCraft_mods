@@ -3,10 +3,10 @@
 	if not minetest.get_modpath("mobs_npc") then return end
 
 	for i = 1, 2 do
- 		if minetest.get_node({x = pos.x, y = pos.y - i, z=pos.z}).name ~= "default:snowblock" then
+		if minetest.get_node({x = pos.x, y = pos.y - i, z=pos.z}).name ~= "default:snowblock" then
 			return
- 		end
- 	end
+		end
+	end
 
 	-- if 3 snow block are placed, this will make snow golem
 	for i = 0, 2 do

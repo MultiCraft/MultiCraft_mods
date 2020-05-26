@@ -22,9 +22,9 @@ local function get_pistonspec_name(name, part)
 		return
 	end
 	for spec_name, spec in pairs(specs) do
-		for part, value in pairs(spec)  do
+		for spart, value in pairs(spec)  do
 			if name == value then
-				return spec_name, part
+				return spec_name, spart
 			end
 		end
 	end
@@ -120,9 +120,9 @@ end
 
 local orientations = {
 	[0] = { 4,  8},
-	      {13, 17},
-	      {10,  6},
-	      {20, 15}
+		  {13, 17},
+		  {10,  6},
+		  {20, 15}
 }
 
 local deg = math.deg
@@ -205,7 +205,7 @@ local function piston_rotate_on(pos, node, player, mode)
 	end
 	local player_name = player and player:is_player() and player:get_player_name() or ""
 	local ok, dir_after, pusher_pos_after
-	for i = 1, 5 do
+	for _ = 1, 5 do
 		node.param2 = rotate(node.param2, mode)
 		dir_after = vector.multiply(minetest.facedir_to_dir(node.param2), -1)
 		pusher_pos_after = vector.add(dir_after, pos)
