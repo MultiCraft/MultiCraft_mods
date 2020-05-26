@@ -16,7 +16,7 @@ local wall_sign_positions = {
 }
 
 local function generate_sign_line_texture(str, row)
-	local leftover = floor((20 - #str) * 16 / 2) or 0
+	local leftover = floor((20 - #str) * 16 / 2)
 	local texture = ""
 	for i = 1, 20 do
 		local char = str:byte(i)
@@ -212,8 +212,8 @@ minetest.register_lbm({
 local function construct(pos)
 	local meta = minetest.get_meta(pos)
 	meta:set_string("formspec", "size[5,3]" ..
-			"textarea[1.35,0.5;2.9,1.5;Dtext;" .. Sl("Enter your text:") .. ";${sign_text}]" ..
-			"button_exit[1.06,1.65;2.9,1;;" .. Sl("Save") .. "]")
+			"textarea[1.15,0.3;3.3,2;Dtext;" .. Sl("Enter your text:") .. ";${sign_text}]" ..
+			"button_exit[0.85,2;3.3,1;;" .. Sl("Save") .. "]")
 end
 
 local function destruct(pos)
