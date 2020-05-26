@@ -1,7 +1,7 @@
 -- Function that get the input/output rules of the delayer
 local delayer_get_output_rules = function(node)
 	local rules = {{x = 0, y = 0, z = 1}}
-	for i = 0, node.param2 do
+	for _ = 0, node.param2 do
 		rules = mesecon.rotate_rules_left(rules)
 	end
 	return rules
@@ -9,7 +9,7 @@ end
 
 local delayer_get_input_rules = function(node)
 	local rules = {{x = 0, y = 0, z = -1}}
-	for i = 0, node.param2 do
+	for _ = 0, node.param2 do
 		rules = mesecon.rotate_rules_left(rules)
 	end
 	return rules
@@ -39,27 +39,27 @@ for i = 1, 4 do
 	local boxes
 	if i == 1 then
 		boxes = {
-			{-8/16, -8/16, -8/16, 8/16, -6/16, 8/16},	 -- the main slab
-			{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	 -- still torch
-			{ 0/16, -6/16, -1/16, 2/16, -1/16, 1/16}	 -- moved torch
+			{-8/16, -8/16, -8/16, 8/16, -6/16, 8/16},	-- the main slab
+			{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	-- still torch
+			{ 0/16, -6/16, -1/16, 2/16, -1/16, 1/16}	-- moved torch
 		}
 	elseif i == 2 then
 		boxes = {
-			{-8/16, -8/16, -8/16, 8/16, -6/16, 8/16},	 -- the main slab
-			{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	 -- still torch
-			{-2/16, -6/16, -1/16, 0/16, -1/16, 1/16}	 -- moved torch
+			{-8/16, -8/16, -8/16, 8/16, -6/16, 8/16},	-- the main slab
+			{ 6/16, -6/16, -1/16, 4/16, -1/16, 1/16},	-- still torch
+			{-2/16, -6/16, -1/16, 0/16, -1/16, 1/16}	-- moved torch
 		}
 	elseif i == 3 then
 		boxes = {
-			{-8/16, -8/16, -8/16, 8/16,  -6/16, 8/16},	 -- the main slab
-			{ 6/16, -6/16, -1/16, 4/16,  -1/16, 1/16},	 -- still torch
-			{-4/16, -6/16, -1/16, -2/16, -1/16, 1/16}	 -- moved torch
+			{-8/16, -8/16, -8/16, 8/16,  -6/16, 8/16},	-- the main slab
+			{ 6/16, -6/16, -1/16, 4/16,  -1/16, 1/16},	-- still torch
+			{-4/16, -6/16, -1/16, -2/16, -1/16, 1/16}	-- moved torch
 		}
 	elseif i == 4 then
 		boxes = {
-			{-8/16, -8/16, -8/16,  8/16, -6/16, 8/16},	 -- the main slab
-			{ 6/16, -6/16, -1/16,  4/16, -1/16, 1/16},	 -- still torch
-			{-6/16, -6/16, -1/16, -4/16, -1/16, 1/16}	 -- moved torch
+			{-8/16, -8/16, -8/16,  8/16, -6/16, 8/16},	-- the main slab
+			{ 6/16, -6/16, -1/16,  4/16, -1/16, 1/16},	-- still torch
+			{-6/16, -6/16, -1/16, -4/16, -1/16, 1/16}	-- moved torch
 		}
 	end
 

@@ -20,7 +20,7 @@ local split_inv = minetest.create_detached_inventory("split", {
 		return stack:get_count() / 2
 	end
 })
-split_inv:set_size("main", 1)	
+split_inv:set_size("main", 1)
 
 -- Fences alias
 minetest.register_alias("fences:fence_wood", "default:fence_wood")

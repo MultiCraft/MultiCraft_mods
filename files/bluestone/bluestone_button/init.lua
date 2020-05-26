@@ -40,7 +40,7 @@ local function press(pos, node, material)
 	minetest.get_node_timer(pos):start(1)
 end
 
-local boxes_off = {-1/4, -1/8, 0.5, 1/4, 1/8, 6/16} 
+local boxes_off = {-1/4, -1/8, 0.5, 1/4, 1/8, 6/16}
 local boxes_on  = {-1/4, -1/8, 0.5, 1/4, 1/8, 7/16}
 
 local mesecons_off = {

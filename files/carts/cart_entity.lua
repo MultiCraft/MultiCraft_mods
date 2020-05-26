@@ -75,6 +75,7 @@ end
 function cart_entity:on_detach_child(child)
 	if child and child:get_player_name() == self.driver then
 		self.driver = nil
+		carts:manage_attachment(child, nil)
 	end
 end
 
@@ -228,7 +229,7 @@ local function rail_on_step(self, dtime)
 		vel = vector_add(vel, self.velocity)
 
 		if not minetest.is_valid_pos(vel) then
-			core.log("error", "carts: vel")
+			minetest.log("error", "carts: vel")
 			return
 		end
 

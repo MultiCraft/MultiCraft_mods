@@ -6,7 +6,7 @@ end
 
 local function random_sample(rand, list, count)
 	local ret = {}
-	for n = 1, count do
+	for _ = 1, count do
 		local idx = rand:next(1, #list)
 		table.insert(ret, list[idx])
 		table.remove(list, idx)
@@ -91,13 +91,13 @@ local function populate_chest(pos, rand, dungeontype)
 			if not itemdef then
 				minetest.log("warning", "Registered loot item " .. loot.name .. " does not exist")
 			elseif itemdef.tool_capabilities then
-				for n = 1, amount do
+				for _ = 1, amount do
 					local wear = rand:next(0.20 * 65535, 0.75 * 65535) -- 20% to 75% wear
 					table.insert(items, ItemStack({name = loot.name, wear = wear}))
 				end
 			elseif itemdef.stack_max == 1 then
 				-- not stackable, add separately
-				for n = 1, amount do
+				for _ = 1, amount do
 					table.insert(items, loot.name)
 				end
 			else

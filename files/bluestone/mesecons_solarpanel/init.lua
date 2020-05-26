@@ -33,7 +33,7 @@ mesecon.register_node("mesecons_solarpanel:solar_panel", {
 
 		return true
 	end,
-	
+
 	on_construct = function(pos)
 		minetest.get_node_timer(pos):start(mesecon.setting("spanel_interval", 1))
 	end
