@@ -5,7 +5,7 @@ minetest.register_craftitem("mobs:nametag", {
 	groups = {flammable = 2, nohit = 1}
 })
 
-core.register_craft({
+minetest.register_craft({
 	type = "shapeless",
 	output = "mobs:nametag",
 	recipe = {"default:paper", "dye:black", "farming:string"}
