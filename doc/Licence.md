@@ -1,16 +1,18 @@
-MultiCraft_game Open Source
-===========================
+MultiCraft_game | Open Source
+=============================
 
-MultiCraft_game is based on the minetest_game, which is developed by a [number of contributors](https://github.com/minetest/minetest_game/graphs/contributors).
+MultiCraft_game is based on the [Minetest Game](https://github.com/minetest/minetest_game), which is developed by a [number of contributors](https://github.com/minetest/minetest_game/graphs/contributors).
 It also uses many mods from various developers with various licenses. Carefully read the README and LICENSE files in each folder.
 
-Copyright © 2014-2019 Maksim Gamarnik [MoNTE48] <MoNTE48@mail.ua> & MultiCraft Development Team.
+Copyright © 2014-2020 Maksim Gamarnik [MoNTE48] <MoNTE48@mail.ua> & MultiCraft Development Team.
+
+MultiCraft_game is licensed under LGPLv3 (or higher). Resources games licensed under CC-BY-SA 4.0, unless otherwise stated.
 
 **Be sure to look at the information, and a license in every mods!**
 
 --- --- ---
 
-For any Game mods, textures, models, or any other content [/games/default/../], which **clearly indicates that it is proprietary**, the following conditions apply:
+For any Game mods, textures, models, or any other content, which **clearly indicates that it is proprietary**, the following conditions apply:
 1) You can use these content without restriction in the official MultiCraft build.
 2) They are an integral part of this project and are created or purchased exclusively for it.
 3) You cannot use them in another game/project.
@@ -18,8 +20,8 @@ For any Game mods, textures, models, or any other content [/games/default/../], 
 
 --- --- ---
 
-License of Minetest sounds:
-===========================
+License of Minetest sounds
+==========================	
 
 Copyright (C) 2010-2012 celeron55, Perttu Ahola <celeron55@gmail.com>
 See README.txt in each mod directory for information about other authors.
@@ -27,8 +29,8 @@ See README.txt in each mod directory for information about other authors.
 Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 http://creativecommons.org/licenses/by-sa/3.0/
 
-License of Minetest_game source code:
-=====================================
+License of Minetest_game source code
+====================================
 
 Copyright (C) 2010-2012 celeron55, Perttu Ahola <celeron55@gmail.com>
 See README.txt in each mod directory for information about other authors.
@@ -49,8 +51,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 --- --- ---
 
-License of media (textures):
-============================
+License of media (textures)
+===========================
 
 Copyright (C) 2013 Vattic
 
@@ -90,3 +92,7 @@ https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/resource-
 You can use my texture pack on the following conditions:
 You must specify a link on this topic in their publications.
 If your package contains more than 80% of my textures, you have no right to publish them.
+
+--- --- ---
+
+	Thanks to all the people who helped make the world better!
