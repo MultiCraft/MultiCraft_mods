@@ -3,7 +3,7 @@ local S = intllib.make_gettext_pair()
 
 mobs = {
 	mod = "redo",
-	version = "20200525",
+	version = "20200609",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -1102,8 +1102,8 @@ local entity_physics = function(pos, radius)
 		local ent = objs[n]:get_luaentity()
 
 		-- punches work on entities AND players
---		objs[n]:punch(objs[n], 1.0, {
-		objs[n]:punch(nil, 1.0, {
+		objs[n]:punch(objs[n], 1.0, {
+--		objs[n]:punch(nil, 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = damage},
 		}, pos)
@@ -2602,7 +2602,8 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 			and not self.child
 			and self.attack_players
 			and hitter:get_player_name() ~= self.owner
-			and not mobs.invis[name] then
+			and not mobs.invis[name]
+			and self.object ~= hitter then
 		-- attack whoever punched mob
 		self.state = ""
 		self:do_attack(hitter)
@@ -3483,19 +3484,32 @@ function mobs:boom(self, pos, radius)
 end]]
 
 -- Mob spawning, returns true on successful placement
-local function spawn_mob(pos, mob, data, placer)
-	if not pos or not placer or not minetest.registered_entities[mob] or
-			minetest.is_protected_action(pos, placer:get_player_name()) then
-		return
+local function spawn_mob(pos, mob, data, placer, drop)
+	if not pos or not placer or not minetest.registered_entities[mob] then
+		return false
+	end
+
+	local player_name = placer:get_player_name()
+
+	if minetest.is_protected(pos, player_name) then
+		if drop then
+			minetest.add_item(pos, mob)
+		end
+
+		return false
 	end
 
 	-- have we reached active mob limit
 	if active_limit > 0 and active_mobs >= active_limit then
-		minetest.chat_send_player(placer:get_player_name(),
+		minetest.chat_send_player(player_name,
 		S("Active Mob Limit Reached!")
 		.. "  (" .. active_mobs
 		.. " / " .. active_limit .. ")")
-		return
+		if drop then
+			minetest.add_item(pos, mob)
+		end
+
+		return false
 	end
 
 	pos.y = pos.y + 1
@@ -3505,10 +3519,9 @@ local function spawn_mob(pos, mob, data, placer)
 		if ent then
 			-- set owner if not a monster
 			if ent.type ~= "monster" then
-				local pn = placer:get_player_name()
-				ent.owner = pn
+				ent.owner = player_name
 				ent.tamed = true
-				local infotext = Sl("Owned by @1", Sl(pn))
+				local infotext = Sl("Owned by @1", Sl(player_name))
 				ent.infotext = infotext
 				obj:set_properties({
 					infotext = infotext
@@ -3531,7 +3544,7 @@ local function throw_spawn_egg(itemstack, user, pointed_thing)
 
 	local mob = itemstack:get_name():gsub("_set$", "")
 	local egg_impact = function(thrower, pos, dir, hit_object)
-		spawn_mob(pos, mob, itemstack:get_metadata(), user)
+		spawn_mob(pos, mob, itemstack:get_metadata(), user, true)
 	end
 	local obj = minetest.item_throw(mob .. "_set", user, 19, -3, egg_impact)
 	if obj then
@@ -3540,7 +3553,7 @@ local function throw_spawn_egg(itemstack, user, pointed_thing)
 			obj:set_properties({
 				visual = "sprite",
 				visual_size = {x = 0.5, y = 0.5},
-				textures = {def.inventory_image},
+				textures = {def.inventory_image}
 			})
 		end
 		minetest.sound_play("throwing_sound", {
