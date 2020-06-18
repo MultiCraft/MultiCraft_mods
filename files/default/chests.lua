@@ -12,7 +12,9 @@ local chest_formspec = "size[9,8.75]" ..
 	"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
 	"list[current_name;main;0,0.5;9,3;]" ..
 	"list[current_player;main;0,4.5;9,3;9]" ..
-	"list[current_player;main;0,7.74;9,1;]"
+	"list[current_player;main;0,7.74;9,1;]" ..
+	"listring[current_name;main]" ..
+	"listring[current_player;main]"
 
 local function set_large_chest(pos_l, pos_r)
 	local meta_l = minetest.get_meta(pos_l)
@@ -24,14 +26,20 @@ local function set_large_chest(pos_l, pos_r)
 		default.listcolors ..
 		"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
 		"list[current_player;main;0.01,7.4;9,3;9]" ..
-		"list[current_player;main;0,10.61;9,1;]"
+		"list[current_player;main;0,10.61;9,1;]" ..
+		"listring[current_name;main]" ..
+		"listring[current_player;main]"
 
+	local chest_l = pos_r.x .. "," .. pos_r.y .. "," .. pos_r.z
 	local formspec_l = large_chest_formspec ..
-		"list[nodemeta:" .. pos_r.x .. "," .. pos_r.y .. "," .. pos_r.z .. ";main;0.01,3.39;9,3;]" ..
-		"list[current_name;main;0.01,0.4;9,3;]"
+		"list[nodemeta:" .. chest_l .. ";main;0.01,3.39;9,3;]" ..
+		"list[current_name;main;0.01,0.4;9,3;]" ..
+		"listring[nodemeta:" .. chest_l .. ";main]"
+	local chest_p = pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z
 	local formspec_r = large_chest_formspec ..
-		"list[nodemeta:" .. pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z .. ";main;0.01,0.4;9,3;]" ..
-		"list[current_name;main;0.01,3.39;9,3;]"
+		"list[nodemeta:" .. chest_p .. ";main;0.01,0.4;9,3;]" ..
+		"list[current_name;main;0.01,3.39;9,3;]" ..
+		"listring[nodemeta:" .. chest_p .. ";main]"
 	meta_l:set_string("formspec", formspec_l)
 	meta_r:set_string("formspec", formspec_r)
 

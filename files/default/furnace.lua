@@ -16,7 +16,9 @@ function default.get_furnace_active_formspec(fuel_percent, item_percent)
 		item_percent ..":default_arrow_fg.png^[transformR270]" ..
 		"item_image[4.925,1.425;1.2,1.2;default:cell]" ..
 		"list[context;dst;5,1.5;1,1;]" ..
-		"list[context;split;8,3.14;1,1;]"
+		"list[context;split;8,3.14;1,1;]" ..
+		"listring[context;dst]" ..
+		"listring[current_player;main]"
 end
 
 function default.get_furnace_inactive_formspec()
@@ -31,7 +33,9 @@ function default.get_furnace_inactive_formspec()
 		"image[4,1.5;1,1;default_arrow_bg.png^[transformR270]" ..
 		"item_image[4.925,1.425;1.2,1.2;default:cell]" ..
 		"list[context;dst;5,1.5;1,1;]" ..
-		"list[context;split;8,3.14;1,1;]"
+		"list[context;split;8,3.14;1,1;]" ..
+		"listring[context;dst]" ..
+		"listring[current_player;main]"
 end
 
 --
