@@ -432,6 +432,8 @@ pep.moles = {}
 
 function pep.moledig(playername)
 	local player = minetest.get_player_by_name(playername)
+	if not player then return end
+
 	local dir = minetest.yaw_to_dir(player:get_look_horizontal())
 	local pos = vector.round(player:get_pos())
 

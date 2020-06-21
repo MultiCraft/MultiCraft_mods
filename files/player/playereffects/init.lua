@@ -113,7 +113,7 @@ function playereffects.apply_effect_type(effect_type_id, duration, player, repea
 	local biggest_hudpos = -1
 	local free_hudpos
 
-	local hudinfos = playereffects.hudinfos[playername]
+	local hudinfos = playereffects.hudinfos[playername] or {}
 	for _, hudinfo in pairs(hudinfos) do
 		local hudpos = hudinfo.pos
 		if hudpos > biggest_hudpos then
