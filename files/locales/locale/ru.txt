@@ -413,17 +413,6 @@ Medium Fish in Bucket = Рыбка в Ведре
 Squid Egg = Яйцо Спавна Кальмара
 
 
-#ocean
-Ammania Bonsai = Аммания Бонсай
-Ceramium = Церамиум
-Phyllophora = Филлофора
-Posidonia = Посидония
-Codium = Кодиум
-Inky Algae = Чернильница
-Macrocystis = Макроцистис
-Nitella = Нителла
-
-
 #pie
 Cake = Торт
 Pumpkin Pie = Тыквенный Пирог
