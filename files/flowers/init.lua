@@ -466,3 +466,45 @@ minetest.register_node("flowers:waterlily", {
 		return itemstack
 	end
 })
+
+minetest.register_node("flowers:waterlily_flower", {
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = "facedir",
+	tiles = {"flowers_waterlily.png^flowers_waterlily_flower.png", "flowers_waterlily.png"},
+	walkable = false,
+	floodable = true,
+	groups = {snappy = 3, flammable = 1, not_in_creative_inventory = 1},
+	sounds = default.node_sound_leaves_defaults(),
+	drop = "flowers:waterlily",
+	node_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -15/32, 0.5}
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {-7/16, -0.5, -7/16, 7/16, -15/32, 7/16}
+	}
+})
+
+
+minetest.register_abm({
+	label = "Waterlily Flower",
+	nodenames = {
+		"flowers:waterlily",
+		"flowers:waterlily_flower"
+	},
+	interval = 20,
+	chance = 3,
+	catch_up = false,
+	action = function(pos, node)
+		local light = minetest.get_node_light(pos)
+		if light >= 10 and node.name == "flowers:waterlily" then
+			node.name = "flowers:waterlily_flower"
+			minetest.swap_node(pos, node)
+		elseif light < 10 and node.name == "flowers:waterlily_flower" then
+			node.name = "flowers:waterlily"
+			minetest.swap_node(pos, node)
+		end
+	end
+})
