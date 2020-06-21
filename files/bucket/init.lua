@@ -106,7 +106,8 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 						if source == "default:lava_source" then
 							minetest.chat_send_player(player_name, S("Too much Lava is bad, right?"))
 							return itemstack
-						elseif height > 64 then
+						elseif height > 64 or
+								minetest.get_node({x = lpos.x, y = lpos.y - 1, z = lpos.z}).name == "air" then
 							minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"))
 							return itemstack
 						elseif source == "default:water_source" then
