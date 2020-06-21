@@ -13,7 +13,7 @@ MultiCraft Development Team
 
 Graphics in this mod is NOT free and can be used only as part of the official MultiCraft build.
 Allowed to be used in non-official builds ONLY for personal use.
-Exceptions: flowers_waterlily.png, flowers_mushroom_*.png
+Exceptions: flowers_mushroom_*.png
 
 -------------------
 
