@@ -3,7 +3,7 @@ local S = intllib.make_gettext_pair()
 
 mobs = {
 	mod = "redo",
-	version = "20200609",
+	version = "20200620",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -530,7 +530,7 @@ local yaw_to_pos = function(self, target, rot)
 		yaw = yaw + pi
 	end
 
-	yaw = self:set_yaw(yaw, 6)
+	yaw = self:set_yaw(yaw, rot)
 
 	return yaw
 end
@@ -583,7 +583,14 @@ local effect = function(pos, amount, texture, min_size, max_size,
 	max_size = max_size or 1
 	gravity = gravity or -9.81
 	glow = glow or 0
-	fall = fall and 0 or -radius
+	
+	if fall == true then
+		fall = 0
+	elseif fall == false then
+		fall = radius
+	else
+		fall = -radius
+	end
 
 	minetest.add_particlespawner({
 		amount = amount,
@@ -601,6 +608,12 @@ local effect = function(pos, amount, texture, min_size, max_size,
 		texture = texture,
 		glow = glow
 	})
+end
+
+
+function mobs:effect(pos, amount, texture, min_size, max_size,
+		radius, gravity, glow, fall)
+	effect(pos, amount, texture, min_size, max_size, radius, gravity, glow, fall)
 end
 
 
@@ -1103,7 +1116,6 @@ local entity_physics = function(pos, radius)
 
 		-- punches work on entities AND players
 		objs[n]:punch(objs[n], 1.0, {
---		objs[n]:punch(nil, 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = damage},
 		}, pos)
@@ -2258,8 +2270,10 @@ function mob_class:do_states(dtime)
 				self.path.following = false -- not stuck anymore
 				self:set_velocity(0)
 
-				if not self.custom_attack then
-					if self.timer > 1 then
+				if self.timer > 1 then
+					-- no custom attack or custom attack returns true to continue
+					if not self.custom_attack
+					or self:custom_attack(self, p) == true then
 						self.timer = 0
 						self:set_animation("punch")
 
@@ -2283,11 +2297,6 @@ function mob_class:do_states(dtime)
 								damage_groups = {fleshy = self.damage}
 							}, nil)
 						end
-					end
-				else -- call custom attack every second
-					if self.custom_attack and self.timer > 1 then
-						self.timer = 0
-						self:custom_attack(p)
 					end
 				end
 			end
@@ -2667,13 +2676,15 @@ function mob_class:mob_staticdata()
 		self.rotate = rad(90)
 	end
 
-	local tmp = {}
+	local tmp, t = {}
 
 	for _, stat in pairs(self) do
-		local t = type(stat)
+		t = type(stat)
 
-		if t ~= "function" and t ~= "nil" and t ~= "userdata"
-				and _ ~= "_cmi_components" then
+		if  t ~= "function"
+		and t ~= "nil"
+		and t ~= "userdata"
+		and _ ~= "_cmi_components" then
 			tmp[_] = self[_]
 		end
 	end
@@ -2709,8 +2720,16 @@ function mob_class:mob_activate(staticdata, def, dtime)
 	local tmp = minetest.deserialize(staticdata)
 
 	if tmp then
+		local t
+
 		for _, stat in pairs(tmp) do
-			self[_] = stat
+			t = type(stat)
+
+			if  t ~= "function"
+			and t ~= "nil"
+			and t ~= "userdata" then
+				self[_] = stat
+			end
 		end
 	end
 
@@ -3369,6 +3388,7 @@ function mobs:register_arrow(name, def)
 		drop = def.drop or false, -- drops arrow as registered item when true
 		collisionbox = def.collisionbox or {-.1, -.1, -.1, .1, .1, .1},
 		timer = 0,
+		lifetime = def.lifetime or 4.5,
 		switch = 0,
 		owner_id = def.owner_id,
 		rotate = def.rotate,
@@ -3379,10 +3399,10 @@ function mobs:register_arrow(name, def)
 		end,
 
 		on_step = def.on_step or function(self, dtime)
-			self.timer = self.timer + 1
+			self.timer = self.timer + dtime
 			local pos = self.object:get_pos()
 			if self.switch == 0
-			or self.timer > 150 then
+			or self.timer > self.lifetime then
 				self.object:remove()
 				return
 			end
@@ -3405,7 +3425,6 @@ function mobs:register_arrow(name, def)
 			end
 
 			if self.hit_node then
-
 				local node = node_ok(pos).name
 
 				if minetest.registered_nodes[node].walkable then
@@ -3649,11 +3668,14 @@ end
 --[[function mobs:force_capture(self, clicker)
 	-- add special mob egg with all mob information
 	local new_stack = ItemStack(self.name .. "_set")
-	local tmp = {}
+	local tmp, t = {}
 
 	for _, stat in pairs(self) do
-		local t = type(stat)
-		if t ~= "function" and t ~= "nil" and t ~= "userdata" then
+		t = type(stat)
+
+		if  t ~= "function"
+		and t ~= "nil"
+		and t ~= "userdata" then
 			tmp[_] = self[_]
 		end
 	end
@@ -3738,13 +3760,14 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net,
 			-- unless 'replacewith' contains new item to use
 			if not replacewith then
 				new_stack = ItemStack(mobname .. "_set")
-				local tmp = {}
+				local tmp, t = {}
 
 				for _, stat in pairs(self) do
-					local t = type(stat)
-					if t ~= "function"
-							and t ~= "nil"
-							and t ~= "userdata" then
+					t = type(stat)
+
+					if  t ~= "function"
+					and t ~= "nil"
+					and t ~= "userdata" then
 						tmp[_] = self[_]
 					end
 				end
