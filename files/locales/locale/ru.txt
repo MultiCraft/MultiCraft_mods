@@ -1,4 +1,5 @@
 #3d_armor
+Your @1 got destroyed! = Ваша броня "@1" была сломана!
 Leather Helmet = Кожаный Шлем
 Steel Helmet = Стальной Шлем
 Golden Helmet = Золотой Шлем
