@@ -231,6 +231,7 @@ local function receive_fields(pos, _, fields, sender, wall)
 	if minetest.is_protected(pos, sender:get_player_name()) then
 		return
 	end
+	text = text:sub(1, 256)
 	local p2 = minetest.get_node(pos).param2
 	local sign_pos = sign_positions
 	if wall then
