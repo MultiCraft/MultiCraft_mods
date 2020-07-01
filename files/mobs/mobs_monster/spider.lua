@@ -47,7 +47,22 @@ mobs:register_mob("mobs_monster:spider", {
 		walk_start = 1,		walk_end = 21,
 		run_start = 1,		run_end = 21,
 		punch_start = 25,	punch_end = 45,
-	}
+	},
+
+	-- make spiders jump at you on attack
+	custom_attack = function(self)
+		local vel = self.object:get_velocity()
+
+		self.object:set_velocity({
+			x = vel.x * self.run_velocity,
+			y = self.jump_height * 1.2,
+			z = vel.z * self.run_velocity
+		})
+
+		self.pausetimer = 0.5
+
+		return true -- continue rest of attack function
+	end
 })
 
 -- Small spider
