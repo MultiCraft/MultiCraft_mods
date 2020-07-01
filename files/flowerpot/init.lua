@@ -102,7 +102,7 @@ function flowerpot.register_node(nodename)
 	local def = minetest.registered_nodes[nodename]
 
 	local node = table.copy(pot)
-	node.mesh = "flowerpot.obj"
+	node.mesh = "flowerpot.b3d"
 	node.tiles = get_tile(def)
 	node.selection_box = {
 		type = "fixed",
@@ -119,7 +119,7 @@ end
 -- Empty Flowerpot
 local empty = table.copy(pot)
 empty.description = "Flowerpot"
-empty.mesh = "flowerpot.obj"
+empty.mesh = "flowerpot.b3d"
 empty.tiles = {"flowerpot.png", "blank.png", "blank.png"}
 empty.selection_box = {
 	type = "fixed",
@@ -134,7 +134,7 @@ minetest.register_node("flowerpot:empty", empty)
 -- Inventory Flowerpot
 local inv = table.copy(pot)
 inv.description = "Flowerpot"
-inv.mesh = "flowerpot_inv.obj"
+inv.mesh = "flowerpot_inv.b3d"
 inv.tiles = {"flowerpot.png"}
 inv.node_placement_prediction = ""
 inv.on_place = function(itemstack, placer, pointed_thing)
