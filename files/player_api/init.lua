@@ -6,17 +6,22 @@ dofile(minetest.get_modpath("player_api") .. "/wieldview.lua")
 local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 
 -- Default player appearance
+local b = "blank.png"
 player_api.register_model("character.b3d", {
 	animation_speed = 30,
-	textures = {"character.png", "blank.png", "blank.png", "blank.png"},
+	textures = {"character.png", b, b, b, b},
 	animations = {
 		-- Standard animations.
-		stand     = {x = 0,   y = 0}, -- y = 79
-		lay       = {x = 162, y = 166},
-		walk      = {x = 168, y = 187},
-		mine      = {x = 189, y = 198},
-		walk_mine = {x = 200, y = 219},
-		sit       = {x = 81,  y = 160}
+		stand           = {x = 0,   y =   0}, -- y = 79
+		sit             = {x = 81,  y = 160},
+		lay             = {x = 162, y = 166},
+		walk            = {x = 168, y = 187},
+		mine            = {x = 189, y = 198},
+		walk_mine       = {x = 200, y = 219},
+		sneak_stand     = {x = 221, y = 261},
+		sneak_walk      = {x = 262, y = 282},
+		sneak_mine      = {x = 283, y = 293},
+		sneak_walk_mine = {x = 294, y = 314}
 	},
 	stepheight = 0.6,
 	eye_height = 1.47
@@ -29,7 +34,7 @@ player_api.hand = {
 	drawtype = "mesh",
 	mesh = "hand.b3d",
 	tiles = {"character.png"},
-	inventory_image = "blank.png",
+	inventory_image = b,
 	drop = "",
 	node_placement_prediction = ""
 }
@@ -101,21 +106,6 @@ minetest.register_on_joinplayer(function(player)
 	inv:set_size("hand", 1)
 	inv:set_stack("hand", 1, "player_api:hand" .. gender .. color)
 end)
-
--- Temporary solution to the problem of loading yaw 'nul' on iOS
-if PLATFORM == "iOS" then
-	minetest.register_on_joinplayer(function(player)
-		if (player:get_look_horizontal() == 0) then
-			player:set_look_horizontal(0.01)
-		end
-
-		minetest.after(5, function()
-			if (player:get_look_horizontal() == 0) then
-				minetest.request_shutdown()
-			end
-		end)
-	end)
-end
 
 -- Items for the new player
 if not creative_mode_cache and minetest.is_singleplayer() then
