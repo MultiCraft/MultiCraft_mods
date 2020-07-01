@@ -45,9 +45,14 @@ armor.register_armor_group = function(self, group, base)
 end
 
 armor.update_player_visuals = function(self, player)
-	if player then
-		local armor = self.textures[player:get_player_name()].armor
-		player_api.set_textures(player, nil, armor)
+	if player and player:is_player() then
+		local player_name = player:get_player_name()
+		local oldarmor = player_api.player_armor[player_name]
+		local newarmor = self.textures[player_name].armor
+
+		if oldarmor ~= newarmor then
+			player_api.set_textures(player, nil, newarmor)
+		end
 	end
 end
 
