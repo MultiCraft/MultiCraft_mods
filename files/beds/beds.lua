@@ -29,8 +29,8 @@ beds.register_bed("beds:bed", {
 	description = "Bed",
 	inventory_image = "beds_bed_inv.png",
 	wield_image = "beds_bed_inv.png",
-	tiles = {"beds_bed.png^beds_bed_red.png"},
-	mesh = "beds_bed.obj",
+	tiles = {"beds_bed.png", "wool_red.png"},
+	mesh = "beds_bed.b3d",
 	selectionbox = beds.box,
 	collisionbox = beds.box,
 	recipe = {
