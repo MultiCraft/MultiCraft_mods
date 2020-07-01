@@ -28,7 +28,7 @@ local boat = {
 		physical = true,
 		collisionbox = {-0.6, -0.4, -0.6, 0.6, 0.3, 0.6},
 		visual = "mesh",
-		mesh = "boats_boat.obj",
+		mesh = "boats_boat.b3d",
 		textures = {"default_acacia_wood.png"}
 	},
 	driver = nil,
