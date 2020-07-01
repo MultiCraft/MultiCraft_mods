@@ -13,9 +13,9 @@ mobs:register_mob("mobs_npc:trader", {
 	visual = "mesh",
 	mesh = "character.b3d",
 	textures = {
-		{"mobs_trader.png^mobs_trader1.png", b, b, b},
-		{"mobs_trader.png^mobs_trader2.png", b, b, b},
-		{"mobs_trader.png^mobs_trader3.png", b, b, b}
+		{"mobs_trader.png^mobs_trader1.png", b, b, b, b},
+		{"mobs_trader.png^mobs_trader2.png", b, b, b, b},
+		{"mobs_trader.png^mobs_trader3.png", b, b, b, b}
 	},
 	makes_footstep_sound = true,
 	sounds = {},

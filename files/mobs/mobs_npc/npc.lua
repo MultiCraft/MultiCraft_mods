@@ -19,7 +19,7 @@ for k = 1, 3 do
 		"mobs_npc_man.png" .. "^" ..
 		"mobs_npc_man_hair" .. i .. ".png" .. "^" ..
 		"mobs_npc_man_pants" .. j .. ".png" .. "^" ..
-		"mobs_npc_man_shirt" .. k .. ".png", b, b, b
+		"mobs_npc_man_shirt" .. k .. ".png", b, b, b, b
 	}
 	mcount = mcount + 1
 end
@@ -112,7 +112,7 @@ for k = 1, 3 do
 		"mobs_npc_woman.png" .. "^" ..
 		"mobs_npc_woman_hair" .. i .. ".png" .. "^" ..
 		"mobs_npc_woman_pants" .. j .. ".png" .. "^" ..
-		"mobs_npc_woman_shirt" .. k .. ".png", b, b, b
+		"mobs_npc_woman_shirt" .. k .. ".png", b, b, b, b
 	}
 	wcount = wcount + 1
 end
