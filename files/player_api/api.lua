@@ -16,12 +16,15 @@ local player_model = {}
 local player_textures = {}
 local player_anim = {}
 local player_sneak = {}
-local player_sneak_nametag = {}
 
-local player_skin = {}
-local player_armor = {}
+player_api.player_skin = {}
+player_api.player_armor = {}
+player_api.player_cape = {}
 local player_wielditem = {}
 local player_cube = {}
+
+local player_skin, player_armor, player_cape =
+		player_api.player_skin, player_api.player_armor, player_api.player_cape
 
 player_api.wielded_item = {}
 player_api.player_attached = {}
@@ -55,18 +58,20 @@ function player_api.set_model(player, model_name)
 	player_model[name] = model_name
 end
 
-function player_api.set_textures(player, skin, armor, wielditem, cube)
+function player_api.set_textures(player, skin, armor, wielditem, cube, cape)
 	local name = player:get_player_name()
 
 	local oldskin      = player_skin[name]      or "character.png"
 	local oldarmor     = player_armor[name]     or "blank.png"
 	local oldwielditem = player_wielditem[name] or "blank.png"
 	local oldcube      = player_cube[name]      or "blank.png"
+	local oldcape      = player_cape[name]      or "blank.png"
 
 	skin      = skin      or oldskin
 	armor     = armor     or oldarmor
 	wielditem = wielditem or oldwielditem
 	cube      = cube      or oldcube
+	cape      = cape      or oldcape
 
 	if oldskin ~= skin then
 		player_skin[name] = skin
@@ -80,10 +85,27 @@ function player_api.set_textures(player, skin, armor, wielditem, cube)
 	if oldcube ~= cube then
 		player_cube[name] = cube
 	end
+	if oldcape ~= cape then
+		player_cape[name] = cape
+	end
 
-	local texture = {skin, armor, wielditem, cube}
-	player_textures[name] = texture
-	player:set_properties({textures = texture})
+	local texture = {skin, armor, wielditem, cube, cape}
+
+	local skip = false
+	if player_textures[name] then
+		skip = true
+		for i = 1, #texture do
+			if texture[i] ~= player_textures[name][i] then
+				skip = false
+				break
+			end
+		end
+	end
+
+	if not skip then
+		player_textures[name] = texture
+		player:set_properties({textures = texture})
+	end
 end
 
 function player_api.set_animation(player, anim_name, speed)
@@ -95,9 +117,44 @@ function player_api.set_animation(player, anim_name, speed)
 	if not (model and model.animations[anim_name]) then
 		return
 	end
-	local anim = model.animations[anim_name]
 	player_anim[name] = anim_name
-	player:set_animation(anim, speed or model.animation_speed, animation_blend)
+	local anim_speed = speed or model.animation_speed
+	player:set_animation(model.animations[anim_name], anim_speed, animation_blend, true)
+end
+
+function player_api.set_sneak(player, sneak, speed)
+	local name = player:get_player_name()
+	local model = player_model[name] and models[player_model[name]]
+	local anim = model.animations
+	local anim_speed = speed or model.animation_speed
+
+	if sneak then
+		-- Set snaaking local animation
+		player:set_local_animation(
+			anim["sneak_stand"],
+			anim["sneak_walk"],
+			anim["sneak_mine"],
+			anim["sneak_walk_mine"],
+			anim_speed)
+
+		-- Hide nametag
+		local nametag = player:get_nametag_attributes()
+		nametag.color.a = 0
+		player:set_nametag_attributes(nametag)
+	else
+		-- Back normal local animation
+		player:set_local_animation(
+			anim["stand"],
+			anim["walk"],
+			anim["mine"],
+			anim["walk_mine"],
+			anim_speed)
+
+		-- Show nametag
+		local nametag = player:get_nametag_attributes()
+		nametag.color.a = 255
+		player:set_nametag_attributes(nametag)
+	end
 end
 
 function player_api.preview(player, skin)
@@ -131,6 +188,7 @@ end
 
 -- Localize for better performance
 local player_set_animation = player_api.set_animation
+local player_set_sneak = player_api.set_sneak
 local player_attached = player_api.player_attached
 
 minetest.register_on_leaveplayer(function(player)
@@ -141,13 +199,13 @@ minetest.register_on_leaveplayer(function(player)
 
 	player_skin[name] = nil
 	player_armor[name] = nil
+	player_cape[name] = nil
 	player_wielditem[name] = nil
 	player_cube[name] = nil
 	player_api.wielded_item[name] = nil
 
 	player_attached[name] = nil
 	player_sneak[name] = nil
-	player_sneak_nametag[name] = nil
 end)
 
 -- Check each player and apply animations
@@ -158,44 +216,53 @@ minetest.register_playerstep(function(_, playernames)
 			local model_name = player_model[name]
 			local model = model_name and models[model_name]
 			if model and not player_attached[name] then
-				local controls = player:get_player_control()
 				local animation_speed_mod = model.animation_speed or 30
-
-				-- Determine if the player is sneaking, and reduce animation speed if so
-				if controls.sneak then
-					animation_speed_mod = animation_speed_mod / 2
-
-					if not player_sneak_nametag[name] then
-						local nametag = player:get_nametag_attributes()
-						nametag.color.a = 0
-						player:set_nametag_attributes(nametag)
-						player_sneak_nametag[name] = true
-					end
-				else
-					if player_sneak_nametag[name] then
-						local nametag = player:get_nametag_attributes()
-						nametag.color.a = 255
-						player:set_nametag_attributes(nametag)
-						player_sneak_nametag[name] = false
-					end
-				end
 
 				-- Apply animations based on what the player is doing
 				if player:get_hp() == 0 then
 					player_set_animation(player, "lay")
+					return
+				end
+
+				local controls = player:get_player_control()
+				local c_sneak = controls.sneak
+				local c_mouse = controls.LMB or controls.RMB
+
+				-- Determine if the player is sneaking, and reduce animation speed if so
+				if c_sneak then
+					animation_speed_mod = animation_speed_mod / 2
+				end
+
+				-- Determine if the player is sneaking
+				if player_sneak[name] ~= c_sneak then
+					player_anim[name] = nil
+					player_sneak[name] = c_sneak
+					player_set_sneak(player, c_sneak, animation_speed_mod)
+				end
+
 				-- Determine if the player is walking
-				elseif controls.up or controls.down or controls.left or controls.right then
-					if player_sneak[name] ~= controls.sneak then
-						player_anim[name] = nil
-						player_sneak[name] = controls.sneak
-					end
-					if controls.LMB or controls.RMB then
-						player_set_animation(player, "walk_mine", animation_speed_mod)
+				if controls.up or controls.down or controls.left or controls.right then
+					if not c_sneak then
+						if c_mouse then
+							player_set_animation(player, "walk_mine", animation_speed_mod)
+						else
+							player_set_animation(player, "walk", animation_speed_mod)
+						end
 					else
-						player_set_animation(player, "walk", animation_speed_mod)
+						if c_mouse then
+							player_set_animation(player, "sneak_walk_mine", animation_speed_mod)
+						else
+							player_set_animation(player, "sneak_walk", animation_speed_mod)
+						end
 					end
-				elseif controls.LMB or controls.RMB then
-					player_set_animation(player, "mine", animation_speed_mod)
+				elseif c_mouse then
+					if not c_sneak then
+						player_set_animation(player, "mine", animation_speed_mod)
+					else
+						player_set_animation(player, "sneak_mine", animation_speed_mod)
+					end
+				elseif c_sneak then
+					player_set_animation(player, "sneak_stand", animation_speed_mod)
 				else
 					player_set_animation(player, "stand", animation_speed_mod)
 				end
