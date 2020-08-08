@@ -1,6 +1,7 @@
 -- Player animation blending
 -- Note: This is currently broken due to a bug in Irrlicht, leave at 0
 local animation_blend = 0
+local enable_sscsm = minetest.global_exists("sscsm")
 
 player_api.registered_models = {}
 
@@ -105,6 +106,10 @@ function player_api.set_textures(player, skin, armor, wielditem, cube, cape)
 	if not skip then
 		player_textures[name] = texture
 		player:set_properties({textures = texture})
+
+		if enable_sscsm and sscsm.has_sscsms_enabled(name) then
+			sscsm.com_send(name, "player_api:preview", player_api.preview(player))
+		end
 	end
 end
 
@@ -273,3 +278,15 @@ minetest.register_playerstep(function(_, playernames)
 		end
 	end
 end, true) -- Force this callback to run every step for smoother animations
+
+if enable_sscsm then
+	sscsm.register({
+		name = "player_api",
+		file = minetest.get_modpath("player_api") .. "/sscsm.lua"
+	})
+
+	sscsm.register_on_sscsms_loaded(function(name)
+		local player = minetest.get_player_by_name(name)
+		sscsm.com_send(name, "player_api:preview", player_api.preview(player))
+	end)
+end
