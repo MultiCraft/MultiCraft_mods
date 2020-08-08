@@ -25,6 +25,7 @@ read_globals = {
 	"mobs",
 	"playerphysics",
 	"screwdriver",
+	"sscsm",
 	-- Silence errors about custom table methods.
 	table = { fields = { "copy", "indexof" } },
 	-- Silence warnings about accessing undefined fields of global 'math'
