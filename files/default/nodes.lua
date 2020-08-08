@@ -253,10 +253,6 @@ minetest.register_node("default:snow", {
 		or name == "default:dirt_with_dry_grass" then
 			minetest.swap_node(pos, {name = "default:dirt_with_snow"})
 		end
-	end,
-
-	on_timer = function(pos)
-		minetest.remove_node(pos)
 	end
 })
 
