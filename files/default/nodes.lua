@@ -1626,7 +1626,6 @@ minetest.register_node("default:slimeblock", {
 	description = "Slime Block",
 	drawtype = "nodebox",
 	tiles = {"default_slimeblock.png"},
-	walkable = false,
 	paramtype = "light",
 	node_box = {
 		type = "fixed",
@@ -1637,7 +1636,7 @@ minetest.register_node("default:slimeblock", {
 	},
 	use_texture_alpha = true,
 	sunlight_propagates = true,
-	groups = {oddly_breakable_by_hand = 3, disable_jump = 1, fall_damage_add_percent = -100, speed = -60}
+	groups = {oddly_breakable_by_hand = 3, fall_damage_add_percent = -100, bouncy = 75}
 })
 
 --

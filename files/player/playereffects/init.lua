@@ -94,12 +94,13 @@ end
 
 function playereffects.apply_effect_type(effect_type_id, duration, player, repeat_interval_time_left)
 	local start_time = os.time()
-	if type(player) == "userdata" and not (player.is_player or player:is_player()) then
+	if type(player) == "userdata" and not player:is_player() then
 		minetest.log("error", "[playereffects] Attempted to apply effect type " .. effect_type_id .. " to a non-player!")
 		return false
 	end
 
 	local playername = player:get_player_name()
+	if not playername then return false end
 	local groups = playereffects.effect_types[effect_type_id].groups
 	for _, v in pairs(groups) do
 		playereffects.cancel_effect_group(v, playername)
