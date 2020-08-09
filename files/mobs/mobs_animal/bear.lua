@@ -30,7 +30,6 @@ mobs:register_mob("mobs_animal:bear", {
 	group_attack = true,
 	hp_min = 10,
 	hp_max = 15,
-	fall_damage = 3,
 	fear_height = 4,
 	drops = function(pos)
 		if rawget(_G, "experience") then

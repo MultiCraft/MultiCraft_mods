@@ -30,7 +30,6 @@ mobs:register_mob("mobs_animal:kitten", {
 			{name = "farming:string"}
 		}
 	end,
-	fall_damage = 2,
 	fear_height = 3,
 	animation = {
 		speed_normal = 42,
