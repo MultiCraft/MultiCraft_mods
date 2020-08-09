@@ -28,7 +28,6 @@ mobs:register_mob("mobs_animal:wolf", {
 	follow = {"food_meat_raw", "default:bone"},
 	pathfinding = true,
 	group_attack = true,
-	fall_damage = 3,
 	fear_height = 4,
 
 	on_rightclick = function(self, clicker)
@@ -81,7 +80,6 @@ mobs:register_mob("mobs_animal:dog", {
 	attacks_monsters = true,
 	pathfinding = true,
 	group_attack = true,
-	fall_damage = 5,
 
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 6, true, true) then return end
