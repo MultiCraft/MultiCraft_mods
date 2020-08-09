@@ -1,12 +1,18 @@
--- our API object
-doors = {}
+doors = {
+	registered_doors = {},
+	registered_trapdoors = {},
+	registered_fencegates = {}
+}
 
-doors.registered_doors = {}
-doors.registered_trapdoors = {}
-doors.registered_fencegates = {}
+local translator = minetest.get_translator
+local S = translator and translator("doors") or intllib.make_gettext_pair()
 
--- Intllib
-local S = intllib.make_gettext_pair()
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
 
 local table_copy = table.copy
 

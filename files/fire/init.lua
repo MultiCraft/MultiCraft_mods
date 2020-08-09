@@ -1,5 +1,15 @@
 fire = {}
 
+local translator = minetest.get_translator
+local S = translator and translator("fire") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 --
 -- Items
 --
@@ -66,7 +76,7 @@ local tr = minetest.get_modpath("toolranks")
 
 -- Flint and Steel
 minetest.register_tool("fire:flint_and_steel", {
-	description = "Flint and Steel",
+	description = S"Flint and Steel",
 	inventory_image = "fire_flint_steel.png",
 	sound = {breaks = "default_tool_breaks"},
 

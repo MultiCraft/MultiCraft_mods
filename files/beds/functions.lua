@@ -5,9 +5,6 @@ if enable_respawn == nil then
 	enable_respawn = true
 end
 
--- Intllib
-local S = intllib.make_gettext_pair()
-
 -- Helper functions
 
 local function get_look_yaw(pos)
@@ -63,7 +60,7 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 			if obj:is_player() then
 				local obj_name = obj:get_player_name()
 				if obj_name ~= name then
-					minetest.chat_send_player(name, S("This bed is already occupied!"))
+					minetest.chat_send_player(name, beds.S("This bed is already occupied!"))
 					return
 				end
 			end
@@ -146,13 +143,13 @@ local function update_formspecs(finished)
 
 	local form_n
 	if finished then
-		form_n = beds.formspec .. "label[2.7,9;" .. S("Good morning.") .. "]"
+		form_n = beds.formspec .. "label[2.7,9;" .. beds.S("Good morning.") .. "]"
 	else
 		form_n = beds.formspec .. "label[2.2,9;" ..
-			S("@1 of @2 players are in bed", player_in_bed, ges) .. "]"
+			beds.S("@1 of @2 players are in bed", player_in_bed, ges) .. "]"
 		if is_majority and is_night_skip_enabled() then
 			form_n = form_n .. "button_exit[2,6;4,0.75;force;" ..
-			S("Force night skip") .. "]"
+			beds.S("Force night skip") .. "]"
 		end
 	end
 
@@ -174,7 +171,7 @@ end
 function beds.skip_night()
 	minetest.set_timeofday(0.23)
 	if is_sp then
-		minetest.chat_send_all(S("Good morning."))
+		minetest.chat_send_all(beds.S("Good morning."))
 	end
 end
 

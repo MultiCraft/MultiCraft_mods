@@ -1,9 +1,12 @@
--- Intllib
-local S = intllib.make_gettext_pair()
+local translator = minetest.get_translator
+local S = translator and translator("bucket") or intllib.make_gettext_pair()
 
-minetest.register_alias("bucket", "bucket:bucket_empty")
-minetest.register_alias("bucket_water", "bucket:bucket_water")
-minetest.register_alias("bucket_lava", "bucket:bucket_lava")
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
 
 minetest.register_craft({
 	output = "bucket:bucket_empty",
