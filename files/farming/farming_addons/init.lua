@@ -2,7 +2,7 @@ local path = minetest.get_modpath("farming_addons")
 local farming = {
 	"api", "seeds",
 	"carrot", "cocoa", "corn",
-	"melon", "potato", "pumpkin"
+	"watermelon", "potato", "pumpkin"
 }
 
 for _, name in pairs(farming) do
