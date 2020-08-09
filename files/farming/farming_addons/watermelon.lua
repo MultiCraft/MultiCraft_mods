@@ -1,5 +1,5 @@
 farming.register_plant("farming_addons:melon", {
-	description = "Melon Seed",
+	description = "Watermelon Seed",
 	inventory_image = "farming_addons_melon_seed.png",
 	steps = 8,
 	minlight = 12,
@@ -10,7 +10,7 @@ farming.register_plant("farming_addons:melon", {
 
 -- eat melons
 minetest.override_item("farming_addons:melon", {
-	description = Sl("Melon Slice"),
+	description = Sl("Watermelon Slice"),
 	on_use = minetest.item_eat(2)
 })
 
@@ -19,14 +19,14 @@ local function tick(pos)
 	minetest.get_node_timer(pos):start(math.random(512, 1024))
 end
 
--- MELON FRUIT - HARVEST
+-- WATERMELON FRUIT - HARVEST
 minetest.register_node("farming_addons:melon_fruit", {
-	description = "Melon",
+	description = "Watermelon",
 	tiles = {"farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_side.png"},
 	paramtype2 = "facedir",
 	sounds = default.node_sound_wood_defaults(),
 	is_ground_content = false,
-	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1, not_cuttable = 1},
+	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1, not_cuttable = 1, falling_node = 1},
 	drop = {
 		items = {
 			{items = {"farming_addons:melon"}},
@@ -65,12 +65,23 @@ minetest.override_item("farming_addons:melon_8", {
 
 -- Melon
 minetest.register_craftitem("farming_addons:melon_golden", {
-	description = "Golden Melon Slice",
+	description = "Golden Watermelon Slice",
 	inventory_image = "farming_addons_melon_golden.png",
 	on_use = minetest.item_eat(10),
 	groups = {food = 1}
 })
 
+--
+-- Recipes
+--
+
+-- Seed
+minetest.register_craft({
+	output = "farming_addons:seed_melon",
+	recipe = {{"farming_addons:melon"}}
+})
+
+-- Golden Melon
 minetest.register_craft({
 	output = "farming_addons:melon_golden",
 	recipe = {
@@ -80,6 +91,7 @@ minetest.register_craft({
 	}
 })
 
+-- Block
 minetest.register_craft({
 	output = "farming_addons:melon_fruit",
 	recipe = {
@@ -87,4 +99,20 @@ minetest.register_craft({
 		{"farming_addons:melon", "farming_addons:melon", "farming_addons:melon"},
 		{"farming_addons:melon", "farming_addons:melon", "farming_addons:melon"}
 	}
+})
+
+--
+-- Generation
+--
+
+minetest.register_decoration({
+	name = "default:grass",
+	deco_type = "simple",
+	place_on = {"default:dirt_with_grass"},
+	sidelen = 80,
+	fill_ratio = 0.0001,
+	biomes = {"rainforest"},
+	y_max = 40,
+	y_min = 1,
+	decoration = "farming_addons:melon_fruit",
 })
