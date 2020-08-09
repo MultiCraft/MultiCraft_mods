@@ -42,6 +42,12 @@ armor:register_armor("3d_armor:helmet_chain", {
 	groups = {armor_head = 15, armor_heal = 10, armor_use = 500}
 })
 
+armor:register_armor("3d_armor:helmet_mask", {
+	description = "Underwater Mask",
+	inventory_image = "3d_armor_inv_helmet_mask.png",
+	groups = {armor_head = 1, armor_mask = 10, armor_use = 600, not_in_creative_inventory = 1}
+})
+
 -- Regisiter Torso Armor
 
 armor:register_armor("3d_armor:chestplate_leather", {
