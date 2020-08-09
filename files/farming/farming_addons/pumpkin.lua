@@ -37,7 +37,7 @@ minetest.register_node("farming_addons:pumpkin_fruit", {
 	paramtype2 = "facedir",
 	sounds = default.node_sound_wood_defaults(),
 	is_ground_content = false,
-	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1},
+	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1, falling_node = 1},
 	after_dig_node = function(_, _, oldmetadata)
 		local parent = oldmetadata.fields.parent
 		local parent_pos_from_child = minetest.string_to_pos(parent)
@@ -73,9 +73,34 @@ minetest.override_item("farming_addons:pumpkin_8", {
 	}
 })
 
--- pumpkin as fuel
+--
+-- Recipes
+--
+
+-- Seed
+minetest.register_craft({
+	output = "farming_addons:seed_pumpkin 3",
+	recipe = {{"farming_addons:pumpkin_fruit"}}
+})
+
+-- Fuel
 minetest.register_craft({
 	type = "fuel",
 	recipe = "farming_addons:pumpkin_fruit",
 	burntime = 20
+})
+
+--
+-- Generation
+--
+
+minetest.register_decoration({
+	name = "default:grass",
+	deco_type = "simple",
+	place_on = {"default:dirt_with_grass"},
+	sidelen = 80,
+	fill_ratio = 0.0001,
+	y_max = 40,
+	y_min = 1,
+	decoration = "farming_addons:pumpkin_fruit",
 })
