@@ -1,0 +1,4 @@
+# textdomain: boats
+Boat=Лодка
+Boat: cruise mode on=Лодка: круизный режим включен
+Boat: cruise mode off=Лодка: круизный режим выключен

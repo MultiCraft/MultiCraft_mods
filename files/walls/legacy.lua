@@ -178,7 +178,7 @@ minetest.register_node(":wallet:wall_21", {
 })
 
 minetest.register_node(":wallet:wall", {
-	description = "Cobblestone Wall",
+	description = walls.S"Cobblestone Wall",
 	paramtype = "light",
 	tiles = {"default_cobble.png"},
 	groups = {cracky = 3, wall = 1, stone = 2},
@@ -240,7 +240,7 @@ minetest.register_node(":wallet:wallmossy_21", {
 })
 
 minetest.register_node(":wallet:wallmossy", {
-	description = "Mossy Cobblestone Wall",
+	description = walls.S"Mossy Cobblestone Wall",
 	paramtype = "light",
 	collision_box = {
 		type = "fixed",

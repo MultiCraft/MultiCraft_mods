@@ -1,9 +1,19 @@
 walls = {}
 
+local translator = minetest.get_translator
+walls.S = translator and translator("walls") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		walls.S = intllib.make_gettext_pair()
+	end
+end
+
 walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wall_sounds, not_in_cinv)
 	-- inventory node, and pole-type wall start item
 	minetest.register_node(wall_name, {
-		description = wall_desc,
+		description = walls.S(wall_desc),
 		drawtype = "nodebox",
 		node_box = {
 			type = "connected",
@@ -81,7 +91,7 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 	})
 
 	minetest.register_node(wall_name .. "_inv", {
-		description = wall_desc,
+		description = walls.S(wall_desc),
 		drawtype = "nodebox",
 		node_box = {
 			type = "fixed",

@@ -1,7 +1,17 @@
+local translator = minetest.get_translator
+local S = translator and translator("watch") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 for hour = 0, 12 do
 	local img = hour ~= 0 and "watch_" .. hour or "blank"
 	minetest.register_tool("watch:" .. hour, {
-		description = "Watch",
+		description = S"Watch",
 		inventory_image = "watch_watch.png^" .. img .. ".png",
 		groups = {watch = hour, not_in_creative_inventory = (hour == 0 and 0) or 1}
 	})

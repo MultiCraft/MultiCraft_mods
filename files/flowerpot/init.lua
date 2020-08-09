@@ -12,6 +12,16 @@
 
 flowerpot = {}
 
+local translator = minetest.get_translator
+local S = translator and translator("flowerpot") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 -- Handle plant removal from flowerpot
 local function on_punch(pos, node, puncher)
 	if puncher and not
@@ -118,7 +128,7 @@ end
 
 -- Empty Flowerpot
 local empty = table.copy(pot)
-empty.description = "Flowerpot"
+empty.description = S"Flowerpot"
 empty.mesh = "flowerpot.b3d"
 empty.tiles = {"flowerpot.png", "blank.png", "blank.png"}
 empty.selection_box = {
@@ -133,7 +143,7 @@ minetest.register_node("flowerpot:empty", empty)
 
 -- Inventory Flowerpot
 local inv = table.copy(pot)
-inv.description = "Flowerpot"
+inv.description = S"Flowerpot"
 inv.mesh = "flowerpot_inv.b3d"
 inv.tiles = {"flowerpot.png"}
 inv.node_placement_prediction = ""
