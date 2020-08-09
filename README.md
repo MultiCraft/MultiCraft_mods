@@ -1,12 +1,13 @@
 MultiCraft_game | Open Source ![Build Status](https://github.com/MultiCraft/MultiCraft_game/workflows/build/badge.svg)
 =============================
 
-MultiCraft_game is an Open Source module for MultiCraft ― sandbox game inspired by [Minecraft](https://minecraft.net/).
+MultiCraft_game is an Open Source game for MultiCraft Engine.
 
 MultiCraft_game is based on the [Minetest Game](https://github.com/minetest/minetest_game), which is developed by a [number of contributors](https://github.com/minetest/minetest_game/graphs/contributors).
 It also uses many mods from various developers with various licenses. Carefully read the README and LICENSE files in each folder.
 
-Copyright © 2014-2020 Maksim Gamarnik [MoNTE48] <MoNTE48@mail.ua> & MultiCraft Development Team.
+Copyright © 2014-2020 Maksim Gamarnik [MoNTE48] <MoNTE48@mail.ua>
+Copyright © 2014-2020 MultiCraft Development Team
 
 MultiCraft_game is licensed under LGPLv3 (or higher). Resources games licensed under CC-BY-SA 4.0, unless otherwise stated.
 
