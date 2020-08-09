@@ -14,8 +14,12 @@ MultiCraft Development Team (LGPLv3.0+)
 
 Authors of models
 -----------------
-stujones11 (CC BY-SA 3.0):
-  character.b3d -- Both derived from a model by MirceaKitsune (CC BY-SA 3.0)
+MultiCraft Development Team (CC BY-SA 3.0):
+  character.b3d -- based on stujones11 (CC BY-SA 3.0) 3d_armor model, derived from a model by MirceaKitsune (CC BY-SA 3.0)
+
+MultiCraft Development Team (CC BY-SA 4.0):
+  character_preview.b3d
+  hand.b3d
 
 Author of textures
 ------------------
