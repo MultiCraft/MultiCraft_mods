@@ -208,7 +208,7 @@ playereffects.register_effect_type("pepspeedplus", S("High Speed"), "pep_speedpl
 pep.register_potion({
 	basename = "speedplus",
 	contentstring = "Running Potion",
-	longdesc = "Drinking it will make you run faster for 60 seconds.",
+	longdesc = "Drinking it will make you run faster for 60 seconds",
 	effect_type = "pepspeedplus",
 	duration = 60,
 	recipe = {
@@ -228,7 +228,7 @@ playereffects.register_effect_type("pepspeedminus", S("Low Speed"), "pep_speedmi
 pep.register_potion({
 	basename = "speedminus",
 	contentstring = "Slug Potion",
-	longdesc = "Drinking it will make you walk slower for 60 seconds.",
+	longdesc = "Drinking it will make you walk slower for 60 seconds",
 	effect_type = "pepspeedminus",
 	duration = 60,
 	recipe = {"default:dry_grass", "default:ice", "vessels:glass_bottle"}
@@ -245,7 +245,7 @@ playereffects.register_effect_type("pepbreath", S("Perfect Breath"), "pep_breath
 pep.register_potion({
 	basename = "breath",
 	contentstring = "Air Potion",
-	longdesc = "Drinking it gives you breath underwater for 60 seconds.",
+	longdesc = "Drinking it gives you breath underwater for 60 seconds",
 	effect_type = "pepbreath",
 	duration = 30,
 	recipe = {
@@ -264,7 +264,7 @@ playereffects.register_effect_type("pepregen", S("Regeneration"), "pep_regen.png
 pep.register_potion({
 	basename = "regen",
 	contentstring = "Healing Potion",
-	longdesc = "Drinking it makes you regenerate health. Every 2 seconds, you get 1 HP, 20 times in total.",
+	longdesc = "Drinking it makes you regenerate health.\nEvery 2 seconds, you get 1 HP, 20 times in total",
 	effect_type = "pepregen",
 	duration = 20,
 	recipe = {
@@ -282,7 +282,7 @@ playereffects.register_effect_type("pepregen2", S("Regeneration II"), "pep_regen
 pep.register_potion({
 	basename = "regen2",
 	contentstring = "Healing Potion II",
-	longdesc = "Drinking it makes you regenerate health quickly. Every second you get 2 HP, 30 times in total.",
+	longdesc = "Drinking it makes you regenerate health quickly.\nEvery second you get 2 HP, 30 times in total",
 	effect_type = "pepregen2",
 	duration = 30,
 	recipe = {"default:gold_ingot", "farming:flour", "pep:regen"}
@@ -299,7 +299,7 @@ playereffects.register_effect_type("pepgrav0", S("No Gravity"), "pep_grav0.png",
 pep.register_potion({
 	basename = "grav0",
 	contentstring = "Non-Gravity Potion",
-	longdesc = "When you drink this potion, gravity stops affecting you, as if you were in space. The effect lasts for 30 seconds.",
+	longdesc = "When you drink this potion, gravity stops affecting you, as if you were in space.\nThe effect lasts for 30 seconds",
 	effect_type = "pepgrav0",
 	duration = 30,
 	recipe = {"mesecons:wire_00000000_off", "vessels:glass_bottle"}
@@ -310,7 +310,7 @@ playereffects.register_effect_type("pepgravreset", S("Gravity Neutralizer"), "pe
 pep.register_potion({
 	basename = "gravreset",
 	contentstring = "Gravity Neutralizer Potion",
-	longdesc = "Drinking it will stop all gravity effects you currently have.",
+	longdesc = "Drinking it will stop all gravity effects you currently have",
 	effect_type = "pepgravreset",
 	recipe = {"pep:grav0", "default:steel_ingot"}
 })
@@ -326,7 +326,7 @@ playereffects.register_effect_type("pepjumpplus", S("High Jump"), "pep_jumpplus.
 pep.register_potion({
 	basename = "jumpplus",
 	contentstring = "High Jumping Potion",
-	longdesc = "Drinking it will make you jump higher for 60 seconds.",
+	longdesc = "Drinking it will make you jump higher for 60 seconds",
 	effect_type = "pepjumpplus",
 	duration = 60,
 	recipe = {
@@ -346,7 +346,7 @@ playereffects.register_effect_type("pepjumpminus", S("Low Jump"), "pep_jumpminus
 pep.register_potion({
 	basename = "jumpminus",
 	contentstring = "Low Jumping Potion",
-	longdesc = "Drinking it will make you jump lower for 60 seconds.",
+	longdesc = "Drinking it will make you jump lower for 60 seconds",
 	effect_type = "pepjumpminus",
 	duration = 60,
 	recipe = {
@@ -358,30 +358,33 @@ pep.register_potion({
 local dark = {}
 playereffects.register_effect_type("pepnightvision", S("Night Vision"), "pep_nightvision.png", {"nightvision"},
 	function(player)
+		local player_name = player:get_player_name()
+
 		player:override_day_night_ratio(
 			math.min(1, minetest.get_timeofday() + 0.6))
 
-		if not dark[player:get_player_name()] then
+		if not dark[player_name] then
 			local hud = player:hud_add({
 				hud_elem_type = "image",
 				position = {x = 0.5, y = 0.5},
 				scale = {x = -100, y = -100},
 				text = "pep_dark.png"
 			})
-			dark[player:get_player_name()] = hud
+			dark[player_name] = hud
 		end
 	end,
 	function(_, player)
-		player:override_day_night_ratio(nil)
+		local player_name = player:get_player_name()
 
-		player:hud_remove(dark[player:get_player_name()])
-		dark[player:get_player_name()] = nil
+		player:override_day_night_ratio(nil)
+		player:hud_remove(dark[player_name])
+		dark[player_name] = nil
 	end
 )
 pep.register_potion({
 	basename = "nightvision",
 	contentstring = "Night Vision Potion",
-	longdesc = "Drinking it, you will see in the dark for 60 seconds",
+	longdesc = "Drinking it, you will see in the dark for 60 seconds.\nThe potion works only outdoors",
 	effect_type = "pepnightvision",
 	duration = 60,
 	recipe = {
@@ -490,7 +493,7 @@ playereffects.register_effect_type("pepmole", S("Autodig Mode"), "pep_mole.png",
 pep.register_potion({
 	basename = "mole",
 	contentstring = "Autodig Potion",
-	longdesc = "Drinking it will start an effect which will attempt to mine any two blocks in front of you, as if you were using a diamond pickaxe on them. The effect lasts for 30 seconds.",
+	longdesc = "Drinking it will start an effect which will attempt to mine any two blocks in front of you.\nThe effect lasts for 30 seconds",
 	effect_type = "pepmole",
 	duration = 30,
 	recipe = {"default:pick_steel", "default:shovel_steel", "vessels:glass_bottle"}
