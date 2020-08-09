@@ -229,7 +229,7 @@ local function rail_on_step(self, dtime)
 		vel = vector_add(vel, self.velocity)
 
 		if not minetest.is_valid_pos(vel) then
-			minetest.log("error", "carts: vel")
+			self.punched = false
 			return
 		end
 
