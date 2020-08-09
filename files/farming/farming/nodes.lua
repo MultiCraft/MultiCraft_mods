@@ -28,6 +28,12 @@ minetest.register_node("farming:soil", {
 	groups = {crumbly = 3, not_in_creative_inventory = 1, soil = 2,
 		grassland = 1, field = 1},
 	sounds = default.node_sound_dirt_defaults(),
+	drawtype = "nodebox",
+	paramtype = "light",
+	node_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.5, 0.5, 0.45, 0.5}
+	},
 	soil = {
 		base = "default:dirt",
 		dry = "farming:soil",
@@ -41,6 +47,12 @@ minetest.register_node("farming:soil_wet", {
 	groups = {crumbly = 3, not_in_creative_inventory = 1, soil = 3, wet = 1,
 		grassland = 1, field = 1},
 	sounds = default.node_sound_dirt_defaults(),
+	drawtype = "nodebox",
+	paramtype = "light",
+	node_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.5, 0.5, 0.45, 0.5}
+	},
 	soil = {
 		base = "default:dirt",
 		dry = "farming:soil",
@@ -59,7 +71,7 @@ minetest.register_node("farming:straw", {
 minetest.register_abm({
 	label = "Farming soil",
 	nodenames = {"group:field"},
-	interval = 15,
+	interval = 10,
 	chance = 4,
 	action = function(pos, node)
 		pos.y = pos.y + 1
