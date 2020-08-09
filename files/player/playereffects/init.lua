@@ -41,8 +41,16 @@ local use_autosave = false
 -- The time interval between autosaves, in seconds (only used when use_autosave is true)
 local autosave_time = 10
 
--- Intllib
-local S = intllib.make_gettext_pair()
+-- Translations
+local translator = minetest.get_translator
+local S = translator and translator("playereffects") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
 
 --[=[ Load inactive_effects and last_effect_id from playereffects, if this file exists ]=]
 do

@@ -1,3 +1,13 @@
+local translator = minetest.get_translator
+local S = translator and translator("boats") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 --
 -- Helper functions
 --
@@ -157,13 +167,13 @@ function boat.on_step(self, dtime)
 			if ctrl.up and ctrl.down then
 				if not self.auto then
 					self.auto = true
-					minetest.chat_send_player(self.driver, Sl("Boat: cruise mode on"))
+					minetest.chat_send_player(self.driver, S("Boat: cruise mode on"))
 				end
 			elseif ctrl.down then
 				self.v = self.v - dtime * 2.0
 				if self.auto then
 					self.auto = false
-					minetest.chat_send_player(self.driver, Sl("Boat: cruise mode off"))
+					minetest.chat_send_player(self.driver, S("Boat: cruise mode off"))
 				end
 			elseif ctrl.up or self.auto then
 				self.v = self.v + dtime * 2.0
@@ -285,7 +295,7 @@ minetest.register_entity("boats:boat", boat)
 
 
 minetest.register_craftitem("boats:boat", {
-	description = "Boat",
+	description = S"Boat",
 	inventory_image = "boats_inventory.png",
 	liquids_pointable = true,
 	stack_max = 1,

@@ -1,3 +1,13 @@
+local translator = minetest.get_translator
+local S = translator and translator("3d_armor") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 local ARMOR_LEVEL_MULTIPLIER = 1
 local ARMOR_HEAL_MULTIPLIER = 1
 local enable_damage = minetest.settings:get_bool("enable_damage")
@@ -36,6 +46,10 @@ armor = {
 -- Armor Registration
 
 armor.register_armor = function(_, name, def)
+	def.description = S(def.description)
+	if def.desc_color then
+		def.description = def.desc_color .. def.description
+	end
 	minetest.register_tool(name, def)
 end
 
@@ -192,7 +206,7 @@ armor.update_armor = function(self, player)
 			if stack:get_count() == 0 then
 				local desc = minetest.registered_tools[item].description
 				if desc then
-					minetest.chat_send_player(name, Sl("Your @1 got destroyed!", desc))
+					minetest.chat_send_player(name, S("Your @1 got destroyed!", desc))
 				end
 			end
 		end

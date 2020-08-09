@@ -1,3 +1,13 @@
+local translator = minetest.get_translator
+local S = translator and translator("signs") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 local vadd = vector.add
 local floor, pi = math.floor, math.pi
 
@@ -212,8 +222,8 @@ minetest.register_lbm({
 local function construct(pos)
 	local meta = minetest.get_meta(pos)
 	meta:set_string("formspec", "size[5,3]" ..
-			"textarea[1.15,0.3;3.3,2;Dtext;" .. Sl("Enter your text:") .. ";${sign_text}]" ..
-			"button_exit[0.85,2;3.3,1;;" .. Sl("Save") .. "]")
+			"textarea[1.15,0.3;3.3,2;Dtext;" .. S("Enter your text:") .. ";${sign_text}]" ..
+			"button_exit[0.85,2;3.3,1;;" .. S("Save") .. "]")
 end
 
 local function destruct(pos)
@@ -265,7 +275,7 @@ local function receive_fields(pos, _, fields, sender, wall)
 end
 
 minetest.register_node("signs:sign", {
-	description = "Sign",
+	description = S"Sign",
 	tiles = {"signs_wood.png"},
 	drawtype = "nodebox",
 	paramtype = "light",

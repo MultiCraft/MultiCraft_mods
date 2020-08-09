@@ -1,3 +1,13 @@
+local translator = minetest.get_translator
+local S = translator and translator("itemframes") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 minetest.register_entity("itemframes:item", {
 	visual = "wielditem",
 	visual_size = {x = 0.33, y = 0.33},
@@ -95,7 +105,7 @@ local function after_dig_node(pos)
 end
 
 minetest.register_node("itemframes:frame",{
-	description = "Item frame",
+	description = S"Item frame",
 	drawtype = "nodebox",
 	node_box = {
 		type = "wallmounted",
@@ -128,7 +138,7 @@ minetest.register_node("itemframes:frame",{
 		local meta = minetest.get_meta(pos)
 		local pn = placer:get_player_name()
 		meta:set_string("owner", pn)
-		meta:set_string("infotext", Sl("Item frame") .. "\n" .. Sl("Owned by @1", Sl(pn)))
+		meta:set_string("infotext", S("Item frame") .. "\n" .. S("Owned by @1", S(pn)))
 	end,
 
 	on_rightclick = function(pos, node, clicker, itemstack)

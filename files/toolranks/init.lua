@@ -1,9 +1,16 @@
--- Intllib
-local S = intllib.make_gettext_pair()
+toolranks = {}
+
+local translator = minetest.get_translator
+local S = translator and translator("toolranks") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
 
 local C = default.colors
-
-toolranks = {}
 
 function toolranks.get_level(uses)
 	if uses >= 16384 then

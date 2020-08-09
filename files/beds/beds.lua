@@ -26,7 +26,7 @@ end
 
 
 beds.register_bed("beds:bed", {
-	description = "Bed",
+	description = beds.S"Bed",
 	inventory_image = "beds_bed_inv.png",
 	wield_image = "beds_bed_inv.png",
 	tiles = {"beds_bed.png", "wool_red.png"},
