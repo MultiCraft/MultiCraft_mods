@@ -14,14 +14,23 @@ minetest.after(1, function()
 			else
 				wield_tiles[name] = def.inventory_image .. "^[transformR270"
 			end
-		elseif def.tiles and type(def.tiles[1]) == "string" and
-				def.tiles[1] ~= "" and def.drawtype and
-				(def.drawtype == "normal" or def.drawtype:sub(1, 8) == "allfaces" or
-				def.drawtype:sub(1, 5) == "glass" or def.drawtype == "liquid") then
-			if not (def.tiles[3] ~= "" and type(def.tiles[3]) == "string") then
-				wield_cubes[name] = def.tiles[1]
+		elseif def.tiles and type(def.tiles[1]) == "string" and def.tiles[1] ~= "" then
+			if def.drawtype and
+					(def.drawtype == "normal" or
+					 def.drawtype == "liquid" or
+					 def.drawtype:sub(1, 8) == "allfaces" or
+					 def.drawtype:sub(1, 5) == "glass") then
+				if not def.tiles[3] ~= "" and type(def.tiles[3]) == "string" then
+					wield_cubes[name] = def.tiles[1]
+				else
+					wield_cubes[name] = def.tiles[3]
+				end
 			else
-				wield_cubes[name] = def.tiles[3]
+				if not def.tiles[3] ~= "" and type(def.tiles[3]) == "string" then
+					wield_tiles[name] = def.tiles[1]
+				else
+					wield_tiles[name] = def.tiles[3]
+				end
 			end
 		end
 	end
