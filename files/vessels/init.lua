@@ -1,7 +1,17 @@
+local translator = minetest.get_translator
+local S = translator and translator("vessels") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 local vessels_shelf_formspec =
 	default.gui ..
 	"item_image[0,-0.1;1,1;vessels:shelf]" ..
-	"label[0.9,0.1;" .. Sl("Potion Shelf") .. "]" ..
+	"label[0.9,0.1;" .. S("Potion Shelf") .. "]" ..
 	"list[context;vessels;0,1;9,2;]" ..
 	"list[context;split;8,3.14;1,1;]" ..
 	"listring[context;vessels]" ..
@@ -38,17 +48,22 @@ local function update_vessels_shelf(pos)
 	end
 	meta:set_string("formspec", formspec)
 	if n_potions + n_empty == 0 then
-		meta:set_string("infotext", Sl("Empty Potion Shelf"))
+		meta:set_string("infotext", S("Empty Potion Shelf"))
 	else
-		meta:set_string("infotext", Sl("Potion Shelf") .. "\n(" ..
-			Sl("Potions:") .. " " .. n_potions .. ", " .. Sl("Bottles:") .. " " .. n_empty .. ")")
+		meta:set_string("infotext", S("Potion Shelf") .. "\n(" ..
+			S("Potions:") .. " " .. n_potions .. ", " .. S("Bottles:") .. " " .. n_empty .. ")")
 	end
+
+	meta:set_string("version", "2")
 end
 
 minetest.register_node("vessels:shelf", {
-	description = "Potion Shelf",
-	tiles = {"default_wood.png", "default_wood.png", "default_wood.png",
-		"default_wood.png", "vessels_shelf.png", "vessels_shelf.png"},
+	description = S"Potion Shelf",
+	tiles = {
+		"default_wood.png",                   "default_wood.png",
+		"default_wood.png",                   "default_wood.png",
+		"default_wood.png^vessels_shelf.png", "default_wood.png^vessels_shelf.png"
+	},
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {cracky = 2, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
@@ -141,4 +156,17 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "vessels:shelf",
 	burntime = 30
+})
+
+-- LBM for updating Potion Shelf
+minetest.register_lbm({
+	label = "Potion Shelf updater",
+	name = "vessels:shelf_updater",
+	nodenames = "vessels:shelf",
+	action = function(pos)
+		local meta = minetest.get_meta(pos)
+		if meta:get_string("version") ~= "2" then
+			update_vessels_shelf(pos)
+		end
+	end
 })
