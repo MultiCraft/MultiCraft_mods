@@ -1,6 +1,3 @@
--- Intllib
-local S = intllib.make_gettext_pair()
-
 local b = "blank.png"
 
 mobs:register_mob("mobs_npc:trader", {
@@ -9,7 +6,7 @@ mobs:register_mob("mobs_npc:trader", {
 	attacks_monsters = true,
 	hp_min = 15,
 	hp_max = 20,
-	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
+	collisionbox = mobs_npc.cbox,
 	visual = "mesh",
 	mesh = "character.b3d",
 	textures = {
@@ -43,7 +40,7 @@ mobs:register_mob("mobs_npc:trader", {
 	end,
 
 	on_spawn = function(self)
-		self.nametag = S("Trader")
+		self.nametag = mobs_npc.S("Trader")
 		self.object:set_properties({
 			nametag = self.nametag,
 			nametag_color = "#FFFFFF"
@@ -99,10 +96,10 @@ mobs.human = {
 	items = {
 		{"mobs:nametag 1", "default:emerald 1", 10},
 		{"farming:bread 8", "default:emerald 2", 5},
-		{"default:clay 8", "default:emerald 1", 12},
-		{"default:brick 8", "default:emerald 2", 17},
-		{"carts:cart 1", "default:gold_ingot 2", 17},
-		{"boats:boat 1", "default:gold_ingot 1", 17},
+		{"default:clay 8", "default:emerald 1", 10},
+		{"default:brick 8", "default:emerald 2", 15},
+		{"carts:cart 1", "default:gold_ingot 2", 16},
+		{"boats:boat 1", "default:gold_ingot 1", 15},
 		{"default:diamond 1", "default:emerald 2", 30},
 		{"farming:wheat 8", "default:emerald 2", 17},
 		{"default:tree 16", "default:gold_ingot 2", 15},
@@ -111,23 +108,28 @@ mobs.human = {
 		{"default:birch_sapling 3", "default:gold_ingot 2", 20},
 		{"default:stone 16", "default:emerald 1", 17},
 		{"watch:0 1", "default:emerald 1", 7},
-		{"mobs_water:fish_small 1", "default:emerald 2", 25},
+		{"mobs_water:fish_small 1", "default:emerald 2", 20},
 		{"default:sword_gold 1", "default:emerald 1", 17},
 		{"bucket:bucket_lava 1", "default:emerald 1", 15},
 		{"default:quartz_crystal 8", "default:emerald 1", 17},
 		{"farming:hoe_ruby 1", "default:emerald 1", 17},
-		{"default:cactus 4", "default:emerald 2", 40},
-		{"default:sugarcane 4", "default:emerald 2", 40},
+		{"default:cactus 4", "default:emerald 2", 35},
+		{"default:sugarcane 4", "default:emerald 2", 35},
 		{"default:ruby 1", "default:emerald 4", 20},
 		{"default:ruby 2", "default:emerald 7", 20},
 		{"default:ruby 1", "default:diamond 5", 30},
 		{"default:ruby 2", "default:diamond 9", 30},
-		{"default:obsidian 32", "default:emerald 1", 40},
+		{"default:obsidian 32", "default:emerald 1", 30},
 		{"default:emerald 1", "default:obsidian 64", 45},
 		{"farming_addons:carrot_golden 2", "default:diamond 1", 25},
 		{"farming_addons:seed_melon 1", "default:diamond 1", 25},
 		{"farming_addons:seed_pumpkin 1", "default:diamond 1", 25},
-		{"farming_addons:potato 1", "default:gold_ingot 2", 20}
+		{"farming_plants:seed_melon 1", "default:diamond 1", 25},
+		{"farming_addons:potato 1", "default:gold_ingot 2", 20},
+		{"3d_armor:helmet_chain 1", "default:goldblock 4", 40},
+		{"3d_armor:chestplate_chain 1", "default:ruby 4", 40},
+		{"3d_armor:leggings_chain 1", "default:emerald 4", 40},
+		{"3d_armor:boots_chain 1", "default:diamond 4", 40}
 	}
 }
 
@@ -174,7 +176,7 @@ function mobs.trader_add_goods(self, race)
 	end
 
 	self.trades = trades
-	self.version = 2
+	self.version = 3
 end
 
 function mobs.trader_show_goods(self, clicker, race)
@@ -184,8 +186,8 @@ function mobs.trader_show_goods(self, clicker, race)
 	end
 
 	if not self.game_name then
-		self.game_name = tostring(S(race.names[random(#race.names)]))
-		self.nametag = S("Trader @1", self.game_name)
+		self.game_name = mobs_npc.S(race.names[random(#race.names)])
+		self.nametag = mobs_npc.S("Trader @1", self.game_name)
 		self.object:set_properties({
 			nametag = self.nametag,
 			nametag_color = "#00FF00"
@@ -194,13 +196,13 @@ function mobs.trader_show_goods(self, clicker, race)
 
 	local version = self.version
 
-	if self.trades == nil or not version or version < 2 then
+	if self.trades == nil or not version or version < 3 then
 		mobs.trader_add_goods(self, race)
 	end
 
 	local player = clicker:get_player_name()
 	minetest.chat_send_player(player,
-		S("<[NPC] Trader @1> Hello, @2, have a look at my wares.",
+		mobs_npc.S("<[NPC] Trader @1> Hello, @2, have a look at my wares.",
 			self.game_name, Sl(player)))
 
 	-- Make formspec trade list
@@ -245,7 +247,8 @@ function mobs.trader_show_goods(self, clicker, race)
 	minetest.show_formspec(player, "mobs_npc:trade",
 		default.gui ..
 		"item_image[0,-0.1;1,1;default:emerald]" ..
-		"label[0.9,0.1;" .. S("Trader @1's stock", self.game_name) .. "]" ..
+		"label[0.9,0.1;" .. mobs_npc.S("Trader @1's stock", self.game_name) .. "]" ..
+		"image[7.95,3.1;1.1,1.1;^[colorize:#D6D5E6]]" ..
 		formspec_trade_list)
 end
 
@@ -298,4 +301,4 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
-mobs:register_egg("mobs_npc:trader", S("Trader"), "mobs_trader_egg.png")
+mobs:register_egg("mobs_npc:trader", mobs_npc.S("Trader"), "mobs_trader_egg.png")
