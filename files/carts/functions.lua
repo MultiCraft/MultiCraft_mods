@@ -234,7 +234,7 @@ function carts:register_rail(name, def_overwrite)
 		walkable = false,
 		selection_box = {
 			type = "fixed",
-			fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
+			fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2}
 		},
 		sounds = default.node_sound_metal_defaults()
 	}
