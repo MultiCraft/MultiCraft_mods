@@ -737,7 +737,7 @@ minetest.register_node("default:birch_sapling", {
 minetest.register_node("default:stone_with_coal", {
 	description = "Coal Ore",
 	tiles = {"default_stone.png^default_mineral_coal.png"},
-	groups = {cracky = 3},
+	groups = {cracky = 3, not_cuttable = 1},
 	drop = "default:coal_lump",
 	sounds = default.node_sound_stone_defaults()
 })
@@ -753,7 +753,7 @@ minetest.register_node("default:coalblock", {
 minetest.register_node("default:stone_with_iron", {
 	description = "Iron Ore",
 	tiles = {"default_stone.png^default_mineral_iron.png"},
-	groups = {cracky = 2},
+	groups = {cracky = 2, not_cuttable = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -775,7 +775,7 @@ minetest.register_node("default:lapisblock", {
 minetest.register_node("default:stone_with_bluestone", {
 	description = "Bluestone Ore",
 	tiles = {"default_stone.png^default_mineral_bluestone.png"},
-	groups = {cracky = 2},
+	groups = {cracky = 2, not_cuttable = 1},
 	drop = "mesecons:wire_00000000_off 8",
 	sounds = default.node_sound_stone_defaults()
 })
@@ -783,7 +783,7 @@ minetest.register_node("default:stone_with_bluestone", {
 minetest.register_node("default:stone_with_lapis", {
 	description = "Lapis Lazuli Ore",
 	tiles = {"default_stone.png^default_mineral_lapis.png"},
-	groups = {cracky = 2},
+	groups = {cracky = 2, not_cuttable = 1},
 	drop = {
 		max_items = 2,
 		items = {
@@ -801,7 +801,7 @@ minetest.register_node("default:stone_with_lapis", {
 minetest.register_node("default:stone_with_gold", {
 	description = "Gold Ore",
 	tiles = {"default_stone.png^default_mineral_gold.png"},
-	groups = {cracky = 2},
+	groups = {cracky = 2, not_cuttable = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -816,7 +816,7 @@ minetest.register_node("default:goldblock", {
 minetest.register_node("default:stone_with_emerald", {
 	description = default.colors.emerald .. Sl("Emerald Ore"),
 	tiles = {"default_stone.png^default_mineral_emerald.png"},
-	groups = {cracky = 2},
+	groups = {cracky = 2, not_cuttable = 1},
 	drop = "default:emerald",
 	sounds = default.node_sound_stone_defaults()
 })
@@ -838,7 +838,7 @@ minetest.register_node("default:rubyblock", {
 minetest.register_node("default:stone_with_diamond", {
 	description = "Diamonds in Stone",
 	tiles = {"default_stone.png^default_mineral_diamond.png"},
-	groups = {cracky = 1},
+	groups = {cracky = 1, not_cuttable = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -1293,6 +1293,10 @@ local function update_bookshelf(pos)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local invlist = inv:get_list("books")
+	if not invlist then
+		inv:set_size("books", 9 * 2)
+		invlist = inv:get_list("books")
+	end
 
 	local formspec = bookshelf_formspec
 	-- Inventory slots overlay
@@ -1328,6 +1332,20 @@ local function update_bookshelf(pos)
 	end
 end
 
+-- LBM for updating Bookshelf
+minetest.register_lbm({
+	label = "Bookshelf updater",
+	name = "default:bookshelf_updater",
+	nodenames = "default:bookshelf",
+	action = function(pos)
+		local meta = minetest.get_meta(pos)
+		if meta:get_string("version") ~= "2" then
+			update_bookshelf(pos)
+			meta:set_string("version", "2")
+		end
+	end
+})
+
 minetest.register_node("default:bookshelf", {
 	description = "Bookshelf",
 	tiles = {"default_wood.png", "default_wood.png", "default_wood.png",
@@ -1343,6 +1361,7 @@ minetest.register_node("default:bookshelf", {
 		inv:set_size("books", 9 * 2)
 		inv:set_size("split", 1)
 		update_bookshelf(pos)
+		meta:set_string("version", "2")
 	end,
 	can_dig = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()
