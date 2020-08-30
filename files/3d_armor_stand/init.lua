@@ -11,7 +11,6 @@ end
 local pi, vround = math.pi, vector.round
 
 local armor_stand_formspec = default.gui ..
-	"item_image[0,-0.1;1,1;3d_armor_stand:armor_stand]" ..
 	"label[0.9,0.05;" .. S"Armor Stand" .. "]" ..
 	"list[current_name;armor_head;3.5,1;1,1;]" ..
 	"list[current_name;armor_legs;4.5,1;1,1;]" ..
@@ -112,78 +111,189 @@ local function check_item(pos)
 	update_entity(pos)
 end
 
-minetest.register_node("3d_armor_stand:armor_stand", {
-	description = S"Armor Stand",
-	drawtype = "mesh",
-	mesh = "3d_armor_stand.b3d",
-	tiles = {"3d_armor_stand.png"},
-	inventory_image = "3d_armor_stand_inv.png",
-	wield_image = "3d_armor_stand_inv.png",
-	paramtype = "light",
-	paramtype2 = "facedir",
-	walkable = false,
-	selection_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, 1.5, 0.5}
-	},
-	groups = {choppy = 2, oddly_breakable_by_hand = 2},
-	sounds = default.node_sound_wood_defaults(),
-	after_place_node = function(pos, placer)
-		local meta = minetest.get_meta(pos)
-		local pn = placer:get_player_name()
-		meta:set_string("infotext", S"Armor Stand" .. "\n" .. S("Owned by @1", S(pn)))
 
-		meta:set_string("formspec", armor_stand_formspec)
-		local inv = meta:get_inventory()
-		for _, element in pairs(elements) do
-			inv:set_size("armor_" .. element, 1)
-		end
+--
+-- Armor Stand registration helper
+--
 
-		minetest.add_entity(pos, "3d_armor_stand:armor_entity")
-	end,
-	can_dig = function(pos, player)
-		return not minetest.is_protected(pos, player and player:get_player_name())
-	end,
-	on_dig = function(pos, node, player)
-		if not minetest.is_protected(pos, player and player:get_player_name()) then
-			drop_armor(pos)
-			minetest.node_dig(pos, node, player)
-		end
-	end,
-	on_punch = check_item,
-	allow_metadata_inventory_put = function(pos, listname, _, stack, player)
-		if minetest.is_protected(pos, player:get_player_name()) then
-			return 0
-		end
+local stand_nodes = {}
+local function register_armor_stand(name, def)
+	stand_nodes[#stand_nodes+1] = name
 
-		local item = minetest.registered_tools[stack:get_name()]
-		local group = item and item.groups
-		if group then
+	minetest.register_craft({
+		output = name,
+		recipe = {
+			{"", def.material, ""},
+			{"", def.material, ""},
+			{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
+		}
+	})
+
+	-- Allow almost everything to be overridden
+	local default_fields = {
+		drawtype = "mesh",
+		mesh = "3d_armor_stand.b3d",
+		paramtype = "light",
+		paramtype2 = "facedir",
+		walkable = false,
+		selection_box = {
+			type = "fixed",
+			fixed = {-0.5, -0.5, -0.5, 0.5, 1.5, 0.5}
+		},
+		groups = {},
+
+		after_place_node = function(pos, placer)
+			local meta = minetest.get_meta(pos)
+			local pn = placer and placer:get_player_name() or ""
+			meta:set_string("infotext", S"Armor Stand" .. "\n" .. S("Owned by @1", S(pn)))
+			local formspec = armor_stand_formspec ..
+				"item_image[0,-0.1;1,1;" .. name .. "]"
+			meta:set_string("formspec", formspec)
+			local inv = meta:get_inventory()
 			for _, element in pairs(elements) do
-				if listname == "armor_" .. element and group["armor_" .. element] then
-					return 1
+				inv:set_size("armor_" .. element, 1)
+			end
+
+			minetest.add_entity(pos, "3d_armor_stand:armor_entity")
+		end,
+		can_dig = function(pos, player)
+			local pn = player and player:get_player_name() or ""
+			return not minetest.is_protected(pos, pn)
+		end,
+		on_dig = function(pos, node, player)
+			local pn = player and player:get_player_name() or ""
+			if not minetest.is_protected(pos, pn) then
+				drop_armor(pos)
+				minetest.node_dig(pos, node, player)
+			end
+		end,
+		on_punch = check_item,
+		allow_metadata_inventory_put = function(pos, listname, _, stack, player)
+			local pn = player and player:get_player_name() or ""
+			if minetest.is_protected(pos, pn) then
+				return 0
+			end
+
+			local item = minetest.registered_tools[stack:get_name()]
+			local group = item and item.groups
+			if group then
+				for _, element in pairs(elements) do
+					if listname == "armor_" .. element and
+							group["armor_" .. element] then
+						return 1
+					end
 				end
 			end
-		end
 
-		return 0
-	end,
-	allow_metadata_inventory_take = function(pos, _, _, stack, player)
-		if minetest.is_protected(pos, player:get_player_name()) then
 			return 0
+		end,
+		allow_metadata_inventory_take = function(pos, _, _, stack, player)
+			local pn = player and player:get_player_name() or ""
+			if minetest.is_protected(pos, pn) then
+				return 0
+			end
+			return stack:get_count()
+		end,
+		allow_metadata_inventory_move = function() return 0 end,
+		on_metadata_inventory_put = update_entity,
+		on_metadata_inventory_take = update_entity,
+		after_destruct = update_entity,
+		on_blast = function(pos)
+			drop_armor(pos)
+			armor.drop_armor(pos, "3d_armor_stand:armor_stand")
+			minetest.remove_node(pos)
 		end
-		return stack:get_count()
-	end,
-	allow_metadata_inventory_move = function() return 0 end,
-	on_metadata_inventory_put = update_entity,
-	on_metadata_inventory_take = update_entity,
-	after_destruct = update_entity,
-	on_blast = function(pos)
-		drop_armor(pos)
-		armor.drop_armor(pos, "3d_armor_stand:armor_stand")
-		minetest.remove_node(pos)
+	}
+	for k, v in pairs(default_fields) do
+		if def[k] == nil then
+			def[k] = v
+		end
 	end
+
+	def.material = nil
+
+	minetest.register_node(name, def)
+end
+
+
+--
+-- Register Stands
+--
+
+register_armor_stand("3d_armor_stand:armor_stand", {
+	description = S"Apple Wood Armor Stand",
+	tiles = {"3d_armor_stand_platform.png^3d_armor_stand_wood.png"},
+	inventory_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_inv.png",
+	wield_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_inv.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:fence_wood"
 })
+
+register_armor_stand("3d_armor_stand:armor_stand_acacia_wood", {
+	description = S"Acacia Wood Armor Stand",
+	tiles = {"3d_armor_stand_platform.png^3d_armor_stand_wood_acacia.png"},
+	inventory_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_acacia_inv.png",
+	wield_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_acacia_inv.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:fence_acacia_wood"
+})
+
+register_armor_stand("3d_armor_stand:armor_stand_birch_wood", {
+	description = S"Birch Wood Armor Stand",
+	tiles = {"3d_armor_stand_platform.png^3d_armor_stand_wood_birch.png"},
+	inventory_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_birch_inv.png",
+	wield_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_birch_inv.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:fence_birch_wood"
+})
+
+register_armor_stand("3d_armor_stand:armor_stand_jungle_wood", {
+	description = S"Jungle Wood Armor Stand",
+	tiles = {"3d_armor_stand_platform.png^3d_armor_stand_wood_jungle.png"},
+	inventory_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_jungle_inv.png",
+	wield_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_jungle_inv.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:fence_jungle_wood"
+})
+
+register_armor_stand("3d_armor_stand:armor_stand_pine_wood", {
+	description = S"Pine Wood Armor Stand",
+	tiles = {"3d_armor_stand_platform.png^3d_armor_stand_wood_pine.png"},
+	inventory_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_pine_inv.png",
+	wield_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_pine_inv.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:fence_pine_wood"
+})
+
+register_armor_stand("3d_armor_stand:armor_stand_cherry_blossom_wood", {
+	description = S"Cherry Blossom Wood Armor Stand",
+	tiles = {"3d_armor_stand_platform.png^3d_armor_stand_wood_cherry_blossom.png"},
+	inventory_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_cherry_blossom_inv.png",
+	wield_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_wood_cherry_blossom_inv.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:fence_cherry_blossom_wood"
+})
+
+register_armor_stand("3d_armor_stand:armor_stand_ice", {
+	description = S"Ice Wood Armor Stand",
+	tiles = {"3d_armor_stand_platform.png^3d_armor_stand_ice.png"},
+	inventory_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_ice_inv.png",
+	wield_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_ice_inv.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	sounds = default.node_sound_glass_defaults(),
+	material = "default:fence_ice"
+})
+
+
+--
+-- Entity
+--
 
 minetest.register_entity("3d_armor_stand:armor_entity", {
 	physical = false,
@@ -205,16 +315,7 @@ minetest.register_entity("3d_armor_stand:armor_entity", {
 minetest.register_lbm({
 	label = "Check Armor Stand",
 	name = "3d_armor_stand:armor_stand",
-	nodenames = {"3d_armor_stand:armor_stand"},
+	nodenames = stand_nodes,
 	run_at_every_load = true,
 	action = check_item
-})
-
-minetest.register_craft({
-	output = "3d_armor_stand:armor_stand",
-	recipe = {
-		{"", "group:fence", ""},
-		{"", "group:fence", ""},
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
-	}
 })
