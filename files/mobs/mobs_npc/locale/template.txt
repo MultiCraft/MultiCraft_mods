@@ -2,24 +2,29 @@
 # last update: 2016/June/10
 
 #npc.lua
-NPC dropped you an item for gold! =
-NPC stands still. =
-NPC will follow you. = 
-NPC Man =
-NPC Woman =
+NPC dropped you an item for gold!=
+NPC stands still.=
+NPC will follow you.=
+NPC Man=
+NPC Woman=
 
 #trader.lua
-Trader @1 =
-<[NPC] Trader @1> Hello, @2, have a look at my wares. =
-Trader @1's stock =
-Trader =
+Trader @1=
+<[NPC] Trader @1> Hello, @2, have a look at my wares.=
+Trader @1's stock=
+Trader=
 
-Bob =
-Duncan =
-Bill =
-Tom =
-James =
-Ian =
-Lenny =
-Dylan =
-Ethan =
+Bill=
+Clark=
+Donald=
+Duncan=
+Dylan=
+Ethan=
+Gower=
+James=
+Lenny=
+Ralph=
+Rodman=
+Scott=
+Tom=
+Winslow=
