@@ -5,14 +5,42 @@ local neighbor = {
 	[3] = {{x =  0, z =  1}, {x =  0, z = -1}}
 }
 
-local chest_formspec = "size[9,8.75]" ..
-	"background[-0.2,-0.26;9.41,9.49;formspec_chest.png]" ..
+-- Chests formspecs
+local chest_cells = ""
+local large_chest_cells = ""
+for x = 1, 9 do
+for y = 1, 6 do
+	if y < 4 then
+		chest_cells = chest_cells ..
+			"item_image[" .. x - 1 .. "," .. y - 0.15 .. ";1,1;default:cell]"
+	end
+	large_chest_cells = large_chest_cells ..
+		"item_image[" .. x - 1 .. "," .. y - 0.15 .. ";1,1;default:cell]"
+end
+end
+
+local chest_formspec = default.gui ..
+	"item_image[0,-0.1;1,1;default:chest]" ..
+	"label[0.9,0.1;" .. Sl("Chest") .. "]" ..
+	"image[7.95,3.1;1.1,1.1;^[colorize:#D6D5E6]]" ..
+	chest_cells ..
+	"list[current_name;main;0,0.85;9,3;]" ..
+	"listring[current_name;main]" ..
+	"listring[current_player;main]"
+
+local large_chest_formspec = "size[9,11.6]" ..
 	default.gui_bg ..
 	default.listcolors ..
-	"image_button_exit[8.35,-0.19;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
-	"list[current_name;main;0,0.5;9,3;]" ..
-	"list[current_player;main;0,4.5;9,3;9]" ..
-	"list[current_player;main;0,7.74;9,1;]" ..
+	"background[0,1;0,0;formspec_background_color.png;true]" ..
+	"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]" ..
+	"background[-0.19,2.68;9.4,9.43;formspec_inventory.png]" ..
+	"image_button_exit[8.4,-0.2;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
+	"item_image[0,-0.2;1,1;default:chest]" ..
+	"label[0.9,0;" .. Sl("Large Chest") .. "]" ..
+	"image[7.95,6;1.1,1.1;^[colorize:#D6D5E6]]" ..
+	large_chest_cells ..
+	"list[current_player;main;0.01,7.4;9,3;9]" ..
+	"list[current_player;main;0.01,10.62;9,1;]" ..
 	"listring[current_name;main]" ..
 	"listring[current_player;main]"
 
@@ -20,26 +48,16 @@ local function set_large_chest(pos_l, pos_r)
 	local meta_l = minetest.get_meta(pos_l)
 	local meta_r = minetest.get_meta(pos_r)
 
-	local large_chest_formspec = "size[9,11.5]" ..
-		"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]" ..
-		default.gui_bg ..
-		default.listcolors ..
-		"image_button_exit[8.35,-0.28;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
-		"list[current_player;main;0.01,7.4;9,3;9]" ..
-		"list[current_player;main;0,10.61;9,1;]" ..
-		"listring[current_name;main]" ..
-		"listring[current_player;main]"
-
 	local chest_l = pos_r.x .. "," .. pos_r.y .. "," .. pos_r.z
 	local formspec_l = large_chest_formspec ..
-		"list[nodemeta:" .. chest_l .. ";main;0.01,3.39;9,3;]" ..
-		"list[current_name;main;0.01,0.4;9,3;]" ..
+		"list[nodemeta:" .. chest_l .. ";main;0.01,3.85;9,3;]" ..
+		"list[current_name;main;0.01,0.85;9,3;]" ..
 		"listring[nodemeta:" .. chest_l .. ";main]"
-	local chest_p = pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z
+	local chest_r = pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z
 	local formspec_r = large_chest_formspec ..
-		"list[nodemeta:" .. chest_p .. ";main;0.01,0.4;9,3;]" ..
-		"list[current_name;main;0.01,3.39;9,3;]" ..
-		"listring[nodemeta:" .. chest_p .. ";main]"
+		"list[nodemeta:" .. chest_r .. ";main;0.01,0.85;9,3;]" ..
+		"list[current_name;main;0.01,3.85;9,3;]" ..
+		"listring[nodemeta:" .. chest_r .. ";main]"
 	meta_l:set_string("formspec", formspec_l)
 	meta_r:set_string("formspec", formspec_r)
 
@@ -65,6 +83,7 @@ local function on_construct(pos)
 	else
 		meta:set_string("formspec", chest_formspec)
 		meta:set_string("infotext", Sl("Chest"))
+		meta:set_string("version", "2")
 	end
 
 	meta:get_inventory():set_size("main", 9*3)
@@ -175,4 +194,52 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "default:chest",
 	burntime = 15
+})
+
+-- LBM for updating Chest
+minetest.register_lbm({
+	label = "Chest updater",
+	name = "default:chest_updater",
+	nodenames = "default:chest",
+	action = function(pos)
+		local meta = minetest.get_meta(pos)
+		if meta:get_string("version") ~= "2" then
+			meta:set_string("formspec", chest_formspec)
+			meta:set_string("version", "2")
+		end
+	end
+})
+
+minetest.register_lbm({
+	label = "Chest updater (large)",
+	name = "default:chest_large_updater",
+	nodenames = {"default:chest_left", "default:chest_right"},
+	action = function(pos, node)
+		local meta = minetest.get_meta(pos)
+		if meta:get_string("version") ~= "2" then
+			local param2 = minetest.get_node(pos).param2
+
+			if node.name == "default:chest_left" then
+				local pos_r = {x = pos.x + neighbor[param2][1].x, y = pos.y, z = pos.z + neighbor[param2][1].z}
+				local chest_l = pos_r.x .. "," .. pos_r.y .. "," .. pos_r.z
+
+				local formspec_l = large_chest_formspec ..
+					"list[nodemeta:" .. chest_l .. ";main;0.01,3.85;9,3;]" ..
+					"list[current_name;main;0.01,0.85;9,3;]" ..
+					"listring[nodemeta:" .. chest_l .. ";main]"
+				meta:set_string("formspec", formspec_l)
+			elseif node.name == "default:chest_right" then
+				local pos_l = {x = pos.x + neighbor[param2][2].x, y = pos.y, z = pos.z + neighbor[param2][2].z}
+				local chest_r = pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z
+
+				local formspec_r = large_chest_formspec ..
+					"list[nodemeta:" .. chest_r .. ";main;0.01,0.85;9,3;]" ..
+					"list[current_name;main;0.01,3.85;9,3;]" ..
+					"listring[nodemeta:" .. chest_r .. ";main]"
+				meta:set_string("formspec", formspec_r)
+			end
+
+			meta:set_string("version", "2")
+		end
+	end
 })
