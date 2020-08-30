@@ -24,7 +24,7 @@ function carts:signal_detector_rail(pos)
 end
 
 carts:register_rail("carts:detectorrail", {
-	description = "Detector Rail",
+	description = carts.S"Detector Rail",
 	tiles = {
 		"carts_rail_straight_dtc.png", "carts_rail_curved_dtc.png",
 		"carts_rail_t_junction_dtc.png", "carts_rail_crossing_dtc.png"
