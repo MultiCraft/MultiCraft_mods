@@ -37,7 +37,7 @@ minetest.register_node("farming_addons:pumpkin_fruit", {
 	paramtype2 = "facedir",
 	sounds = default.node_sound_wood_defaults(),
 	is_ground_content = false,
-	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1, falling_node = 1},
+	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30, food = 1, not_cuttable = 1, falling_node = 1},
 	after_dig_node = function(_, _, oldmetadata)
 		local parent = oldmetadata.fields.parent
 		local parent_pos_from_child = minetest.string_to_pos(parent)

@@ -26,6 +26,7 @@ read_globals = {
 	"playerphysics",
 	"screwdriver",
 	"sscsm",
+	"workbench",
 	-- Silence errors about custom table methods.
 	table = { fields = { "copy", "indexof" } },
 	-- Silence warnings about accessing undefined fields of global 'math'
@@ -36,6 +37,7 @@ globals = {"intllib", "hud", "Sl"}
 
 exclude_files = {
 	"files/bluestone/mesecons/internal.lua",
+	"files/deprecated/init.lua",
 	"files/mobs/mobs_redo/api.lua",
 	"files/signs/slugify.lua",
 	"files/workbench/init.lua",

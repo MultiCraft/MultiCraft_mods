@@ -3,8 +3,8 @@ local workbench_label, workbench_back = "", ""
 
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
-local nodes = {}
-for node, def in pairs(minetest.registered_nodes) do
+workbench.nodes = {}
+for node, def in pairs(minetest.registered_workbench.nodes) do
 	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass" or def.drawtype:sub(1,8) == "allfaces") and
 	   (def.tiles and type(def.tiles[1]) == "string") and
 		not def.on_rightclick and
@@ -15,11 +15,11 @@ for node, def in pairs(minetest.registered_nodes) do
 		not def.groups.colorglass and
 		not def.mesecons
 	then
-		nodes[#nodes+1] = node
+		workbench.nodes[#workbench.nodes+1] = node
 	end
 end
 
-setmetatable(nodes, {
+setmetatable(workbench.nodes, {
 	__concat = function(t1, t2)
 		for i=1, #t2 do
 			t1[#t1+1] = t2[i]
@@ -29,7 +29,7 @@ setmetatable(nodes, {
 })
 
 local valid_block = {}
-for _, v in pairs(nodes) do
+for _, v in pairs(workbench.nodes) do
 	valid_block[v] = true
 end
 
@@ -341,9 +341,9 @@ minetest.register_lbm({
 })
 
 for _, d in pairs(workbench.defs) do
-	for i = 1, #nodes do
-		local node = nodes[i]
-		local def = minetest.registered_nodes[node]
+	for i = 1, #workbench.nodes do
+		local node = workbench.nodes[i]
+		local def = minetest.registered_workbench.nodes[node]
 		local groups, tiles, mesh, collision_box = {}, {}, {}, {}
 		local drawtype = "nodebox"
 
@@ -405,55 +405,6 @@ for _, d in pairs(workbench.defs) do
 		})
 	end
 end
-
--- Aliases. A lot of aliases...
--- [Delete aliases after July 2020]
-local stairs_aliases = {
-	{"corner",		"outerstair"},
-	{"invcorner",	"outerstair"},
-	{"stair_outer",	"innerstair"},
-	{"stair_inner",	"innerstair"},
-	{"nanoslab",	"microslab"}
-}
-
-for i = 1, #nodes do
-	local node = nodes[i]
-	for _, d in pairs(workbench.defs) do
-		minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"), "stairs:"..d[1].."_"..node:gsub(":", "_"))
-		minetest.register_alias(node.."_"..d[1],                           "stairs:"..d[1].."_"..node:gsub(":", "_"))
-	end
-
-	for _, e in pairs(stairs_aliases) do
-		minetest.register_alias("stairs:"..e[1].."_"..node:match(":(.*)"), "stairs:"..e[2].."_"..node:gsub(":", "_"))
-		minetest.register_alias("stairs:"..e[1].."_"..node:gsub(":", "_"), "stairs:"..e[2].."_"..node:gsub(":", "_"))
-		minetest.register_alias(node.."_"..e[1],                           "stairs:"..e[2].."_"..node:gsub(":", "_"))
-	end
-end
-
-for _, d in pairs(workbench.defs) do
-	minetest.register_alias("stairs:"..d[1].."_coal",        "stairs:"..d[1].."_default_coalblock")
-	minetest.register_alias("stairs:"..d[1].."_lapis_block", "stairs:"..d[1].."_default_lapisblock")
-end
-
-for _, e in pairs(stairs_aliases) do
-	minetest.register_alias("stairs:"..e[1].."_coal",        "stairs:"..e[2].."_default_coalblock")
-	minetest.register_alias("stairs:"..e[1].."_lapis_block", "stairs:"..e[2].."_default_lapisblock")
-end
-
-minetest.register_alias("stairs:stair_steel",    "stairs:stair_default_steelblock")
-minetest.register_alias("stairs:slab_steel",     "stairs:slab_default_steelblock")
-minetest.register_alias("stairs:corner_steel",   "stairs:corner_default_steelblock")
-minetest.register_alias("stairs:stair_gold",     "stairs:stair_default_goldblock")
-minetest.register_alias("stairs:slab_gold",      "stairs:slab_default_goldblock")
-minetest.register_alias("stairs:corner_gold",    "stairs:corner_default_goldblock")
-minetest.register_alias("stairs:stair_diamond",  "stairs:stair_default_diamondblock")
-minetest.register_alias("stairs:slab_diamond",   "stairs:slab_default_diamondblock")
-minetest.register_alias("stairs:corner_diamond", "stairs:corner_default_diamondblock")
-
-
--- Workbench
-minetest.register_alias("crafting:workbench", "workbench:workbench")
-minetest.register_alias("default:workbench", "workbench:workbench")
 
 -- Craft items
 

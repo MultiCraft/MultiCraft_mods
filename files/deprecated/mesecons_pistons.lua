@@ -1,5 +1,5 @@
 -- From mesecons_pistons mod
--- License and Readme here: https://github.com/MultiCraft/MultiCraft/tree/master/games/default/files/bluestone
+-- License and Readme here: https://github.com/MultiCraft/MultiCraft_game/tree/master/files/bluestone
 -- Added 17 Jul 2019
 
 local ground_dir = {
@@ -22,7 +22,6 @@ minetest.register_lbm({
 		"mesecons_pistons:piston_up_sticky_on",
 		"mesecons_pistons:piston_up_pusher_sticky"
 	},
-	run_at_every_load = false,
 	action = function(pos, node)
 		local dir = ground_dir[math.floor(node.param2/4)]
 		node.param2 = minetest.dir_to_facedir(dir, true)
@@ -42,7 +41,6 @@ minetest.register_lbm({
 		"mesecons_pistons:piston_down_sticky_on",
 		"mesecons_pistons:piston_down_pusher_sticky"
 	},
-	run_at_every_load = false,
 	action = function(pos, node)
 		local dir = vector.multiply(ground_dir[math.floor(node.param2/4)], -1)
 		node.param2 = minetest.dir_to_facedir(dir, true)
