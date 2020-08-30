@@ -1,8 +1,5 @@
 -- Npc by TenPlus1
 
--- Intllib
-local S = intllib.make_gettext_pair()
-
 local b = "blank.png"
 
 mobs.npc_drops = {
@@ -35,7 +32,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 --	pathfinding = true,
 	hp_min = 15,
 	hp_max = 20,
-	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
+	collisionbox = mobs_npc.cbox,
 	visual = "mesh",
 	mesh = "character.b3d",
 	textures = mtextures,
@@ -86,7 +83,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 				name = drops[math.random(#drops)]
 			})
 
-			minetest.chat_send_player(name, S("NPC dropped you an item for gold!"))
+			minetest.chat_send_player(name, mobs_npc.S("NPC dropped you an item for gold!"))
 			return
 		end
 
@@ -94,10 +91,10 @@ mobs:register_mob("mobs_npc:npc_man", {
 		if self.owner and self.owner == name then
 			if self.order == "follow" then
 				self.order = "stand"
-				minetest.chat_send_player(name, S("NPC stands still."))
+				minetest.chat_send_player(name, mobs_npc.S("NPC stands still."))
 			else
 				self.order = "follow"
-				minetest.chat_send_player(name, S("NPC will follow you."))
+				minetest.chat_send_player(name, mobs_npc.S("NPC will follow you."))
 			end
 		end
 	end]]
@@ -128,7 +125,7 @@ mobs:register_mob("mobs_npc:npc_woman", {
 --	pathfinding = true,
 	hp_min = 15,
 	hp_max = 20,
-	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
+	collisionbox = mobs_npc.cbox,
 	visual = "mesh",
 	mesh = "character.b3d",
 	textures = wtextures,
@@ -179,7 +176,7 @@ mobs:register_mob("mobs_npc:npc_woman", {
 				name = drops[math.random(#drops)]
 			})
 
-			minetest.chat_send_player(name, S("NPC dropped you an item for gold!"))
+			minetest.chat_send_player(name, mobs_npc.S("NPC dropped you an item for gold!"))
 			return
 		end
 
@@ -187,14 +184,14 @@ mobs:register_mob("mobs_npc:npc_woman", {
 		if self.owner and self.owner == name then
 			if self.order == "follow" then
 				self.order = "stand"
-				minetest.chat_send_player(name, S("NPC stands still."))
+				minetest.chat_send_player(name, mobs_npc.S("NPC stands still."))
 			else
 				self.order = "follow"
-				minetest.chat_send_player(name, S("NPC will follow you."))
+				minetest.chat_send_player(name, mobs_npc.S("NPC will follow you."))
 			end
 		end
 	end]]
 })
 
-mobs:register_egg("mobs_npc:npc_man", S("NPC Man"), "mobs_npc_man_egg.png")
-mobs:register_egg("mobs_npc:npc_woman", S("NPC Woman"), "mobs_npc_woman_egg.png")
+mobs:register_egg("mobs_npc:npc_man", mobs_npc.S("NPC Man"), "mobs_npc_man_egg.png")
+mobs:register_egg("mobs_npc:npc_woman", mobs_npc.S("NPC Woman"), "mobs_npc_woman_egg.png")
