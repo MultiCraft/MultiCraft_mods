@@ -115,19 +115,19 @@ local workbench_fs = [[
 	item_image[0,-0.1;1,1;workbench:workbench]
 	]] .. workbench_label .. [[
 
-	image_button[0.2,0.8;1.5,1.5;blank.png;creating;;true;false;workbench_button_back.png]
+	image_button[0.2,0.8;1.5,1.5;blank.png;creating;;true;false;formspec_button_back.png]
 	item_image[0.25,0.85;1.5,1.5;stairs:stair_default_wood]
 	item_image[0.25,0.95;1.4,1.4;workbench:saw]
 	tooltip[creating;]] .. Sl("Сutting") .. [[;#000;#FFF]
 
-	image_button[0.2,2.15;1.5,1.5;blank.png;anvil;;true;false;workbench_button_back.png]
+	image_button[0.2,2.15;1.5,1.5;blank.png;anvil;;true;false;formspec_button_back.png]
 	image[0.25,2.2;1.5,1.5;workbench_anvil.png]
 	tooltip[anvil;]] .. Sl("Anvil") .. [[;#000;#FFF]
 
 	list[current_player;craft;2,0.5;3,3;]
 	list[current_player;craftpreview;7,1.505;1,1;]
 
-	image_button[7,3.14;1,1;blank.png;craftguide;;true;false;workbench_button_back.png]
+	image_button[7,3.14;1,1;blank.png;craftguide;;true;false;formspec_button_back.png]
 	image[7,3.14;1,1;craftguide_book.png]
 	tooltip[craftguide;]] .. Sl("Crafting Guide") .. [[;#000;#FFF]
 ]]
@@ -138,7 +138,7 @@ local creating_fs = [[
 
 	item_image[0,-0.1;1,1;workbench:workbench]
 	]] .. workbench_back .. [[
-	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;workbench_button_back.png]
+	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;formspec_button_back.png]
 
 	item_image[0.1,1.15;1.75,1.75;workbench:saw]
 	list[context;craft;2,1.505;1,1;]
@@ -151,7 +151,7 @@ local repair_fs = [[
 
 	item_image[0,-0.1;1,1;workbench:workbench]
 	]] .. workbench_back .. [[
-	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;workbench_button_back.png]
+	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;formspec_button_back.png]
 
 	image[0.1,1.15;1.75,1.75;workbench_anvil.png]
 	item_image[2,2.5;1,1;default:pick_stone]
@@ -189,7 +189,7 @@ function workbench.construct(pos)
 	inv:set_size("forms", 4*3)
 
 	meta:set_string("infotext", Sl("Workbench"))
-	meta:set_string("version", "2")
+	meta:set_string("version", "4")
 	workbench:set_formspec(meta, 1)
 end
 
@@ -331,11 +331,11 @@ minetest.register_node("workbench:workbench", {
 
 minetest.register_lbm({
 	label = "Workbench updater",
-	name = "workbench:updater",
+	name = "workbench:updater_v4",
 	nodenames = "workbench:workbench",
 	action = function(pos)
-		if minetest.get_meta(pos):get_string("version") ~= "2" then
-			minetest.set_node(pos, {name = "workbench:workbench"})
+		if minetest.get_meta(pos):get_string("version") ~= "4" then
+			construct(pos)
 		end
 	end
 })
