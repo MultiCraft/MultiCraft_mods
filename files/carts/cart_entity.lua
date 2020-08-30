@@ -102,7 +102,7 @@ function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities)
 		local owner = self.owner
 		if owner and owner ~= puncher_name then
 			minetest.chat_send_player(puncher_name,
-				Sl("You cannot pick up a Cart!") .. " " .. Sl("Owned by @1", owner))
+				carts.S"You cannot pick up a Cart!" .. " " .. carts.S("Owned by @1", owner))
 			return
 		end
 		if self.sound_handle then
@@ -178,6 +178,9 @@ local function rail_sound(self, dtime)
 		minetest.after(0.2, minetest.sound_stop, handle)
 	end
 	local vel = self.object:get_velocity()
+	if not vel then
+		return
+	end
 	local speed = vector_length(vel)
 	if speed > 0 then
 		self.sound_handle = minetest.sound_play(
@@ -463,7 +466,7 @@ end
 minetest.register_entity("carts:cart", cart_entity)
 
 minetest.register_node("carts:cart", {
-	description = "Cart (Sneak+Click to pick up)",
+	description = carts.S"Cart (Sneak+Click to pick up)",
 	drawtype = "mesh",
 	mesh = "carts_cart.b3d",
 	tiles = {"carts_cart.png"},
