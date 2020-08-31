@@ -1,5 +1,15 @@
 player_api = {}
 
+local translator = minetest.get_translator
+local S = translator and translator("player_api") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 dofile(minetest.get_modpath("player_api") .. "/api.lua")
 dofile(minetest.get_modpath("player_api") .. "/wieldview.lua")
 
@@ -135,7 +145,7 @@ minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
 	local pos_string = minetest.pos_to_string(pos, 1)
 
-	minetest.chat_send_player(name, Sl("Your last coordinates:") .. " "
+	minetest.chat_send_player(name, S("Your last coordinates:") .. " "
 		.. pos_string)
 
 	minetest.log("action", name .. " died at " .. pos_string)
