@@ -19,6 +19,10 @@ Pine Wood Door=Дверь из Дерева Сосны
 Pine Wood Door with Glass=Дверь из Дерева Сосны со Стеклом
 Pine Wood Interior Door=Внутренняя Дверь из Дерева Сосны
 Pine Wood Interior Glass Door=Внутренняя Стеклянная Дверь из Дерева Сосны
+Cherry Blossom Wood Door=Дверь из Дерева Сакуры
+Cherry Blossom Wood Door with Glass=Дверь из Дерева Сакуры со Стеклом
+Cherry Blossom Wood Interior Door=Внутренняя Дверь из Дерева Сакуры
+Cherry Blossom Wood Interior Glass Door=Внутренняя Стеклянная Дверь из Дерева Сакуры
 Steel Door=Стальная Дверь
 Grilled Door=Решётчатая Дверь
 
@@ -27,6 +31,7 @@ Acacia Wood Trapdoor=Люк из Дерева Акации
 Birch Wood Trapdoor=Люк из Дерева Берёзы
 Jungle Wood Trapdoor=Люк из Джунгли-Дерева
 Pine Wood Trapdoor=Люк из Дерева Сосны
+Cherry Blossom Wood Trapdoor=Люк из Дерева Сакуры
 Steel Trapdoor=Стальной Люк
 
 Apple Wood Fence Gate=Ворота из Дерева Яблони
@@ -34,6 +39,7 @@ Acacia Wood Fence Gate=Ворота из Дерева Акации
 Birch Wood Fence Gate=Ворота из Дерева Берёзы
 Jungle Wood Fence Gate=Ворота из Дерева Джунгли-дерева
 Pine Wood Fence Gate=Ворота из Дерева Сосны
+Cherry Blossom Wood Fence Gate=Ворота из Дерева Сакуры
 Ice Fence Gate=Ворота изо Льда
 
 Owned by @1=Владелец: @1

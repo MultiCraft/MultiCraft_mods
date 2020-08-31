@@ -17,6 +17,10 @@ Added Fence Gate model, code, and sounds.
 Various Minetest developers and contributors (MIT)
 MultiCraft Development Team (MIT)
 
+Licenses of media (textures)
+----------------------------
+MultiCraft Development Team (CC-BY-SA 4.0)
+
 Authors of media (models)
 -------------------------
 Door 3d models by sofar (CC-BY-SA-3.0)
