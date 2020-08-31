@@ -567,6 +567,9 @@ function mob_class:do_stay_near()
 	if not self.stay_near then return false end
 
 	local pos = self.object:get_pos()
+	if not pos then
+		return false
+	end
 	local searchnodes = self.stay_near[1]
 	local chance = self.stay_near[2] or 10
 
@@ -1737,6 +1740,10 @@ function mob_class:do_runaway_from()
 	end
 
 	local s = self.object:get_pos()
+	if not s then
+		return
+	end
+
 	local p, sp, dist, pname
 	local player, obj, min_player, name
 	local min_dist = self.view_range + 1
