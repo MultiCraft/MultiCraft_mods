@@ -181,7 +181,7 @@ function doors.door_toggle(pos, node, clicker)
 
 	minetest.swap_node(pos, {
 		name = name .. transform[state + 1][dir+1].v,
-		param2 = transform[state + 1][dir+1].param2
+		param2 = transform[state + 1][dir + 1].param2
 	})
 	meta:set_int("state", state)
 
@@ -263,10 +263,10 @@ function doors.register(name, def)
 			local dir = placer and minetest.dir_to_facedir(placer:get_look_dir()) or 0
 
 			local ref = {
-				{x = -1, y = 0, z = 0},
-				{x = 0, y = 0, z = 1},
-				{x = 1, y = 0, z = 0},
-				{x = 0, y = 0, z = -1}
+				{x = -1, y = 0, z =  0},
+				{x =  0, y = 0, z =  1},
+				{x =  1, y = 0, z =  0},
+				{x =  0, y = 0, z = -1}
 			}
 
 			local aside = {

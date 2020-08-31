@@ -28,8 +28,15 @@ For more details:
 https://opensource.org/licenses/MIT
 
 
-Licenses of media (textures, models and sounds)
------------------------------------------------
+Licenses of media (textures)
+----------------------------
+
+Attribution-ShareAlike 4.0 International (CC-BY-SA 4.0)
+Copyright (C) 2018-2020 MultiCraft Development Team
+
+
+Licenses of media (models and sounds)
+-------------------------------------
 
 Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 Copyright (C) 2011-2016 Fernando Zapata

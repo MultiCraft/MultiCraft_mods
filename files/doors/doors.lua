@@ -77,6 +77,9 @@ doors.register("door_pine_wood", {
 	}
 })
 
+
+-- Other Doors --
+
 doors.register("door_steel", {
 	tiles = {{name = "doors_door_steel.png", backface_culling = true}},
 	description = "Steel Door",
@@ -157,9 +160,9 @@ minetest.register_alias("doors:hidden", "air")
 
 doors.register_trapdoor("doors:trapdoor", {
 	description = "Apple Wood Trapdoor",
-	wield_image = "doors_trapdoor_wood_top.png",
-	tile_front = "doors_trapdoor_wood_top.png",
-	tile_bottom = "doors_trapdoor_wood_bottom.png",
+	wield_image = "doors_trapdoor_wood.png^doors_trapdoor_wood_handle.png",
+	tile_front = "doors_trapdoor_wood.png^doors_trapdoor_wood_handle.png",
+	tile_bottom = "doors_trapdoor_wood.png",
 	tile_side = "doors_trapdoor_wood_side.png",
 	material = "default:wood",
 	fuel = 7,
@@ -168,9 +171,9 @@ doors.register_trapdoor("doors:trapdoor", {
 
 doors.register_trapdoor("doors:trapdoor_steel", {
 	description = "Steel Trapdoor",
-	wield_image = "doors_trapdoor_steel_top.png",
-	tile_front = "doors_trapdoor_steel_top.png",
-	tile_bottom = "doors_trapdoor_steel_bottom.png",
+	wield_image = "doors_trapdoor_steel.png^doors_trapdoor_steel_handle.png",
+	tile_front = "doors_trapdoor_steel.png^doors_trapdoor_steel_handle.png",
+	tile_bottom = "doors_trapdoor_steel.png",
 	tile_side = "doors_trapdoor_steel_side.png",
 	node_box_open = {
 		type = "fixed",
