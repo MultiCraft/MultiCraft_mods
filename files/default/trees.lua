@@ -63,6 +63,10 @@ function default.grow_sapling(pos)
 		minetest.log("action", "An emergent jungle sapling grows into a tree at "..
 			minetest.pos_to_string(pos))
 		default.grow_new_emergent_jungle_tree(pos)
+	elseif node.name == "default:cherry_blossom_sapling" then
+		minetest.log("action", "An cherry blossom sapling grows into a tree at "..
+			minetest.pos_to_string(pos))
+		default.grow_new_cherry_blossom_tree(pos)
 	end
 
 	return true
@@ -153,6 +157,15 @@ end
 function default.grow_new_birch_tree(pos)
 	local path = modpath .. "/schematics/birch_tree_from_sapling.mts"
 	minetest.place_schematic({x = pos.x - 2, y = pos.y - 1, z = pos.z - 2},
+		path, "random", nil, true)
+end
+
+
+-- New cherry blossom tree
+
+function default.grow_new_cherry_blossom_tree(pos)
+	local path = modpath .. "/schematics/cherry_blossom_tree_from_sapling.mts"
+	minetest.place_schematic({x = pos.x - 3, y = pos.y - 1, z = pos.z - 3},
 		path, "random", nil, true)
 end
 

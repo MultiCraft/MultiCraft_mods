@@ -730,6 +730,84 @@ minetest.register_node("default:birch_sapling", {
 	end
 })
 
+minetest.register_node("default:cherry_blossom_tree", {
+	description = "Cherry Blossom Tree",
+	tiles = {"default_cherry_blossom_tree_top.png", "default_cherry_blossom_tree_top.png", "default_cherry_blossom_tree.png"},
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	sounds = default.node_sound_wood_defaults(),
+
+	on_place = minetest.rotate_node
+})
+
+minetest.register_node("default:cherry_blossom_wood", {
+	description = "Cherry Blossom Wood Planks",
+	paramtype2 = "facedir",
+	place_param2 = 0,
+	tiles = {"default_cherry_blossom_wood.png"},
+	is_ground_content = false,
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1},
+	sounds = default.node_sound_wood_defaults()
+})
+
+minetest.register_node("default:cherry_blossom_sapling", {
+	description = "Cherry Blossom Tree Sapling",
+	drawtype = "plantlike",
+	tiles = {"default_cherry_blossom_sapling.png"},
+	inventory_image = "default_cherry_blossom_sapling.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	on_timer = grow_sapling,
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.3, -0.5, -0.3, 0.3, 0.35, 0.3}
+	},
+	groups = {snappy = 2, dig_immediate = 3, flammable = 2,
+		attached_node = 1, sapling = 1},
+	sounds = default.node_sound_leaves_defaults(),
+
+	on_construct = function(pos)
+		minetest.get_node_timer(pos):start(math.random(300, 1500))
+	end,
+
+	on_place = function(itemstack, placer, pointed_thing)
+		itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
+			"default:cherry_blossom_sapling",
+			-- minp, maxp to be checked, relative to sapling pos
+			-- minp_relative.y = 1 because sapling pos has been checked
+			{x = -3, y = 1, z = -3},
+			{x = 3, y = 6, z = 3},
+			-- maximum interval of interior volume check
+			4)
+
+		return itemstack
+	end
+})
+
+minetest.register_node("default:cherry_blossom_leaves", {
+	description = "Cherry Blossom Tree Leaves",
+	drawtype = "allfaces_optional",
+	waving = 1,
+	tiles = {"default_cherry_blossom_leaves.png"},
+	paramtype = "light",
+	walkable = false,
+	is_ground_content = false,
+	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1, speed = -20},
+	drop = {
+		max_items = 1,
+		items = {
+			{items = {"default:cherry_blossom_sapling"}, rarity = 20},
+			{items = {"default:vine"}, rarity = 12},
+			{items = {"default:cherry_blossom_leaves"}}
+		}
+	},
+	sounds = default.node_sound_leaves_defaults(),
+
+	after_place_node = after_place_leaves
+})
+
 --
 -- Ores
 --
@@ -1455,6 +1533,16 @@ default.register_ladder("default:ladder_pine_wood", {
 	material = "default:pine_wood"
 })
 
+default.register_ladder("default:ladder_cherry_blossom_wood", {
+	description = "Cherry Blossom Ladder",
+	tiles = {"default_cherry_blossom_wood.png"},
+	inventory_image = "default_ladder_cherry_blossom_wood.png",
+	wield_image = "default_ladder_cherry_blossom_wood.png",
+	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	sounds = default.node_sound_wood_defaults(),
+	material = "default:cherry_blossom_wood"
+})
+
 default.register_ladder("default:ladder_steel", {
 	description = "Steel Ladder",
 	tiles = {"default_ladder_steel_tile.png"},
@@ -1546,6 +1634,16 @@ default.register_fence("default:fence_pine_wood", {
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
 	sounds = default.node_sound_wood_defaults()
 })
+
+default.register_fence("default:fence_cherry_blossom_wood", {
+	description = "Cherry Blossom Wood Fence",
+	texture = "default_cherry_blossom_wood.png",
+	inventory_image = "default_fence_cherry_blossom_wood.png",
+	material = "default:cherry_blossom_wood",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	sounds = default.node_sound_wood_defaults()
+})
+
 
 default.register_fence("default:fence_ice", {
 	description = "Ice Fence",
