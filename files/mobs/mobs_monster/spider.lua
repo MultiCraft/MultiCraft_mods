@@ -50,7 +50,7 @@ mobs:register_mob("mobs_monster:spider", {
 	},
 
 	-- make spiders jump at you on attack
-	custom_attack = function(self)
+--[[custom_attack = function(self)
 		local vel = self.object:get_velocity()
 
 		self.object:set_velocity({
@@ -62,7 +62,7 @@ mobs:register_mob("mobs_monster:spider", {
 		self.pausetimer = 0.5
 
 		return true -- continue rest of attack function
-	end
+	end]]
 })
 
 -- Small spider
