@@ -1426,8 +1426,11 @@ minetest.register_lbm({
 
 minetest.register_node("default:bookshelf", {
 	description = "Bookshelf",
-	tiles = {"default_wood.png", "default_wood.png", "default_wood.png",
-		"default_wood.png", "default_bookshelf.png", "default_bookshelf.png"},
+	tiles = {
+		"default_wood.png", "default_wood.png",
+		"default_wood.png", "default_wood.png",
+		"default_wood.png^default_bookshelf.png", "default_wood.png^default_bookshelf.png"
+	},
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {cracky = 2, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
