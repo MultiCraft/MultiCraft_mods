@@ -119,9 +119,5 @@ function mesecon.receptor_off(pos, rules)
 	mesecon.queue:add_action(pos, "receptor_off", {rules}, nil, rules)
 end
 
--- Deprecated stuff
--- To be removed in future releases
-dofile(modpath .. "/legacy.lua");
-
 --Services like turnoff receptor on dignode and so on
 dofile(modpath .. "/services.lua");
