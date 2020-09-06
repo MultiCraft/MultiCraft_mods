@@ -199,7 +199,7 @@ minetest.register_craft({
 -- LBM for updating Chest
 minetest.register_lbm({
 	label = "Chest updater",
-	name = "default:chest_updater",
+	name = "default:chest_updater_v2",
 	nodenames = "default:chest",
 	action = function(pos)
 		local meta = minetest.get_meta(pos)
