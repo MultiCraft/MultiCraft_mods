@@ -200,12 +200,12 @@ mesecon.queue:add_function("activate", function (pos, rulename)
 end)
 
 function mesecon.activate(pos, node, rulename, depth)
-		if rulename == nil then
+	if rulename == nil then
 		for _,rule in ipairs(mesecon.effector_get_rules(node)) do
 			mesecon.activate(pos, node, rule, depth + 1)
-			end
-			return
 		end
+		return
+	end
 	mesecon.queue:add_action(pos, "activate", {rulename}, delaytime, rulename, 1 / depth)
 end
 
@@ -223,12 +223,12 @@ mesecon.queue:add_function("deactivate", function (pos, rulename)
 end)
 
 function mesecon.deactivate(pos, node, rulename, depth)
-		if rulename == nil then
+	if rulename == nil then
 		for _,rule in ipairs(mesecon.effector_get_rules(node)) do
 			mesecon.deactivate(pos, node, rule, depth + 1)
-			end
-		return
 		end
+		return
+	end
 	mesecon.queue:add_action(pos, "deactivate", {rulename}, delaytime, rulename, 1 / depth)
 end
 
@@ -251,7 +251,7 @@ function mesecon.changesignal(pos, node, rulename, newstate, depth)
 			mesecon.changesignal(pos, node, rule, newstate, depth + 1)
 		end
 		return
-end
+	end
 
 	-- Include "change" in overwritecheck so that it cannot be overwritten
 	-- by "active" / "deactivate" that will be called upon the node at the same time.
