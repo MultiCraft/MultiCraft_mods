@@ -1,3 +1,5 @@
+local vadd, vequals, vmultiply = vector.add, vector.equals, vector.multiply
+
 local specs = {
 	normal = {
 		offname = "mesecons_pistons:piston_normal_off",
@@ -22,7 +24,7 @@ local function get_pistonspec_name(name, part)
 		return
 	end
 	for spec_name, spec in pairs(specs) do
-		for spart, value in pairs(spec)  do
+		for spart, value in pairs(spec) do
 			if name == value then
 				return spec_name, spart
 			end
@@ -58,8 +60,8 @@ end
 
 local function piston_remove_pusher(pos, node, check_falling)
 	local pistonspec = get_pistonspec(node.name, "onname")
-	local dir = vector.multiply(minetest.facedir_to_dir(node.param2), -1)
-	local pusherpos = vector.add(pos, dir)
+	local dir = vmultiply(minetest.facedir_to_dir(node.param2), -1)
+	local pusherpos = vadd(pos, dir)
 	local pushername = minetest.get_node(pusherpos).name
 
 	-- make sure there actually is a pusher (for compatibility reasons mainly)
@@ -83,10 +85,13 @@ local function piston_after_dig(pos, node)
 	piston_remove_pusher(pos, node, true)
 end
 
-local piston_on = function(pos, node)
+local function piston_on(pos, node)
 	local pistonspec = get_pistonspec(node.name, "offname")
-	local dir = vector.multiply(minetest.facedir_to_dir(node.param2), -1)
-	local pusher_pos = vector.add(pos, dir)
+	if not pistonspec then -- it may be called asynchronously now, don’t crash if something goes wrong
+		return
+	end
+	local dir = vmultiply(minetest.facedir_to_dir(node.param2), -1)
+	local pusher_pos = vadd(pos, dir)
 	local success, stack, oldstack = mesecon.mvps_push(pusher_pos, dir, max_push)
 	if not success then
 		return
@@ -104,6 +109,9 @@ end
 
 local function piston_off(pos, node)
 	local pistonspec = get_pistonspec(node.name, "onname")
+	if not pistonspec then
+		return
+	end
 	minetest.set_node(pos, {param2 = node.param2, name = pistonspec.offname})
 	piston_remove_pusher(pos, node, not pistonspec.sticky)
 
@@ -111,11 +119,34 @@ local function piston_off(pos, node)
 		return
 	end
 	local dir = minetest.facedir_to_dir(node.param2)
-	local pullpos = vector.add(pos, vector.multiply(dir, -2))
+	local pullpos = vadd(pos, vmultiply(dir, -2))
 	local success, _, oldstack = mesecon.mvps_pull_single(pullpos, dir, max_pull)
 	if success then
-		mesecon.mvps_move_objects(pullpos, vector.multiply(dir, -1), oldstack, -1)
+		mesecon.mvps_move_objects(pullpos, vmultiply(dir, -1), oldstack, -1)
 	end
+end
+
+-- not on/off as power state may change faster than the piston state
+mesecon.queue:add_function("piston_switch", function(pos)
+	local node = mesecon.get_node_force(pos)
+	if mesecon.is_powered(pos) then
+		piston_on(pos, node)
+	else
+		piston_off(pos, node)
+	end
+end)
+
+local piston_on_delayed, piston_off_delayed
+local delay = mesecon.setting("piston_delay", 0.15)
+if delay >= 0 then
+	local function piston_switch_delayed(pos)
+		mesecon.queue:add_action(pos, "piston_switch", {}, delay, "piston_switch")
+	end
+	piston_on_delayed = piston_switch_delayed
+	piston_off_delayed = piston_switch_delayed
+else
+	piston_on_delayed = piston_on
+	piston_off_delayed = piston_off
 end
 
 local orientations = {
@@ -191,8 +222,8 @@ end
 
 local function piston_rotate_on(pos, node, player, mode)
 	local pistonspec = get_pistonspec(node.name, "onname")
-	local dir = vector.multiply(minetest.facedir_to_dir(node.param2), -1)
-	local pusher_pos = vector.add(dir, pos)
+	local dir = vmultiply(minetest.facedir_to_dir(node.param2), -1)
+	local pusher_pos = vadd(dir, pos)
 	local pusher_node = minetest.get_node(pusher_pos)
 	if pusher_node.name ~= pistonspec.pusher then
 		return piston_rotate(pos, node, nil, mode)
@@ -207,8 +238,8 @@ local function piston_rotate_on(pos, node, player, mode)
 	local ok, dir_after, pusher_pos_after
 	for _ = 1, 5 do
 		node.param2 = rotate(node.param2, mode)
-		dir_after = vector.multiply(minetest.facedir_to_dir(node.param2), -1)
-		pusher_pos_after = vector.add(dir_after, pos)
+		dir_after = vmultiply(minetest.facedir_to_dir(node.param2), -1)
+		pusher_pos_after = vadd(dir_after, pos)
 		local pusher_pos_after_node_name = minetest.get_node(pusher_pos_after).name
 		local pusher_pos_after_node_def = minetest.registered_nodes[pusher_pos_after_node_name]
 		if pusher_pos_after_node_def and pusher_pos_after_node_def.buildable_to and
@@ -230,7 +261,7 @@ end
 
 local function piston_rotate_pusher(pos, node, player, mode)
 	local pistonspec = get_pistonspec(node.name, "pusher")
-	local piston_pos = vector.add(pos, minetest.facedir_to_dir(node.param2))
+	local piston_pos = vadd(pos, minetest.facedir_to_dir(node.param2))
 	local piston_node = minetest.get_node(piston_pos)
 	if piston_node.name ~= pistonspec.onname then
 		minetest.remove_node(pos) -- Make it possible to remove alone pushers.
@@ -247,8 +278,8 @@ local pt = 3/16 -- pusher thickness
 local piston_pusher_box = {
 	type = "fixed",
 	fixed = {
-		{-2/16, -2/16, -.5 + pt, 2/16, 2/16,  .5 + pt},
-		{-.5  , -.5  , -.5	 , .5  , .5  , -.5 + pt}
+		{-2/16, -2/16, -.5 + pt, 2/16, 2/16, .5 + pt},
+		{-.5, -.5, -.5, .5, .5, -.5 + pt}
 	}
 }
 
@@ -279,8 +310,8 @@ minetest.register_node("mesecons_pistons:piston_normal_off", {
 	after_place_node = piston_orientate,
 	sounds = default.node_sound_wood_defaults(),
 	mesecons = {effector={
-		action_on = piston_on,
-		rules = piston_get_rules,
+		action_on = piston_on_delayed,
+		rules = piston_get_rules
 	}},
 	on_rotate = piston_rotate,
 	on_blast = mesecon.on_blastnode
@@ -307,8 +338,8 @@ minetest.register_node("mesecons_pistons:piston_normal_on", {
 	selection_box = piston_on_box,
 	sounds = default.node_sound_wood_defaults(),
 	mesecons = {effector={
-		action_off = piston_off,
-		rules = piston_get_rules,
+		action_off = piston_off_delayed,
+		rules = piston_get_rules
 	}},
 	on_rotate = piston_rotate_on,
 	on_blast = mesecon.on_blastnode
@@ -356,8 +387,8 @@ minetest.register_node("mesecons_pistons:piston_sticky_off", {
 	after_place_node = piston_orientate,
 	sounds = default.node_sound_wood_defaults(),
 	mesecons = {effector={
-		action_on = piston_on,
-		rules = piston_get_rules,
+		action_on = piston_on_delayed,
+		rules = piston_get_rules
 	}},
 	on_rotate = piston_rotate,
 	on_blast = mesecon.on_blastnode
@@ -384,8 +415,8 @@ minetest.register_node("mesecons_pistons:piston_sticky_on", {
 	selection_box = piston_on_box,
 	sounds = default.node_sound_wood_defaults(),
 	mesecons = {effector={
-		action_off = piston_off,
-		rules = piston_get_rules,
+		action_off = piston_off_delayed,
+		rules = piston_get_rules
 	}},
 	on_rotate = piston_rotate_on,
 	on_blast = mesecon.on_blastnode
@@ -432,12 +463,12 @@ mesecon.register_mvps_stopper("mesecons_pistons:piston_pusher_sticky", piston_pu
 
 local function piston_get_stopper(node, _, stack, stackid)
 	local pistonspec = get_pistonspec(node.name, "onname")
-	local dir = vector.multiply(minetest.facedir_to_dir(node.param2), -1)
-	local pusherpos  = vector.add(stack[stackid].pos, dir)
+	local dir = vmultiply(minetest.facedir_to_dir(node.param2), -1)
+	local pusherpos  = vadd(stack[stackid].pos, dir)
 	local pushernode = minetest.get_node(pusherpos)
 	if pistonspec.pusher == pushernode.name then
 		for _, s in pairs(stack) do
-			if  vector.equals(s.pos, pusherpos) -- pusher is also to be pushed
+			if vequals(s.pos, pusherpos) -- pusher is also to be pushed
 			and s.node.param2 == node.param2 then
 				return false
 			end
