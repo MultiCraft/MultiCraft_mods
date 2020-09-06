@@ -78,6 +78,7 @@ function beds.register_bed(name, def)
 			end
 
 			minetest.set_node(pos, {name = itemstack:get_name(), param2 = dir})
+			minetest.sound_play({name = "default_place_node_hard"}, {pos = pos})
 
 			if not (creative and creative.is_enabled_for
 					and creative.is_enabled_for(player_name)) or
