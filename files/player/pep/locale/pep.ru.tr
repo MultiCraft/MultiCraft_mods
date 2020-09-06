@@ -24,13 +24,13 @@ Air Potion=Зелье Дыхания
 Drinking it gives you breath underwater for 60 seconds=Выпив его, вы сможете дышать под водой в течении 60 секунд
 
 Healing Potion=Зелье Регенерации
-Drinking it makes you regenerate health.\nEvery 2 seconds, you get 1 HP, 20 times in total=Выпив его, вы будете регенерировать здоровье.\nКаждые 2 секунды вы получите 1 HP, всего 20 раз
+Drinking it makes you regenerate health.@nEvery 2 seconds, you get 1 HP, 20 times in total=Выпив его, вы будете регенерировать здоровье.@nКаждые 2 секунды вы получите 1 HP, всего 20 раз
 
 Healing Potion II=Зелье Регенерации II
-Drinking it makes you regenerate health quickly.\nEvery second you get 2 HP, 30 times in total=Выпив его, вы будете регенерировать здоровье.\nКаждую секунду вы получите 2 HP, всего 30 раз
+Drinking it makes you regenerate health quickly.@nEvery second you get 2 HP, 30 times in total=Выпив его, вы будете регенерировать здоровье.@nКаждую секунду вы получите 2 HP, всего 30 раз
 
 Non-Gravity Potion=Зелье Невесомости
-When you drink this potion, gravity stops affecting you, as if you were in space.\nThe effect lasts for 30 seconds=Когда вы выпьете это зелье, гравитация перестанет действовать на вас, как будто вы в космосе.\nЭффект длится 30 секунд.
+When you drink this potion, gravity stops affecting you, as if you were in space.@nThe effect lasts for 30 seconds=Когда вы выпьете это зелье, гравитация перестанет действовать на вас, как будто вы в космосе.@nЭффект длится 30 секунд
 
 Gravity Neutralizer Potion=Зелье Нейтрализации Невесомости
 Drinking it will stop all gravity effects you currently have=Выпив его, вы остановите все эффекты гравитации, которые у вас есть сейчас
@@ -42,10 +42,10 @@ Low Jumping Potion=Зелье Слабых Прыжков
 Drinking it will make you jump lower for 60 seconds=Выпив его, ваш прыжок станет очень слабым в течении 60 секунд
 
 Night Vision Potion=Зелье Ночного Видения
-Drinking it, you will see in the dark for 60 seconds.\nThe potion works only outdoors=Выпив его, вы сможете видеть в темноте в течении 60 секунд.\nЗелье действует только под открытым небом
+Drinking it, you will see in the dark for 60 seconds.@nThe potion works only outdoors=Выпив его, вы сможете видеть в темноте в течении 60 секунд.@nЗелье действует только под открытым небом
 
 Invisible Potion=Зелье Невидимости
 Drinking it, you will invisible for 30 seconds=Выпив его, вы будете невидимыми в течении 30 секунд
 
 Autodig Potion=Зелье Автодобычи
-Drinking it will start an effect which will attempt to mine any two blocks in front of you.\nThe effect lasts for 30 seconds=Выпив его, вы активируете эффект, который попытается сломать любые два блока перед вами.\nЭффект длится 30 секунд.
+Drinking it will start an effect which will attempt to mine any two blocks in front of you.@nThe effect lasts for 30 seconds=Выпив его, вы активируете эффект, который попытается сломать любые два блока перед вами.@nЭффект длится 30 секунд
