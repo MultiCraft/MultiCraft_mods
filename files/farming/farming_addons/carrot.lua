@@ -1,5 +1,8 @@
+local S = farming_addons.S
+
 farming.register_plant("farming_addons:carrot", {
-	description = "Carrot Seed",
+	description = S"Carrot Seed",
+	harvest_description = S"Carrot",
 	paramtype2 = "meshoptions",
 	inventory_image = "farming_addons_carrot_seed.png",
 	steps = 4,
@@ -29,7 +32,7 @@ minetest.override_item("farming_addons:carrot", {
 
 -- Golden Carrot
 minetest.register_craftitem("farming_addons:carrot_golden", {
-	description = "Golden Carrot",
+	description = S"Golden Carrot",
 	inventory_image = "farming_addons_carrot_golden.png",
 	wield_image = "farming_addons_carrot_golden.png",
 	groups = {food = 1},

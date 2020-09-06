@@ -1,5 +1,8 @@
+local S = farming_addons.S
+
 farming.register_plant("farming_addons:potato", {
-	description = "Potato Seed",
+	description = S"Potato Seed",
+	harvest_description = S"Potato",
 	paramtype2 = "meshoptions",
 	inventory_image = "farming_addons_potato_seed.png",
 	steps = 4,
@@ -43,14 +46,14 @@ minetest.override_item("farming_addons:potato_4", {
 
 -- Potato
 minetest.register_craftitem("farming_addons:potato_baked", {
-	description = "Baked Potato",
+	description = S"Baked Potato",
 	inventory_image = "farming_addons_potato_baked.png",
 	on_use = minetest.item_eat(6),
 	groups = { food = 1},
 })
 
 minetest.register_craftitem("farming_addons:potato_poisonous", {
-	description = "Poisonous Potato",
+	description = S"Poisonous Potato",
 	inventory_image = "farming_addons_potato_poisonous.png",
 	on_use = minetest.item_eat(2, nil, -4),
 	groups = {food = 1},

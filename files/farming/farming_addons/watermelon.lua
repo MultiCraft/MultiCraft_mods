@@ -1,5 +1,8 @@
+local S = farming_addons.S
+
 farming.register_plant("farming_addons:melon", {
-	description = "Watermelon Seed",
+	description = S"Watermelon Seed",
+	harvest_description = S"Watermelon",
 	inventory_image = "farming_addons_melon_seed.png",
 	steps = 8,
 	minlight = 12,
@@ -10,7 +13,7 @@ farming.register_plant("farming_addons:melon", {
 
 -- eat melons
 minetest.override_item("farming_addons:melon", {
-	description = Sl("Watermelon Slice"),
+	description = S"Watermelon Slice",
 	on_use = minetest.item_eat(2)
 })
 
@@ -21,7 +24,7 @@ end
 
 -- WATERMELON FRUIT - HARVEST
 minetest.register_node("farming_addons:melon_fruit", {
-	description = "Watermelon",
+	description = S"Watermelon",
 	tiles = {"farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_top.png", "farming_addons_melon_fruit_side.png"},
 	paramtype2 = "facedir",
 	sounds = default.node_sound_wood_defaults(),
@@ -65,7 +68,7 @@ minetest.override_item("farming_addons:melon_8", {
 
 -- Melon
 minetest.register_craftitem("farming_addons:melon_golden", {
-	description = "Golden Watermelon Slice",
+	description = S"Golden Watermelon Slice",
 	inventory_image = "farming_addons_melon_golden.png",
 	on_use = minetest.item_eat(10),
 	groups = {food = 1}
@@ -114,5 +117,5 @@ minetest.register_decoration({
 	biomes = {"rainforest"},
 	y_max = 40,
 	y_min = 1,
-	decoration = "farming_addons:melon_fruit",
+	decoration = "farming_addons:melon_fruit"
 })

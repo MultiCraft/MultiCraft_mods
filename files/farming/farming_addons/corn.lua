@@ -1,5 +1,8 @@
+local S = farming_addons.S
+
 farming.register_plant("farming_addons:corn", {
-	description = "Corn Seed",
+	description = S"Corn Seed",
+	harvest_description = S"Corn",
 	inventory_image = "farming_addons_corn_seed.png",
 	steps = 8,
 	minlight = 12,
@@ -68,7 +71,7 @@ minetest.override_item("farming_addons:corn_8", {
 
 -- Baked Corn
 minetest.register_craftitem("farming_addons:corn_baked", {
-	description = "Baked Corn",
+	description = S"Baked Corn",
 	inventory_image = "farming_addons_corn_baked.png",
 	groups = {food = 1},
 	on_use = minetest.item_eat(8)

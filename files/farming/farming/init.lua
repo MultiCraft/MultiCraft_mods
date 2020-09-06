@@ -1,11 +1,19 @@
 -- Global farming namespace
-
 farming = {}
 farming.path = minetest.get_modpath("farming")
 
+local translator = minetest.get_translator
+farming.S = translator and translator("farming") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		farming.S = intllib.make_gettext_pair()
+	end
+end
+local S = farming.S
 
 -- Load files
-
 dofile(farming.path .. "/api.lua")
 dofile(farming.path .. "/nodes.lua")
 dofile(farming.path .. "/hoes.lua")
@@ -14,7 +22,8 @@ dofile(farming.path .. "/hoes.lua")
 -- WHEAT
 
 farming.register_plant("farming:wheat", {
-	description = "Wheat Seed",
+	description = S"Wheat Seed",
+	harvest_description = S"Wheat",
 	paramtype2 = "meshoptions",
 	inventory_image = "farming_wheat_seed.png",
 	steps = 8,
@@ -25,13 +34,13 @@ farming.register_plant("farming:wheat", {
 })
 
 minetest.register_craftitem("farming:flour", {
-	description = "Flour",
+	description = S"Flour",
 	inventory_image = "farming_flour.png",
 	groups = {food_flour = 1, flammable = 1, farming = 1}
 })
 
 minetest.register_craftitem("farming:bread", {
-	description = "Bread",
+	description = S"Bread",
 	inventory_image = "farming_bread.png",
 	on_use = minetest.item_eat(5),
 	groups = {food_bread = 1, flammable = 2, food = 1}
@@ -53,7 +62,7 @@ minetest.register_craft({
 -- String
 
 minetest.register_craftitem("farming:string",{
-	description = "String",
+	description = S"String",
 	inventory_image = "farming_string.png",
 	groups = {materials = 1}
 })

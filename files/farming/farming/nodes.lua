@@ -1,3 +1,5 @@
+local S = farming.S
+
 minetest.override_item("default:dirt", {
 	soil = {
 		base = "default:dirt",
@@ -61,7 +63,7 @@ minetest.register_node("farming:soil_wet", {
 })
 
 minetest.register_node("farming:straw", {
-	description = "Straw",
+	description = S"Straw",
 	tiles = {"farming_straw_top.png", "farming_straw_top.png", "farming_straw_side.png"},
 	is_ground_content = false,
 	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30},
