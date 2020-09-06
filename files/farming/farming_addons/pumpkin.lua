@@ -1,3 +1,5 @@
+local S = farming_addons.S
+
 -- spawn snow golem
 --[[local function pumpkin_on_construct(pos)
 	if not minetest.get_modpath("mobs_npc") then return end
@@ -17,7 +19,8 @@
 end]]
 
 farming.register_plant("farming_addons:pumpkin", {
-	description = "Pumpkin Seed",
+	description = S"Pumpkin Seed",
+	harvest_description = S"Pumpkin",
 	inventory_image = "farming_addons_pumpkin_seed.png",
 	steps = 8,
 	minlight = 12,
@@ -32,7 +35,7 @@ end
 
 -- PUMPKIN FRUIT - HARVEST
 minetest.register_node("farming_addons:pumpkin_fruit", {
-	description = "Pumpkin",
+	description = S"Pumpkin",
 	tiles = {"farming_addons_pumpkin_top.png", "farming_addons_pumpkin_top.png", "farming_addons_pumpkin_side.png"},
 	paramtype2 = "facedir",
 	sounds = default.node_sound_wood_defaults(),
@@ -102,5 +105,5 @@ minetest.register_decoration({
 	fill_ratio = 0.0001,
 	y_max = 40,
 	y_min = 1,
-	decoration = "farming_addons:pumpkin_fruit",
+	decoration = "farming_addons:pumpkin_fruit"
 })

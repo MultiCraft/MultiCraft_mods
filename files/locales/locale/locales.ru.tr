@@ -17,22 +17,6 @@ Wooden Pressure Plate=Деревянная Нажимная Плита
 Stone Pressure Plate=Каменная Нажимная Плита
 
 
-#carts
-Cart (Sneak+Click to pick up)=Вагонетка (Приседание+Нажатие чтобы взять)
-You cannot pick up a Cart!=Вы не можете забрать Вагонетку!
-Rail=Рельсы
-Powered Rail=Электрические Рельсы
-Brake Rail=Рельсы Торможения
-Start-stop Rail=Старт-стоп Рельсы
-Detector Rail=Рельсы с Датчиком
-
-
-#colored
-Bed=Кровать
-Hardened Clay=Обожжённая Глина
-Wool=Шерсть
-
-
 #creative || inventory
 Set Home=Установить Дом
 Go Home=Идти Домой
@@ -55,6 +39,7 @@ Crafting Guide=Руководство Крафта
 Craft Guide=Руководство
 Usage:=Примен.:
 Recipe:=Рецепт:
+of=из
 Clear=Очистить
 Search=Искать
 Previous page=Предыдущая страница
@@ -162,6 +147,10 @@ Birch Tree=Дерево Берёзы
 Birch Wood Planks=Доски из Берёзы
 Birch Tree Leaves=Листья Берёзы
 Birch Tree Sapling=Деревце Берёзы
+Cherry Blossom Tree=Дерево Сакуры
+Cherry Blossom Wood Planks=Доски из Сакуры
+Cherry Blossom Tree Leaves=Листья Сакуры
+Cherry Blossom Tree Sapling=Деревце Сакуры
 Coal Ore=Угольная Руда
 Coal Block=Блок Угля
 Iron Ore=Железная Руда
@@ -188,6 +177,7 @@ Acacia Wood Ladder=Лестница из Дерева Акации
 Birch Wood Ladder=Лестница из Дерева Берёзы
 Jungle Wood Ladder=Лестница из Джунгли-дерева
 Pine Wood Ladder=Лестница из Дерева Сосны
+Cherry Blossom Wood Ladder=Лестница из Дерева Сакуры
 Steel Ladder=Лестница из Стали
 Ice Ladder=Лестница изо Льда
 Grill=Решётка
@@ -196,6 +186,7 @@ Acacia Wood Fence=Забор из Дерева Акации
 Birch Wood Fence=Забор из Дерева Берёзы
 Jungle Wood Fence=Забор из Джунгли-дерева
 Pine Wood Fence=Забор из Дерева Сосны
+Cherry Blossom Wood Fence=Забор из Дерева Сакуры
 Ice Fence=Забор изо Льда
 Vines=Лоза
 Glass=Стекло
@@ -240,63 +231,6 @@ Fishing Pole=Удочка
 Owned by @1=Владелец: @1
 
 
-#farming
-Wheat=Пшеница
-Wheat Seed=Семена Пшеницы
-Flour=Мука
-Bread=Хлеб
-String=Нить
-Straw=Солома
-Wooden Hoe=Деревянная Мотыга
-Stone Hoe=Каменная Мотыга
-Steel Hoe=Стальная Мотыга
-Gold Hoe=Золотая Мотыга
-Diamond Hoe=Алмазная Мотыга
-Emerald Hoe=Изумрудная Мотыга
-Ruby Hoe=Рубиновая Мотыга
-
-
-#farming_addons
-Carrot=Морковка
-Golden Carrot=Золотая Морковка
-Carrot Seed=Семена Морковки
-Cocoa Bean=Шоколадные Бобы
-Chocolate=Шоколадка
-
-Potato=Картошка
-Baked Potato=Запечённая Картошка
-Poisonous Potato=Ядовитая Картошка
-Potato Seed=Семена Картошки
-
-Cookie=Печенье
-
-Corn=Кукуруза
-Baked Corn=Запечённая Кукуруза
-Corn Seed=Семена Кукурузы
-
-Watermelon=Арбуз
-Watermelon Slice=Долька Арбуза
-Golden Watermelon Slice=Золотая Долька Арбуза
-Watermelon Seed=Семена Арбуза
-
-Pumpkin=Тыква
-Pumpkin Seed=Семена Тыквы
-
-Empty Bowl=Пустая Миска
-Stewed Pork Bowl=Миска Тушёной Свинины
-
-
-#farming
-Melon=Дыня
-Melon Slice=Долька Дыни
-Melon Seed=Семена Дыни
-
-Sunflower Seed=Семена Подсолнуха
-Fried Sunflower Seeds=Жареные Семена Подсолнуха
-Sunflower Head=Голова Подсолнуха
-Oil Bottle=Бутыль с Маслом
-
-
 #mobs_redo
 (Tamed)=(Прирученн.)
 Name Tag=Именная Метка
@@ -335,29 +269,7 @@ Small Spider Egg=Яйцо Спавна Маленького Паука
 Zombie Head=Голова Зомби
 Turtle Egg=Яйцо Спавна Черепахи
 
-
-#mobs_water
-Aquarium=Аквариум
-Click a \"Fish in Bucket\" to settle a Fish=Нажмите \"Ведром с Рыбкой\", чтобы поселить Рыбку
-You forgot about your Fish!=Вы забыли о своей Рыбке!
-Pick up the Fish with a \"Empty Bucket\"=Возьмите Рыбку \"Пустым Ведром\"
-Small Fish in Bucket=Маленькая Рыбка в Ведре
-Medium Fish in Bucket=Рыбка в Ведре
-Squid Egg=Яйцо Спавна Кальмара
-
-
-#vessels
-Potion Shelf=Шкаф с Зельями
-Empty Potion Shelf=Пустой Шкаф с Зельями
-Empty Glass Bottle=Пустой Стеклянный Бутыль
-Bottles:=Бутылей:
-Potions:=Зелий:
-
-
-#player_api
-Your last coordinates:=Ваши последние координаты:
 Player=Игрок
-
 
 #player_skin
 Appearance=Внешний Вид
@@ -367,30 +279,3 @@ Black Mode=Чёрный Режим
 Light Mode=Светлый Режим
 Cape=Плащ
 Name Color=Цвет Имени
-
-
-#throwing
-Bow=Лук
-Bow with arrow=Лук со Стрелой
-Arrow=Стрела
-
-
-#workbench
-Workbench=Верстак
-Hammer=Молот
-Сutting=Нарезка
-Anvil=Наковальня
-< Back=< Назад
-
-Micropanel=(Половина Мини-панели)
-Microslab=(Мини-панель)
-Thinstair=(Тонкая Лестница)
-Cube=(Кубик)
-Panel=(Половина Панели)
-Slab=(Панель)
-Doublepanel=(Двойная Панель)
-Halfstair=(Половина Ступенек)
-Outerstair=(Внешние Ступеньки)
-Stair=(Ступеньки)
-Slope=(Уклон)
-Innerstair=(Внутренние Ступеньки)

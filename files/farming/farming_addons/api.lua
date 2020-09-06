@@ -1,6 +1,3 @@
--- main class
-farming_addons = {}
-
 -- how often a growth failure tick is retried (e.g. too dark)
 local function tick_short(pos)
 	minetest.get_node_timer(pos):start(math.random(256, 768))
