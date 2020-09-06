@@ -49,6 +49,11 @@ local boat = {
 }
 
 
+-- Compatible for MultiCraft Engine 2.0
+local aheight = 11
+if minetest.features and minetest.features.object_independent_selectionbox then
+	aheight = 1
+end
 function boat.on_rightclick(self, clicker)
 	if not clicker or not clicker:is_player() then
 		return
@@ -78,7 +83,7 @@ function boat.on_rightclick(self, clicker)
 		end
 		self.driver = name
 		clicker:set_attach(self.object, "",
-			{x = 0, y = 11, z = -2}, {x = 0, y = 0, z = 0})
+			{x = 0, y = aheight, z = -2}, {x = 0, y = 0, z = 0})
 		player_api.player_attached[name] = true
 		minetest.after(0.1, function()
 			if clicker then
