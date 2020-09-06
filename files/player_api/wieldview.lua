@@ -20,16 +20,18 @@ minetest.after(1, function()
 					 def.drawtype == "liquid" or
 					 def.drawtype:sub(1, 8) == "allfaces" or
 					 def.drawtype:sub(1, 5) == "glass") then
-				if not def.tiles[3] ~= "" and type(def.tiles[3]) == "string" then
-					wield_cubes[name] = def.tiles[1]
-				else
+				if def.tiles[3] ~= "" and type(def.tiles[3]) == "string" then
 					wield_cubes[name] = def.tiles[3]
+				else
+					wield_cubes[name] = def.tiles[1]
 				end
 			else
-				if not def.tiles[3] ~= "" and type(def.tiles[3]) == "string" then
-					wield_tiles[name] = def.tiles[1]
-				else
+				if (def.tiles[6] ~= "" and type(def.tiles[6]) == "string") then
+					wield_tiles[name] = def.tiles[6]
+				elseif (def.tiles[3] ~= "" and type(def.tiles[3]) == "string") then
 					wield_tiles[name] = def.tiles[3]
+				else
+					wield_tiles[name] = def.tiles[1]
 				end
 			end
 		end
