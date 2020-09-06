@@ -1,3 +1,5 @@
+local S = farming_addons.S
+
 -- how often node timers for plants will tick, +/- some random value
 local function tick(pos)
 	minetest.get_node_timer(pos):start(math.random(332, 572))
@@ -111,7 +113,7 @@ end
 
 -- COCOA
 minetest.register_craftitem("farming_addons:cocoa_bean", {
-	description = "Cocoa Bean",
+	description = S"Cocoa Bean",
 	tiles = {"farming_addons_cocoa_bean.png"},
 	inventory_image = "farming_addons_cocoa_bean.png",
 	wield_image = "farming_addons_cocoa_bean.png",
@@ -121,7 +123,6 @@ minetest.register_craftitem("farming_addons:cocoa_bean", {
 
 -- 1
 minetest.register_node("farming_addons:cocoa_1", {
-	description = "Cocoa 1",
 	drawtype = "nodebox",
 	tiles = {
 		"farming_addons_cocoa_top_1.png",
@@ -171,7 +172,6 @@ minetest.register_node("farming_addons:cocoa_1", {
 
 -- 2
 minetest.register_node("farming_addons:cocoa_2", {
-	description = "Cocoa 2",
 	drawtype = "nodebox",
 	tiles = {
 		"farming_addons_cocoa_top_2.png",
@@ -221,7 +221,6 @@ minetest.register_node("farming_addons:cocoa_2", {
 
 -- 3
 minetest.register_node("farming_addons:cocoa_3", {
-	description = "Cocoa 3",
 	drawtype = "nodebox",
 	tiles = {
 		"farming_addons_cocoa_top_3.png",
@@ -315,7 +314,7 @@ minetest.register_craft({
 })
 
 minetest.register_craftitem("farming_addons:cookie", {
-	description = "Cookie",
+	description = S"Cookie",
 	inventory_image = "farming_addons_cookie.png",
 	groups = {food = 1},
 	on_use = minetest.item_eat(2)
@@ -329,7 +328,7 @@ minetest.register_craft({
 })
 
 minetest.register_craftitem("farming_addons:chocolate", {
-	description = "Chocolate",
+	description = S"Chocolate",
 	inventory_image = "farming_addons_chocolate.png",
 	on_use = minetest.item_eat(3),
 	groups = {food = 1}
