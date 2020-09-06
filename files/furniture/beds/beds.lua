@@ -3,7 +3,7 @@ beds.box = {-0.5, -0.5, -0.5, 0.5, 0.06, 1.5}
 function beds.dyeing(pos, _, clicker, itemstack)
 	local player_name = clicker:get_player_name()
 	if minetest.is_protected(pos, player_name) then
-		return
+		return false
 	end
 
 	local itemname = itemstack:get_name()
