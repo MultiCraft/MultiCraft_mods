@@ -68,6 +68,8 @@ local collision = {
 	{-1/4, -0.5, -1/4, 1/4, 1, 1/4}
 }
 
+local groups = {cracky = 3, wall = 1, stone = 2, wall_not_full = 1}
+
 local floor = math.floor
 for i = 1, 15 do
 	local need = {}
@@ -109,7 +111,7 @@ for i = 1, 15 do
 		tiles = {"default_cobble.png"},
 		paramtype = "light",
 		sunlight_propagates = true,
-		groups = {cracky = 3, wall = 1, stone = 2},
+		groups = groups,
 		drop = "wallet:wall",
 		node_box = {
 			type = "fixed",
@@ -128,7 +130,7 @@ for i = 1, 15 do
 		paramtype = "light",
 		sunlight_propagates = true,
 		is_ground_content = false,
-		groups = {cracky = 3, wall = 1, stone = 2},
+		groups = groups,
 		drop = "wallet:wallmossy",
 		node_box = {
 			type = "fixed",
@@ -151,7 +153,7 @@ minetest.register_node(":wallet:wall_16", {
 	paramtype = "light",
 	sunlight_propagates = true,
 	is_ground_content = false,
-	groups = {cracky = 3, wall = 1, stone = 2},
+	groups = groups,
 	drop = "wallet:wall",
 	node_box = {
 		type = "fixed",
@@ -169,7 +171,7 @@ minetest.register_node(":wallet:wall_21", {
 	paramtype = "light",
 	sunlight_propagates = true,
 	is_ground_content = false,
-	groups = {cracky = 3, wall = 1, stone = 2},
+	groups = groups,
 	drop = "wallet:wall",
 	node_box = {
 		type = "fixed",
@@ -181,7 +183,7 @@ minetest.register_node(":wallet:wall", {
 	description = walls.S"Cobblestone Wall",
 	paramtype = "light",
 	tiles = {"default_cobble.png"},
-	groups = {cracky = 3, wall = 1, stone = 2},
+	groups = groups,
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
@@ -213,7 +215,7 @@ minetest.register_node(":wallet:wallmossy_16", {
 	paramtype = "light",
 	sunlight_propagates = true,
 	is_ground_content = false,
-	groups = {cracky = 3, wall = 1, stone = 2},
+	groups = groups,
 	drop = "wallet:wallmossy",
 	node_box = {
 		type = "fixed",
@@ -231,7 +233,7 @@ minetest.register_node(":wallet:wallmossy_21", {
 	paramtype = "light",
 	sunlight_propagates = true,
 	is_ground_content = false,
-	groups = {cracky = 3, wall = 1, stone = 2},
+	groups = groups,
 	drop = "wallet:wallmossy",
 	node_box = {
 		type = "fixed",
@@ -249,7 +251,7 @@ minetest.register_node(":wallet:wallmossy", {
 	tiles = {"default_mossycobble.png"},
 	sunlight_propagates = true,
 	is_ground_content = false,
-	groups = {cracky = 3, wall = 1, stone = 2},
+	groups = groups,
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
