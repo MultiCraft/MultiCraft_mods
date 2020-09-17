@@ -1662,7 +1662,7 @@ minetest.register_node("default:bookshelf", {
 		return inv:is_empty("books")
 	end,
 	allow_metadata_inventory_put = function(pos, listname, _, stack, player)
-		if not minetest.is_protected(pos, player:get_player_name()) and
+		if not minetest.is_protected(pos, player and player:get_player_name() or "") and
 				minetest.get_item_group(stack:get_name(), "book") ~= 0 then
 			if listname == "split" then
 				return 1
@@ -1673,13 +1673,13 @@ minetest.register_node("default:bookshelf", {
 		return 0
 	end,
 	allow_metadata_inventory_take = function(pos, _, _, stack, player)
-		if minetest.is_protected(pos, player:get_player_name()) then
+		if minetest.is_protected(pos, player and player:get_player_name() or "") then
 			return 0
 		end
 		return stack:get_count()
 	end,
 	allow_metadata_inventory_move = function(pos, _, _, to_list, _, count, player)
-		if minetest.is_protected(pos, player:get_player_name()) then
+		if minetest.is_protected(pos, player and player:get_player_name() or "") then
 			return 0
 		elseif to_list == "split" then
 			return 1
