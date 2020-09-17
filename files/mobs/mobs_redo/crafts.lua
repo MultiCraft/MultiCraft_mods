@@ -1,6 +1,8 @@
+local S = mobs.S
+
 -- name tag
 minetest.register_craftitem("mobs:nametag", {
-	description = "Name Tag",
+	description = S"Name Tag",
 	inventory_image = "mobs_nametag.png",
 	groups = {flammable = 2, nohit = 1}
 })
@@ -13,14 +15,14 @@ minetest.register_craft({
 
 -- leather
 minetest.register_craftitem("mobs:leather", {
-	description = "Leather",
+	description = S"Leather",
 	inventory_image = "mobs_leather.png",
 	groups = {flammable = 2}
 })
 
 -- raw meat
 minetest.register_craftitem("mobs:meat_raw", {
-	description = "Raw Meat",
+	description = S"Raw Meat",
 	inventory_image = "mobs_meat_raw.png",
 	on_use = minetest.item_eat(3, nil, -4),
 	groups = {food_meat_raw = 1, flammable = 2, food = 1}
@@ -28,7 +30,7 @@ minetest.register_craftitem("mobs:meat_raw", {
 
 -- cooked meat
 minetest.register_craftitem("mobs:meat", {
-	description = "Cooked Meat",
+	description = S"Cooked Meat",
 	inventory_image = "mobs_meat.png",
 	on_use = minetest.item_eat(8),
 	groups = {food_meat = 1, flammable = 2, food = 1}
@@ -43,7 +45,7 @@ minetest.register_craft({
 
 -- raw pork
 minetest.register_craftitem("mobs:pork_raw", {
-	description = "Raw Pork",
+	description = S"Raw Pork",
 	inventory_image = "mobs_pork_raw.png",
 	on_use = minetest.item_eat(3, nil, -4),
 	groups = {food_meat_raw = 1, flammable = 2, food = 1}
@@ -51,7 +53,7 @@ minetest.register_craftitem("mobs:pork_raw", {
 
 -- cooked pork
 minetest.register_craftitem("mobs:pork", {
-	description = "Cooked Pork",
+	description = S"Cooked Pork",
 	inventory_image = "mobs_pork_cooked.png",
 	on_use = minetest.item_eat(8),
 	groups = {food_meat = 1, flammable = 2, food = 1}
@@ -66,7 +68,7 @@ minetest.register_craft({
 
 -- raw rabbit
 minetest.register_craftitem("mobs:rabbit_raw", {
-	description = "Raw Rabbit",
+	description = S"Raw Rabbit",
 	inventory_image = "mobs_rabbit_raw.png",
 	on_use = minetest.item_eat(3, nil, -4),
 	groups = {food_meat_raw = 1, flammable = 2, food = 1}
@@ -74,7 +76,7 @@ minetest.register_craftitem("mobs:rabbit_raw", {
 
 -- cooked rabbit
 minetest.register_craftitem("mobs:rabbit_cooked", {
-	description = "Cooked Rabbit",
+	description = S"Cooked Rabbit",
 	inventory_image = "mobs_rabbit_cooked.png",
 	on_use = minetest.item_eat(5),
 	groups = {food_meat = 1, flammable = 2, food = 1}
@@ -89,7 +91,7 @@ minetest.register_craft({
 
 -- rabbit hide
 minetest.register_craftitem("mobs:rabbit_hide", {
-	description = "Rabbit Hide",
+	description = S"Rabbit Hide",
 	inventory_image = "mobs_rabbit_hide.png",
 	groups = {flammable = 2}
 })
@@ -130,7 +132,7 @@ local function chicken_egg_shoot(itemstack, thrower)
 end
 
 minetest.register_craftitem("mobs:chicken_egg", {
-	description = "Egg",
+	description = S"Egg",
 	inventory_image = "mobs_chicken_egg.png",
 	visual_scale = 0.7,
 	groups = {food = 1},
@@ -141,7 +143,7 @@ minetest.register_alias("mobs:egg", "air")
 
 -- fried egg
 minetest.register_craftitem("mobs:chicken_egg_fried", {
-	description = "Fried Egg",
+	description = S"Fried Egg",
 	inventory_image = "mobs_chicken_egg_fried.png",
 	on_use = minetest.item_eat(2),
 	groups = {flammable = 2, food = 1}
@@ -155,7 +157,7 @@ minetest.register_craft({
 
 -- raw chicken
 minetest.register_craftitem("mobs:chicken_raw", {
-	description = "Raw Chicken",
+	description = S"Raw Chicken",
 	inventory_image = "mobs_chicken_raw.png",
 	on_use = minetest.item_eat(2, nil, -3),
 	groups = {food_meat_raw = 1, food_chicken_raw = 1, flammable = 2, food = 1}
@@ -163,7 +165,7 @@ minetest.register_craftitem("mobs:chicken_raw", {
 
 -- cooked chicken
 minetest.register_craftitem("mobs:chicken_cooked", {
-	description = "Cooked Chicken",
+	description = S"Cooked Chicken",
 	inventory_image = "mobs_chicken_cooked.png",
 	on_use = minetest.item_eat(6),
 	groups = {food_meat = 1, food_chicken = 1, flammable = 2, food = 1}
@@ -177,7 +179,7 @@ minetest.register_craft({
 
 -- cheese wedge
 minetest.register_craftitem("mobs:cheese", {
-	description = "Cheese",
+	description = S"Cheese",
 	inventory_image = "mobs_cheese.png",
 	wield_image = "mobs_cheese_wield.png",
 	on_use = minetest.item_eat(4),
@@ -194,7 +196,7 @@ minetest.register_craft({
 
 -- cheese block
 minetest.register_node("mobs:cheeseblock", {
-	description = "Cheese Block",
+	description = S"Cheese Block",
 	tiles = {"mobs_cheeseblock.png"},
 	is_ground_content = false,
 	groups = {crumbly = 3},
@@ -219,7 +221,7 @@ minetest.register_craft({
 
 -- rotten flesh
 minetest.register_craftitem("mobs:rotten_flesh", {
-	description = "Rotten Flesh",
+	description = S"Rotten Flesh",
 	inventory_image = "mobs_rotten_flesh.png",
 	on_use = minetest.item_eat(4, nil, -4),
 	groups = {flammable = 2, food = 1}
@@ -232,7 +234,7 @@ minetest.register_alias("mobs:protector", "default:goldblock")
 
 -- shears
 minetest.register_tool("mobs:shears", {
-	description = "Steel Shears",
+	description = S"Steel Shears",
 	inventory_image = "mobs_shears.png",
 	groups = {flammable = 2, nohit = 1}
 })
@@ -247,7 +249,7 @@ minetest.register_craft({
 
 -- cobweb
 minetest.register_node("mobs:cobweb", {
-	description = "Cobweb",
+	description = S"Cobweb",
 	drawtype = "plantlike",
 	visual_scale = 1.2,
 	tiles = {"mobs_cobweb.png"},

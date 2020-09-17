@@ -171,6 +171,15 @@ Dry Shrub=Сухой Куст
 Jungle Grass=Джунгли-трава
 Grass=Трава
 Dry Grass=Сухая Трава
+Bush Stem=Стебель Куста
+Bush Leaves=Листья Куста
+Bush Sapling=Саженец Куста
+Acacia Bush Stem=Стебель Куста Акации
+Acacia Bush Leaves=Листья Куста Акации
+Acacia Bush Sapling=Саженец Куста Акации
+Pine Bush Stem=Стебель Соснового Куста
+Pine Bush Needles=Иголки Соснового Куста
+Pine Bush Sapling=Саженец Соснового Куста
 Bookshelf=Книжный Шкаф
 Apple Wood Ladder=Лестница из Дерева Яблони
 Acacia Wood Ladder=Лестница из Дерева Акации
@@ -229,47 +238,8 @@ Ruby Sword=Рубиновый Меч
 Fishing Pole=Удочка
 
 Owned by @1=Владелец: @1
-
-
-#mobs_redo
-(Tamed)=(Прирученн.)
-Name Tag=Именная Метка
-Leather=Кожа
-Raw Meat=Сырое Мясо
-Cooked Meat=Приготовленное Мясо
-Raw Pork=Сырая Свинина
-Cooked Pork=Приготовленная Свинина
-Raw Rabbit=Сырая Крольчатина
-Cooked Rabbit=Приготовленный Кролик
-Rabbit Hide=Кролик
-Egg=Яйцо
-Fried Egg=Жареное Яйцо
-Raw Chicken=Сырая Курица
-Cooked Chicken=Приготовленная Курица
-Cheese=Сыр
-Cheese Block=Блок Сыра
-Rotten Flesh=Гнилая Плоть
-Steel Shears=Стальные Ножницы
-Cobweb=Паутина
-Turtle Shell=Черепаший Панцирь
-
-Bear Egg=Яйцо Спавна Медведя
-Bunny Egg=Яйцо Спавна Кролика
-Chicken Egg=Яйцо Спавна Курицы
-Cow Egg=Яйцо Спавна Коровы
-Wolf's Egg=Яйцо Спавна Волка
-Dog Egg=Яйцо Спавна Собаки
-Cat's Egg=Яйцо Спавна Кошки
-Pig Egg=Яйцо Спавна Свиньи
-Sheep Egg=Яйцо Спавна Овцы
-Parror Egg=Яйцо Спавна Попугая
-Skeleton Egg=Яйцо Спавна Скелета
-Spider Egg=Яйцо Спавна Паука
-Small Spider Egg=Яйцо Спавна Маленького Паука
-Zombie Head=Голова Зомби
-Turtle Egg=Яйцо Спавна Черепахи
-
 Player=Игрок
+
 
 #player_skin
 Appearance=Внешний Вид

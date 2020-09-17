@@ -1,3 +1,4 @@
+# textdomain: mobs
 Not tamed!=Не приручен!
 @1 is owner!=@1 является владельцем!
 Missed!=Потерян!
@@ -8,8 +9,29 @@ Already protected!=Уже защищён!
 Enter name:=Введите имя:
 Rename=Переименовать
 Health:=Здоровье:
-Cow already milked!=Корова уже подоена!
 Active Mob Limit Reached!=Достигнут Лимит Активных Мобов!
+Owned by @1=Владелец: @1
+Player=Игрок
+
+(Tamed)=(Прирученн.)
+Name Tag=Именная Метка
+Leather=Кожа
+Raw Meat=Сырое Мясо
+Cooked Meat=Приготовленное Мясо
+Raw Pork=Сырая Свинина
+Cooked Pork=Приготовленная Свинина
+Raw Rabbit=Сырая Крольчатина
+Cooked Rabbit=Приготовленный Кролик
+Rabbit Hide=Кролик
+Egg=Яйцо
+Fried Egg=Жареное Яйцо
+Raw Chicken=Сырая Курица
+Cooked Chicken=Приготовленная Курица
+Cheese=Сыр
+Cheese Block=Блок Сыра
+Rotten Flesh=Гнилая Плоть
+Steel Shears=Стальные Ножницы
+Cobweb=Паутина
 
 Bear=Медведь
 Bunny=Кролик

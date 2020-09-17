@@ -107,5 +107,5 @@ mobs:spawn({
 	chance = 35000
 })
 
-mobs:register_egg("mobs_monster:zombie", "Zombie Head", "zombie_head.png")
-mobs:register_egg("mobs_monster:zombie_giant", "Giant Zombie Head", "zombie_head.png")
+mobs:register_egg("mobs_monster:zombie", mobs_monster.S"Zombie Head", "zombie_head.png")
+mobs:register_egg("mobs_monster:zombie_giant", mobs_monster.S"Giant Zombie Head", "zombie_head.png")
