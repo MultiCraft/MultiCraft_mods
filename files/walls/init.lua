@@ -13,7 +13,6 @@ end
 walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wall_sounds, not_in_cinv)
 	-- inventory node, and pole-type wall start item
 	minetest.register_node(wall_name, {
-		description = walls.S(wall_desc),
 		drawtype = "nodebox",
 		node_box = {
 			type = "connected",
@@ -39,20 +38,6 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 		groups = {cracky = 3, wall = 1, stone = 2, not_in_creative_inventory = 1},
 		sounds = wall_sounds,
 		drop = wall_name .. "_inv",
-		after_place_node = function(pos)
-			local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
-			local pos_above = {x = pos.x, y = pos.y + 1, z = pos.z}
-			local node_under = minetest.get_node(pos_under).name
-			if minetest.get_item_group(node_under, "wall") == 1 then
-				local node_under_can = node_under:gsub("_full$", "")
-				minetest.set_node(pos_under, {name = node_under_can .. "_full"})
-			end
-
-			local node_above = minetest.get_node(pos_above).name
-			if minetest.get_item_group(node_above, "wall") == 1 then
-				minetest.set_node(pos, {name = wall_name .. "_full"})
-			end
-		end,
 		after_dig_node = function(pos, _, _, digger)
 			local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
 			local node_under = string.gsub(minetest.get_node(pos_under).name, "_full$", "")
@@ -107,6 +92,22 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 
 		on_construct = function(pos)
 			minetest.set_node(pos, {name = wall_name})
+		end,
+		after_place_node = function(pos)
+			local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
+			local pos_above = {x = pos.x, y = pos.y + 1, z = pos.z}
+			local node_under = minetest.get_node(pos_under).name
+			local node_above = minetest.get_node(pos_above).name
+			if minetest.get_item_group(node_under, "wall") == 1 and
+					minetest.get_item_group(node_above, "wall_not_full") ~= 1 then
+				local node_under_can = node_under:gsub("_full$", "")
+				minetest.set_node(pos_under, {name = node_under_can .. "_full"})
+			end
+
+			if minetest.get_item_group(node_above, "wall") == 1 and
+					minetest.get_item_group(node_above, "wall_not_full") ~= 1 then
+				minetest.set_node(pos, {name = wall_name .. "_full"})
+			end
 		end
 	})
 
