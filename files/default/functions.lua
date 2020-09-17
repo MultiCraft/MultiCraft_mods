@@ -698,7 +698,7 @@ local function snowball_impact(thrower, pos, dir, hit_object)
 			end
 		end
 		if node_pos then
-			if not minetest.is_protected(node_pos, thrower and thrower:get_player_name()) then
+			if not minetest.is_protected(node_pos, thrower and thrower:get_player_name() or "") then
 				minetest.add_node(pos, {name = "default:snow"})
 				minetest.spawn_falling_node(pos)
 			end

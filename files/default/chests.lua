@@ -102,7 +102,7 @@ local function on_receive_fields(pos, _, fields)
 end
 
 local function allow_take_put(pos, _, _, stack, player)
-	if minetest.is_protected(pos, player:get_player_name()) then
+	if minetest.is_protected(pos, player and player:get_player_name() or "") then
 		return 0
 	end
 	return stack:get_count()
