@@ -186,7 +186,7 @@ minetest.register_craft({
 	}
 })
 
-minetest.after(1, function()
+minetest.after(0, function()
 	local register_pot = flowerpot.register_node
 	for node, def in pairs(minetest.registered_nodes) do
 		if def.groups.flora or def.groups.sapling then

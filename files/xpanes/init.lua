@@ -1,3 +1,13 @@
+local translator = minetest.get_translator
+local S = translator and translator("xpanes") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		S = intllib.make_gettext_pair()
+	end
+end
+
 local function is_pane(pos)
 	return minetest.get_item_group(minetest.get_node(pos).name, "pane") > 0
 end
@@ -156,7 +166,7 @@ function xpanes.register_pane(name, def)
 end
 
 xpanes.register_pane("pane", {
-	description = "Glass Pane",
+	description = S"Glass Pane",
 	textures = {"default_glass.png", "xpanes_top_glass.png"},
 	sounds = default.node_sound_glass_defaults(),
 	groups = {snappy = 2, cracky = 3, oddly_breakable_by_hand = 3, glasspane = 1},
@@ -169,7 +179,7 @@ xpanes.register_pane("pane", {
 })
 
 xpanes.register_pane("bar", {
-	description = "Steel Bars",
+	description = S"Steel Bars",
 	textures = {"xpanes_bar.png", "xpanes_bar_top.png"},
 	inventory_image = "xpanes_bar.png",
 	wield_image = "xpanes_bar.png",
