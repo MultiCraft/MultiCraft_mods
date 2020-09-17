@@ -296,10 +296,10 @@ local piston_on_box = {
 minetest.register_node("mesecons_pistons:piston_normal_off", {
 	description = "Piston",
 	tiles = {
-		"mesecons_piston_top.png",
-		"mesecons_piston_bottom.png",
-		"mesecons_piston_left.png",
-		"mesecons_piston_right.png",
+		"mesecons_piston_side.png^[transformFY",
+		"mesecons_piston_side.png",
+		"mesecons_piston_side.png^[transformR90",
+		"mesecons_piston_side.png^[transformR270",
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front.png"
 	},
@@ -321,10 +321,10 @@ minetest.register_node("mesecons_pistons:piston_normal_off", {
 minetest.register_node("mesecons_pistons:piston_normal_on", {
 	drawtype = "nodebox",
 	tiles = {
-		"mesecons_piston_top.png",
-		"mesecons_piston_bottom.png",
-		"mesecons_piston_left.png",
-		"mesecons_piston_right.png",
+		"mesecons_piston_side.png^[transformFY",
+		"mesecons_piston_side.png",
+		"mesecons_piston_side.png^[transformR90",
+		"mesecons_piston_side.png^[transformR270",
 		"mesecons_piston_back.png",
 		"mesecons_piston_on_front.png"
 	},
@@ -349,10 +349,10 @@ minetest.register_node("mesecons_pistons:piston_normal_on", {
 minetest.register_node("mesecons_pistons:piston_pusher_normal", {
 	drawtype = "nodebox",
 	tiles = {
-		"mesecons_piston_top.png",
-		"mesecons_piston_bottom.png",
-		"mesecons_piston_left.png",
-		"mesecons_piston_right.png",
+		"mesecons_piston_side.png^[transformFY",
+		"mesecons_piston_side.png",
+		"mesecons_piston_side.png^[transformR90",
+		"mesecons_piston_side.png^[transformR270",
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front.png"
 	},
@@ -373,10 +373,10 @@ minetest.register_node("mesecons_pistons:piston_pusher_normal", {
 minetest.register_node("mesecons_pistons:piston_sticky_off", {
 	description = "Sticky Piston",
 	tiles = {
-		"mesecons_piston_top.png",
-		"mesecons_piston_bottom.png",
-		"mesecons_piston_left.png",
-		"mesecons_piston_right.png",
+		"mesecons_piston_side.png^[transformFY",
+		"mesecons_piston_side.png",
+		"mesecons_piston_side.png^[transformR90",
+		"mesecons_piston_side.png^[transformR270",
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front_sticky.png"
 	},
@@ -398,10 +398,10 @@ minetest.register_node("mesecons_pistons:piston_sticky_off", {
 minetest.register_node("mesecons_pistons:piston_sticky_on", {
 	drawtype = "nodebox",
 	tiles = {
-		"mesecons_piston_top.png",
-		"mesecons_piston_bottom.png",
-		"mesecons_piston_left.png",
-		"mesecons_piston_right.png",
+		"mesecons_piston_side.png^[transformFY",
+		"mesecons_piston_side.png",
+		"mesecons_piston_side.png^[transformR90",
+		"mesecons_piston_side.png^[transformR270",
 		"mesecons_piston_back.png",
 		"mesecons_piston_on_front.png"
 	},
@@ -426,10 +426,10 @@ minetest.register_node("mesecons_pistons:piston_sticky_on", {
 minetest.register_node("mesecons_pistons:piston_pusher_sticky", {
 	drawtype = "nodebox",
 	tiles = {
-		"mesecons_piston_top.png",
-		"mesecons_piston_bottom.png",
-		"mesecons_piston_left.png",
-		"mesecons_piston_right.png",
+		"mesecons_piston_side.png^[transformFY",
+		"mesecons_piston_side.png",
+		"mesecons_piston_side.png^[transformR90",
+		"mesecons_piston_side.png^[transformR270",
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front_sticky.png"
 	},
