@@ -49,4 +49,4 @@ mobs:spawn({
 	chance = 15000
 })
 
-mobs:register_egg("mobs_monster:skeleton", "Skeleton Egg", "mobs_monster_egg.png^default_bone.png")
+mobs:register_egg("mobs_monster:skeleton", mobs_monster.S"Skeleton Egg", "mobs_monster_egg.png^default_bone.png")

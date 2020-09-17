@@ -1,5 +1,15 @@
 mobs_monster = {}
 
+local translator = minetest.get_translator
+mobs_monster.S = translator and translator("mobs_monster") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		mobs_monster.S = intllib.make_gettext_pair()
+	end
+end
+
 mobs_monster.spawn_nodes = {
 	"default:dirt", "default:sandstone", "default:stone",
 	"default:sand", "default:redsand",

@@ -107,8 +107,8 @@ mobs:register_mob("mobs_monster:small_spider", {
 	}
 })
 
-mobs:register_egg("mobs_monster:spider", "Spider Egg", "mobs_monster_egg.png^mobs_spider_egg.png")
-mobs:register_egg("mobs_monster:small_spider", "Small Spider Egg", "mobs_monster_egg.png^mobs_spider_small_egg.png")
+mobs:register_egg("mobs_monster:spider", mobs_monster.S"Spider Egg", "mobs_monster_egg.png^mobs_spider_egg.png")
+mobs:register_egg("mobs_monster:small_spider", mobs_monster.S"Small Spider Egg", "mobs_monster_egg.png^mobs_spider_small_egg.png")
 
 mobs:spawn({
 	name = "mobs_monster:spider",

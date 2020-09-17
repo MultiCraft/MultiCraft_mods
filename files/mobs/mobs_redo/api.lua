@@ -1,11 +1,20 @@
--- Intllib
-local S = intllib.make_gettext_pair()
-
 mobs = {
 	mod = "redo",
 	version = "20200725",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
+
+local translator = minetest.get_translator
+mobs.S = translator and translator("mobs") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		mobs.S = intllib.make_gettext_pair()
+	end
+end
+
+local S = mobs.S
 
 -- creative check
 local creative = minetest.settings:get_bool("creative_mode")
@@ -1299,7 +1308,7 @@ function mob_class:breed()
 						textures = self.child_texture[1]
 					end
 
-					local infotext = Sl("Owned by @1", self.owner or "")
+					local infotext = S("Owned by @1", self.owner or "")
 
 					-- and resize to half height
 					mob:set_properties({
@@ -3566,7 +3575,7 @@ local function spawn_mob(pos, mob, data, placer, drop)
 			if ent.type ~= "monster" then
 				ent.owner = player_name
 				ent.tamed = true
-				local infotext = Sl("Owned by @1", Sl(player_name))
+				local infotext = S("Owned by @1", S(player_name))
 				ent.infotext = infotext
 				obj:set_properties({
 					infotext = infotext
@@ -3634,7 +3643,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 
 	-- register new spawn egg containing mob information
 	minetest.register_craftitem(mob .. "_set", {
-		description = Sl(desc) .. " " .. Sl("(Tamed)"),
+		description = desc .. " " .. S"(Tamed)",
 		inventory_image = invimg,
 		groups = {spawn_egg = 2, not_in_creative_inventory = 1},
 		stack_max = 1,
@@ -3661,7 +3670,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 
 	-- register old stackable mob egg
 	minetest.register_craftitem(mob, {
-		description = Sl(desc),
+		description = desc,
 		inventory_image = invimg,
 		groups = grp,
 		stack_max = 1,
@@ -3852,9 +3861,10 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 			self.health = self.hp_max
 
 			if self.htimer < 1 then
+				local mob_name = self.name:split(":")[2]:split("_")[1]:gsub("^%l", string.upper)
 				minetest.chat_send_player(clicker:get_player_name(),
 					S("\"@1\" at full health: @2",
-						S(self.name:split(":")[2]:split("_")[1]:gsub("^%l", string.upper)), tostring(self.health)))
+						S(mob_name), tostring(self.health)))
 				self.htimer = 5
 			end
 		end
@@ -3881,9 +3891,10 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 			if tame then
 				if self.tamed == false then
+					local mob_name = self.name:split(":")[2]:split("_")[1]:gsub("^%l", string.upper)
 					minetest.chat_send_player(clicker:get_player_name(),
 						S("\"@1\" has been tamed!",
-							S(self.name:split(":")[2]:split("_")[1]:gsub("^%l", string.upper))))
+							S(mob_name)))
 					self:mob_sound("mobs_spell")
 				end
 
@@ -3892,7 +3903,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 					local pn = clicker:get_player_name()
 					self.owner = pn
 
-					local infotext = Sl("Owned by @1", Sl(pn))
+					local infotext = S("Owned by @1", S(pn))
 					self.infotext = infotext
 					self.object:set_properties({
 						infotext = infotext

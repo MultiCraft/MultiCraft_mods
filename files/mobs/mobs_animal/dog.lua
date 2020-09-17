@@ -116,5 +116,5 @@ mobs:spawn({
 	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:wolf", "Wolf's Egg", "wool_grey.png", true)
-mobs:register_egg("mobs_animal:dog", "Dog Egg", "wool_brown.png", true)
+mobs:register_egg("mobs_animal:wolf", mobs_animal.S"Wolf's Egg", "wool_grey.png", true)
+mobs:register_egg("mobs_animal:dog", mobs_animal.S"Dog Egg", "wool_brown.png", true)
