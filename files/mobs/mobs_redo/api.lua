@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20200725",
+	version = "20200916",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -1308,7 +1308,9 @@ function mob_class:breed()
 						textures = self.child_texture[1]
 					end
 
-					local infotext = S("Owned by @1", self.owner or "")
+					local owner = type(self.owner) == "string" and self.owner or ""
+
+					local infotext = S("Owned by @1", S(owner))
 
 					-- and resize to half height
 					mob:set_properties({
@@ -2440,18 +2442,18 @@ local tr = minetest.get_modpath("toolranks")
 function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 	-- mob health check
 	if self.health <= 0 then
-		return
+		return true
 	end
 
 	-- custom punch function
 	if self.do_punch and not self:do_punch(hitter, tflp, tool_capabilities, dir) then
-		return
+		return true
 	end
 
 	-- error checking when mod profiling is enabled
 	if not tool_capabilities then
 		minetest.log("warning", "[mobs] Mod profiling enabled, damage not enabled")
-		return
+		return true
 	end
 
 	if hitter:is_player() then
@@ -2459,13 +2461,13 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 
 		-- is_protected_action check
 		if mobs.is_creative(hitter) and minetest.is_protected_action(self.object:get_pos(), player_name) then
-			return
+			return true
 		end
 
 		-- is mob protected?
 		if self.tamed and minetest.is_protected(self.object:get_pos(), player_name) then
 			minetest.chat_send_player(player_name, S("Mob has been protected!"))
-			return
+			return true
 		end
 	end
 
@@ -2586,7 +2588,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 		local v = self.object:get_velocity()
 
 		-- sanity check
-		if not v then return end
+		if not v then return true end
 
 		local kb = damage or 1
 		local up = 2
@@ -3934,7 +3936,10 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 				.. "field[1.35,1.25;2.9,1;name;"
 				.. S("Enter name:") .. ";" .. tag .. "]"
 				.. "button_exit[1.06,1.65;2.9,1;mob_rename;" .. S("Rename") .. "]")
+
+		return true
 	end
+
 	return false
 end
 
