@@ -134,7 +134,7 @@ for i = 1, #dyes do
 	minetest.register_alias("mobs_animal:sheep_" .. name, "mobs_animal:sheep_white")
 end
 
-mobs:register_egg("mobs_animal:sheep_white", "Sheep Egg", "wool_white.png", true)
+mobs:register_egg("mobs_animal:sheep_white", mobs_animal.S"Sheep Egg", "wool_white.png", true)
 
 mobs:spawn({
 	name = "mobs_animal:sheep_white",
