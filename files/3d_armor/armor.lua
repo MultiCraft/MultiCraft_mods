@@ -1,51 +1,53 @@
+local S = armor.S
+
 -- Regisiter Head Armor
 
 armor:register_armor("3d_armor:helmet_leather", {
-	description = "Leather Helmet",
+	description = S"Leather Helmet",
 	inventory_image = "3d_armor_inv_helmet_leather.png",
 	groups = {armor_head = 5, armor_heal = 0, armor_use = 100}
 })
 
 armor:register_armor("3d_armor:helmet_steel", {
-	description = "Steel Helmet",
+	description = S"Steel Helmet",
 	inventory_image = "3d_armor_inv_helmet_steel.png",
 	groups = {armor_head = 10, armor_heal = 5, armor_use = 250}
 })
 
 armor:register_armor("3d_armor:helmet_gold", {
-	description = "Golden Helmet",
+	description = S"Golden Helmet",
 	inventory_image = "3d_armor_inv_helmet_gold.png",
 	groups = {armor_head = 15, armor_heal = 10, armor_use = 500}
 })
 
 armor:register_armor("3d_armor:helmet_diamond", {
-	description = "Diamond Helmet",
+	description = S"Diamond Helmet",
 	inventory_image = "3d_armor_inv_helmet_diamond.png",
 	groups = {armor_head = 20, armor_heal = 15, armor_use = 750}
 })
 
 armor:register_armor("3d_armor:helmet_emerald", {
-	description = "Emerald Helmet",
+	description = S"Emerald Helmet",
 	desc_color = default.colors.emerald,
 	inventory_image = "3d_armor_inv_helmet_emerald.png",
 	groups = {armor_head = 20, armor_heal = 15, armor_use = 1000}
 })
 
 armor:register_armor("3d_armor:helmet_ruby", {
-	description = "Ruby Helmet",
+	description = S"Ruby Helmet",
 	desc_color = default.colors.ruby,
 	inventory_image = "3d_armor_inv_helmet_ruby.png",
 	groups = {armor_head = 15, armor_heal = 20}
 })
 
 armor:register_armor("3d_armor:helmet_chain", {
-	description = "Chain Helmet",
+	description = S"Chain Helmet",
 	inventory_image = "3d_armor_inv_helmet_chain.png",
 	groups = {armor_head = 15, armor_heal = 10, armor_use = 500}
 })
 
 armor:register_armor("3d_armor:helmet_mask", {
-	description = "Underwater Mask",
+	description = S"Underwater Mask",
 	inventory_image = "3d_armor_inv_helmet_mask.png",
 	groups = {armor_head = 1, armor_mask = 10, armor_use = 600, not_in_creative_inventory = 1}
 })
@@ -53,45 +55,45 @@ armor:register_armor("3d_armor:helmet_mask", {
 -- Regisiter Torso Armor
 
 armor:register_armor("3d_armor:chestplate_leather", {
-	description = "Leather Chestplate",
+	description = S"Leather Chestplate",
 	inventory_image = "3d_armor_inv_chestplate_leather.png",
 	groups = {armor_torso = 15, armor_heal = 0, armor_use = 100}
 })
 
 armor:register_armor("3d_armor:chestplate_steel", {
-	description = "Steel Chestplate",
+	description = S"Steel Chestplate",
 	inventory_image = "3d_armor_inv_chestplate_steel.png",
 	groups = {armor_torso = 20, armor_heal = 5, armor_use = 250}
 })
 
 armor:register_armor("3d_armor:chestplate_gold", {
-	description = "Golden Chestplate",
+	description = S"Golden Chestplate",
 	inventory_image = "3d_armor_inv_chestplate_gold.png",
 	groups = {armor_torso = 25, armor_heal = 10, armor_use = 500}
 })
 
 armor:register_armor("3d_armor:chestplate_diamond",{
-	description = "Diamond Chestplate",
+	description = S"Diamond Chestplate",
 	inventory_image = "3d_armor_inv_chestplate_diamond.png",
 	groups = {armor_torso = 30, armor_heal = 15, armor_use = 750}
 })
 
 armor:register_armor("3d_armor:chestplate_emerald", {
-	description = "Emerald Chestplate",
+	description = S"Emerald Chestplate",
 	desc_color = default.colors.emerald,
 	inventory_image = "3d_armor_inv_chestplate_emerald.png",
 	groups = {armor_torso = 30, armor_heal = 15, armor_use = 1000}
 })
 
 armor:register_armor("3d_armor:chestplate_ruby", {
-	description = "Ruby Chestplate",
+	description = S"Ruby Chestplate",
 	desc_color = default.colors.ruby,
 	inventory_image = "3d_armor_inv_chestplate_ruby.png",
 	groups = {armor_torso = 25, armor_heal = 15}
 })
 
 armor:register_armor("3d_armor:chestplate_chain", {
-	description = "Chain Chestplate",
+	description = S"Chain Chestplate",
 	inventory_image = "3d_armor_inv_chestplate_chain.png",
 	groups = {armor_torso = 25, armor_heal = 10, armor_use = 500}
 })
@@ -99,45 +101,45 @@ armor:register_armor("3d_armor:chestplate_chain", {
 -- Regisiter Leg Armor
 
 armor:register_armor("3d_armor:leggings_leather", {
-	description = "Leather Leggings",
+	description = S"Leather Leggings",
 	inventory_image = "3d_armor_inv_leggings_leather.png",
 	groups = {armor_legs = 10, armor_heal = 0, armor_use = 100}
 })
 
 armor:register_armor("3d_armor:leggings_steel", {
-	description = "Steel Leggings",
+	description = S"Steel Leggings",
 	inventory_image = "3d_armor_inv_leggings_steel.png",
 	groups = {armor_legs = 15, armor_heal = 5, armor_use = 250}
 })
 
 armor:register_armor("3d_armor:leggings_gold", {
-	description = "Golden Leggings",
+	description = S"Golden Leggings",
 	inventory_image = "3d_armor_inv_leggings_gold.png",
 	groups = {armor_legs = 20, armor_heal = 10, armor_use = 500}
 })
 
 armor:register_armor("3d_armor:leggings_diamond", {
-	description = "Diamond Leggings",
+	description = S"Diamond Leggings",
 	inventory_image = "3d_armor_inv_leggings_diamond.png",
 	groups = {armor_legs = 25, armor_heal = 15, armor_use = 750}
 })
 
 armor:register_armor("3d_armor:leggings_emerald", {
-	description = "Emerald Leggings",
+	description = S"Emerald Leggings",
 	desc_color = default.colors.emerald,
 	inventory_image = "3d_armor_inv_leggings_emerald.png",
 	groups = {armor_legs = 25, armor_heal = 15, armor_use = 1000}
 })
 
 armor:register_armor("3d_armor:leggings_ruby", {
-	description = "Ruby Leggings",
+	description = S"Ruby Leggings",
 	desc_color = default.colors.ruby,
 	inventory_image = "3d_armor_inv_leggings_ruby.png",
 	groups = {armor_legs = 20, armor_heal = 15}
 })
 
 armor:register_armor("3d_armor:leggings_chain", {
-	description = "Chain Leggings",
+	description = S"Chain Leggings",
 	inventory_image = "3d_armor_inv_leggings_chain.png",
 	groups = {armor_legs = 20, armor_heal = 10, armor_use = 500}
 })
@@ -145,45 +147,45 @@ armor:register_armor("3d_armor:leggings_chain", {
 -- Regisiter Boots
 
 armor:register_armor("3d_armor:boots_leather", {
-	description = "Leather Boots",
+	description = S"Leather Boots",
 	inventory_image = "3d_armor_inv_boots_leather.png",
 	groups = {armor_feet = 5, armor_heal = 0, armor_use = 100}
 })
 
 armor:register_armor("3d_armor:boots_steel", {
-	description = "Steel Boots",
+	description = S"Steel Boots",
 	inventory_image = "3d_armor_inv_boots_steel.png",
 	groups = {armor_feet = 10, armor_heal = 5, armor_use = 250}
 })
 
 armor:register_armor("3d_armor:boots_gold", {
-	description = "Golden Boots",
+	description = S"Golden Boots",
 	inventory_image = "3d_armor_inv_boots_gold.png",
 	groups = {armor_feet = 15, armor_heal = 10, armor_use = 500}
 })
 
 armor:register_armor("3d_armor:boots_diamond", {
-	description = "Diamond Boots",
+	description = S"Diamond Boots",
 	inventory_image = "3d_armor_inv_boots_diamond.png",
 	groups = {armor_feet = 20, armor_heal = 15, armor_use = 750}
 })
 
 armor:register_armor("3d_armor:boots_emerald", {
-	description = "Emerald Boots",
+	description = S"Emerald Boots",
 	desc_color = default.colors.emerald,
 	inventory_image = "3d_armor_inv_boots_emerald.png",
 	groups = {armor_feet = 20, armor_heal = 15, armor_use = 1000}
 })
 
 armor:register_armor("3d_armor:boots_ruby", {
-	description = "Ruby Boots",
+	description = S"Ruby Boots",
 	desc_color = default.colors.ruby,
 	inventory_image = "3d_armor_inv_boots_ruby.png",
 	groups = {armor_feet = 15, armor_heal = 15}
 })
 
 armor:register_armor("3d_armor:boots_chain", {
-	description = "Chain Boots",
+	description = S"Chain Boots",
 	inventory_image = "3d_armor_inv_boots_chain.png",
 	groups = {armor_feet = 15, armor_heal = 10, armor_use = 500}
 })
