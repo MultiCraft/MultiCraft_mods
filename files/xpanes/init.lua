@@ -159,10 +159,6 @@ function xpanes.register_pane(name, def)
 			recipe = def.recipe
 		})
 	end
-
-	for i = 1, 15 do
-		minetest.register_alias("xpanes:" .. name .. "_" .. i, "xpanes:" .. name .. "_flat")
-	end
 end
 
 xpanes.register_pane("pane", {
