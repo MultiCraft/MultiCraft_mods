@@ -99,7 +99,7 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 			local node_under = minetest.get_node(pos_under).name
 			local node_above = minetest.get_node(pos_above).name
 			if minetest.get_item_group(node_under, "wall") == 1 and
-					minetest.get_item_group(node_above, "wall_not_full") ~= 1 then
+					minetest.get_item_group(node_under, "wall_not_full") ~= 1 then
 				local node_under_can = node_under:gsub("_full$", "")
 				minetest.set_node(pos_under, {name = node_under_can .. "_full"})
 			end
