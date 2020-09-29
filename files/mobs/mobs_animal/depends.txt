@@ -1,4 +1,3 @@
 default
 mobs
 dye
-colored
