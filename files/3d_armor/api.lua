@@ -1,10 +1,12 @@
+armor = {}
+
 local translator = minetest.get_translator
-local S = translator and translator("3d_armor") or intllib.make_gettext_pair()
+armor.S = translator and translator("3d_armor") or intllib.make_gettext_pair()
 
 if translator and not minetest.is_singleplayer() then
 	local lang = minetest.settings:get("language")
 	if lang and lang == "ru" then
-		S = intllib.make_gettext_pair()
+		armor.S = intllib.make_gettext_pair()
 	end
 end
 
@@ -36,17 +38,15 @@ local armor_textures = setmetatable({}, {
 	end
 })
 
-armor = {
-	elements = {"head", "torso", "legs", "feet"},
-	physics = {"jump", "speed", "gravity"},
-	def = armor_def,
-	textures = armor_textures
-}
+armor.elements = {"head", "torso", "legs", "feet"}
+armor.physics = {"jump", "speed", "gravity"}
+armor.def = armor_def
+armor.textures = armor_textures
+
 
 -- Armor Registration
 
 armor.register_armor = function(_, name, def)
-	def.description = S(def.description)
 	if def.desc_color then
 		def.description = def.desc_color .. def.description
 	end
@@ -206,7 +206,7 @@ armor.update_armor = function(self, player)
 			if stack:get_count() == 0 then
 				local desc = minetest.registered_tools[item].description
 				if desc then
-					minetest.chat_send_player(name, S("Your @1 got destroyed!", desc))
+					minetest.chat_send_player(name, armor.S("Your @1 got destroyed!", desc))
 				end
 			end
 		end
