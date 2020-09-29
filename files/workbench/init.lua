@@ -1,10 +1,9 @@
-local workbench = {}
-local workbench_label, workbench_back = "", ""
+workbench = {}
 
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
 workbench.nodes = {}
-for node, def in pairs(minetest.registered_workbench.nodes) do
+for node, def in pairs(minetest.registered_nodes) do
 	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass" or def.drawtype:sub(1,8) == "allfaces") and
 	   (def.tiles and type(def.tiles[1]) == "string") and
 		not def.on_rightclick and
@@ -15,18 +14,9 @@ for node, def in pairs(minetest.registered_workbench.nodes) do
 		not def.groups.colorglass and
 		not def.mesecons
 	then
-		workbench.nodes[#workbench.nodes+1] = node
+		workbench.nodes[node] = true
 	end
 end
-
-setmetatable(workbench.nodes, {
-	__concat = function(t1, t2)
-		for i=1, #t2 do
-			t1[#t1+1] = t2[i]
-		end
-		return t1
-	end
-})
 
 local valid_block = {}
 for _, v in pairs(workbench.nodes) do
@@ -54,7 +44,7 @@ workbench.defs = {
 						{ 0, 8,  0, 8,  8, 8  }},
 	{"stair",		1,	{ 0, 0,  0, 16, 8, 16  },
 						{ 0, 8,  8, 16, 8, 8  }},
-	{"slope",		2,	nil					   }
+	{"slope",		2						   }
 }
 
 local repairable_tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
@@ -80,12 +70,11 @@ function workbench:get_output(inv, input, name)
 end
 
 -- Thanks to kaeza for this function
-function workbench:pixelbox(size, boxes)
+local function pixelbox(size, boxes)
 	local fixed = {}
-	for _, box in pairs(boxes) do
-		-- `unpack` has been changed to `table.unpack` in newest Lua versions
+	for i, box in pairs(boxes) do
 		local x, y, z, w, h, l = unpack(box)
-		fixed[#fixed+1] = {
+		fixed[i] = {
 			(x / size) - 0.5,
 			(y / size) - 0.5,
 			(z / size) - 0.5,
@@ -103,17 +92,12 @@ minetest.register_craftitem("workbench:saw", {
 	groups = {not_in_creative_inventory = 1}
 })
 
-if PLATFORM ~= "Android" and PLATFORM ~= "iOS" then
-	workbench_label = "label[0.9,0.1;" .. Sl("Workbench") .. "]"
-	workbench_back  = "label[0.1,0.7;" .. Sl("< Back") .. "]"
-end
-
 -- Workbench formspec
 local workbench_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_crafting.png]
 
 	item_image[0,-0.1;1,1;workbench:workbench]
-	]] .. workbench_label .. [[
+	label[0.9,0.1;]] .. Sl("Workbench") .. [[]
 
 	image_button[0.2,0.8;1.5,1.5;blank.png;creating;;true;false;formspec_button_back.png]
 	item_image[0.25,0.85;1.5,1.5;stairs:stair_default_wood]
@@ -137,7 +121,7 @@ local creating_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_creating.png]
 
 	item_image[0,-0.1;1,1;workbench:workbench]
-	]] .. workbench_back .. [[
+	label[0.1,0.7;]] .. Sl("< Back") .. [[]
 	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;formspec_button_back.png]
 
 	item_image[0.1,1.15;1.75,1.75;workbench:saw]
@@ -150,7 +134,7 @@ local repair_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_anvil.png]
 
 	item_image[0,-0.1;1,1;workbench:workbench]
-	]] .. workbench_back .. [[
+	label[0.1,0.7;]] .. Sl("< Back") .. [[]
 	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;formspec_button_back.png]
 
 	image[0.1,1.15;1.75,1.75;workbench_anvil.png]
@@ -161,13 +145,8 @@ local repair_fs = [[
 ]]
 
 local formspecs = {
-	-- Workbench formspec
 	workbench_fs,
-
-	-- Crafting formspec
 	creating_fs,
-
-	-- Repair formspec
 	repair_fs
 }
 
@@ -340,10 +319,10 @@ minetest.register_lbm({
 	end
 })
 
-for _, d in pairs(workbench.defs) do
-	for i = 1, #workbench.nodes do
-		local node = workbench.nodes[i]
-		local def = minetest.registered_workbench.nodes[node]
+for i = 1, #workbench.defs do
+	local d = workbench.defs[i]
+	for node, _ in pairs(workbench.nodes) do
+		local def = minetest.registered_nodes[node]
 		local groups, tiles, mesh, collision_box = {}, {}, {}, {}
 		local drawtype = "nodebox"
 
@@ -400,13 +379,15 @@ for _, d in pairs(workbench.defs) do
 			sounds = def.sounds,
 			use_texture_alpha = def.use_texture_alpha,
 			on_place = minetest.rotate_node,
-			node_box = workbench:pixelbox(16, {unpack(d, 3)}),
+			node_box = pixelbox(16, {unpack(d, 3)}),
 			collision_box = collision_box
 		})
 	end
 end
 
+--
 -- Craft items
+--
 
 minetest.register_tool("workbench:hammer", {
 	description = "Hammer",
@@ -430,8 +411,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "workbench:hammer",
 	recipe = {
-		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
-		{"", "group:stick", ""}
+		{"default:steel_ingot", "default:stick", "default:steel_ingot"},
+		{"", "default:stick", ""},
+		{"", "default:stick", ""}
 	}
 })
 
