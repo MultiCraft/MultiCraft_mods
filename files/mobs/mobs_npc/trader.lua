@@ -1,3 +1,6 @@
+mobs_trader = {}
+
+local S = mobs_npc.S
 local b = "blank.png"
 
 mobs:register_mob("mobs_npc:trader", {
@@ -32,15 +35,15 @@ mobs:register_mob("mobs_npc:trader", {
 	},
 
 	on_punch = function(self, clicker)
-		mobs.trader_show_goods(self, clicker, mobs.human)
+		mobs_trader.trader_show_goods(self, clicker, mobs_trader.human)
 	end,
 
 	on_rightclick = function(self, clicker)
-		mobs.trader_show_goods(self, clicker, mobs.human)
+		mobs_trader.trader_show_goods(self, clicker, mobs_trader.human)
 	end,
 
 	on_spawn = function(self)
-		self.nametag = mobs_npc.S("Trader")
+		self.nametag = S"Trader"
 		self.object:set_properties({
 			nametag = self.nametag,
 			nametag_color = "#FFFFFF"
@@ -86,7 +89,7 @@ mobs:register_mob("mobs_npc:trader", {
 -- inventory slots.
 
 -- Define tabe containing names for use and shop items for sale
-mobs.human = {
+mobs_trader.human = {
 	names = {
 		"Bill", "Clark", "Donald", "Duncan", "Dylan", "Ethan", "Gower",
 		"James", "Lenny", "Ralph", "Rodman", "Scott", "Tom", "Winslow"
@@ -135,7 +138,7 @@ mobs.human = {
 
 local random = math.random
 
-function mobs.trader_add_goods(self, race)
+function mobs_trader.trader_add_goods(self, race)
 	local trade_index = 1
 	local trades_already_added = {}
 	local trader_pool_size = 6
@@ -179,15 +182,15 @@ function mobs.trader_add_goods(self, race)
 	self.version = 3
 end
 
-function mobs.trader_show_goods(self, clicker, race)
+function mobs_trader.trader_show_goods(self, clicker, race)
 	if not self.id then
 		self.id = (random(1000) * random(10000))
 				.. self.name .. (random(1000) ^ 2)
 	end
 
 	if not self.game_name then
-		self.game_name = mobs_npc.S(race.names[random(#race.names)])
-		self.nametag = mobs_npc.S("Trader @1", self.game_name)
+		self.game_name = S(race.names[random(#race.names)])
+		self.nametag = S("Trader @1", self.game_name)
 		self.object:set_properties({
 			nametag = self.nametag,
 			nametag_color = "#00FF00"
@@ -197,13 +200,13 @@ function mobs.trader_show_goods(self, clicker, race)
 	local version = self.version
 
 	if self.trades == nil or not version or version < 3 then
-		mobs.trader_add_goods(self, race)
+		mobs_trader.trader_add_goods(self, race)
 	end
 
-	local player = clicker:get_player_name()
+	local player = clicker and clicker:get_player_name() or ""
 	minetest.chat_send_player(player,
-		mobs_npc.S("<[NPC] Trader @1> Hello, @2, have a look at my wares.",
-			self.game_name, Sl(player)))
+		S("<[NPC] Trader @1> Hello, @2, have a look at my wares.",
+			self.game_name, S(player)))
 
 	-- Make formspec trade list
 	local formspec_trade_list = ""
@@ -247,7 +250,7 @@ function mobs.trader_show_goods(self, clicker, race)
 	minetest.show_formspec(player, "mobs_npc:trade",
 		default.gui ..
 		"item_image[0,-0.1;1,1;default:emerald]" ..
-		"label[0.9,0.1;" .. mobs_npc.S("Trader @1's stock", self.game_name) .. "]" ..
+		"label[0.9,0.1;" .. S("Trader @1's stock", self.game_name) .. "]" ..
 		"image[7.95,3.1;1.1,1.1;^[colorize:#D6D5E6]]" ..
 		formspec_trade_list)
 end
@@ -301,4 +304,4 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
-mobs:register_egg("mobs_npc:trader", mobs_npc.S("Trader"), "mobs_trader_egg.png")
+mobs:register_egg("mobs_npc:trader", S"Trader", "mobs_trader_egg.png")
