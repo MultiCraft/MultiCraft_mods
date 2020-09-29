@@ -7,6 +7,7 @@ These can be cooked into dry sponges, and then placed near a liquid to remove an
 They turn in to wet sponges when used, so to use them again, they have to be cooked.
 https://forum.minetest.net/viewtopic.php?f=9&t=20729
 
-License of source code:
------------------------
+License of source code
+----------------------
 Copyright (C) Benjie/Fiftysix - 27/8/18 (MIT)
+Copyright (C) MultiCraft Development Team (MIT)
