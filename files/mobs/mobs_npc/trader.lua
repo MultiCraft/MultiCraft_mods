@@ -2,6 +2,7 @@ mobs_trader = {}
 
 local S = mobs_npc.S
 local b = "blank.png"
+local ver = 4
 
 mobs:register_mob("mobs_npc:trader", {
 	type = "npc",
@@ -179,7 +180,7 @@ function mobs_trader.trader_add_goods(self, race)
 	end
 
 	self.trades = trades
-	self.version = 3
+	self.version = ver
 end
 
 function mobs_trader.trader_show_goods(self, clicker, race)
@@ -199,7 +200,7 @@ function mobs_trader.trader_show_goods(self, clicker, race)
 
 	local version = self.version
 
-	if self.trades == nil or not version or version < 3 then
+	if self.trades == nil or not version or version < ver then
 		mobs_trader.trader_add_goods(self, race)
 	end
 
@@ -238,11 +239,11 @@ function mobs_trader.trader_show_goods(self, clicker, race)
 
 			formspec_trade_list = formspec_trade_list ..
 					"item_image[" .. x .. "," .. y .. ";1,1;" .. self.trades[i][2] .. "]" ..
-					"image_button[" .. x .. "," .. y .. ";1,1;formspec_cell.png;prices#" .. i .. "#" .. self.id .. ";;;false;formspec_cell.png^default_item_pressed.png]" ..
+					"image_button[" .. x .. "," .. y .. ";1,1;formspec_cell.png;prices#" .. i .. "#" .. self.id .. ";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
 					"tooltip[prices#" .. i .. "#" .. self.id .. ";" .. tooltip_prices .. "]" ..
 					"image[".. x + 1 ..",".. y ..";1,1;default_arrow_bg.png^[transformR270]" ..
 					"item_image[" .. x + 2 .. "," .. y .. ";1,1;" .. self.trades[i][1] .. "]" ..
-					"image_button[" .. x + 2 .. "," .. y .. ";1,1;formspec_cell.png;goods#" .. i .. "#" .. self.id .. ";;;false;formspec_cell.png^default_item_pressed.png]" ..
+					"image_button[" .. x + 2 .. "," .. y .. ";1,1;formspec_cell.png;goods#" .. i .. "#" .. self.id .. ";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
 					"tooltip[goods#" .. i .. "#" .. self.id .. ";" .. tooltip_goods .. "]"
 		end
 	end
