@@ -166,7 +166,7 @@ function player_api.preview(player, skin)
 	local c = "blank.png"
 	if player then
 		local name = player:get_player_name()
-		local model = models[player_model[name]]
+		local model = models[player_model[name]] or models["character.b3d"]
 		skin = player_textures[name] or model.textures
 		c = "(" .. skin[1] .. "^" .. skin[2] .. ")"
 	elseif skin then
