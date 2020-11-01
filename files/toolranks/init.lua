@@ -65,7 +65,7 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 	-- Alert player when tool got a new level
 	if lastlevel < level then
 		minetest.chat_send_player(name,
-			S("Your tool \"@1\" ot a new level!",
+			S("Your tool \"@1\" got a new level!",
 			(C.green .. itemdesc .. C.white)))
 
 		minetest.sound_play("toolranks_levelup", {to_player = name})
