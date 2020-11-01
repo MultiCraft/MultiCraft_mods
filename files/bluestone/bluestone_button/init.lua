@@ -22,7 +22,7 @@ local function on_place(itemstack, placer, pointed_thing)
 				pointed_thing) or itemstack
 		end
 
-		if not node_def.walkable then
+		if not node_def or not node_def.walkable then
 			return itemstack -- Place on walkable node not allowed
 		end
 
