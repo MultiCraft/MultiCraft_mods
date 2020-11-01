@@ -4,20 +4,20 @@
 -- The API documentation in here was moved into doc/lua_api.txt
 
 -- Definitions made by this mod that other mods can use too
+local Cesc = minetest.get_color_escape_sequence
 default = {
 	colors = {
-		grey = minetest.get_color_escape_sequence("#9d9d9d"),
-		green = minetest.get_color_escape_sequence("#1eff00"),
-		gold = minetest.get_color_escape_sequence("#ffdf00"),
-		white = minetest.get_color_escape_sequence("#ffffff"),
-		emerald = minetest.get_color_escape_sequence("#00e87e"),
-		ruby = minetest.get_color_escape_sequence("#d80a1b")
+		grey = Cesc("#9d9d9d"),
+		green = Cesc("#1eff00"),
+		gold = Cesc("#ffdf00"),
+		white = Cesc("#ffffff"),
+		emerald = Cesc("#00e87e"),
+		ruby = Cesc("#d80a1b")
 	}
 }
 
 minetest.register_craftitem("default:cell", {
-	inventory_image = "formspec_cell.png",
-	groups = {craftguide_cell = 1}
+	inventory_image = "formspec_cell.png"
 })
 
 default.gui_bg = "bgcolor[#08080880;true]"
