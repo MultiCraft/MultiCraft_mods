@@ -269,7 +269,6 @@ mesecon.register_mvps_stopper("default:chest")
 mesecon.register_mvps_stopper("default:chest_left")
 mesecon.register_mvps_stopper("default:chest_right")
 mesecon.register_mvps_stopper("default:furnace")
-mesecon.register_mvps_stopper("itemframes:frame")
 
 mesecon.register_on_mvps_move(mesecon.move_hot_nodes)
 mesecon.register_on_mvps_move(function(moved_nodes)
