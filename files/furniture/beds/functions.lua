@@ -1,3 +1,4 @@
+local S = beds.S
 local pi = math.pi
 local is_sp = minetest.is_singleplayer()
 local enable_respawn = minetest.settings:get_bool("enable_bed_respawn")
@@ -55,18 +56,6 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 		return
 	end
 
-	if bed_pos then
-		for _, obj in pairs(minetest.get_objects_inside_radius(bed_pos, 0.5)) do
-			if obj:is_player() then
-				local obj_name = obj:get_player_name()
-				if obj_name ~= name then
-					minetest.chat_send_player(name, beds.S("This bed is already occupied!"))
-					return
-				end
-			end
-		end
-	end
-
 	-- stand up
 	if state ~= nil and not state and not sit then
 		local p = beds.pos[name] or nil
@@ -88,6 +77,15 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 		hud_flags.wielditem = true
 		player_api.set_animation(player, "stand", 30)
 	else -- sit or lay down
+		-- Check if bed is occupied
+		for _, other_pos in pairs(beds.bed_position) do
+			if vector.distance(bed_pos, other_pos) < 0.1 then
+				minetest.chat_send_player(name, S("This bed is already occupied!"))
+				return false
+			end
+		end
+
+		-- Check if player is moving
 		if vector.length(player:get_player_velocity()) > 0 then
 			return
 		end
@@ -143,13 +141,13 @@ local function update_formspecs(finished)
 
 	local form_n
 	if finished then
-		form_n = beds.formspec .. "label[2.7,9;" .. beds.S("Good morning.") .. "]"
+		form_n = beds.formspec .. "label[2.7,9;" .. S("Good morning.") .. "]"
 	else
 		form_n = beds.formspec .. "label[2.2,9;" ..
-			beds.S("@1 of @2 players are in bed", player_in_bed, ges) .. "]"
+			S("@1 of @2 players are in bed", player_in_bed, ges) .. "]"
 		if is_majority and is_night_skip_enabled() then
 			form_n = form_n .. "button_exit[2,6;4,0.75;force;" ..
-			beds.S("Force night skip") .. "]"
+			S("Force night skip") .. "]"
 		end
 	end
 
@@ -171,7 +169,7 @@ end
 function beds.skip_night()
 	minetest.set_timeofday(0.23)
 	if is_sp then
-		minetest.chat_send_all(beds.S("Good morning."))
+		minetest.chat_send_all(S("Good morning."))
 	end
 end
 
@@ -251,6 +249,19 @@ minetest.register_on_leaveplayer(function(player)
 				beds.kick_players()
 			end
 		end)
+	end
+end)
+
+minetest.register_on_dieplayer(function(player)
+	local name = player:get_player_name()
+	local in_bed = beds.player
+	local pos = player:get_pos()
+	local yaw = get_look_yaw(pos)
+
+	if in_bed[name] then
+		lay_down(player, nil, pos, false)
+		player:set_look_horizontal(yaw)
+		player:set_pos(pos)
 	end
 end)
 
