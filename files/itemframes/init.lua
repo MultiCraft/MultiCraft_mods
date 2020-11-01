@@ -201,3 +201,8 @@ minetest.register_craft({
 	recipe = "itemframes:frame",
 	burntime = 10
 })
+
+-- MVPS Stopper
+if mesecon and mesecon.register_mvps_stopper then
+	mesecon.register_mvps_stopper("itemframes:frame")
+end
