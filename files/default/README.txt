@@ -21,7 +21,7 @@ http://www.gnu.org/licenses/lgpl-3.0.html
 
 
 Authors of media (sounds, and schematics)
-----------------------------------------------------------
+-----------------------------------------
 Everything not listed in here:
 celeron55, Perttu Ahola <celeron55@gmail.com> (CC BY-SA 3.0)
 
@@ -70,8 +70,8 @@ Metal sounds:
   - https://www.freesound.org/people/yadronoff/sounds/320397/
   default_dug_metal.*.ogg - Iwan Gabovitch - qubodup - CC0
   - http://opengameart.org/users/qubodup
-  default_metal_footstep.*.ogg - Ottomaani138 - CC0
-  - https://www.freesound.org/people/Ottomaani138/sounds/232692/
+  default_metal_footstep.*.ogg - (CC0 1.0) - CC0 1.0
+  - https://freesound.org/people/mypantsfelldown/sounds/398937/
   default_place_node_metal.*.ogg - Ogrebane - CC0
   - http://opengameart.org/content/wood-and-metal-sound-effects-volume-2
 
@@ -105,21 +105,18 @@ http://freesound.org/people/Ryding/sounds/94337/
 Ferk (CC0 1.0):
   default_item_smoke.ogg, based on a sound by http://opengameart.org/users/bart
 
-wool_coat_movement.ogg from freeSFX.co.uk and has a Creative Commons license
+  wool_coat_movement.ogg from freeSFX.co.uk and has a Creative Commons license
 
-  player_damage.1.ogg
-  player_damage.2.ogg
-  player_damage.3.ogg
-  http://www.freesound.org/people/thecheeseman/sounds/44428/
-  http://www.freesound.org/people/thecheeseman/sounds/44429/
-  http://www.freesound.org/people/thecheeseman/sounds/44430/
+thecheeseman (CC BY 3.0):
+http://www.freesound.org/people/thecheeseman/sounds/44428/
+http://www.freesound.org/people/thecheeseman/sounds/44429/
+http://www.freesound.org/people/thecheeseman/sounds/44430/
+  player_damage.*.ogg
 
-  player_damage.1.ogg from TenPlus1 mobs_redo mod (Creative Commons sounds from Freesound.org)
-
-  sonictechtonic (CC BY 3.0):
-https://www.freesound.org/people/sonictechtonic/sounds/241872/
-  player_damage.2.ogg
-
+lolamadeus (CC0 1.0):
+https://freesound.org/people/lolamadeus/sounds/179341/
+  default_gravel_dig.*.ogg
+  default_gravel_dug.*.ogg
 
 Models
 ------
