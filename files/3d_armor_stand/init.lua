@@ -200,7 +200,6 @@ local function register_armor_stand(name, def)
 		after_destruct = update_entity,
 		on_blast = function(pos)
 			drop_armor(pos)
-			armor.drop_armor(pos, "3d_armor_stand:armor_stand")
 			minetest.remove_node(pos)
 		end
 	}
@@ -213,6 +212,10 @@ local function register_armor_stand(name, def)
 	def.material = nil
 
 	minetest.register_node(name, def)
+
+	if mesecon and mesecon.register_mvps_stopper then
+		mesecon.register_mvps_stopper(name)
+	end
 end
 
 
