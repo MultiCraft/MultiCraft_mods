@@ -36,12 +36,21 @@ mobs:register_mob("mobs_monster:zombie", {
 		end
 		return {
 			{name = "mobs_monster:rotten_flesh"},
-			{name = "mobs_monster:rotten_flesh", chance = 2},
 			{name = "mobs_monster:rotten_flesh", chance = 2}
 		}
 	end
 })
 
+mobs:spawn({
+	name = "mobs_monster:zombie",
+	nodes = mobs_monster.spawn_nodes,
+	max_light = 6,
+	chance = 15000
+})
+
+mobs:register_egg("mobs_monster:zombie", mobs_monster.S"Zombie Head", "zombie_head.png")
+
+-- Giant Zombie, spawning disabled
 mobs:register_mob("mobs_monster:zombie_giant", {
 	type = "monster",
 	visual = "mesh",
@@ -93,19 +102,12 @@ mobs:register_mob("mobs_monster:zombie_giant", {
 	end
 })
 
-mobs:spawn({
-	name = "mobs_monster:zombie",
-	nodes = mobs_monster.spawn_nodes,
-	max_light = 6,
-	chance = 15000
-})
-
-mobs:spawn({
+--[[mobs:spawn({
 	name = "mobs_monster:zombie_giant",
 	nodes = mobs_monster.spawn_nodes,
 	max_light = 4,
 	chance = 35000
-})
+})]]
 
-mobs:register_egg("mobs_monster:zombie", mobs_monster.S"Zombie Head", "zombie_head.png")
 mobs:register_egg("mobs_monster:zombie_giant", mobs_monster.S"Giant Zombie Head", "zombie_head.png")
+minetest.add_group("mobs_monster:zombie_giant", {not_in_creative_inventory = 1})
