@@ -1063,7 +1063,6 @@ minetest.register_node("default:bush_stem", {
 minetest.register_node("default:bush_leaves", {
 	description = "Bush Leaves",
 	drawtype = "allfaces_optional",
-	waving = 1,
 	tiles = {"default_leaves.png"},
 	paramtype = "light",
 	groups = {snappy = 3, flammable = 2, leaves = 1},
@@ -1134,7 +1133,6 @@ minetest.register_node("default:acacia_bush_stem", {
 minetest.register_node("default:acacia_bush_leaves", {
 	description = "Acacia Bush Leaves",
 	drawtype = "allfaces_optional",
-	waving = 1,
 	tiles = {"default_acacia_leaves.png"},
 	paramtype = "light",
 	groups = {snappy = 3, flammable = 2, leaves = 1},
@@ -1205,7 +1203,6 @@ minetest.register_node("default:pine_bush_stem", {
 minetest.register_node("default:pine_bush_needles", {
 	description = "Pine Bush Needles",
 	drawtype = "allfaces_optional",
-	waving = 1,
 	tiles = {"default_pine_needles.png"},
 	paramtype = "light",
 	groups = {snappy = 3, flammable = 2, leaves = 1},
