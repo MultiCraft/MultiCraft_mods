@@ -1065,6 +1065,7 @@ minetest.register_node("default:bush_leaves", {
 	drawtype = "allfaces_optional",
 	tiles = {"default_leaves.png"},
 	paramtype = "light",
+	walkable = false,
 	groups = {snappy = 3, flammable = 2, leaves = 1},
 	drop = {
 		max_items = 1,
@@ -1135,6 +1136,7 @@ minetest.register_node("default:acacia_bush_leaves", {
 	drawtype = "allfaces_optional",
 	tiles = {"default_acacia_leaves.png"},
 	paramtype = "light",
+	walkable = false,
 	groups = {snappy = 3, flammable = 2, leaves = 1},
 	drop = {
 		max_items = 1,
