@@ -10,10 +10,17 @@ if translator and not minetest.is_singleplayer() then
 	end
 end
 
--- Compatible for MultiCraft Engine 2.0
-mobs_npc.cbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35}
-if minetest.features and minetest.features.object_independent_selectionbox then
-	mobs_npc.cbox = {-0.35, 0, -0.35, 0.35, 1.8, 0.35}
+-- replace npc using the old player model
+function mobs_npc.replace_model(self)
+	if self.collisionbox[2] ~= -1.0 then
+		local pos = self.object:get_pos()
+		if pos then
+			minetest.add_entity(pos, self.name)
+			self.object:remove()
+			return true
+		end
+	end
+	return false
 end
 
 local path = minetest.get_modpath("mobs_npc")

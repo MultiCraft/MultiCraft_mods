@@ -10,9 +10,9 @@ mobs:register_mob("mobs_npc:trader", {
 	attacks_monsters = true,
 	hp_min = 15,
 	hp_max = 20,
-	collisionbox = mobs_npc.cbox,
+	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
 	visual = "mesh",
-	mesh = "character.b3d",
+	mesh = "mobs_npc.b3d",
 	textures = {
 		{"mobs_trader.png^mobs_trader1.png", b, b, b, b},
 		{"mobs_trader.png^mobs_trader2.png", b, b, b, b},
@@ -53,6 +53,10 @@ mobs:register_mob("mobs_npc:trader", {
 	end,
 
 	after_activate = function(self)
+		if mobs_npc.replace_model(self) then
+			return
+		end
+
 		if not self.game_name then
 			self.object:set_properties({
 				nametag_color = "#FFFFFF"
@@ -188,6 +192,7 @@ function mobs_trader.trader_show_goods(self, clicker, race)
 		self.id = (random(1000) * random(10000))
 				.. self.name .. (random(1000) ^ 2)
 	end
+	local id = self.id
 
 	if not self.game_name then
 		self.game_name = S(race.names[random(#race.names)])
@@ -197,24 +202,27 @@ function mobs_trader.trader_show_goods(self, clicker, race)
 			nametag_color = "#00FF00"
 		})
 	end
+	local game_name = self.game_name
 
 	local version = self.version
+	local trades = self.trades
 
-	if self.trades == nil or not version or version < ver then
+	if trades == nil or not version or version < ver then
 		mobs_trader.trader_add_goods(self, race)
+		trades = self.trades
 	end
 
 	local player = clicker and clicker:get_player_name() or ""
 	minetest.chat_send_player(player,
-		S("<[NPC] Trader @1> Hello, @2, have a look at my wares.",
-			self.game_name, S(player)))
+		S("<[NPC] Trader @1> Hello @2, have a look at my wares.",
+			game_name, S(player)))
 
 	-- Make formspec trade list
 	local formspec_trade_list = ""
 	local x, y
 
 	for i = 1, 6 do
-		if self.trades[i] and self.trades[i] ~= "" then
+		if trades[i] and trades[i] ~= "" then
 			if i < 4 then
 				x = 1
 				y = i - 0.2
@@ -223,35 +231,35 @@ function mobs_trader.trader_show_goods(self, clicker, race)
 				y = i - 3.2
 			end
 
-			local name_prices = self.trades[i][2]:match("%S*")
-			local amount_prices = self.trades[i][2]:match("%d")
+			local name_prices = trades[i][2]:match("%S*")
+			local amount_prices = trades[i][2]:match("%d")
 			local itemdef_prices = minetest.registered_items[name_prices]
 			local tooltip_prices =
 					(itemdef_prices and itemdef_prices.description or "") .. " " ..
 					(amount_prices and amount_prices ~= "1" and amount_prices or "")
 
-			local name_goods = self.trades[i][1]:match("%S*")
-			local amount_goods = self.trades[i][1]:match("%d")
+			local name_goods = trades[i][1]:match("%S*")
+			local amount_goods = trades[i][1]:match("%d")
 			local itemdef_goods = minetest.registered_items[name_goods]
 			local tooltip_goods =
 					(itemdef_goods and itemdef_goods.description or "") .. " " ..
 					(amount_goods and amount_goods ~= "1" and amount_goods or "")
 
 			formspec_trade_list = formspec_trade_list ..
-					"item_image[" .. x .. "," .. y .. ";1,1;" .. self.trades[i][2] .. "]" ..
-					"image_button[" .. x .. "," .. y .. ";1,1;formspec_cell.png;prices#" .. i .. "#" .. self.id .. ";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
-					"tooltip[prices#" .. i .. "#" .. self.id .. ";" .. tooltip_prices .. "]" ..
+					"item_image[" .. x .. "," .. y .. ";1,1;" .. trades[i][2] .. "]" ..
+					"image_button[" .. x .. "," .. y .. ";1,1;formspec_cell.png;prices#" .. i .. "#" .. id .. ";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
+					"tooltip[prices#" .. i .. "#" .. id .. ";" .. tooltip_prices .. "]" ..
 					"image[".. x + 1 ..",".. y ..";1,1;default_arrow_bg.png^[transformR270]" ..
-					"item_image[" .. x + 2 .. "," .. y .. ";1,1;" .. self.trades[i][1] .. "]" ..
-					"image_button[" .. x + 2 .. "," .. y .. ";1,1;formspec_cell.png;goods#" .. i .. "#" .. self.id .. ";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
-					"tooltip[goods#" .. i .. "#" .. self.id .. ";" .. tooltip_goods .. "]"
+					"item_image[" .. x + 2 .. "," .. y .. ";1,1;" .. trades[i][1] .. "]" ..
+					"image_button[" .. x + 2 .. "," .. y .. ";1,1;formspec_cell.png;goods#" .. i .. "#" .. id .. ";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
+					"tooltip[goods#" .. i .. "#" .. id .. ";" .. tooltip_goods .. "]"
 		end
 	end
 
 	minetest.show_formspec(player, "mobs_npc:trade",
 		default.gui ..
 		"item_image[0,-0.1;1,1;default:emerald]" ..
-		"label[0.9,0.1;" .. S("Trader @1's stock", self.game_name) .. "]" ..
+		"label[0.9,0.1;" .. S("Trader @1's stock", game_name) .. "]" ..
 		"image[7.95,3.1;1.1,1.1;^[colorize:#D6D5E6]]" ..
 		formspec_trade_list)
 end

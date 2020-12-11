@@ -32,9 +32,9 @@ mobs:register_mob("mobs_npc:npc_man", {
 --	pathfinding = true,
 	hp_min = 15,
 	hp_max = 20,
-	collisionbox = mobs_npc.cbox,
+	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
 	visual = "mesh",
-	mesh = "character.b3d",
+	mesh = "mobs_npc.b3d",
 	textures = mtextures,
 --[[child_texture = {
 		{"mobs_npc_baby.png", b, b, b}
@@ -60,6 +60,8 @@ mobs:register_mob("mobs_npc:npc_man", {
 			return true
 		end
 	end,
+
+	after_activate = mobs_npc.replace_model,
 
 --[[on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
@@ -125,9 +127,9 @@ mobs:register_mob("mobs_npc:npc_woman", {
 --	pathfinding = true,
 	hp_min = 15,
 	hp_max = 20,
-	collisionbox = mobs_npc.cbox,
+	collisionbox = {-0.35, -1.0, -0.35, 0.35, 0.8, 0.35},
 	visual = "mesh",
-	mesh = "character.b3d",
+	mesh = "mobs_npc.b3d",
 	textures = wtextures,
 --[[child_texture = {
 		{"mobs_npc_baby.png", b, b, b}
@@ -153,6 +155,8 @@ mobs:register_mob("mobs_npc:npc_woman", {
 			return true
 		end
 	end,
+
+	after_activate = mobs_npc.replace_model,
 
 --[[on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
