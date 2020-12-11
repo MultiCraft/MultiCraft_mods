@@ -5,17 +5,26 @@ minetest.register_privilege("creative", {
 	give_to_singleplayer = false
 })
 
-local creative_mode_cache = minetest.settings:get_bool("creative_mode")
+-- Override the engine's creative mode function
+local old_is_creative_enabled = minetest.is_creative_enabled
 
+function minetest.is_creative_enabled(name)
+	if name == "" then
+		return old_is_creative_enabled(name)
+	end
+	return minetest.check_player_privs(name, {creative = true}) or
+		old_is_creative_enabled(name)
+end
+
+-- For backwards compatibility:
 function creative.is_enabled_for(name)
-	return creative_mode_cache or
-		minetest.check_player_privs(name, {creative = true})
+	return minetest.is_creative_enabled(name)
 end
 
 -- Unlimited node placement
 minetest.register_on_placenode(function(_, _, placer)
 	if placer and placer:is_player() then
-		return creative.is_enabled_for(placer:get_player_name())
+		return minetest.is_creative_enabled(placer:get_player_name())
 	end
 end)
 
@@ -23,7 +32,7 @@ end)
 local old_handle_node_drops = minetest.handle_node_drops
 function minetest.handle_node_drops(pos, drops, digger)
 	if not digger or not digger:is_player() or
-		not creative.is_enabled_for(digger:get_player_name()) then
+		not minetest.is_creative_enabled(digger:get_player_name()) then
 		return old_handle_node_drops(pos, drops, digger)
 	end
 	local inv = digger:get_inventory()
