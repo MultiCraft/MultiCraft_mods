@@ -1259,6 +1259,36 @@ minetest.register_node("default:pine_bush_sapling", {
 -- Liquids
 --
 
+local is_sp = minetest.is_singleplayer()
+local function liquid_place(itemstack, placer, pointed_thing)
+	if pointed_thing.type == "node" then
+		local under = pointed_thing.under
+		local node = minetest.get_node(under)
+		local node_def = minetest.registered_nodes[node.name]
+		if node_def and node_def.on_rightclick and
+				not (placer and placer:is_player() and
+				placer:get_player_control().sneak) then
+			return node_def.on_rightclick(under, node, placer, itemstack,
+				pointed_thing) or itemstack
+		end
+
+		local player_name = placer and placer:get_player_name() or ""
+		if is_sp or
+				minetest.check_player_privs(player_name, {server = true}) then
+			local result
+			itemstack, result = minetest.item_place(itemstack,
+					placer, pointed_thing)
+
+			if result then
+				minetest.sound_play({name = "default_place_node_hard"},
+						{pos = pointed_thing.above})
+			end
+		end
+	end
+
+	return itemstack
+end
+
 -- Water
 local water_source = {
 	drawtype = "liquid",
@@ -1300,7 +1330,9 @@ local water_source = {
 	liquid_viscosity = 1,
 	post_effect_color = {a = 90, r = 30, g = 60, b = 90},
 	groups = {water = 3, liquid = 3, cools_lava = 1, not_in_creative_inventory = 1},
-	sounds = default.node_sound_water_defaults()
+	sounds = default.node_sound_water_defaults(),
+	node_placement_prediction = "",
+	on_place = liquid_place
 }
 
 minetest.register_node("default:water_source", water_source)
@@ -1412,7 +1444,9 @@ local river_water_source =  {
 	liquid_range = 2,
 	post_effect_color = {a = 90, r = 30, g = 76, b = 90},
 	groups = {water = 3, liquid = 3, cools_lava = 1, not_in_creative_inventory = 1},
-	sounds = default.node_sound_water_defaults()
+	sounds = default.node_sound_water_defaults(),
+	node_placement_prediction = "",
+	on_place = liquid_place
 }
 
 minetest.register_node("default:river_water_source", river_water_source)
@@ -1518,7 +1552,9 @@ minetest.register_node("default:lava_source", {
 	liquid_renewable = false,
 	damage_per_second = 4,
 	post_effect_color = {a = 180, r = 255, g = 64, b = 0},
-	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1}
+	groups = {lava = 3, liquid = 2, igniter = 1, not_in_creative_inventory = 1},
+	node_placement_prediction = "",
+	on_place = liquid_place
 })
 
 minetest.register_node("default:lava_flowing", {
