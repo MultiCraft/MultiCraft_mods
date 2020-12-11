@@ -218,7 +218,8 @@ function boat.on_step(self, dtime)
 		end
 	end
 	local velo = self.object:get_velocity()
-	if self.v == 0 and velo.x == 0 and velo.y == 0 and velo.z == 0 then
+	if not self.driver and
+			self.v == 0 and velo.x == 0 and velo.y == 0 and velo.z == 0 then
 		self.object:set_pos(self.object:get_pos())
 		return
 	end
@@ -330,8 +331,7 @@ minetest.register_craftitem("boats:boat", {
 				boat:set_yaw(placer:get_look_horizontal())
 			end
 			local player_name = placer and placer:get_player_name() or ""
-			if not (creative and creative.is_enabled_for and
-					creative.is_enabled_for(player_name)) or not sp then
+			if not minetest.is_creative_enabled(player_name) or not sp then
 				itemstack:take_item()
 			end
 		end
