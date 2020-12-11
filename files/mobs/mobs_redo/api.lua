@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20201003",
+	version = "20201115",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -811,7 +811,7 @@ function mob_class:check_for_death(cmi_cause)
 	local pos = self.object:get_pos()
 
 	-- execute custom death function
-	if self.on_die then
+	if pos and self.on_die then
 		self:on_die(pos)
 		remove_mob(self, true)
 
@@ -825,7 +825,7 @@ function mob_class:check_for_death(cmi_cause)
 
 		local frames = self.animation.die_end - self.animation.die_start
 		local speed = self.animation.die_speed or 15
-		local length = max(frames / speed, 0)
+		local length = max((frames / speed), 0)
 
 		self.attack = nil
 		self.v_start = false
@@ -837,9 +837,11 @@ function mob_class:check_for_death(cmi_cause)
 		self:set_animation("die")
 
 		minetest.after(length, function(self)
-			remove_mob(self, true)
+			if self.object:get_luaentity() then
+				remove_mob(self, true)
+			end
 		end, self)
-	else
+	elseif pos then -- otherwise remove mob
 		remove_mob(self, true)
 	end
 
@@ -1945,7 +1947,8 @@ function mob_class:do_states(dtime)
 
 	if self.state == "stand" then
 		if self.randomly_turn and random(4) == 1 then
-			local s, lp = self.object:get_pos()
+			local lp
+			local s = self.object:get_pos()
 			local objs = minetest.get_objects_inside_radius(s, 3)
 
 			for n = 1, #objs do
@@ -1980,7 +1983,8 @@ function mob_class:do_states(dtime)
 			self:set_animation("walk")
 		end
 	elseif self.state == "walk" then
-		local s, lp = self.object:get_pos()
+		local s = self.object:get_pos()
+		local lp
 
 		-- is there something I need to avoid?
 		if self.water_damage > 0
@@ -2380,31 +2384,35 @@ function mob_class:falling(pos)
 	-- sanity check
 	if not v then return end
 
-	local fall_speed = -9.81 -- gravity
+	if v.y > 0 then
+		-- apply gravity when moving up
+		self.object:set_acceleration({
+			x = 0,
+			y = -9.81,
+			z = 0
+		})
 
-	-- don't exceed mob fall speed
-	if v.y < self.fall_speed then
-		fall_speed = self.fall_speed
+	elseif v.y <= 0 and v.y > self.fall_speed then
+		-- fall downwards at set speed
+		self.object:set_acceleration({
+			x = 0,
+			y = self.fall_speed,
+			z = 0
+		})
+	else
+		-- stop accelerating once max fall speed hit
+		self.object:set_acceleration({x = 0, y = 0, z = 0})
 	end
 
-	-- in water then use liquid viscosity for float/sink speed
-	if (self.standing_in
-	and minetest.registered_nodes[self.standing_in].groups.liquid)
-	or (self.standing_on
-	and minetest.registered_nodes[self.standing_in].groups.liquid) then
-		local visc = min(
-				minetest.registered_nodes[self.standing_in].liquid_viscosity, 7)
-
-		if self.floats == 1 then
-			-- floating up
-			if visc > 0 then
-				fall_speed = max(1, v.y) / (visc + 1)
-			end
-		else
-			-- sinking down
-			if visc > 0 then
-				fall_speed = -(max(1, v.y) / (visc + 1))
-			end
+	-- in water then float up
+	if self.standing_in
+	and minetest.registered_nodes[self.standing_in].groups.water then
+		if self.floats then
+			self.object:set_acceleration({
+				x = 0,
+				y = -self.fall_speed / (max(1, v.y) ^ 8),
+				z = 0
+			})
 		end
 	else
 		-- fall damage onto solid ground
@@ -2425,13 +2433,6 @@ function mob_class:falling(pos)
 			self.old_y = self.object:get_pos().y
 		end
 	end
-
-	-- fall at set speed
-	self.object:set_acceleration({
-		x = 0,
-		y = fall_speed,
-		z = 0
-	})
 end
 
 
@@ -2638,7 +2639,9 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 		self:do_attack(hitter)
 
 		-- alert others to the attack
-		local objs, obj = minetest.get_objects_inside_radius(hitter:get_pos(), self.view_range)
+		local objs = minetest.get_objects_inside_radius(
+				hitter:get_pos(), self.view_range)
+		local obj
 
 		for n = 1, #objs do
 			obj = objs[n]:get_luaentity()
@@ -2808,20 +2811,14 @@ function mob_class:mob_activate(staticdata, def, dtime)
 		end
 
 		colbox = {
-			self.base_colbox[1] * .5,
-			self.base_colbox[2] * .5,
-			self.base_colbox[3] * .5,
-			self.base_colbox[4] * .5,
-			self.base_colbox[5] * .5,
-			self.base_colbox[6] * .5
+			self.base_colbox[1] * .5, self.base_colbox[2] * .5,
+			self.base_colbox[3] * .5, self.base_colbox[4] * .5,
+			self.base_colbox[5] * .5, self.base_colbox[6] * .5
 		}
 		selbox = {
-			self.base_selbox[1] * .5,
-			self.base_selbox[2] * .5,
-			self.base_selbox[3] * .5,
-			self.base_selbox[4] * .5,
-			self.base_selbox[5] * .5,
-			self.base_selbox[6] * .5
+			self.base_selbox[1] * .5, self.base_selbox[2] * .5,
+			self.base_selbox[3] * .5, self.base_selbox[4] * .5,
+			self.base_selbox[5] * .5, self.base_selbox[6] * .5
 		}
 	end
 
@@ -2996,12 +2993,12 @@ function mob_class:on_step(dtime)
 					dif = 2 * pi - dif -- need to add
 					yaw = yaw + dif / self.delay
 				else
-					yaw = yaw - dif / self.delay -- need to vsubtract
+					yaw = yaw - dif / self.delay -- need to subtract
 				end
 			elseif yaw < self.target_yaw then
 				if dif > pi then
 					dif = 2 * pi - dif
-					yaw = yaw - dif / self.delay -- need to vsubtract
+					yaw = yaw - dif / self.delay -- need to subtract
 				else
 					yaw = yaw + dif / self.delay -- need to add
 				end
@@ -3024,7 +3021,9 @@ function mob_class:on_step(dtime)
 	-- run custom function (defined in mob lua file)
 	if self.do_custom then
 		-- when false skip going any further
-		if self:do_custom(dtime) == false then return end
+		if self:do_custom(dtime) == false then
+			return
+		end
 	end
 
 	-- attack timer
