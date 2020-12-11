@@ -10,7 +10,7 @@ NPC Woman=NPC Крестьянка
 
 #trader.lua
 Trader @1=Торговец @1
-<[NPC] Trader @1> Hello, @2, have a look at my wares.=<[NPC] Торговец @1> Привет, @2, посмотри, что я продаю.
+<[NPC] Trader @1> Hello @2, have a look at my wares.=<[NPC] Торговец @1> Привет @2, посмотри, что я продаю.
 Trader @1's stock=Предложения торговца @1а
 Trader=Торговец
 Player=Игрок
