@@ -101,17 +101,20 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 					end
 				end
 
-				local player_name = user:get_player_name()
+				local pn = user and user:get_player_name() or ""
 
-				if not singleplayer then
+				local place_restriction = not singleplayer and
+						not minetest.check_player_privs(pn, {server = true})
+
+				if place_restriction then
 					local height = under.y
 					if height > 8 then
 						if source == "default:lava_source" then
-							minetest.chat_send_player(player_name, S("Too much Lava is bad, right?"))
+							minetest.chat_send_player(pn, S("Too much Lava is bad, right?"))
 							return itemstack
 						elseif height > 64 or
 								minetest.get_node({x = lpos.x, y = lpos.y - 1, z = lpos.z}).name == "air" then
-							minetest.chat_send_player(player_name, S("Too much liquid is bad, right?"))
+							minetest.chat_send_player(pn, S("Too much liquid is bad, right?"))
 							return itemstack
 						elseif source == "default:water_source" then
 							source = "default:water_source_poured"
@@ -121,15 +124,14 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 					end
 				end
 
-				if check_protection(lpos, user and player_name or "",
-						"place " .. source) then
+				if check_protection(lpos, pn, "place " .. source) then
 					return itemstack
 				end
 
 				minetest.set_node(lpos, {name = source})
-				if not singleplayer
+				if place_restriction
 						or not (creative and creative.is_enabled_for
-						and creative.is_enabled_for(player_name)) then
+						and creative.is_enabled_for(pn)) then
 					return ItemStack("bucket:bucket_empty")
 				else
 					return itemstack
