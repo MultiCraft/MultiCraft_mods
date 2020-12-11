@@ -162,31 +162,36 @@ function player_api.set_sneak(player, sneak, speed)
 	end
 end
 
-function player_api.preview(player, skin)
+function player_api.preview(player, skin, head)
 	local c = "blank.png"
 	if player then
 		local name = player:get_player_name()
 		local model = models[player_model[name]] or models["character.b3d"]
-		skin = player_textures[name] or model.textures
-		c = "(" .. skin[1] .. "^" .. skin[2] .. ")"
+		local texture = player_textures[name] or model.textures
+		c = "(" .. texture[1] .. "^" .. texture[2] .. ")"
 	elseif skin then
 		c = skin
 	end
 
-	local texture = "((" ..
-		"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png)^" ..					-- Left Leg
-		"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png^[transformFX)^" ..	-- Right Leg
+	local texture
+	if head then
+		texture = "[combine:16x16:-16,-16=" .. c											-- Head
+	else
+		texture = "((" ..
+			"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png)^" ..					-- Left Leg
+			"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png^[transformFX)^" ..	-- Right Leg
 
-		"([combine:32x64:-8,-16=" .. c .. "^[mask:player_api_head.png)^" ..				-- Head
+			"([combine:32x64:-8,-16=" .. c .. "^[mask:player_api_head.png)^" ..				-- Head
 
-		"([combine:32x64:-32,-24=" .. c .. "^[mask:player_api_chest.png)^" ..			-- Chest
+			"([combine:32x64:-32,-24=" .. c .. "^[mask:player_api_chest.png)^" ..			-- Chest
 
-		"([combine:32x64:-72,-16=" .. c .. "^[mask:player_api_head.png)^" ..			-- Helmet
+			"([combine:32x64:-72,-16=" .. c .. "^[mask:player_api_head.png)^" ..			-- Helmet
 
-		"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png)^" ..				-- Left Arm
-		"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png^[transformFX)" ..	-- Right Arm
+			"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png)^" ..				-- Left Arm
+			"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png^[transformFX)" ..	-- Right Arm
 
-		")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
+			")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
+	end
 
 	return texture
 end
