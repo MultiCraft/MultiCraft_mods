@@ -118,7 +118,7 @@ minetest.register_craftitem("farming_addons:cocoa_bean", {
 	inventory_image = "farming_addons_cocoa_bean.png",
 	wield_image = "farming_addons_cocoa_bean.png",
 	on_place = farming_addons.place_cocoa_bean,
-	groups = {farming = 1}
+	groups = {farming = 1, wieldview = 2}
 })
 
 -- 1
@@ -331,7 +331,7 @@ minetest.register_craftitem("farming_addons:chocolate", {
 	description = S"Chocolate",
 	inventory_image = "farming_addons_chocolate.png",
 	on_use = minetest.item_eat(3),
-	groups = {food = 1}
+	groups = {food = 1, wieldview = 2}
 })
 
 minetest.register_craft({

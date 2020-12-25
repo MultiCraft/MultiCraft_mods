@@ -7,7 +7,7 @@ farming.register_plant("farming_addons:corn", {
 	steps = 8,
 	minlight = 12,
 	fertility = {"grassland"},
-	groups = {flammable = 4, food = 1},
+	groups = {flammable = 4, food = 1, wieldview = 2},
 	place_param2 = 3
 })
 
@@ -73,7 +73,7 @@ minetest.override_item("farming_addons:corn_8", {
 minetest.register_craftitem("farming_addons:corn_baked", {
 	description = S"Baked Corn",
 	inventory_image = "farming_addons_corn_baked.png",
-	groups = {food = 1},
+	groups = {food = 1, wieldview = 2},
 	on_use = minetest.item_eat(8)
 })
 
