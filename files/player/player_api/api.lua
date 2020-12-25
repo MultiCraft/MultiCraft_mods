@@ -176,6 +176,9 @@ function player_api.preview(player, skin, head)
 	end
 
 	local texture
+	-- Escape characters for combine
+	c = c:gsub("%^", "\\^"):gsub(":", "\\:")
+
 	if head then
 		texture = "[combine:16x16:-16,-16=" .. c											-- Head
 	else
@@ -195,7 +198,7 @@ function player_api.preview(player, skin, head)
 			")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
 	end
 
-	return texture
+	return minetest.formspec_escape(texture)
 end
 
 -- Localize for better performance
