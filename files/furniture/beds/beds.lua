@@ -13,8 +13,7 @@ function beds.dyeing(pos, _, clicker, itemstack)
 			param2 = minetest.get_node(pos).param2
 		})
 
-		if not (creative and creative.is_enabled_for and
-				creative.is_enabled_for(player_name)) then
+		if not minetest.is_creative_enabled(player_name) then
 			itemstack:take_item()
 		end
 
