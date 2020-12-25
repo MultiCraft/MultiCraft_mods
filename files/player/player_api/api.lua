@@ -24,6 +24,8 @@ player_api.player_cape = {}
 local player_wielditem = {}
 local player_cube = {}
 
+local b = "blank.png"
+
 local player_skin, player_armor, player_cape =
 		player_api.player_skin, player_api.player_armor, player_api.player_cape
 
@@ -63,10 +65,10 @@ function player_api.set_textures(player, skin, armor, wielditem, cube, cape)
 	local name = player:get_player_name()
 
 	local oldskin      = player_skin[name]      or "character.png"
-	local oldarmor     = player_armor[name]     or "blank.png"
-	local oldwielditem = player_wielditem[name] or "blank.png"
-	local oldcube      = player_cube[name]      or "blank.png"
-	local oldcape      = player_cape[name]      or "blank.png"
+	local oldarmor     = player_armor[name]     or b
+	local oldwielditem = player_wielditem[name] or b
+	local oldcube      = player_cube[name]      or b
+	local oldcape      = player_cape[name]      or b
 
 	skin      = skin      or oldskin
 	armor     = armor     or oldarmor
@@ -163,7 +165,7 @@ function player_api.set_sneak(player, sneak, speed)
 end
 
 function player_api.preview(player, skin, head)
-	local c = "blank.png"
+	local c = b
 	if player then
 		local name = player:get_player_name()
 		local model = models[player_model[name]] or models["character.b3d"]

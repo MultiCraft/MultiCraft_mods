@@ -193,7 +193,7 @@ minetest.register_craftitem("default:steel_ingot", {
 minetest.register_craftitem("default:stick", {
 	description = "Stick",
 	inventory_image = "default_stick.png",
-	groups = {stick = 1, flammable = 2}
+	groups = {stick = 1, flammable = 2, wieldview = 2}
 })
 
 
@@ -224,7 +224,8 @@ minetest.register_craftitem("default:gunpowder", {
 
 minetest.register_craftitem("default:bone", {
 	description = "Bone",
-	inventory_image = "default_bone.png"
+	inventory_image = "default_bone.png",
+	groups = {wieldview = 2}
 })
 
 minetest.register_craftitem("default:glowstone_dust", {
