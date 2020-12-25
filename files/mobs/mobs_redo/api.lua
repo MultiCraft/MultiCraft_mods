@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20201115",
+	version = "20201206",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -105,6 +105,7 @@ local mob_class = {
 	light_damage_max = 15,
 	water_damage = 0,
 	lava_damage = 5,
+	air_damage = 0,
 	suffocation = 2,
 	fall_damage = 1,
 	fall_speed = -9.81, -- must be lower than -2
@@ -247,10 +248,10 @@ function mob_class:set_velocity(v)
 		c_x, c_y = unpack(self:collision())
 	end
 
-	local yaw = (self.object:get_yaw() or 0) + self.rotate
+	local yaw = (self.object:get_yaw() or 0) + (self.rotate or 0)
 
 	-- nil check for velocity
-	v = v or 0
+	v = v or 0.01
 
 	-- check if standing in liquid with max viscosity of 7
 	local visc = min(minetest.registered_nodes[self.standing_in].liquid_viscosity, 7)
@@ -262,8 +263,8 @@ function mob_class:set_velocity(v)
 		v = v / (visc + 1)
 	end
 
-	-- set velocity with hard limit of 10
-	local vel = self.object:get_velocity()
+	-- set velocity
+	local vel = self.object:get_velocity() or 0
 
 	local new_vel = {
 		x = (sin(yaw) * -v) + c_x,
@@ -766,6 +767,11 @@ end
 
 -- check if mob is dead or only hurt
 function mob_class:check_for_death(cmi_cause)
+	-- We dead already
+	if self.state == "die" then
+		return true
+	end
+
 	-- has health actually changed?
 	if self.health == self.old_health and self.health > 0 then
 		return false
@@ -826,6 +832,7 @@ function mob_class:check_for_death(cmi_cause)
 		local frames = self.animation.die_end - self.animation.die_start
 		local speed = self.animation.die_speed or 15
 		local length = max((frames / speed), 0)
+		local rot = self.animation.die_rotate and 5
 
 		self.attack = nil
 		self.v_start = false
@@ -833,6 +840,10 @@ function mob_class:check_for_death(cmi_cause)
 		self.blinktimer = 0
 		self.passive = true
 		self.state = "die"
+		self.object:set_properties({
+			pointable = false, collide_with_objects = false,
+			automatic_rotate = rot
+		})
 		self:set_velocity(0)
 		self:set_animation("die")
 
@@ -986,6 +997,18 @@ function mob_class:do_env_damage()
 				type = "environment",
 				pos = pos,
 				node = self.standing_in}) then
+			return true
+		end
+	end
+
+	-- air damage
+	if self.air_damage ~= 0 and self.standing_in == "air" then
+		self.health = self.health - self.air_damage
+
+		effect(pos, 3, "bubble.png", 1, 1, 1, 0.2)
+
+		if self:check_for_death({type = "environment",
+				pos = pos, node = self.standing_in}) then
 			return true
 		end
 	end
@@ -1189,14 +1212,17 @@ function mob_class:follow_holding(clicker)
 	return false
 end
 
+local HORNY_TIME = 30
+local HORNY_AGAIN_TIME = 300
+local CHILD_GROW_TIME = 60 * 20 -- 20 minutes
 
 -- find two animals of same type and breed if nearby and horny
 function mob_class:breed()
-	-- child takes 240 seconds before growing into adult
+	-- child takes a long time before growing into adult
 	if self.child then
 		self.hornytimer = self.hornytimer + 1
 
-		if self.hornytimer > 240 then
+		if self.hornytimer > CHILD_GROW_TIME  then
 			self.child = false
 			self.hornytimer = 0
 			self.object:set_properties({
@@ -1224,27 +1250,25 @@ function mob_class:breed()
 		return
 	end
 
-	-- horny animal can mate for 40 seconds,
-	-- afterwards horny animal cannot mate again for 200 seconds
-	if self.horny and self.hornytimer < 240 then
+	-- horny animal can mate for HORNY_TIME seconds,
+	-- afterwards horny animal cannot mate again for HORNY_AGAIN_TIME seconds
+	if self.horny and self.hornytimer < HORNY_TIME + HORNY_AGAIN_TIME then
 		self.hornytimer = self.hornytimer + 1
 
-		if self.hornytimer >= 240 then
+		if self.hornytimer >= HORNY_TIME + HORNY_AGAIN_TIME then
 			self.hornytimer = 0
 			self.horny = false
 		end
 	end
 
 	-- find another same animal who is also horny and mate if nearby
-	if self.horny and self.hornytimer <= 40 then
+	if self.horny and self.hornytimer <= HORNY_TIME  then
 		local pos = self.object:get_pos()
 
 		effect({x = pos.x, y = pos.y + 1.5, z = pos.z}, 8, "heart.png", 3, 4, 1, 0.1)
 
 		local objs = minetest.get_objects_inside_radius(pos, 3)
-		local num = 0
 		local ent
-
 
 		for n = 1, #objs do
 			ent = objs[n]:get_luaentity()
@@ -1269,17 +1293,19 @@ function mob_class:breed()
 				end
 			end
 
-			if ent
-					and canmate
-					and ent.horny
-					and ent.hornytimer <= 40 then
-				num = num + 1
-			end
+			-- found another similar horny animal that isn't self?
+			if ent and ent.object ~= self.object
+			and canmate
+			and ent.horny
+			and ent.hornytimer <= 40 then
+				local pos2 = ent.object:get_pos()
 
-			-- found your mate? then have a baby
-			if num > 1 then
-				self.hornytimer = 41
-				ent.hornytimer = 41
+				-- Have mobs face one another
+				yaw_to_pos(self, pos2)
+				yaw_to_pos(ent, self.object:get_pos())
+
+				self.hornytimer = HORNY_TIME + 1
+				ent.hornytimer = HORNY_TIME + 1
 
 				-- have we reached active mob limit
 				if active_limit > 0 and active_mobs >= active_limit then
@@ -1292,12 +1318,16 @@ function mob_class:breed()
 
 				-- spawn baby
 				minetest.after(5, function(self, ent)
-					if not self.object:get_luaentity() then return end
+					if not self.object:get_luaentity() then
+						return
+					end
 
 					-- custom breed function
 					if self.on_breed then
 						-- when false skip going any further
-						if self:on_breed(ent) == false then return end
+						if self:on_breed(ent) == false then
+							return
+						end
 					else
 						effect(pos, 15, "heart.png", 1, 2, 2, 15, 5)
 						self:mob_sound("mobs_spell")
@@ -1347,7 +1377,7 @@ function mob_class:breed()
 					ent2.owner = self.owner
 					ent2.infotext = infotext
 				end, self, ent)
-				num = 0
+
 				break
 			end
 		end
@@ -1854,17 +1884,19 @@ function mob_class:follow_flop()
 			self.following = nil
 		end
 	else
-		-- stop following player if not holding specific item
-		if self.following
-				and self.following:is_player()
-				and not self:follow_holding(self.following) then
-			self.following = nil
-		end
+		-- stop following player if not holding specific item or mob is horny
+ 		if self.following
+ 		and self.following:is_player()
+		and (self:follow_holding(self.following) == false
+		or self.horny) then
+ 			self.following = nil
+ 		end
 	end
 
 	-- follow that thing
 	if self.following then
 		local s = self.object:get_pos()
+		if not s then return end
 		local p
 
 		if self.following:is_player() then
@@ -1903,6 +1935,14 @@ function mob_class:follow_flop()
 	if self.fly then
 		if not self:attempt_flight_correction() then
 			self.state = "flop"
+
+			-- do we have a custom on_flop function?
+			if self.on_flop then
+				if self:on_flop(self) then
+					return
+				end
+			end
+
 			self.object:set_velocity({x = 0, y = -5, z = 0})
 			self:set_animation("stand")
 			return
@@ -3107,6 +3147,7 @@ function mobs:register_mob(name, def)
 		owner = def.owner,
 		order = def.order,
 		on_die = def.on_die,
+		on_flop = def.on_flop,
 		do_custom = def.do_custom,
 		jump_height = def.jump_height,
 		drawtype = def.drawtype, -- DEPRECATED, use rotate instead
@@ -3130,6 +3171,7 @@ function mobs:register_mob(name, def)
 		light_damage_max = def.light_damage_max,
 		water_damage = def.water_damage,
 		lava_damage = def.lava_damage,
+		air_damage = def.air_damage,
 		suffocation = def.suffocation,
 		fall_damage = def.fall_damage,
 		fall_speed = def.fall_speed,
@@ -3916,7 +3958,10 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 		-- make children grow quicker
 		if self.child then
-			self.hornytimer = self.hornytimer + 20
+--			self.hornytimer = self.hornytimer + 20
+			-- deduct 10% of the time to adulthood
+			self.hornytimer = self.hornytimer + (
+					(CHILD_GROW_TIME - self.hornytimer) * 0.1)
 			return true
 		end
 
@@ -3961,17 +4006,19 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 	-- if mob has been tamed you can name it with a nametag
 	if item:get_name() == "mobs:nametag"
 			and name == self.owner then
-
 		-- store mob and nametag stack in external variables
 		mob_obj[name] = self
 		mob_sta[name] = item
 		local tag = self.nametag or ""
+		local esc = minetest.formspec_escape
 
 		minetest.show_formspec(name, "mobs_nametag",
 				"size[5,3]" ..
 				"field[1.35,1.25;2.9,1;name;" ..
-				S"Enter name:" .. ";" .. tag .. "]" ..
-				"button_exit[1.06,1.65;2.9,1;mob_rename;" .. S"Rename" .. "]")
+				esc(S("Enter name:")) ..
+				";" .. tag .. "]" ..
+				"button_exit[1.06,1.65;2.9,1;mob_rename;" ..
+				esc(S("Rename")) .. "]")
 
 		return true
 	end
