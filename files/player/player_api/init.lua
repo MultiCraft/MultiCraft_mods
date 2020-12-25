@@ -10,8 +10,9 @@ if translator and not minetest.is_singleplayer() then
 	end
 end
 
-dofile(minetest.get_modpath("player_api") .. "/api.lua")
-dofile(minetest.get_modpath("player_api") .. "/wieldview.lua")
+local path = minetest.get_modpath("player_api")
+dofile(path .. "/api.lua")
+dofile(path .. "/wieldview.lua")
 
 local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 
@@ -19,7 +20,7 @@ local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 local b = "blank.png"
 player_api.register_model("character.b3d", {
 	animation_speed = 30,
-	textures = {"character.png", b, b, b, b},
+	textures = {player_api.default_texture, b, b, b, b},
 	animations = {
 		-- Standard animations.
 		stand           = {x = 0,   y =   0}, -- y = 79
@@ -31,7 +32,8 @@ player_api.register_model("character.b3d", {
 		sneak_stand     = {x = 221, y = 261},
 		sneak_walk      = {x = 262, y = 282},
 		sneak_mine      = {x = 283, y = 293},
-		sneak_walk_mine = {x = 294, y = 314}
+		sneak_walk_mine = {x = 294, y = 314},
+		ride            = {x = 315, y = 395}
 	},
 	stepheight = 0.6,
 	eye_height = 1.47
@@ -43,7 +45,7 @@ player_api.hand = {
 	paramtype = "light",
 	drawtype = "mesh",
 	mesh = "hand.b3d",
-	tiles = {"character.png"},
+	tiles = {"character_1.png"},
 	inventory_image = b,
 	drop = "",
 	node_placement_prediction = ""
@@ -86,35 +88,17 @@ minetest.register_node("player_api:hand", hand)
 
 -- Update appearance when the player joins
 minetest.register_on_joinplayer(function(player)
-	local name = player:get_player_name()
-	local inv = player:get_inventory()
-
-	player_api.player_attached[name] = false
+	player_api.player_attached[player:get_player_name()] = false
 	player_api.set_model(player, "character.b3d")
-	player:set_local_animation(
-		{x = 0,   y = 0}, -- y = 79
-		{x = 168, y = 187},
-		{x = 189, y = 198},
-		{x = 200, y = 219},
-		30)
 
 	player:hud_set_hotbar_itemcount(9)
 	player:hud_set_hotbar_image("gui_hotbar.png")
 	player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
+
+	local inv = player:get_inventory()
 	inv:set_size("main", 36)
-
-	local gender = player:get_attribute("gender")
-	local color  = player:get_attribute("color")
-	local skin   = player:get_attribute("skin")
-
-	gender = (gender and gender == "female" and "_female")   or ""
-	color  = (color  and color  == "yes"    and "_dark")     or ""
-	skin   = (skin   and skin   ~= "1"      and "_" .. skin) or ""
-
-	local texture = "character" .. gender .. color .. skin .. ".png"
-	player_api.set_textures(player, texture)
 	inv:set_size("hand", 1)
-	inv:set_stack("hand", 1, "player_api:hand" .. gender .. color)
+	inv:set_stack("hand", 1, "player_api:hand")
 end)
 
 -- Items for the new player
@@ -133,10 +117,11 @@ minetest.register_on_dieplayer(function(player)
 
 	-- Drop inventory items
 	local stack
+	local item_drop = minetest.item_drop
 	for i = 1, inv:get_size("main") do
 		stack = inv:get_stack("main", i)
 		if stack:get_count() > 0 then
-			minetest.item_drop(stack, nil, pos)
+			item_drop(stack, nil, pos)
 		end
 	end
 	inv:set_list("main", {})
@@ -145,8 +130,6 @@ minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
 	local pos_string = minetest.pos_to_string(pos, 1)
 
-	minetest.chat_send_player(name, S("Your last coordinates:") .. " "
-		.. pos_string)
-
-	minetest.log("action", name .. " died at " .. pos_string)
+	minetest.chat_send_player(name, S("Your last coordinates: @1", pos_string))
+	minetest.log("action", "Player \"" .. name .. "\" died at " .. pos_string)
 end)
