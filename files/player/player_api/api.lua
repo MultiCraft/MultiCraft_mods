@@ -12,6 +12,8 @@ function player_api.register_model(name, def)
 	models[name] = def
 end
 
+player_api.default_texture = "character_1.png^player_haircut_1.png"
+
 -- Player stats and animations
 local player_model = {}
 local player_textures = {}
@@ -57,6 +59,14 @@ function player_api.set_model(player, model_name)
 		stepheight = model.stepheight or 0.6,
 		eye_height = model.eye_height or 1.47
 	})
+	local animations = model.animations
+	player:set_local_animation(
+		animations.stand,
+		animations.walk,
+		animations.mine,
+		animations.walk_mine,
+		model.animation_speed or 30
+	)
 	player_api.set_animation(player, "stand")
 	player_model[name] = model_name
 end
@@ -64,7 +74,7 @@ end
 function player_api.set_textures(player, skin, armor, wielditem, cube, cape)
 	local name = player:get_player_name()
 
-	local oldskin      = player_skin[name]      or "character.png"
+	local oldskin      = player_skin[name]      or player_api.default_texture
 	local oldarmor     = player_armor[name]     or b
 	local oldwielditem = player_wielditem[name] or b
 	local oldcube      = player_cube[name]      or b
@@ -175,10 +185,10 @@ function player_api.preview(player, skin, head)
 		c = skin
 	end
 
-	local texture
 	-- Escape characters for combine
 	c = c:gsub("%^", "\\^"):gsub(":", "\\:")
 
+	local texture
 	if head then
 		texture = "[combine:16x16:-16,-16=" .. c											-- Head
 	else
