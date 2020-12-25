@@ -1,6 +1,6 @@
 unused_args = true
 allow_defined_top = true
-max_line_length = 200
+max_line_length = 160
 
 ignore = {
 	"122", -- setting a read-only field of a global variable
@@ -40,6 +40,7 @@ exclude_files = {
 	"files/deprecated/init.lua",
 	"files/mobs/mobs_redo/api.lua",
 	"files/signs/slugify.lua",
+	"files/utf8lib/utf8data.lua",
 	"files/workbench/init.lua",
 }
 
