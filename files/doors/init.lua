@@ -16,15 +16,6 @@ end
 
 local table_copy = table.copy
 
-local function replace_old_owner_information(pos)
-	local meta = minetest.get_meta(pos)
-	local owner = meta:get_string("doors_owner")
-	if owner and owner ~= "" then
-		meta:set_string("owner", owner)
-		meta:set_string("doors_owner", "")
-	end
-end
-
 -- returns an object to a door object or nil
 function doors.get(pos)
 	local node_name = minetest.get_node(pos).name
@@ -149,9 +140,9 @@ function doors.door_toggle(pos, node, clicker)
 		state = tonumber(state)
 	end
 
-	replace_old_owner_information(pos)
-
-	if clicker and not default.can_interact_with_node(clicker, pos) then
+	local pn = clicker and clicker:get_player_name() or ""
+	if clicker and minetest.is_protected(pos, pn) and
+			not default.can_interact_with_node(clicker, pos) then
 		return false
 	end
 
@@ -291,7 +282,7 @@ function doors.register(name, def)
 				meta:set_string("infotext", S(def.description) .. "\n" .. S("Owned by @1", S(pn)))
 			end
 
-			if not (creative and creative.is_enabled_for and creative.is_enabled_for(pn)) then
+			if not minetest.is_creative_enabled(pn) then
 				itemstack:take_item()
 			end
 
@@ -414,9 +405,9 @@ end
 function doors.trapdoor_toggle(pos, node, clicker)
 	node = node or minetest.get_node(pos)
 
-	replace_old_owner_information(pos)
-
-	if clicker and not default.can_interact_with_node(clicker, pos) then
+	local pn = clicker and clicker:get_player_name() or ""
+	if clicker and minetest.is_protected(pos, pn) and
+			not default.can_interact_with_node(clicker, pos) then
 		return false
 	end
 
@@ -478,7 +469,7 @@ function doors.register_trapdoor(name, def)
 			meta:set_string("owner", pn)
 			meta:set_string("infotext", S(def.description) .. "\n" .. S("Owned by @1", S(pn)))
 
-			return (creative and creative.is_enabled_for and creative.is_enabled_for(pn))
+			return minetest.is_creative_enabled(pn)
 		end
 
 		def.on_blast = function() end
@@ -589,9 +580,9 @@ end
 function doors.fencegate_toggle(pos, node, clicker)
 	node = node or minetest.get_node(pos)
 
-	replace_old_owner_information(pos)
-
-	if clicker and not default.can_interact_with_node(clicker, pos) then
+	local pn = clicker and clicker:get_player_name() or ""
+	if clicker and minetest.is_protected(pos, pn) and
+			not default.can_interact_with_node(clicker, pos) then
 		return false
 	end
 
