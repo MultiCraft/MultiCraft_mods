@@ -8,6 +8,8 @@ local function grow_sapling(...)
 	return default.grow_sapling(...)
 end
 
+local random = math.random
+
 --
 -- Stone
 --
@@ -98,7 +100,7 @@ minetest.register_node("default:redsandstonesmooth", {
 minetest.register_node("default:obsidian", {
 	description = "Obsidian",
 	tiles = {"default_obsidian.png"},
-	groups = {cracky = 3, level = 2, oddly_breakable_by_hand = 3},
+	groups = {cracky = 1, level = 2, oddly_breakable_by_hand = 3},
 	sounds = default.node_sound_stone_defaults()
 })
 
@@ -337,7 +339,7 @@ minetest.register_node("default:sapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -478,7 +480,7 @@ minetest.register_node("default:junglesapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -556,7 +558,7 @@ minetest.register_node("default:pine_sapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -636,7 +638,7 @@ minetest.register_node("default:acacia_sapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -713,7 +715,7 @@ minetest.register_node("default:birch_sapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -769,7 +771,7 @@ minetest.register_node("default:cherry_blossom_sapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -1098,7 +1100,7 @@ minetest.register_node("default:bush_sapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -1169,7 +1171,7 @@ minetest.register_node("default:acacia_bush_sapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -1239,7 +1241,7 @@ minetest.register_node("default:pine_bush_sapling", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(300, 1500))
+		minetest.get_node_timer(pos):start(random(300, 1500))
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -1924,7 +1926,7 @@ minetest.register_node("default:vine", {
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(math.random(30, 60))
+		minetest.get_node_timer(pos):start(random(30, 60))
 	end,
 
 	on_timer = function(pos)
@@ -1944,7 +1946,7 @@ minetest.register_node("default:vine", {
 		default.dig_down(pos, node, digger)
 		local pos_above = {x = pos.x, y = pos.y + 1, z = pos.z}
 		if minetest.get_node(pos_above).name == "default:vine" then
-			minetest.get_node_timer(pos_above):start(math.random(30, 60))
+			minetest.get_node_timer(pos_above):start(random(30, 60))
 		end
 	end
 })
@@ -2105,4 +2107,10 @@ default.register_leafdecay({
 	trunks = {"default:pine_bush_stem"},
 	leaves = {"default:pine_bush_needles"},
 	radius = 1
+})
+
+default.register_leafdecay({
+	trunks = {"default:cherry_blossom_tree"},
+	leaves = {"default:cherry_blossom_leaves"},
+	radius = 3
 })

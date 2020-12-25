@@ -143,7 +143,7 @@ else
 end
 
 function mesecon.dec2bin(n)
-	local x, y = math.floor(n / 2), n % 2
+	local x, y = floor(n / 2), n % 2
 	if (n > 1) then
 	return mesecon.dec2bin(x)..y
 	else
