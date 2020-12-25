@@ -8,7 +8,7 @@ farming.register_plant("farming_addons:carrot", {
 	steps = 4,
 	minlight = 12,
 	fertility = {"grassland"},
-	groups = {flammable = 4, food = 1},
+	groups = {flammable = 4, food = 1, wieldview = 2},
 	place_param2 = 3
 })
 
@@ -35,7 +35,7 @@ minetest.register_craftitem("farming_addons:carrot_golden", {
 	description = S"Golden Carrot",
 	inventory_image = "farming_addons_carrot_golden.png",
 	wield_image = "farming_addons_carrot_golden.png",
-	groups = {food = 1},
+	groups = {food = 1, wieldview = 2},
 	on_use = minetest.item_eat(10)
 })
 

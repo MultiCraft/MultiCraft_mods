@@ -6,13 +6,14 @@
 local wield_tiles = {}
 local wield_cubes = {}
 
-minetest.after(1, function()
+local function prepare()
 	for name, def in pairs(minetest.registered_items) do
-		if def.inventory_image and def.inventory_image ~= "" then
-			if minetest.registered_tools[name] then
-				wield_tiles[name] = def.inventory_image
+		local inv_img = def.inventory_image
+		if inv_img and inv_img ~= "" then
+			if minetest.registered_tools[name] or (def.groups.wieldview == 2) then
+				wield_tiles[name] = inv_img
 			else
-				wield_tiles[name] = def.inventory_image .. "^[transformR270"
+				wield_tiles[name] = inv_img .. "^[transformR270"
 			end
 		elseif def.tiles and type(def.tiles[1]) == "string" and def.tiles[1] ~= "" then
 			if def.drawtype and
@@ -36,15 +37,29 @@ minetest.after(1, function()
 			end
 		end
 	end
-end)
+end
 
+if minetest.register_on_mods_loaded then
+	minetest.register_on_mods_loaded(function()
+		minetest.after(1, function()
+			prepare()
+		end)
+	end)
+else -- legacy MultiCraft Engine
+	minetest.after(1, function()
+		prepare()
+	end)
+end
+
+local set_textures = player_api.set_textures
+local wielded_item = player_api.wielded_item
 function player_api.update_wielded_item(player, name)
 	local item = player:get_wielded_item():get_name()
-	local wielded_item = player_api.wielded_item
+	local b = "blank.png"
 	if item and (not wielded_item[name] or wielded_item[name] ~= item) then
-		local wield_tile = wield_tiles[item] or "blank.png"
-		local wield_cube = wield_cubes[item] or "blank.png"
-		player_api.set_textures(player, nil, nil, wield_tile, wield_cube)
+		local wield_tile = wield_tiles[item] or b
+		local wield_cube = wield_cubes[item] or b
+		set_textures(player, nil, nil, wield_tile, wield_cube)
 		wielded_item[name] = item
 	end
 end
