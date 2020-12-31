@@ -45,7 +45,9 @@ Note:		Now used very minimal version, with the support of only lower and upper.
 
 utf8lib = {}
 
-utf8lib.string = {}
+local path = minetest.get_modpath("utf8lib")
+dofile(path .. "/utf8data.lua")
+dofile(path .. "/slugify.lua")
 
 -- returns the number of bytes used by the UTF-8 character at byte i in s
 -- also doubles as a UTF-8 character validator
@@ -141,6 +143,12 @@ local function utf8charbytes(s, i)
 	end
 end
 
+--
+-- Implement String Library with UTF-8 support
+--
+
+utf8lib.string = {}
+
 -- returns the number of characters in a UTF-8 string
 local function utf8len(s)
 	-- argument checking
@@ -159,8 +167,6 @@ local function utf8len(s)
 
 	return len
 end
-
-dofile(minetest.get_modpath("utf8lib") .. "/utf8data.lua")
 
 -- replace UTF-8 characters based on a mapping table
 local function utf8replace(s, mapping)
