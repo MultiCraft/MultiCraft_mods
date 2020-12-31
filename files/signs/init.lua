@@ -10,6 +10,10 @@ end
 
 local vadd = vector.add
 local floor, pi = math.floor, math.pi
+local find = string.find
+
+-- Cyrillic transliteration library
+local slugify = utf8lib and utf8lib.slugify or function(s) return s end
 
 local sign_positions = {
 	[0] = {{x =  0,    y = 0.18, z = -0.07}, pi},
@@ -53,14 +57,19 @@ local function find_any(str, pair, start)
 	return ret
 end
 
-local disposable_chars = {["\n"] = true, ["\r"] = true, ["\t"] = true, [" "] = true}
-local wrap_chars = {"\n", "\r", "\t", " ", "-", "/", ";", ":", ",", ".", "?", "!"}
-local slugify = dofile(minetest.get_modpath("signs") .. "/slugify.lua")
+local disposable_chars = {
+	["\n"] = true, ["\r"] = true, ["\t"] = true, [" "] = true
+}
+
+local wrap_chars = {
+	"\n", "\r", "\t", " ", "-", "/", ";", ":", ",", ".", "?", "!"
+}
 
 local function generate_sign_texture(str)
 	if not str or str == "" then
 		return "blank.png"
 	end
+
 	local row = 0
 	local texture = "[combine:" .. 16 * 20 .. "x100"
 	local result = {}
@@ -97,7 +106,8 @@ local function generate_sign_texture(str)
 			end
 			if not disposable_chars[str:sub(wrap_i, wrap_i)] then
 				keep_i = wrap_i
-			elseif wrap_i > 1 and not disposable_chars[str:sub(wrap_i - 1, wrap_i - 1)] then
+			elseif wrap_i > 1 and
+					not disposable_chars[str:sub(wrap_i - 1, wrap_i - 1)] then
 				keep_i = wrap_i - 1
 			end
 		end
@@ -145,7 +155,8 @@ minetest.register_entity("signs:sign_text", {
 
 		-- remove entity for missing sign
 		local node_name = minetest.get_node(pos).name
-		if not node_name == "signs:sign" and not node_name == "signs:wall_sign" then
+		if not node_name == "signs:sign" and
+				not node_name == "signs:wall_sign" then
 			ent:remove()
 			return
 		end
@@ -171,6 +182,51 @@ minetest.register_entity("signs:sign_text", {
 		})
 	end
 })
+
+local function place(itemstack, placer, pointed_thing)
+	if pointed_thing.type == "node" then
+		local under = pointed_thing.under
+		local node = minetest.get_node(under)
+		local node_def = minetest.registered_nodes[node.name]
+		if node_def and node_def.on_rightclick and
+				not (placer and placer:is_player() and
+				placer:get_player_control().sneak) then
+			return node_def.on_rightclick(under, node, placer, itemstack,
+				pointed_thing) or itemstack
+		end
+
+		local undery = pointed_thing.under.y
+		local posy = pointed_thing.above.y
+
+		local _, result
+		if undery < posy then -- Floor sign
+			itemstack, result = minetest.item_place(itemstack,
+					placer, pointed_thing)
+		elseif undery == posy then -- Wall sign
+			_, result = minetest.item_place(ItemStack("signs:wall_sign"),
+					placer, pointed_thing)
+			if result and not
+					minetest.is_creative_enabled(placer:get_player_name()) then
+				itemstack:take_item()
+			end
+		end
+		if result then
+			minetest.sound_play({name = "default_place_node_hard"},
+					{pos = pointed_thing.above})
+		end
+	end
+
+	return itemstack
+end
+
+local function destruct(pos)
+	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+		local ent = obj:get_luaentity()
+		if ent and ent.name == "signs:sign_text" then
+			obj:remove()
+		end
+	end
+end
 
 local function check_text(pos)
 	local meta = minetest.get_meta(pos)
@@ -211,44 +267,51 @@ local function check_text(pos)
 	end
 end
 
-minetest.register_lbm({
-	label = "Check for sign text",
-	name = "signs:sign_text",
-	nodenames = {"signs:sign", "signs:wall_sign"},
-	run_at_every_load = true,
-	action = check_text
-})
+local function edit_text(pos, _, clicker)
+	local player_name = clicker:get_player_name()
 
-local function construct(pos)
-	local meta = minetest.get_meta(pos)
-	meta:set_string("formspec", "size[5,3]" ..
-			"textarea[1.15,0.3;3.3,2;Dtext;" .. S("Enter your text:") .. ";${sign_text}]" ..
-			"button_exit[0.85,2;3.3,1;;" .. S("Save") .. "]")
-end
-
-local function destruct(pos)
-	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
-		local ent = obj:get_luaentity()
-		if ent and ent.name == "signs:sign_text" then
-			obj:remove()
-		end
-	end
-end
-
-local function receive_fields(pos, _, fields, sender, wall)
-	local text = fields.Dtext
-	if not text then return end
-	if minetest.is_protected(pos, sender:get_player_name()) then
+	if minetest.is_protected(pos, player_name) then
 		return
 	end
-	text = text:sub(1, 256)
-	local p2 = minetest.get_node(pos).param2
+
+	local text = minetest.get_meta(pos):get_string("sign_text")
+
+	local edit_fs = "size[5,3]" ..
+		"textarea[1.15,0.3;3.3,2;Dtext;" .. S("Enter your text:") ..
+		";" .. text .. "]" ..
+		"button_exit[0.85,2;3.3,1;;" .. S("Save") .. "]" ..
+		"field[0,0;0,0;spos;;" .. minetest.pos_to_string(pos) .. "]"
+
+	minetest.show_formspec(player_name, "signs:edit_text", edit_fs)
+end
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname ~= "signs:edit_text" then
+		return
+	end
+
+	local text = fields.Dtext
+	local pos = fields.spos
+
+	if not text or not pos then
+		return
+	end
+
+	pos = minetest.string_to_pos(fields.spos)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return
+	end
+
+	local node = minetest.get_node(pos)
+	local p2 = node.param2
 	local sign_pos = sign_positions
-	if wall then
+
+	if find(node.name, "wall") then
 		p2 = p2 - 2
 		sign_pos = wall_sign_positions
 	end
 	if not p2 or p2 > 3 or p2 < 0 then return end
+
 	local sign
 	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
 		local ent = obj:get_luaentity()
@@ -263,17 +326,25 @@ local function receive_fields(pos, _, fields, sender, wall)
 	else
 		sign:set_pos(vadd(pos, sign_pos[p2][1]))
 	end
+
+	-- Serialization longer values may cause a crash
+	-- because we are serializing the texture too
+	text = text:sub(1, 256)
+
 	local texture = generate_sign_texture(text)
 	sign:set_properties({
 		textures = {texture, "blank.png"}
 	})
 	sign:set_yaw(sign_pos[p2][2])
+
 	local meta = minetest.get_meta(pos)
 	meta:set_string("sign_text", text)
 	meta:set_string("sign_texture", texture)
 	meta:set_string("infotext", text)
-end
+end)
 
+
+-- Sign nodes
 minetest.register_node("signs:sign", {
 	description = S"Sign",
 	tiles = {"signs_wood.png"},
@@ -291,46 +362,10 @@ minetest.register_node("signs:sign", {
 	},
 	groups = {oddly_breakable_by_hand = 1, choppy = 3, attached_node = 1},
 
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.type == "node" then
-			local under = pointed_thing.under
-			local node = minetest.get_node(under)
-			local node_def = minetest.registered_nodes[node.name]
-			if node_def and node_def.on_rightclick and
-					not (placer and placer:is_player() and
-					placer:get_player_control().sneak) then
-				return node_def.on_rightclick(under, node, placer, itemstack,
-					pointed_thing) or itemstack
-			end
-
-			local undery = pointed_thing.under.y
-			local posy = pointed_thing.above.y
-
-			local _, result
-			if undery < posy then -- Floor sign
-				itemstack, result = minetest.item_place(itemstack,
-						placer, pointed_thing)
-			elseif undery == posy then -- Wall sign
-				_, result = minetest.item_place(ItemStack("signs:wall_sign"),
-						placer, pointed_thing)
-				if result and not (creative and creative.is_enabled_for and
-						creative.is_enabled_for(placer)) then
-					itemstack:take_item()
-				end
-			end
-			if result then
-				minetest.sound_play({name = "default_place_node_hard"},
-						{pos = pointed_thing.above})
-			end
-		end
-
-		return itemstack
-	end,
-
-	on_construct = construct,
+	on_place = place,
 	on_destruct = destruct,
 	on_punch = check_text,
-	on_receive_fields = receive_fields
+	on_rightclick = edit_text
 })
 
 minetest.register_node("signs:wall_sign", {
@@ -347,15 +382,12 @@ minetest.register_node("signs:wall_sign", {
 	groups = {oddly_breakable_by_hand = 1, choppy = 3,
 		not_in_creative_inventory = 1, attached_node = 1},
 
-	on_construct = construct,
 	on_destruct = destruct,
 	on_punch = check_text,
-
-	on_receive_fields = function(pos, _, fields, sender)
-		receive_fields(pos, _, fields, sender, true)
-	end
+	on_rightclick = edit_text
 })
 
+-- Craft
 minetest.register_craft({
 	output = "signs:sign 3",
 	recipe = {
@@ -369,4 +401,13 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "signs:sign",
 	burntime = 10
+})
+
+-- LBM for restoring text
+minetest.register_lbm({
+	label = "Check for sign text",
+	name = "signs:sign_text",
+	nodenames = {"signs:sign", "signs:wall_sign"},
+	run_at_every_load = true,
+	action = check_text
 })
