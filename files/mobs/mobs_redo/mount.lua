@@ -86,7 +86,7 @@ local function force_detach(player)
 	player_api.player_attached[player:get_player_name()] = false
 	player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 	player_api.set_animation(player, "stand", 30)
-	player:set_properties({visual_size = {x = 1, y = 1} })
+	player:set_properties({visual_size = {x = 1, y = 1}})
 
 end
 
@@ -107,6 +107,36 @@ minetest.register_on_dieplayer(function(player)
 	force_detach(player)
 	return true
 end)
+
+-------------------------------------------------------------------------------
+
+-- Just for correct detaching
+local function find_free_pos(pos)
+	local check = {
+		{x = 1,  y = 0, z =  0},
+		{x = 1,  y = 1, z =  0},
+		{x = -1, y = 0, z =  0},
+		{x = -1, y = 1, z =  0},
+		{x = 0,  y = 0, z =  1},
+		{x = 0,  y = 1, z =  1},
+		{x = 0,  y = 0, z = -1},
+		{x = 0,  y = 1, z = -1}
+	}
+
+	for _, c in pairs(check) do
+		local npos = {x = pos.x + c.x, y = pos.y + c.y, z = pos.z + c.z}
+		local node = minetest.get_node_or_nil(npos)
+		if node and node.name then
+			local def = minetest.registered_nodes[node.name]
+			if def and not def.walkable and
+					def.liquidtype == "none" then
+				return npos
+			end
+		end
+	end
+
+	return pos
+end
 
 -------------------------------------------------------------------------------
 
@@ -139,40 +169,32 @@ function mobs.attach(entity, player)
 		}
 	})
 
-	minetest.after(0.2, function(name)
-		local player = minetest.get_player_by_name(name)
-		if player then
-			player_api.set_animation(player, "sit", 30)
+	minetest.after(0.2, function()
+		if player and player:is_player() then
+			player_api.set_animation(player, "ride", 30)
 		end
-	end, player:get_player_name())
+	end)
 
 	player:set_look_horizontal(entity.object:get_yaw() - rot_view)
 end
 
 
-function mobs.detach(player, offset)
+function mobs.detach(player)
 	force_detach(player)
 
-	player_api.set_animation(player, "stand", 30)
-
-	local pos = player:get_pos()
-
-	pos = {
-		x = pos.x + offset.x,
-		y = pos.y + offset.y + 0.2,
-		z = pos.z + offset.z
-	}
-
-	minetest.after(0.1, function(name, pos)
-		local player = minetest.get_player_by_name(name)
-		if player then
+	minetest.after(0.1, function()
+		if player and player:is_player() then
+			local pos = find_free_pos(player:get_pos())
+			pos.y = pos.y + 0.5
 			player:set_pos(pos)
 		end
-	end, player:get_player_name(), pos)
+	end)
 end
 
 
 function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
+	local yaw = entity.object:get_yaw() or 0
+
 	local rot_view = 0
 
 	if entity.player_rotation.y == 90 then
@@ -186,7 +208,6 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 
 	-- process controls
 	if entity.driver then
---print("---velo", get_v(velo))
 		local ctrl = entity.driver:get_player_control()
 
 		-- move forwards
@@ -202,8 +223,21 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 			entity.v = entity.v - entity.accel / 10
 		end
 
-		-- fix mob rotation
-		local horz = entity.driver:get_look_horizontal() or 0
+		-- mob rotation
+		local horz
+		if entity.alt_turn == true then
+			horz = yaw
+
+			if ctrl.left then
+				horz = horz + 0.05
+
+			elseif ctrl.right then
+				horz = horz - 0.05
+			end
+		else
+			horz = entity.driver:get_look_horizontal() or 0
+		end
+
 		entity.object:set_yaw(horz - entity.rotate)
 
 		if can_fly then
@@ -276,7 +310,8 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 
 	-- Set position, velocity and acceleration
 	local p = entity.object:get_pos()
-	local new_velo
+	if not p then return end
+
 	local new_acce = {x = 0, y = -9.81, z = 0}
 
 	p.y = p.y - 0.5
@@ -307,8 +342,8 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 			end
 		end
 
-		if entity.terrain_type == 2
-		or entity.terrain_type == 3 then
+		local terrain_type = entity.terrain_type
+		if terrain_type == 2 or terrain_type == 3 then
 			new_acce.y = 0
 			p.y = p.y + 1
 
@@ -323,6 +358,8 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 			else
 				if abs(velo.y) < 1 then
 					local pos = entity.object:get_pos()
+					if not pos then return end
+
 					pos.y = floor(pos.y) + 0.5
 					entity.object:set_pos(pos)
 					velo.y = 0
@@ -333,7 +370,7 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 		end
 	end
 
-	new_velo = get_velocity(v, entity.object:get_yaw() - rot_view, velo.y)
+	local new_velo = get_velocity(v, yaw - rot_view, velo.y)
 	new_acce.y = new_acce.y + acce_y
 
 	entity.object:set_velocity(new_velo)
