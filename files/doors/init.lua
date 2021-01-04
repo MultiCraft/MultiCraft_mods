@@ -356,7 +356,7 @@ function doors.register(name, def)
 	}}
 
 	def.after_dig_node = function(pos)
-		minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
+		--minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
 		minetest.check_for_falling({x = pos.x, y = pos.y + 1, z = pos.z})
 	end
 
@@ -375,7 +375,7 @@ function doors.register(name, def)
 	end
 
 	def.on_destruct = function(pos)
-		minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
+		--minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
 	end
 
 	def.drawtype = "mesh"
