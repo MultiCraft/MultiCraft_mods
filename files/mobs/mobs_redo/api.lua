@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20201206",
+	version = "20210114",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -84,6 +84,7 @@ local node_snow = "default:snow"
 mobs.fallback_node = minetest.registered_aliases["mapgen_dirt"] or "default:dirt"
 
 local mob_class = {
+	description = nil,
 	attack_type = "dogfight",
 	stepheight = 1.1,
 	fly_in = "air",
@@ -516,8 +517,8 @@ function mob_class:attempt_flight_correction(override)
 
 	local flyable_nodes = minetest.find_nodes_in_area(
 		{x = pos.x - 1, y = pos.y - 1, z = pos.z - 1},
-		{x = pos.x + 1, y = pos.y + 1, z = pos.z + 1},
-		searchnodes)
+		{x = pos.x + 1, y = pos.y + 0, z = pos.z + 1}, searchnodes)
+		-- pos.y + 0 hopefully fixes floating swimmers
 
 	if #flyable_nodes < 1 then
 		return false
@@ -755,7 +756,7 @@ local remove_mob = function(self, decrease)
 			active_mobs = 0
 		end
 	end
---print("-- active mobs: " .. active_mobs .. " / " .. active_limit)
+--	print("-- active mobs: " .. active_mobs .. " / " .. active_limit)
 end
 
 
@@ -835,6 +836,7 @@ function mob_class:check_for_death(cmi_cause)
 		local rot = self.animation.die_rotate and 5
 
 		self.attack = nil
+		self.following = nil
 		self.v_start = false
 		self.timer = 0
 		self.blinktimer = 0
@@ -842,7 +844,7 @@ function mob_class:check_for_death(cmi_cause)
 		self.state = "die"
 		self.object:set_properties({
 			pointable = false, collide_with_objects = false,
-			automatic_rotate = rot
+			automatic_rotate = rot, static_save = false
 		})
 		self:set_velocity(0)
 		self:set_animation("die")
@@ -1108,9 +1110,9 @@ function mob_class:do_jump()
 
 	local blocked = minetest.registered_nodes[nodt.name].walkable
 
---print("standing on:", self.standing_on, pos.y - 0.25)
---print ("in front:", nod.name, pos.y + 0.5)
---print ("in front above:", nodt.name, pos.y + 1.5)
+--	print("standing on:", self.standing_on, pos.y - 0.25)
+--	print("in front:", nod.name, pos.y + 0.5)
+--	print("in front above:", nodt.name, pos.y + 1.5)
 
 	-- jump if standing on solid node (not snow) and not blocked above
 	if (self.walk_chance == 0 or minetest.registered_items[nod.name].walkable)
@@ -1415,7 +1417,7 @@ function mob_class:replace(pos)
 	pos.y = pos.y + y_offset
 
 	if #minetest.find_nodes_in_area(pos, pos, what) > 0 then
-		-- print ("replace node = ".. minetest.get_node(pos).name, pos.y)
+	--	print("replace node = ".. minetest.get_node(pos).name, pos.y)
 
 		if self.on_replace then
 			local oldnode = what
@@ -1569,7 +1571,7 @@ function mob_class:smart_mobs(s, p, dist, dtime)
 --[[
 		-- show path using particles
 		if self.path.way and #self.path.way > 0 then
-			print ("-- path length:" .. tonumber(#self.path.way))
+			print("-- path length:" .. tonumber(#self.path.way))
 			for _, pos in pairs(self.path.way) do
 				minetest.add_particle({
 				pos = pos,
@@ -1734,10 +1736,10 @@ function mob_class:general_attack()
 			if self.name == ent.name
 					or (not self.attack_animals and ent.type == "animal")
 					or (not self.attack_monsters and ent.type == "monster")
-					or (not self.attack_npcs and ent.type == "npc")
-					or (self.specific_attack
-							and not check_for(ent.name, self.specific_attack)) then
-				objs[n] = nil
+					or (not self.attack_npcs and ent.type == "npc") then
+				if not self.specific_attack or not check_for(ent.name, self.specific_attack) then
+					objs[n] = nil
+				end
 			--	print("- mob", n, self.name, ent.name)
 			end
 
@@ -1885,12 +1887,12 @@ function mob_class:follow_flop()
 		end
 	else
 		-- stop following player if not holding specific item or mob is horny
- 		if self.following
+		if self.following
  		and self.following:is_player()
 		and (self:follow_holding(self.following) == false
 		or self.horny) then
- 			self.following = nil
- 		end
+			self.following = nil
+		end
 	end
 
 	-- follow that thing
@@ -2017,7 +2019,6 @@ function mob_class:do_states(dtime)
 				and self.facing_fence ~= true
 				and random(100) <= self.walk_chance
 				and not self.at_cliff then
-
 			self:set_velocity(self.walk_velocity)
 			self.state = "walk"
 			self:set_animation("walk")
@@ -2127,8 +2128,7 @@ function mob_class:do_states(dtime)
 				or self.attack:get_hp() <= 0
 				or (self.attack:is_player()
 				and mobs.invis[self.attack:get_player_name()]) then
-
-			--			print(" ** stop attacking **", dist, self.view_range)
+		--	print(" ** stop attacking **", dist, self.view_range)
 			self.state = "stand"
 			self:set_velocity(0)
 			self:set_animation("stand")
@@ -2157,7 +2157,7 @@ function mob_class:do_states(dtime)
 				self.timer = 0
 				self.blinktimer = 0
 				self:mob_sound(self.sounds.fuse)
-				-- print ("=== explosion timer started", self.explosion_timer)
+			--	print("=== explosion timer started", self.explosion_timer)
 
 			-- stop timer if out of reach or direct line of sight
 			elseif self.allow_fuse_reset
@@ -2198,7 +2198,7 @@ function mob_class:do_states(dtime)
 					self.blinkstatus = not self.blinkstatus
 				end
 
-				-- print ("=== explosion timer", self.timer)
+			--	print("=== explosion timer", self.timer)
 
 				if self.timer > self.explosion_timer then
 					local pos = self.object:get_pos()
@@ -2461,7 +2461,10 @@ function mob_class:falling(pos)
 			local d = (self.old_y or 0) - self.object:get_pos().y
 
 			if d > 5 then
-				self.health = self.health - floor(d - 5)
+				self.object:punch(self.object, 1.0, {
+					full_punch_interval = 1.0,
+					damage_groups = {fleshy = floor(d - 5)},
+				}, nil)
 
 				effect(pos, 5, "item_smoke.png", 1, 2, 2, nil)
 
@@ -2550,7 +2553,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 		end
 	end
 
---print("Mob Damage is", damage)
+-- print("Mob Damage is ", damage)
 
 	-- healing
 	if damage <= -1 then
@@ -2712,7 +2715,7 @@ function mob_class:mob_staticdata()
 	if active_limit > 0 and self.active_toggle then
 		active_mobs = active_mobs + self.active_toggle
 		self.active_toggle = -self.active_toggle
---print("-- staticdata", active_mobs, active_limit, self.active_toggle)
+--	print("-- staticdata", active_mobs, active_limit, self.active_toggle)
 	end
 
 	-- remove mob when out of range unless tamed
@@ -2722,7 +2725,7 @@ function mob_class:mob_staticdata()
 			and self.state ~= "attack"
 			and not self.tamed
 			and self.lifetimer < 20000 then
-	--	print ("REMOVED " .. self.name)
+	--	print("REMOVED " .. self.name)
 
 		remove_mob(self, true)
 
@@ -2747,6 +2750,7 @@ function mob_class:mob_staticdata()
 		if  t ~= "function"
 		and t ~= "nil"
 		and t ~= "userdata"
+		and _ ~= "object"
 		and _ ~= "_cmi_components" then
 			tmp[_] = self[_]
 		end
@@ -2964,6 +2968,8 @@ end
 
 -- main mob function
 function mob_class:on_step(dtime)
+	if self.state == "die" then return end
+
 	local pos = self.object:get_pos()
 	local yaw = self.object:get_yaw()
 
@@ -2993,7 +2999,7 @@ function mob_class:on_step(dtime)
 			z = pos.z
 		}, "air").name
 
---print ("standing in " .. self.standing_in)
+--		print("standing in " .. self.standing_in)
 
 		-- if standing inside solid block then jump to escape
 		if minetest.registered_nodes[self.standing_in].walkable and
@@ -3118,7 +3124,7 @@ end
 
 -- default function when mobs are blown up with TNT
 function mob_class:on_blast(damage)
---print("-- blast damage", damage)
+--	print("-- blast damage", damage)
 
 	self.object:punch(self.object, 1.0, {
 		full_punch_interval = 1.0,
@@ -3137,6 +3143,8 @@ function mobs:register_mob(name, def)
 	mobs.spawning_mobs[name] = {}
 
 	minetest.register_entity(name, setmetatable({
+		description = def.description or
+			name:split(":")[2]:split("_")[1]:gsub("^%l", upper),
 		stepheight = def.stepheight,
 		name = name,
 		type = def.type,
@@ -3317,20 +3325,20 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 
 		-- use instead of abm's neighbor setting when using lbm
 		if map_load and not minetest.find_node_near(pos, 1, neighbors) then
---print("--- lbm neighbors not found")
+--			print("--- lbm neighbors not found")
 			return
 		end
 
 		-- is mob actually registered?
 		if not mobs.spawning_mobs[name]
 				or not minetest.registered_entities[name] then
-		--	print ("--- mob doesn't exist", name)
+		--	print("--- mob doesn't exist", name)
 			return
 		end
 
 		-- are we over active mob limit
 		if active_limit > 0 and active_mobs >= active_limit then
---print("--- active mob limit reached", active_mobs, active_limit)
+		--	print("--- active mob limit reached", active_mobs, active_limit)
 			return
 		end
 
@@ -3350,19 +3358,19 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 		local num_mob, is_pla = count_mobs(pos, name)
 
 		if not is_pla then
-		--	print ("--- no players within active area, will not spawn " .. name)
+		--	print("--- no players within active area, will not spawn " .. name)
 			return
 		end
 
 		if num_mob >= aoc then
-		--	print ("--- too many " .. name .. " in area", num_mob .. "/" .. aoc)
+		--	print("--- too many " .. name .. " in area", num_mob .. "/" .. aoc)
 			return
 		end
 
 		-- mobs cannot spawn in protected areas when enabled
 		if spawn_protected
 				and minetest.is_protected(pos, "") then
-		-- print ("--- inside protected area", name)
+		--	print("--- inside protected area", name)
 			return
 		end
 
@@ -3373,13 +3381,13 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			if tod > 4500 and tod < 19500 then
 				-- daylight, but mob wants night
 				if not day_toggle then
-				-- print ("--- mob needs night", name)
+				-- print("--- mob needs night", name)
 					return
 				end
 			else
 				-- night time but mob wants day
 				if day_toggle then
-				-- print ("--- mob needs day", name)
+				-- print("--- mob needs day", name)
 					return
 				end
 			end
@@ -3391,7 +3399,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 		-- are we spawning within height limits?
 		if pos.y > max_height
 				or pos.y < min_height then
-		--	print ("--- height limits not met", name, pos.y)
+		--	print("--- height limits not met", name, pos.y)
 			return
 		end
 
@@ -3401,51 +3409,51 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			if not light
 					or light > max_light
 					or light < min_light then
-			--	print ("--- light limits not met", name, light)
+			--	print("--- light limits not met", name, light)
 				return
 			end
 		end
 
 		-- do we have enough height clearance to spawn mob?
 		local ent = minetest.registered_entities[name]
-		local height = max(1, ceil(
-				(ent.collisionbox[5] or 0.25) -
-				(ent.collisionbox[2] or -0.25) - 1))
+		local height = max(0, ent.collisionbox[5] - ent.collisionbox[2])
 
-		for n = 0, height do
+		for n = 0, floor(height) do
 			local pos2 = {x = pos.x, y = pos.y + n, z = pos.z}
 
 			if minetest.registered_nodes[node_ok(pos2).name].walkable then
-			--	print ("--- inside block", name, node_ok(pos2).name)
+			--	print("--- inside block", name, node_ok(pos2).name)
 				return
 			end
 		end
 
-		-- spawn mob 1/2 node above ground
-		pos.y = pos.y + 0.5
-		local mob = minetest.add_entity(pos, name)
+		if pos then
+			-- adjust for mob collision box
+			pos.y = pos.y + (ent.collisionbox[2] * -1) - 0.4
 
---			print("[mobs] Spawned " .. name .. " at "
---			.. minetest.pos_to_string(pos) .. " on "
---			.. node.name .. " near " .. neighbors[1])
+			local mob = minetest.add_entity(pos, name)
 
-		if on_spawn then
-			on_spawn(mob:get_luaentity(), pos)
+		--	print("[mobs] Spawned " .. name .. " at "
+		--	.. minetest.pos_to_string(pos) .. " on "
+		--	.. node.name .. " near " .. neighbors[1])
+
+			if on_spawn then
+				on_spawn(mob:get_luaentity(), pos)
+			end
+		else
+		--	print("--- not enough space to spawn", name)
 		end
 	end
 
 
 	-- are we registering an abm or lbm?
-	if map_load then
+	if map_load == true then
 		minetest.register_lbm({
 			name = name .. "_spawning",
 			label = name .. " spawning",
 			nodenames = nodes,
 			run_at_every_load = false,
-
-			action = function(pos, node)
-				spawn_action(pos, node)
-			end
+			action = spawn_action
 		})
 	else
 		minetest.register_abm({
@@ -3455,10 +3463,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			interval = interval,
 			chance = max(1, chance),
 			catch_up = false,
-
-			action = function(pos, node, active_object_count, active_object_count_wider)
-				spawn_action(pos, node, active_object_count, active_object_count_wider)
-			end
+			action = spawn_action
 		})
 	end
 end
@@ -3944,10 +3949,9 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 			self.health = self.hp_max
 
 			if self.htimer < 1 then
-				local mob_name = self.name:split(":")[2]:split("_")[1]:gsub("^%l", upper)
 				minetest.chat_send_player(name,
 					S("\"@1\" at full health: @2",
-						S(mob_name), tostring(self.health)))
+						self.description, tostring(self.health)))
 				self.htimer = 5
 			end
 		end
@@ -3977,9 +3981,8 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 			if tame then
 				if self.tamed == false then
-					local mob_name = self.name:split(":")[2]:split("_")[1]:gsub("^%l", upper)
 					minetest.chat_send_player(name,
-						S("\"@1\" has been tamed!", S(mob_name)))
+						S("\"@1\" has been tamed!", self.description))
 					self:mob_sound("mobs_spell")
 				end
 
@@ -4047,10 +4050,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			return
 		end
 
-		-- limit name entered to 64 characters long
-		if fields.name:len() > 64 then
-			fields.name = fields.name:sub(1, 64)
-		end
+		-- limit name entered to 48 characters long
+		fields.name = fields.name:sub(1, 48)
 
 		-- update nametag
 		mob_obj[name].nametag = fields.name

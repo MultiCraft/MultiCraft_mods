@@ -1,9 +1,12 @@
+local S = mobs_animal.S
+
 local dyes = dye.dyes
 
 for i = 1, #dyes do
 	local name = unpack(dyes[i])
 
 	mobs:register_mob("mobs_animal:sheep_" .. name, {
+		description = S"Sheep",
 		stay_near = {"farming:straw", 10},
 		type = "animal",
 		passive = true,
@@ -134,7 +137,7 @@ for i = 1, #dyes do
 	minetest.register_alias("mobs_animal:sheep_" .. name, "mobs_animal:sheep_white")
 end
 
-mobs:register_egg("mobs_animal:sheep_white", mobs_animal.S"Sheep Egg", "wool_white.png", true)
+mobs:register_egg("mobs_animal:sheep_white", S"Sheep Egg", "wool_white.png", true)
 
 mobs:spawn({
 	name = "mobs_animal:sheep_white",
@@ -163,7 +166,10 @@ mobs:spawn({
 	day_toggle = true
 })
 
-local nodes = {"default:dirt", "default:sand", "default:redsand", "default:dirt_with_dry_grass", "default:dirt_with_grass"}
+local nodes = {
+	"default:dirt", "default:sand", "default:redsand",
+	"default:dirt_with_grass", "default:dirt_with_dry_grass"
+}
 
 mobs:spawn({
 	name = "mobs_animal:sheep_black",

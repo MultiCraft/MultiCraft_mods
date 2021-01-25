@@ -2,7 +2,6 @@
 Not tamed!=Не приручен!
 @1 is owner!=@1 является владельцем!
 Missed!=Потерян!
-Not tamed!=Не приручен!
 Already protected!=Уже защищён!
 "@1" at full health: @2=Моб "@1" имеет полное здоровье: @2
 "@1" has been tamed!=Моб "@1" был приручен!
@@ -23,24 +22,7 @@ Cooked Pork=Приготовленная Свинина
 Raw Rabbit=Сырая Крольчатина
 Cooked Rabbit=Приготовленный Кролик
 Rabbit Hide=Кролик
-Egg=Яйцо
-Fried Egg=Жареное Яйцо
-Raw Chicken=Сырая Курица
-Cooked Chicken=Приготовленная Курица
-Cheese=Сыр
-Cheese Block=Блок Сыра
+
 Rotten Flesh=Гнилая Плоть
 Steel Shears=Стальные Ножницы
 Cobweb=Паутина
-
-Bear=Медведь
-Bunny=Кролик
-Chicken=Курица
-Cow=Корова
-Wolf=Волк
-Dog=Собака
-Kitten=Кошка
-Parrot=Попугай
-Pig=Поросёнок
-Sheep=Овца
-Tutrle=Черепаха

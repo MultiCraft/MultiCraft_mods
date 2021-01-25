@@ -1,8 +1,17 @@
 # textdomain: mobs_animal
-Bear Egg=Яйцо Спавна Медведя
+Bunny=Кролик
 Bunny Egg=Яйцо Спавна Кролика
+
+Wolf=Волк
+Dog=Собака
 Wolf's Egg=Яйцо Спавна Волка
 Dog Egg=Яйцо Спавна Собаки
+
+Cat=Кошка
 Cat's Egg=Яйцо Спавна Кошки
+
+Pig=Свинья
 Pig Egg=Яйцо Спавна Свиньи
+
+Sheep=Овца
 Sheep Egg=Яйцо Спавна Овцы

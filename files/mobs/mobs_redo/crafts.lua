@@ -105,48 +105,6 @@ minetest.register_craft({
 	}
 })
 
--- cheese wedge
-minetest.register_craftitem("mobs:cheese", {
-	description = S"Cheese",
-	inventory_image = "mobs_cheese.png",
-	wield_image = "mobs_cheese_wield.png",
-	on_use = minetest.item_eat(4),
-	groups = {food_cheese = 1, flammable = 2, food = 1}
-})
-
-minetest.register_craft({
-	type = "cooking",
-	output = "mobs:cheese",
-	recipe = "bucket:bucket_milk",
-	cooktime = 5,
-	replacements = {{"bucket:bucket_milk", "bucket:bucket_empty"}}
-})
-
--- cheese block
-minetest.register_node("mobs:cheeseblock", {
-	description = S"Cheese Block",
-	tiles = {"mobs_cheeseblock.png"},
-	is_ground_content = false,
-	groups = {crumbly = 3},
-	sounds = default.node_sound_dirt_defaults()
-})
-
-minetest.register_craft({
-	output = "mobs:cheeseblock",
-	recipe = {
-		{"mobs:cheese", "mobs:cheese", "mobs:cheese"},
-		{"mobs:cheese", "mobs:cheese", "mobs:cheese"},
-		{"mobs:cheese", "mobs:cheese", "mobs:cheese"}
-	}
-})
-
-minetest.register_craft({
-	output = "mobs:cheese 9",
-	recipe = {
-		{"mobs:cheeseblock"}
-	}
-})
-
 -- rotten flesh
 minetest.register_craftitem("mobs:rotten_flesh", {
 	description = S"Rotten Flesh",

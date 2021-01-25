@@ -1,4 +1,7 @@
+local S = mobs_animal.S
+
 mobs:register_mob("mobs_animal:pig", {
+	description = S"Pig",
 	type = "animal",
 	passive = true,
 	hp_min = 5,
@@ -53,4 +56,4 @@ mobs:spawn({
 	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:pig", mobs_animal.S"Pig Egg", "mobs_pig_egg.png")
+mobs:register_egg("mobs_animal:pig", S"Pig Egg", "mobs_pig_egg.png")
