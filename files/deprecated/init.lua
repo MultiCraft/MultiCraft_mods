@@ -45,30 +45,6 @@ minetest.register_lbm({
 register_alias("mesecons_solarpanel:solar_panel_inverted_off", "mesecons_solarpanel:solar_panel_off")
 register_alias("mesecons_solarpanel:solar_panel_inverted_on", "mesecons_solarpanel:solar_panel_on")
 
---== Potions ==--
-local potions = {
-	{"potions:glass_bottle", "vessels:glass_bottle"},
-	{"potionspack:antigravity", "pep:grav0"},
-	{"potionspack:antigravityii", "pep:gravreset"},
-	{"potionspack:speed", "pep:speedminus"},
-	{"potionspack:speedii", "pep:speedplus"},
-	{"potionspack:inversion", "pep:invisible"},
-	{"potionspack:confusion", "pep:breath"},
-	{"potionspack:whatwillthisdo", "pep:mole"},
-	{"potionspack:instanthealth", "pep:regen"},
-	{"potionspack:instanthealthii", "pep:regen2"},
-	{"potionspack:regen", "pep:regen"},
-	{"potionspack:regenii", "pep:regen2"},
-	{"potionspack:harming", "pep:gravreset"},
-	{"potionspack:harmingii", "pep:gravreset"},
-	{"pep:jumpreset", "pep:nightvision"},
-	{"pep:speedreset", "pep:invisible"}
-}
-
-for _, p in pairs(potions) do
-	register_alias(p[1], p[2])
-end
-
 --== carts ==--
 local carts = {
 	{"railcart:cart", "carts:cart"},
