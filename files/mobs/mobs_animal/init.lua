@@ -18,7 +18,7 @@ mobs_animal.spawn_nodes = {
 
 local path = minetest.get_modpath("mobs_animal")
 local name = {
-	"bear", "bunny", "dog",
+	"bunny", "dog",
 	"kitten", "pig", "sheep"
 }
 

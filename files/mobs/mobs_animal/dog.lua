@@ -1,4 +1,7 @@
+local S = mobs_animal.S
+
 mobs:register_mob("mobs_animal:wolf", {
+	description = S"Wolf",
 	type = "animal",
 	damage = 2,
 	hp_min = 8,
@@ -48,6 +51,7 @@ mobs:register_mob("mobs_animal:wolf", {
 
 -- Dog
 mobs:register_mob("mobs_animal:dog", {
+	description = S"Dog",
 	type = "npc",
 	damage = 4,
 	hp_min = 15,
@@ -116,5 +120,5 @@ mobs:spawn({
 	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:wolf", mobs_animal.S"Wolf's Egg", "wool_grey.png", true)
-mobs:register_egg("mobs_animal:dog", mobs_animal.S"Dog Egg", "wool_brown.png", true)
+mobs:register_egg("mobs_animal:wolf", S"Wolf's Egg", "wool_grey.png", true)
+mobs:register_egg("mobs_animal:dog", S"Dog Egg", "wool_dark_grey.png", true)
