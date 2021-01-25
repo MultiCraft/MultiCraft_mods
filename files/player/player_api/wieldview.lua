@@ -9,30 +9,34 @@ local wield_cubes = {}
 local function prepare()
 	for name, def in pairs(minetest.registered_items) do
 		local inv_img = def.inventory_image
+		local tiles = def.tiles
 		if inv_img and inv_img ~= "" then
-			if minetest.registered_tools[name] or (def.groups.wieldview == 2) then
+			local groups = def.groups
+			if (minetest.registered_tools[name] or (groups.wieldview == 2)) and
+					not (groups.wieldview == 3) then
 				wield_tiles[name] = inv_img
 			else
 				wield_tiles[name] = inv_img .. "^[transformR270"
 			end
-		elseif def.tiles and type(def.tiles[1]) == "string" and def.tiles[1] ~= "" then
-			if def.drawtype and
-					(def.drawtype == "normal" or
-					 def.drawtype == "liquid" or
-					 def.drawtype:sub(1, 8) == "allfaces" or
-					 def.drawtype:sub(1, 5) == "glass") then
-				if def.tiles[3] ~= "" and type(def.tiles[3]) == "string" then
-					wield_cubes[name] = def.tiles[3]
+		elseif tiles and type(tiles[1]) == "string" and tiles[1] ~= "" then
+			local drawtype = def.drawtype
+			if drawtype and
+					(drawtype == "normal" or
+					 drawtype == "liquid" or
+					 drawtype:sub(1, 8) == "allfaces" or
+					 drawtype:sub(1, 5) == "glass") then
+				if tiles[3] ~= "" and type(tiles[3]) == "string" then
+					wield_cubes[name] = tiles[3]
 				else
-					wield_cubes[name] = def.tiles[1]
+					wield_cubes[name] = tiles[1]
 				end
 			else
-				if (def.tiles[6] ~= "" and type(def.tiles[6]) == "string") then
-					wield_tiles[name] = def.tiles[6]
-				elseif (def.tiles[3] ~= "" and type(def.tiles[3]) == "string") then
-					wield_tiles[name] = def.tiles[3]
+				if (tiles[6] ~= "" and type(tiles[6]) == "string") then
+					wield_tiles[name] = tiles[6]
+				elseif (tiles[3] ~= "" and type(tiles[3]) == "string") then
+					wield_tiles[name] = tiles[3]
 				else
-					wield_tiles[name] = def.tiles[1]
+					wield_tiles[name] = tiles[1]
 				end
 			end
 		end
