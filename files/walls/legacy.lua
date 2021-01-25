@@ -32,14 +32,14 @@ local function update_wall(pos)
 		end
 	end
 
-	if sum == 0 then
-		sum = 15
-	end
+--	if sum == 0 then
+--		sum = 15
+--	end
 
 	if oldname:find("wallet:wallmossy") == 1 then
-		minetest.add_node(pos, {name = "wallet:wallmossy" .. "_" .. sum})
+		minetest.set_node(pos, {name = "wallet:wallmossy" .. "_" .. sum})
 	elseif oldname:find("wallet:wall") == 1 then
-		minetest.add_node(pos, {name = "wallet:wall" .. "_" .. sum})
+		minetest.set_node(pos, {name = "wallet:wall" .. "_" .. sum})
 	end
 end
 
@@ -63,6 +63,8 @@ local full_blocks = {
 	{-0.5,  -0.5, -3/16, 0.5,  5/16, 3/16},
 	{-3/16, -0.5, -0.5,  3/16, 5/16, 0.5}
 }
+
+local not_connected = {-1/4, -0.5, -1/4, 1/4, 0.5, 1/4}
 
 local collision = {
 	{-1/4, -0.5, -1/4, 1/4, 1, 1/4}
@@ -139,8 +141,8 @@ for i = 1, 15 do
 	})
 end
 
-minetest.register_alias("wallet:wall_0", "wallet:wall_15")
-minetest.register_alias("wallet:wallmossy_0", "wallet:wallmossy_15")
+--minetest.register_alias("wallet:wall_0", "wallet:wall_15")
+--minetest.register_alias("wallet:wallmossy_0", "wallet:wallmossy_15")
 
 -- Wall
 minetest.register_node(":wallet:wall_16", {
@@ -176,6 +178,24 @@ minetest.register_node(":wallet:wall_21", {
 	node_box = {
 		type = "fixed",
 		fixed = {pillar, full_blocks[2]}
+	}
+})
+
+minetest.register_node(":wallet:wall_0", {
+	drawtype = "nodebox",
+	collision_box = {
+		type = "fixed",
+		fixed = collision
+	},
+	tiles = {"default_cobble.png"},
+	paramtype = "light",
+	sunlight_propagates = true,
+	is_ground_content = false,
+	groups = groups,
+	drop = "wallet:wall",
+	node_box = {
+		type = "fixed",
+		fixed = not_connected
 	}
 })
 
@@ -238,6 +258,24 @@ minetest.register_node(":wallet:wallmossy_21", {
 	node_box = {
 		type = "fixed",
 		fixed = {pillar, full_blocks[2]}
+	}
+})
+
+minetest.register_node(":wallet:wallmossy_0", {
+	drawtype = "nodebox",
+	collision_box = {
+		type = "fixed",
+		fixed = collision
+	},
+	tiles = {"default_mossycobble.png"},
+	paramtype = "light",
+	sunlight_propagates = true,
+	is_ground_content = false,
+	groups = groups,
+	drop = "wallet:wallmossy",
+	node_box = {
+		type = "fixed",
+		fixed = not_connected
 	}
 })
 
