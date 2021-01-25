@@ -48,7 +48,7 @@ mobs:spawn({
 	chance = 15000
 })
 
-mobs:register_egg("mobs_monster:zombie", mobs_monster.S"Zombie Head", "zombie_head.png")
+mobs:register_egg("mobs_monster:zombie", mobs_monster.S"Zombie Egg", "mobs_monster_zombie_egg.png")
 
 -- Giant Zombie, spawning disabled
 mobs:register_mob("mobs_monster:zombie_giant", {
@@ -107,7 +107,7 @@ mobs:register_mob("mobs_monster:zombie_giant", {
 	nodes = mobs_monster.spawn_nodes,
 	max_light = 4,
 	chance = 35000
-})]]
+})
 
-mobs:register_egg("mobs_monster:zombie_giant", mobs_monster.S"Giant Zombie Head", "zombie_head.png")
-minetest.add_group("mobs_monster:zombie_giant", {not_in_creative_inventory = 1})
+mobs:register_egg("mobs_monster:zombie_giant", mobs_monster.S"Giant Zombie Head", "mobs_monster_zombie_egg.png")]]
+minetest.register_alias("mobs_monster:zombie_giant", "mobs_monster:zombie")
