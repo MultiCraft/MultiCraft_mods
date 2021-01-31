@@ -16,7 +16,7 @@ for k = 1, 3 do
 		"mobs_npc_man.png" .. "^" ..
 		"mobs_npc_man_hair" .. i .. ".png" .. "^" ..
 		"mobs_npc_man_pants" .. j .. ".png" .. "^" ..
-		"mobs_npc_man_shirt" .. k .. ".png", b, b, b, b
+		"mobs_npc_man_shirt" .. k .. ".png", b, b
 	}
 	mcount = mcount + 1
 end
@@ -37,7 +37,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 	mesh = "mobs_npc.b3d",
 	textures = mtextures,
 --[[child_texture = {
-		{"mobs_npc_baby.png", b, b, b}
+		{"mobs_npc_baby.png", b, b}
 	},]]
 	makes_footstep_sound = true,
 	sounds = {},
@@ -111,7 +111,7 @@ for k = 1, 3 do
 		"mobs_npc_woman.png" .. "^" ..
 		"mobs_npc_woman_hair" .. i .. ".png" .. "^" ..
 		"mobs_npc_woman_pants" .. j .. ".png" .. "^" ..
-		"mobs_npc_woman_shirt" .. k .. ".png", b, b, b, b
+		"mobs_npc_woman_shirt" .. k .. ".png", b, b
 	}
 	wcount = wcount + 1
 end
@@ -132,7 +132,7 @@ mobs:register_mob("mobs_npc:npc_woman", {
 	mesh = "mobs_npc.b3d",
 	textures = wtextures,
 --[[child_texture = {
-		{"mobs_npc_baby.png", b, b, b}
+		{"mobs_npc_baby.png", b, b}
 	},]]
 	makes_footstep_sound = true,
 	sounds = {},

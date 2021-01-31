@@ -41,8 +41,7 @@ function farming.hoe_on_use(itemstack, user, pt, uses)
 		gain = 0.5
 	})
 
-	if creative and creative.is_enabled_for
-			and creative.is_enabled_for(user:get_player_name()) then
+	if minetest.is_creative_enabled(playername) then
 		return
 	end
 
@@ -137,8 +136,7 @@ function farming.place_seed(itemstack, placer, pt, plantname)
 	minetest.add_node(pt.above, {name = plantname, param2 = 1})
 	tick(pt.above)
 
-	if creative and creative.is_enabled_for
-			and creative.is_enabled_for(playername) then
+	if minetest.is_creative_enabled(playername) then
 		return
 	end
 

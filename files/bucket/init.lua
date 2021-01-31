@@ -130,8 +130,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 
 				minetest.set_node(lpos, {name = source})
 				if place_restriction
-						or not (creative and creative.is_enabled_for
-						and creative.is_enabled_for(pn)) then
+						or not minetest.is_creative_enabled(pn) then
 					return ItemStack("bucket:bucket_empty")
 				else
 					return itemstack
@@ -268,7 +267,7 @@ bucket.register_liquid(
 
 -- Milk Bucket
 minetest.register_craftitem("bucket:bucket_milk", {
-	description = "Milk Bucket",
+	description = S"Milk Bucket",
 	inventory_image = "bucket.png^bucket_milk.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, "bucket:bucket_empty"),

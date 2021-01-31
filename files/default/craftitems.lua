@@ -270,8 +270,7 @@ minetest.register_craftitem("default:snowball", {
 	on_use = default.snow_shoot_snowball,
 	on_place = function(itemstack, placer, pointed_thing)
 		if minetest.item_place_node(ItemStack("default:snow"), placer, pointed_thing) then
-			if not (creative and creative.is_enabled_for
-					and creative.is_enabled_for(placer)) then
+			if not minetest.is_creative_enabled(placer:get_player_name()) then
 				itemstack:take_item()
 			end
 		end

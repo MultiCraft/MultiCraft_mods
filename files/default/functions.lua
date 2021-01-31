@@ -729,8 +729,7 @@ function default.snow_shoot_snowball(itemstack, thrower)
 			gain = 0.7,
 			max_hear_distance = 10
 		})
-		if not (creative and creative.is_enabled_for and
-				creative.is_enabled_for(thrower)) or
+		if not minetest.is_creative_enabled(thrower:get_player_name()) or
 				not minetest.is_singleplayer() then
 			itemstack:take_item()
 		end
