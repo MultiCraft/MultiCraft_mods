@@ -30,7 +30,7 @@ farming.register_plant("farming:wheat", {
 	minlight = 12,
 	fertility = {"grassland"},
 	place_param2 = 3,
-	groups = {food_wheat = 1, flammable = 4}
+	groups = {food_wheat = 1, flammable = 4, wieldview = 2}
 })
 
 minetest.register_craftitem("farming:flour", {

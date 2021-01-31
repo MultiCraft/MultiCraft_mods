@@ -79,8 +79,7 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 		C.grey .. S("Uses: @1", dugnodes))
 
 	-- Set wear level
-	if not (creative and creative.is_enabled_for
-			and creative.is_enabled_for(name)) then
+	if not minetest.is_creative_enabled(name) then
 		local wear = digparams.wear
 		if level > 1 then
 			wear = digparams.wear * 4 / (4 + level)

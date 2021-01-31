@@ -84,7 +84,7 @@ minetest.register_tool("fire:flint_and_steel", {
 		local sound_pos = pointed_thing.above or user:get_pos()
 		minetest.sound_play("fire_flint_and_steel",
 			{pos = sound_pos, gain = 0.5, max_hear_distance = 8})
-		local player_name = user:get_player_name()
+		local player_name = user and user:get_player_name() or ""
 		if pointed_thing.type == "node" then
 			local node_under = minetest.get_node(pointed_thing.under).name
 			local nodedef = minetest.registered_nodes[node_under]
@@ -102,8 +102,7 @@ minetest.register_tool("fire:flint_and_steel", {
 				minetest.set_node(pointed_thing.above, {name = "fire:basic_flame"})
 			end
 		end
-		if not (creative and creative.is_enabled_for
-				and creative.is_enabled_for(player_name)) then
+		if not minetest.is_creative_enabled(player_name) then
 			-- Wear tool
 			local wdef = itemstack:get_definition()
 

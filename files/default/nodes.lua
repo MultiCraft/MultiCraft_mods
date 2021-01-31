@@ -1787,7 +1787,7 @@ default.register_ladder("default:ladder_pine_wood", {
 })
 
 default.register_ladder("default:ladder_cherry_blossom_wood", {
-	description = "Cherry Blossom Ladder",
+	description = "Cherry Blossom Wood Ladder",
 	tiles = {"default_cherry_blossom_wood.png"},
 	inventory_image = "default_ladder_cherry_blossom_wood.png",
 	wield_image = "default_ladder_cherry_blossom_wood.png",
