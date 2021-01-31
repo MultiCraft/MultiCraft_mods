@@ -15,6 +15,7 @@ read_globals = {
 	"minetest",
 	"dump",
 	"vector",
+	"utf8",
 	"VoxelManip", "VoxelArea",
 	"PseudoRandom", "PcgRandom",
 	"ItemStack",
@@ -39,8 +40,7 @@ exclude_files = {
 	"files/bluestone/mesecons/internal.lua",
 	"files/deprecated/init.lua",
 	"files/mobs/mobs_redo/api.lua",
-	"files/utf8lib/slugify.lua",
-	"files/utf8lib/utf8data.lua",
+	"files/signs/slugify.lua",
 	"files/workbench/init.lua",
 }
 
