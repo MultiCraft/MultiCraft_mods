@@ -14,9 +14,9 @@ mobs:register_mob("mobs_npc:trader", {
 	visual = "mesh",
 	mesh = "mobs_npc.b3d",
 	textures = {
-		{"mobs_trader.png^mobs_trader1.png", b, b, b, b},
-		{"mobs_trader.png^mobs_trader2.png", b, b, b, b},
-		{"mobs_trader.png^mobs_trader3.png", b, b, b, b}
+		{"mobs_trader.png^mobs_trader1.png", b, b},
+		{"mobs_trader.png^mobs_trader2.png", b, b},
+		{"mobs_trader.png^mobs_trader3.png", b, b}
 	},
 	makes_footstep_sound = true,
 	sounds = {},
@@ -247,11 +247,13 @@ function mobs_trader.trader_show_goods(self, clicker, race)
 
 			formspec_trade_list = formspec_trade_list ..
 					"item_image[" .. x .. "," .. y .. ";1,1;" .. trades[i][2] .. "]" ..
-					"image_button[" .. x .. "," .. y .. ";1,1;formspec_cell.png;prices#" .. i .. "#" .. id .. ";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
+					"image_button[" .. x .. "," .. y .. ";1,1;formspec_cell.png;prices#" .. i .. "#" .. id ..
+						";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
 					"tooltip[prices#" .. i .. "#" .. id .. ";" .. tooltip_prices .. "]" ..
 					"image[".. x + 1 ..",".. y ..";1,1;default_arrow_bg.png^[transformR270]" ..
 					"item_image[" .. x + 2 .. "," .. y .. ";1,1;" .. trades[i][1] .. "]" ..
-					"image_button[" .. x + 2 .. "," .. y .. ";1,1;formspec_cell.png;goods#" .. i .. "#" .. id .. ";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
+					"image_button[" .. x + 2 .. "," .. y .. ";1,1;formspec_cell.png;goods#" .. i .. "#" .. id ..
+						";;;false;formspec_cell.png^formspec_item_pressed.png]" ..
 					"tooltip[goods#" .. i .. "#" .. id .. ";" .. tooltip_goods .. "]"
 		end
 	end

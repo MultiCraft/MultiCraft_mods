@@ -1,6 +1,6 @@
 unused_args = true
 allow_defined_top = true
-max_line_length = 160
+max_line_length = 140
 
 ignore = {
 	"122", -- setting a read-only field of a global variable

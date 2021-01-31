@@ -1,9 +1,11 @@
 pep = {}
 
+local sp = minetest.is_singleplayer()
+
 local translator = minetest.get_translator
 local S = translator and translator("pep") or intllib.make_gettext_pair()
 
-if translator and not minetest.is_singleplayer() then
+if translator and not sp then
 	local lang = minetest.settings:get("language")
 	if lang and lang == "ru" then
 		S = intllib.make_gettext_pair()
@@ -122,9 +124,7 @@ local function use_potion(itemstack, user, pointed_thing, throw)
 		apply_potion(user, pos, potion)
 	end
 
-	if not (creative and creative.is_enabled_for
-			and creative.is_enabled_for(user:get_player_name())) or
-			not minetest.is_singleplayer() then
+	if not minetest.is_creative_enabled(user:get_player_name()) or not sp then
 		itemstack:take_item()
 		if not throw then
 			local inventory = user:get_inventory()
@@ -454,7 +454,7 @@ function pep.moledig(playername)
 		if not minetest.is_protected(digpos, playername) then
 			local node = minetest.get_node(digpos)
 			local def = minetest.registered_nodes[node.name]
-			if def.walkable and def.diggable and
+			if def and def.walkable and def.diggable and
 					(def.can_dig == nil or def.can_dig(digpos, player)) then
 				minetest.node_dig(digpos, node, player)
 
