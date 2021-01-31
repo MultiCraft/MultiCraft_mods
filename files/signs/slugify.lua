@@ -69,10 +69,12 @@ local charmap = {
 	["č"] = "c", ["ž"] = "z"
 }
 
-function utf8lib.slugify(str)
+local function slugify(str)
 	for k, _ in pairs(charmap) do
 		str = str:gsub(tostring(k), charmap[k])
 	end
 
 	return str
 end
+
+return slugify

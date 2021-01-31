@@ -11,9 +11,10 @@ end
 local vadd = vector.add
 local floor, pi = math.floor, math.pi
 local find = string.find
+local b = "blank.png"
 
 -- Cyrillic transliteration library
-local slugify = utf8lib and utf8lib.slugify or function(s) return s end
+local slugify = dofile(minetest.get_modpath("signs") .. "/slugify.lua")
 
 local sign_positions = {
 	[0] = {{x =  0,    y = 0.18, z = -0.07}, pi},
@@ -67,7 +68,7 @@ local wrap_chars = {
 
 local function generate_sign_texture(str)
 	if not str or str == "" then
-		return "blank.png"
+		return b
 	end
 
 	local row = 0
@@ -155,8 +156,8 @@ minetest.register_entity("signs:sign_text", {
 
 		-- remove entity for missing sign
 		local node_name = minetest.get_node(pos).name
-		if not node_name == "signs:sign" and
-				not node_name == "signs:wall_sign" then
+		if node_name ~= "signs:sign" and
+				node_name ~= "signs:wall_sign" then
 			ent:remove()
 			return
 		end
@@ -172,13 +173,13 @@ minetest.register_entity("signs:sign_text", {
 			if meta_text and meta_text ~= "" then
 				texture = generate_sign_texture(meta_text)
 			else
-				texture = "blank.png"
+				texture = b
 			end
 			meta:set_string("sign_texture", texture)
 		end
 
 		ent:set_properties({
-			textures = {texture, "blank.png"}
+			textures = {texture, b}
 		})
 	end
 })
@@ -310,7 +311,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		p2 = p2 - 2
 		sign_pos = wall_sign_positions
 	end
-	if not p2 or p2 > 3 or p2 < 0 then return end
+	if not p2 or p2 > 3 or p2 < 0 then
+		return
+	end
 
 	local sign
 	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
@@ -326,6 +329,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	else
 		sign:set_pos(vadd(pos, sign_pos[p2][1]))
 	end
+	if not sign then
+		return
+	end
 
 	-- Serialization longer values may cause a crash
 	-- because we are serializing the texture too
@@ -333,7 +339,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	local texture = generate_sign_texture(text)
 	sign:set_properties({
-		textures = {texture, "blank.png"}
+		textures = {texture, b}
 	})
 	sign:set_yaw(sign_pos[p2][2])
 
