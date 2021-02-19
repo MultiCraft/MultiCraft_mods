@@ -1,3 +1,5 @@
+local mvps = mesecon and mesecon.register_mvps_stopper
+
 --
 -- Doors
 --
@@ -96,6 +98,11 @@ doors.register("door_steel", {
 	}
 })
 
+if mvps then
+	mesecon.register_mvps_stopper("doors:door_steel_a")
+	mesecon.register_mvps_stopper("doors:door_steel_b")
+end
+
 doors.register("door_grill", {
 	tiles = {{name = "doors_door_grill.png", backface_culling = true}},
 	description = "Grilled Door",
@@ -111,6 +118,11 @@ doors.register("door_grill", {
 		{"default:grill_bar", "default:grill_bar"}
 	}
 })
+
+if mvps then
+	mesecon.register_mvps_stopper("doors:door_grill_a")
+	mesecon.register_mvps_stopper("doors:door_grill_b")
+end
 
 -- Aliases
 
@@ -190,6 +202,11 @@ doors.register_trapdoor("doors:trapdoor_steel", {
 	material = "default:steel_ingot",
 	groups = {cracky = 1, level = 2, door = 1}
 })
+
+if mvps then
+	mesecon.register_mvps_stopper("doors:trapdoor_steel")
+	mesecon.register_mvps_stopper("doors:trapdoor_steel_open")
+end
 
 --
 -- Fencegates
