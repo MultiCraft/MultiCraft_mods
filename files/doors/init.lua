@@ -15,6 +15,7 @@ if translator and not minetest.is_singleplayer() then
 end
 
 local table_copy = table.copy
+local vnew = vector.new
 
 -- returns an object to a door object or nil
 function doors.get(pos)
@@ -192,8 +193,8 @@ local function on_place_node(place_to, newnode,
 			{name = oldnode.name, param1 = oldnode.param1, param2 = oldnode.param2}
 		local pointed_thing_copy = {
 			type  = pointed_thing.type,
-			above = vector.new(pointed_thing.above),
-			under = vector.new(pointed_thing.under),
+			above = vnew(pointed_thing.above),
+			under = vnew(pointed_thing.under),
 			ref   = pointed_thing.ref
 		}
 		callback(place_to_copy, newnode_copy, placer,
@@ -355,11 +356,6 @@ function doors.register(name, def)
 		end
 	}}
 
-	def.after_dig_node = function(pos)
-		minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
-		minetest.check_for_falling({x = pos.x, y = pos.y + 1, z = pos.z})
-	end
-
 	def.on_rotate = function()
 		return false
 	end
@@ -372,10 +368,6 @@ function doors.register(name, def)
 			minetest.remove_node(pos)
 			return {name}
 		end
-	end
-
-	def.on_destruct = function(pos)
-		minetest.remove_node({x = pos.x, y = pos.y + 1, z = pos.z})
 	end
 
 	def.drawtype = "mesh"
@@ -467,7 +459,7 @@ function doors.register_trapdoor(name, def)
 			local pn = placer:get_player_name()
 			local meta = minetest.get_meta(pos)
 			meta:set_string("owner", pn)
-			meta:set_string("infotext", S(def.description) .. "\n" .. S("Owned by @1", S(pn)))
+			meta:set_string("infotext", def.description .. "\n" .. S("Owned by @1", S(pn)))
 
 			return minetest.is_creative_enabled(pn)
 		end
