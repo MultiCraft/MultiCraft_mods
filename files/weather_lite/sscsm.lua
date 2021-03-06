@@ -1,4 +1,4 @@
-local vmultiply, vadd = vector.multiply, vector.add
+local vadd, vmultiply, vround = vector.add, vector.multiply, vector.round
 
 local weather = {
 	type = "none",
@@ -31,7 +31,7 @@ sscsm.every(0.09, function()
 	local current_downfall = weather.registered[weather.type]
 	if current_downfall == nil then return end
 
-	local ppos = vector.round(minetest.localplayer:get_pos())
+	local ppos = vround(minetest.localplayer:get_pos())
 
 	ppos.y = ppos.y + 1.5
 	-- Higher than clouds

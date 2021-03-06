@@ -284,7 +284,7 @@ register_armor_stand("3d_armor_stand:armor_stand_cherry_blossom_wood", {
 })
 
 register_armor_stand("3d_armor_stand:armor_stand_ice", {
-	description = S"Ice Wood Armor Stand",
+	description = S"Ice Armor Stand",
 	tiles = {"3d_armor_stand_platform.png^3d_armor_stand_ice.png"},
 	inventory_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_ice_inv.png",
 	wield_image = "3d_armor_stand_platform_inv.png^3d_armor_stand_ice_inv.png",

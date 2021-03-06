@@ -417,7 +417,6 @@ minetest.register_craft({
 	type = "cooking",
 	output = "default:fish",
 	recipe = "default:fish_raw",
---  cooktime = 2
 })
 
 minetest.register_craft({
