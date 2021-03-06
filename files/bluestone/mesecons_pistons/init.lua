@@ -1,3 +1,5 @@
+local S = mesecon.S
+
 local vadd, vequals, vmultiply = vector.add, vector.equals, vector.multiply
 
 local specs = {
@@ -294,7 +296,7 @@ local piston_on_box = {
 -- Normal (non-sticky) Pistons:
 -- offstate
 minetest.register_node("mesecons_pistons:piston_normal_off", {
-	description = "Piston",
+	description = S("Piston"),
 	tiles = {
 		"mesecons_piston_side.png^[transformFY",
 		"mesecons_piston_side.png",
@@ -371,7 +373,7 @@ minetest.register_node("mesecons_pistons:piston_pusher_normal", {
 -- Sticky ones
 -- offstate
 minetest.register_node("mesecons_pistons:piston_sticky_off", {
-	description = "Sticky Piston",
+	description = S("Sticky Piston"),
 	tiles = {
 		"mesecons_piston_side.png^[transformFY",
 		"mesecons_piston_side.png",

@@ -1,3 +1,5 @@
+local S = mesecon.S
+
 -- Function that get the input/output rules of the delayer
 local delayer_get_output_rules = function(node)
 	local rules = {{x = 0, y = 0, z = 1}}
@@ -91,7 +93,7 @@ if i > 1 then
 end
 
 local off_state = {
-	description = "Delayer",
+	description = S("Delayer"),
 	tiles = {
 		"mesecons_delayer_off.png",
 		"default_stone.png",

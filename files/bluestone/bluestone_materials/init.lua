@@ -1,19 +1,28 @@
+local S = mesecon.S
+
 -- Glue
 minetest.register_craftitem("bluestone_materials:glue", {
-	description = "Glue",
+	description = S("Glue"),
 	inventory_image = "mesecons_glue.png"
 })
 
 minetest.register_craft({
 	output = "bluestone_materials:glue 2",
 	type = "cooking",
-	recipe = "group:sapling",
-	cooktime = 2
+	recipe = "group:sapling"
+})
+
+-- Temporary recipe
+minetest.register_craft({
+	type = "cooking",
+	output = "default:slimeblock",
+	recipe = "bluestone_materials:glue",
+	cooktime = 15
 })
 
 -- Bluestone Block
 minetest.register_node("bluestone_materials:bluestoneblock", {
-	description = "Bluestone Block",
+	description = S("Bluestone Block"),
 	tiles = {"bluestone_block.png"},
 	paramtype = "light",
 	is_ground_content = false,
