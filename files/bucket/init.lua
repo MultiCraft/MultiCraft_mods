@@ -57,7 +57,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 
 	if itemname ~= nil then
 		minetest.register_craftitem(itemname, {
-			description = S(name),
+			description = name,
 			inventory_image = inventory_image,
 			stack_max = 1,
 			liquids_pointable = true,
@@ -104,7 +104,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				local pn = user and user:get_player_name() or ""
 
 				local place_restriction = not singleplayer and
-						not minetest.check_player_privs(pn, {server = true})
+						not minetest.check_player_privs(pn, {bucket = true})
 
 				if place_restriction then
 					local height = under.y
@@ -225,7 +225,7 @@ bucket.register_liquid(
 	"default:water_flowing",
 	"bucket:bucket_water",
 	"bucket.png^bucket_water.png",
-	"Water Bucket",
+	S("Water Bucket"),
 	{water_bucket = 1}
 )
 
@@ -246,7 +246,7 @@ bucket.register_liquid(
 	"default:river_water_flowing",
 	"bucket:bucket_river_water",
 	"bucket.png^bucket_river_water.png",
-	"River Water Bucket",
+	S("River Water Bucket"),
 	{water_bucket = 1},
 	true
 )
@@ -262,12 +262,12 @@ bucket.register_liquid(
 	"default:lava_flowing",
 	"bucket:bucket_lava",
 	"bucket.png^bucket_lava.png",
-	"Lava Bucket"
+	S("Lava Bucket")
 )
 
 -- Milk Bucket
 minetest.register_craftitem("bucket:bucket_milk", {
-	description = S"Milk Bucket",
+	description = S("Milk Bucket"),
 	inventory_image = "bucket.png^bucket_milk.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
@@ -281,4 +281,8 @@ minetest.register_craft({
 	recipe = "bucket:bucket_lava",
 	burntime = 60,
 	replacements = {{"bucket:bucket_lava", "bucket:bucket_empty"}}
+})
+
+minetest.register_privilege("bucket", {
+	description = "Can use the bucket at any height"
 })
