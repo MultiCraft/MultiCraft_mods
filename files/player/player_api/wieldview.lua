@@ -10,8 +10,8 @@ local function prepare()
 	for name, def in pairs(minetest.registered_items) do
 		local inv_img = def.inventory_image
 		local tiles = def.tiles
+		local groups = def.groups
 		if inv_img and inv_img ~= "" then
-			local groups = def.groups
 			if (minetest.registered_tools[name] or (groups.wieldview == 2)) and
 					not (groups.wieldview == 3) then
 				wield_tiles[name] = inv_img
@@ -24,7 +24,8 @@ local function prepare()
 					(drawtype == "normal" or
 					 drawtype == "liquid" or
 					 drawtype:sub(1, 8) == "allfaces" or
-					 drawtype:sub(1, 5) == "glass") then
+					 drawtype:sub(1, 5) == "glass") or
+					(groups.wieldview == 4) then
 				if tiles[3] ~= "" and type(tiles[3]) == "string" then
 					wield_cubes[name] = tiles[3]
 				else
@@ -63,7 +64,7 @@ function player_api.update_wielded_item(player, name)
 	if item and (not wielded_item[name] or wielded_item[name] ~= item) then
 		local wield_tile = wield_tiles[item] or b
 		local wield_cube = wield_cubes[item] or b
-		set_textures(player, nil, nil, wield_tile, wield_cube)
+		set_textures(player, nil, nil, nil, wield_tile, wield_cube)
 		wielded_item[name] = item
 	end
 end

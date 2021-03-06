@@ -65,7 +65,7 @@ armor.update_player_visuals = function(self, player)
 		local newarmor = self.textures[player_name].armor
 
 		if oldarmor ~= newarmor then
-			player_api.set_textures(player, nil, newarmor)
+			player_api.set_textures(player, nil, nil, newarmor)
 		end
 	end
 end
