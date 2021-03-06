@@ -44,6 +44,17 @@ mesecon = {} -- contains all functions and all global variables
 mesecon.queue = {} -- contains the ActionQueue
 mesecon.queue.funcs = {} -- contains all ActionQueue functions
 
+
+local translator = minetest.get_translator
+mesecon.S = translator and translator("mesecons") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		mesecon.S = intllib.make_gettext_pair()
+	end
+end
+
 local modpath = minetest.get_modpath("mesecons")
 
 -- Settings
@@ -68,6 +79,8 @@ dofile(modpath .. "/actionqueue.lua");
 -- like calling action_on/off/change
 dofile(modpath .. "/internal.lua");
 
+local vadd = vector.add
+
 -- API
 -- these are the only functions you need to remember
 
@@ -78,7 +91,7 @@ mesecon.queue:add_function("receptor_on", function (pos, rules)
 
 	-- Call turnon on all linking positions
 	for _, rule in ipairs(mesecon.flattenrules(rules)) do
-		local np = vector.add(pos, rule)
+		local np = vadd(pos, rule)
 		local rulenames = mesecon.rules_link_rule_all(pos, rule)
 		for _, rulename in ipairs(rulenames) do
 			mesecon.turnon(np, rulename)
@@ -97,7 +110,7 @@ mesecon.queue:add_function("receptor_off", function (pos, rules)
 
 	-- Call turnoff on all linking positions
 	for _, rule in ipairs(mesecon.flattenrules(rules)) do
-		local np = vector.add(pos, rule)
+		local np = vadd(pos, rule)
 		local rulenames = mesecon.rules_link_rule_all(pos, rule)
 		for _, rulename in ipairs(rulenames) do
 			mesecon.vm_begin()

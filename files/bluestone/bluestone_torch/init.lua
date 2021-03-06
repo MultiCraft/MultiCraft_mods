@@ -1,5 +1,7 @@
+local S = mesecon.S
+
 default.register_torch("bluestone_torch:torch", {
-	description = "Bluestone Torch",
+	description = S("Bluestone Torch"),
 	tiles = {{
 		name = "bluestone_torch_animated.png",
 		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 2}

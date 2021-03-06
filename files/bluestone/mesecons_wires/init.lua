@@ -10,12 +10,16 @@
 
 -- self_pos = pos of any mesecon node, from_pos = pos of conductor to getconnect for
 
+local S = mesecon.S
+
+local vadd, vequals, vnew = vector.add, vector.equals, vector.new
+
 local wire_getconnect = function (from_pos, self_pos)
 	local node = minetest.get_node(self_pos)
 	if minetest.registered_nodes[node.name]
 	and minetest.registered_nodes[node.name].mesecons then
 		-- rules of node to possibly connect to
-		local rules = {}
+		local rules
 		if (minetest.registered_nodes[node.name].mesecon_wire) then
 			rules = mesecon.rules.default
 		else
@@ -23,7 +27,7 @@ local wire_getconnect = function (from_pos, self_pos)
 		end
 
 		for _, r in ipairs(mesecon.flattenrules(rules)) do
-			if (vector.equals(vector.add(self_pos, r), from_pos)) then
+			if (vequals(vadd(self_pos, r), from_pos)) then
 				return true
 			end
 		end
@@ -36,7 +40,7 @@ local wire_updateconnect = function (pos)
 	local connections = {}
 
 	for _, r in ipairs(mesecon.rules.default) do
-		if wire_getconnect(pos, vector.add(pos, r)) then
+		if wire_getconnect(pos, vadd(pos, r)) then
 			connections[#connections+1] = r
 		end
 	end
@@ -74,7 +78,7 @@ local update_on_place_dig = function (pos, node)
 	end
 
 	-- Update nodes around it
-	local rules = {}
+	local rules
 	if minetest.registered_nodes[node.name]
 	and minetest.registered_nodes[node.name].mesecon_wire then
 		rules = mesecon.rules.default
@@ -84,7 +88,7 @@ local update_on_place_dig = function (pos, node)
 	if (not rules) then return end
 
 	for _, r in ipairs(mesecon.flattenrules(rules)) do
-		local np = vector.add(pos, r)
+		local np = vadd(pos, r)
 		if minetest.registered_nodes[minetest.get_node(np).name]
 		and minetest.registered_nodes[minetest.get_node(np).name].mesecon_wire then
 			wire_updateconnect(np)
@@ -169,20 +173,20 @@ local function register_wires()
 		end
 
 		local rules = {}
-		if (nid[0] == 1) then rules[#rules+1] = vector.new( 1,  0,  0) end
-		if (nid[1] == 1) then rules[#rules+1] = vector.new( 0,  0,  1) end
-		if (nid[2] == 1) then rules[#rules+1] = vector.new(-1,  0,  0) end
-		if (nid[3] == 1) then rules[#rules+1] = vector.new( 0,  0, -1) end
+		if (nid[0] == 1) then rules[#rules+1] = vnew( 1,  0,  0) end
+		if (nid[1] == 1) then rules[#rules+1] = vnew( 0,  0,  1) end
+		if (nid[2] == 1) then rules[#rules+1] = vnew(-1,  0,  0) end
+		if (nid[3] == 1) then rules[#rules+1] = vnew( 0,  0, -1) end
 
-		if (nid[0] == 1) then rules[#rules+1] = vector.new( 1, -1,  0) end
-		if (nid[1] == 1) then rules[#rules+1] = vector.new( 0, -1,  1) end
-		if (nid[2] == 1) then rules[#rules+1] = vector.new(-1, -1,  0) end
-		if (nid[3] == 1) then rules[#rules+1] = vector.new( 0, -1, -1) end
+		if (nid[0] == 1) then rules[#rules+1] = vnew( 1, -1,  0) end
+		if (nid[1] == 1) then rules[#rules+1] = vnew( 0, -1,  1) end
+		if (nid[2] == 1) then rules[#rules+1] = vnew(-1, -1,  0) end
+		if (nid[3] == 1) then rules[#rules+1] = vnew( 0, -1, -1) end
 
-		if (nid[4] == 1) then rules[#rules+1] = vector.new( 1,  1,  0) end
-		if (nid[5] == 1) then rules[#rules+1] = vector.new( 0,  1,  1) end
-		if (nid[6] == 1) then rules[#rules+1] = vector.new(-1,  1,  0) end
-		if (nid[7] == 1) then rules[#rules+1] = vector.new( 0,  1, -1) end
+		if (nid[4] == 1) then rules[#rules+1] = vnew( 1,  1,  0) end
+		if (nid[5] == 1) then rules[#rules+1] = vnew( 0,  1,  1) end
+		if (nid[6] == 1) then rules[#rules+1] = vnew(-1,  1,  0) end
+		if (nid[7] == 1) then rules[#rules+1] = vnew( 0,  1, -1) end
 
 		local meseconspec_off = { conductor = {
 			rules = rules,
@@ -204,7 +208,7 @@ local function register_wires()
 		end
 
 		mesecon.register_node(":mesecons:wire_"..nodeid, {
-			description = "Bluestone",
+			description = S("Bluestone"),
 			drawtype = "nodebox",
 			inventory_image = "bluestone_dust.png",
 			wield_image = "bluestone_dust.png",
@@ -236,4 +240,3 @@ minetest.register_craft({
 	output = "mesecons:wire_00000000_off 8",
 	recipe = "default:stone_with_bluestone",
 })
-

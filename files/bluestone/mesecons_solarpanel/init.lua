@@ -1,3 +1,5 @@
+local S = mesecon.S
+
 -- Solar Panel
 mesecon.register_node("mesecons_solarpanel:solar_panel", {
 	drawtype = "nodebox",
@@ -38,7 +40,7 @@ mesecon.register_node("mesecons_solarpanel:solar_panel", {
 		minetest.get_node_timer(pos):start(mesecon.setting("spanel_interval", 1))
 	end
 },{
-	description = "Solar Panel",
+	description = S("Solar Panel"),
 	groups = {dig_immediate = 3, attached_node = 1},
 	mesecons = {receptor = {
 		state = mesecon.state.off,

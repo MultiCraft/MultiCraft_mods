@@ -22,9 +22,12 @@
 -- mesecon.effector_get_rules(node)	--> Returns the input rules of the effector (mesecon.rules.default if none specified)
 
 -- SIGNALS
--- mesecon.activate(pos, node, depth)				--> Activates   the effector node at the specific pos (calls nodedef.mesecons.effector.action_on), higher depths are executed later
--- mesecon.deactivate(pos, node, depth)				--> Deactivates the effector node at the specific pos (calls nodedef.mesecons.effector.action_off), higher depths are executed later
--- mesecon.changesignal(pos, node, rulename, newstate, depth)	--> Changes the effector node at the specific pos (calls nodedef.mesecons.effector.action_change), higher depths are executed later
+-- mesecon.activate(pos, node, depth)				--> Activates   the effector node at the specific pos
+-- (calls nodedef.mesecons.effector.action_on), higher depths are executed later
+-- mesecon.deactivate(pos, node, depth)				--> Deactivates the effector node at the specific pos
+-- (calls nodedef.mesecons.effector.action_off), higher depths are executed later
+-- mesecon.changesignal(pos, node, rulename, newstate, depth)	--> Changes the effector node at the specific pos
+-- (calls nodedef.mesecons.effector.action_change), higher depths are executed later
 
 -- CONDUCTORS
 -- mesecon.is_conductor(nodename)	--> Returns true if nodename is a conductor
@@ -47,6 +50,7 @@
 -- These functions return rules that have been rotated in the specific direction
 
 local table_remove = table.remove
+local vadd, vequals = vector.add, vector.equals
 
 -- General
 function mesecon.get_effector(nodename)
@@ -324,7 +328,7 @@ function mesecon.get_conductor_on(node_off, rulename)
 			return conductor.states[tonumber(binstate,2)+1]
 		end
 	end
-	return offstate
+	return nil
 end
 
 function mesecon.get_conductor_off(node_on, rulename)
@@ -340,7 +344,7 @@ function mesecon.get_conductor_off(node_on, rulename)
 			return conductor.states[tonumber(binstate,2)+1]
 		end
 	end
-	return onstate
+	return nil
 end
 
 function mesecon.conductor_get_rules(node)
@@ -393,7 +397,7 @@ function mesecon.turnon(pos, link)
 
 			-- Call turnon on neighbors
 			for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
-				local np = vector.add(f.pos, r)
+				local np = vadd(f.pos, r)
 				for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
 					frontiers[#frontiers+1] = {pos = np, link = l}
 			end
@@ -440,7 +444,7 @@ function mesecon.turnoff(pos, link)
 		elseif mesecon.is_conductor_on(node, f.link) then
 			local rules = mesecon.conductor_get_rules(node)
 			for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
-				local np = vector.add(f.pos, r)
+				local np = vadd(f.pos, r)
 
 				-- Check if an onstate receptor is connected. If that is the case,
 				-- abort this turnoff process by returning false. `receptor_off` will
@@ -482,7 +486,7 @@ end
 -- Get all linking inputrules of inputnode (effector or conductor) that is connected to
 -- outputnode (receptor or conductor) at position `output` and has an output in direction `rule`
 function mesecon.rules_link_rule_all(output, rule)
-	local input = vector.add(output, rule)
+	local input = vadd(output, rule)
 	local inputnode = mesecon.get_node_force(input)
 	local inputrules = mesecon.get_any_inputrules (inputnode)
 	if not inputrules then
@@ -492,7 +496,7 @@ end
 
 	for _, inputrule in ipairs(mesecon.flattenrules(inputrules)) do
 		-- Check if input accepts from output
-		if  vector.equals(vector.add(input, inputrule), output) then
+		if  vequals(vadd(input, inputrule), output) then
 			rules[#rules+1] = inputrule
 		end
 	end
@@ -503,7 +507,7 @@ end
 -- Get all linking outputnodes of outputnode (receptor or conductor) that is connected to
 -- inputnode (effector or conductor) at position `input` and has an input in direction `rule`
 function mesecon.rules_link_rule_all_inverted(input, rule)
-	local output = vector.add(input, rule)
+	local output = vadd(input, rule)
 	local outputnode = mesecon.get_node_force(output)
 	local outputrules = mesecon.get_any_outputrules (outputnode)
 	if not outputrules then
@@ -512,7 +516,7 @@ function mesecon.rules_link_rule_all_inverted(input, rule)
 	local rules = {}
 
 	for _, outputrule in ipairs(mesecon.flattenrules(outputrules)) do
-		if  vector.equals(vector.add(output, outputrule), input) then
+		if  vequals(vadd(output, outputrule), input) then
 			rules[#rules+1] = mesecon.invertRule(outputrule)
 		end
 	end
@@ -531,7 +535,7 @@ function mesecon.is_powered(pos, rule)
 		for _, r in ipairs(mesecon.flattenrules(rules)) do
 			local rulenames = mesecon.rules_link_rule_all_inverted(pos, r)
 			for _, rname in ipairs(rulenames) do
-				local np = vector.add(pos, rname)
+				local np = vadd(pos, rname)
 				local nn = mesecon.get_node_force(np)
 
 				if (mesecon.is_conductor_on(nn, mesecon.invertRule(rname))
@@ -543,7 +547,7 @@ function mesecon.is_powered(pos, rule)
 	else
 		local rulenames = mesecon.rules_link_rule_all_inverted(pos, rule)
 		for _, rname in ipairs(rulenames) do
-			local np = vector.add(pos, rname)
+			local np = vadd(pos, rname)
 			local nn = mesecon.get_node_force(np)
 			if (mesecon.is_conductor_on (nn, mesecon.invertRule(rname))
 			or mesecon.is_receptor_on (nn.name)) then

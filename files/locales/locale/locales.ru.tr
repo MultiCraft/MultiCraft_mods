@@ -1,22 +1,4 @@
 # textdomain: locales
-#bluestone
-Bluestone Torch=Синий Факел
-Stone Button=Каменная Кнопка
-Wood Button=Деревянная Кнопка
-Delayer=Делайер
-Lamp=Лампа
-Glue=Клей
-Bluestone Block=Блюстоун Блок
-Noteblock=Звуковой Блок
-Piston=Поршень
-Sticky Piston=Липкий Поршень
-Solar Panel=Солнечная Панель
-Lever=Рычаг
-Bluestone=Блюстоун
-Wooden Pressure Plate=Деревянная Нажимная Плита
-Stone Pressure Plate=Каменная Нажимная Плита
-
-
 #default
 Chest=Сундук
 Large Chest=Большой Сундук

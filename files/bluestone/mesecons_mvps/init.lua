@@ -4,6 +4,8 @@ mesecon.on_mvps_move = {}
 mesecon.mvps_unmov = {}
 
 local table_remove = table.remove
+local vadd, vequals, vmultiply, vnew, vsubtract =
+	vector.add, vector.equals, vector.multiply, vector.new, vector.subtract
 
 --- Objects (entities) that cannot be moved
 function mesecon.register_mvps_unmov(objectname)
@@ -83,12 +85,12 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 			and minetest.registered_nodes[nn.name].mvps_sticky then
 				connected = minetest.registered_nodes[nn.name].mvps_sticky(np, nn)
 			end
-			connected[#connected+1] = vector.add(np, dir)
+			connected[#connected+1] = vadd(np, dir)
 
 			-- If adjacent node is sticky block and connects add that
 			-- position to the connected table
 			for _, r in ipairs(mesecon.rules.alldirs) do
-				local adjpos = vector.add(np, r)
+				local adjpos = vadd(np, r)
 				local adjnode = minetest.get_node(adjpos)
 				if minetest.registered_nodes[adjnode.name]
 				and minetest.registered_nodes[adjnode.name].mvps_sticky then
@@ -97,7 +99,7 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 
 					-- connects to this position?
 					for _, link in ipairs(sticksto) do
-						if vector.equals(link, np) then
+						if vequals(link, np) then
 							connected[#connected+1] = adjpos
 						end
 					end
@@ -105,7 +107,7 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 			end
 
 			if all_pull_sticky then
-				connected[#connected+1] = vector.subtract(np, dir)
+				connected[#connected+1] = vsubtract(np, dir)
 			end
 
 			-- Make sure there are no duplicates in frontiers / nodes before
@@ -113,12 +115,12 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 			for _, cp in ipairs(connected) do
 				local duplicate = false
 				for _, rp in ipairs(nodes) do
-					if vector.equals(cp, rp.pos) then
+					if vequals(cp, rp.pos) then
 						duplicate = true
 					end
 				end
 				for _, fp in ipairs(frontiers) do
-					if vector.equals(cp, fp) then
+					if vequals(cp, fp) then
 						duplicate = true
 					end
 				end
@@ -138,11 +140,11 @@ function mesecon.mvps_push(pos, dir, maximum)
 end
 
 function mesecon.mvps_pull_all(pos, dir, maximum)
-	return mesecon.mvps_push_or_pull(pos, vector.multiply(dir, -1), dir, maximum, true)
+	return mesecon.mvps_push_or_pull(pos, vmultiply(dir, -1), dir, maximum, true)
 end
 
 function mesecon.mvps_pull_single(pos, dir, maximum)
-	return mesecon.mvps_push_or_pull(pos, vector.multiply(dir, -1), dir, maximum)
+	return mesecon.mvps_push_or_pull(pos, vmultiply(dir, -1), dir, maximum)
 end
 
 -- pos: pos of mvps; stackdir: direction of building the stack
@@ -177,7 +179,7 @@ function mesecon.mvps_push_or_pull(pos, _, movedir, maximum, all_pull_sticky)
 
 	-- add nodes
 	for _, n in ipairs(nodes) do
-		local np = vector.add(n.pos, movedir)
+		local np = vadd(n.pos, movedir)
 
 		minetest.set_node(np, n.node)
 		minetest.get_meta(np):from_table(n.meta)
@@ -191,7 +193,7 @@ function mesecon.mvps_push_or_pull(pos, _, movedir, maximum, all_pull_sticky)
 	for i in ipairs(nodes) do
 		moved_nodes[i] = {}
 		moved_nodes[i].oldpos = nodes[i].pos
-		nodes[i].pos = vector.add(nodes[i].pos, movedir)
+		nodes[i].pos = vadd(nodes[i].pos, movedir)
 		moved_nodes[i].pos = nodes[i].pos
 		moved_nodes[i].node = nodes[i].node
 		moved_nodes[i].meta = nodes[i].meta
@@ -214,12 +216,12 @@ function mesecon.mvps_move_objects(pos, dir, nodestack, movefactor)
 		end
 	end
 	movefactor = movefactor or 1
-	dir = vector.multiply(dir, movefactor)
+	dir = vmultiply(dir, movefactor)
 	for _, obj in pairs(minetest.get_objects_inside_radius(pos, #nodestack + 1)) do
 		local obj_pos = obj:get_pos()
 		local cbox = obj:get_properties().collisionbox
-		local min_pos = vector.add(obj_pos, vector.new(cbox[1], cbox[2], cbox[3]))
-		local max_pos = vector.add(obj_pos, vector.new(cbox[4], cbox[5], cbox[6]))
+		local min_pos = vadd(obj_pos, vnew(cbox[1], cbox[2], cbox[3]))
+		local max_pos = vadd(obj_pos, vnew(cbox[4], cbox[5], cbox[6]))
 		local ok = true
 		for k, v in pairs(pos) do
 			local edge1, edge2
@@ -242,7 +244,7 @@ function mesecon.mvps_move_objects(pos, dir, nodestack, movefactor)
 		if ok then
 			local ent = obj:get_luaentity()
 			if obj:is_player() or (ent and not mesecon.is_mvps_unmov(ent.name)) then
-				local np = vector.add(obj_pos, dir)
+				local np = vadd(obj_pos, dir)
 				-- Move only if destination is not solid or object is inside stack:
 				local nn = minetest.get_node(np)
 				local node_def = minetest.registered_nodes[nn.name]
@@ -261,10 +263,7 @@ end
 -- TODO: load blocks instead, as with wires.
 
 mesecon.register_mvps_stopper("ignore")
-mesecon.register_mvps_stopper("doors:door_steel_b_1")
-mesecon.register_mvps_stopper("doors:door_steel_t_1")
-mesecon.register_mvps_stopper("doors:door_steel_b_2")
-mesecon.register_mvps_stopper("doors:door_steel_t_2")
+mesecon.register_mvps_stopper("default:grill_bar")
 mesecon.register_mvps_stopper("default:chest")
 mesecon.register_mvps_stopper("default:chest_left")
 mesecon.register_mvps_stopper("default:chest_right")
