@@ -220,6 +220,7 @@ end
 --
 -- Sapling 'on place' function to check protection of node and resulting tree volume
 --
+local vadd = vector.add
 
 function default.sapling_on_place(itemstack, placer, pointed_thing,
 		sapling_name, minp_relative, maxp_relative, interval)
@@ -252,8 +253,8 @@ function default.sapling_on_place(itemstack, placer, pointed_thing,
 	end
 	-- Check tree volume for protection
 	if minetest.is_area_protected(
-			vector.add(pos, minp_relative),
-			vector.add(pos, maxp_relative),
+			vadd(pos, minp_relative),
+			vadd(pos, maxp_relative),
 			player_name,
 			interval) then
 		minetest.record_protection_violation(pos, player_name)

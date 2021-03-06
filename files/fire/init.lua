@@ -10,6 +10,8 @@ if translator and not minetest.is_singleplayer() then
 	end
 end
 
+local vadd, vdivide, vsubtract = vector.add, vector.divide, vector.subtract
+
 --
 -- Items
 --
@@ -169,8 +171,8 @@ if flame_sound then
 		local player_name = player:get_player_name()
 		-- Search for flame nodes in radius around player
 		local ppos = player:get_pos()
-		local areamin = vector.subtract(ppos, radius)
-		local areamax = vector.add(ppos, radius)
+		local areamin = vsubtract(ppos, radius)
+		local areamax = vadd(ppos, radius)
 		local fpos, num = minetest.find_nodes_in_area(
 			areamin,
 			areamax,
@@ -213,7 +215,7 @@ if flame_sound then
 						fposmin.z = fposi.z
 					end
 				end
-				fposmid = vector.divide(vector.add(fposmin, fposmax), 2)
+				fposmid = vdivide(vadd(fposmin, fposmax), 2)
 			end
 			-- Play sound
 			local handle = minetest.sound_play("fire_fire", {

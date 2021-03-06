@@ -453,13 +453,16 @@ default.after_place_leaves = function(pos, placer)
 end
 
 -- Leafdecay
+local random = math.random
+local vadd, vsubtract = vector.add, vector.subtract
+
 local function leafdecay_after_destruct(pos, _, def)
-	for _, v in pairs(minetest.find_nodes_in_area(vector.subtract(pos, def.radius),
-			vector.add(pos, def.radius), def.leaves)) do
+	for _, v in pairs(minetest.find_nodes_in_area(vsubtract(pos, def.radius),
+			vadd(pos, def.radius), def.leaves)) do
 		local node = minetest.get_node(v)
 		local timer = minetest.get_node_timer(v)
 		if node.param2 ~= 1 and not timer:is_started() then
-			timer:start(math.random(40, 160) / 10)
+			timer:start(random(40, 160) / 10)
 		end
 	end
 end
@@ -481,9 +484,9 @@ local function leafdecay_on_timer(pos, def)
 		if minetest.get_item_group(item, "leafdecay_drop") ~= 0 or
 				not is_leaf then
 			minetest.add_item({
-				x = pos.x - 0.5 + math.random(),
-				y = pos.y - 0.5 + math.random(),
-				z = pos.z - 0.5 + math.random()
+				x = pos.x - 0.5 + random(),
+				y = pos.y - 0.5 + random(),
+				z = pos.z - 0.5 + random()
 			}, item)
 		end
 	end
