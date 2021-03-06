@@ -7,8 +7,11 @@ Authors of source code
 Based on Weather mod
 
 Copyright (C) Jeija (2013)
+
 Copyright (C) HybridDog (2015)
+
 Copyright (C) theFox6 (2018)
+
 Copyright (C) MultiCraft Development Team (2019-2020)
 
 This program is free software; you can redistribute it and/or modify
@@ -30,5 +33,6 @@ Authors of textures
 -------------------
 
 TeddyDesTodes (textures) CC-BY-SA 3.0:
-  weather_lite_rain.png
-  weather_lite_snow.png
+
+* weather_lite_rain.png
+* weather_lite_snow.png
