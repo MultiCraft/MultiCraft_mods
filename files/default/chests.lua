@@ -164,8 +164,9 @@ minetest.register_node("default:chest", def_chest)
 
 local def_chest_left = tcopy(def)
 def_chest_left.tiles = {
-	"default_chest_top_big.png", "default_chest_top_big.png", "default_chest_side.png",
-	"default_chest_side.png", "default_chest_side_big.png^[transformFX", "default_chest_front_big.png"
+	"default_chest_top_big.png", "default_chest_top_big.png",
+	"default_chest_side.png", "default_chest_side.png",
+	"default_chest_side_big.png^[transformFX", "default_chest_front_big.png"
 }
 def_chest_left.groups.not_in_creative_inventory = 1
 def_chest_left.on_destruct =  function(pos) on_destruct(pos, "left") end
@@ -173,8 +174,9 @@ minetest.register_node("default:chest_left", def_chest_left)
 
 local def_chest_right = tcopy(def)
 def_chest_right.tiles = {
-	"default_chest_top_big.png^[transformFX", "default_chest_top_big.png^[transformFX", "default_chest_side.png",
-	"default_chest_side.png", "default_chest_side_big.png", "default_chest_front_big.png^[transformFX"
+	"default_chest_top_big.png^[transformFX", "default_chest_top_big.png^[transformFX",
+	"default_chest_side.png", "default_chest_side.png",
+	"default_chest_side_big.png", "default_chest_front_big.png^[transformFX"
 }
 def_chest_right.groups.not_in_creative_inventory = 1
 def_chest_right.on_destruct = function(pos) on_destruct(pos, "right") end
