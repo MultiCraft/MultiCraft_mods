@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20210114",
+	version = "20210206",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -63,6 +63,9 @@ local lifetime = 900 -- 15 min
 local active_limit = tonumber(settings:get("mob_active_limit")) or 0
 local active_mobs = 0
 local spawn_interval = 20
+
+-- calculate aoc range for mob count
+local aoc_range = tonumber(settings:get("active_block_range")) * 16
 
 if not singleplayer then
 	lifetime = 300 -- 5 min
@@ -160,6 +163,10 @@ local mob_class_meta = {__index = mob_class}
 
 -- play sound
 function mob_class:mob_sound(sound)
+	if not sound then
+		return
+	end
+
 	local pitch = 1.0
 
 	-- higher pitch for a child
@@ -168,14 +175,12 @@ function mob_class:mob_sound(sound)
 	-- a little random pitch to be different
 	pitch = pitch + random(-10, 10) * 0.005
 
-	if sound then
-		minetest.sound_play(sound, {
-			object = self.object,
-			gain = 1.0,
-			max_hear_distance = self.sounds.distance,
-			pitch = pitch
-		})
-	end
+	minetest.sound_play(sound, {
+		object = self.object,
+		gain = 1.0,
+		max_hear_distance = self.sounds.distance,
+		pitch = pitch
+	})
 end
 
 
@@ -322,7 +327,7 @@ function mob_class:set_animation(anim, force)
 
 	-- only use different animation for attacks when using same set
 	if force ~= true and anim ~= "punch" and anim ~= "shoot"
-			and string.find(self.animation.current, anim) then
+			and self.animation.current:find(anim) then
 		return
 	end
 
@@ -493,8 +498,11 @@ local ray_line_of_sight = function(self, pos1, pos2)
 end
 
 function mob_class:line_of_sight(pos1, pos2, stepsize)
+	if minetest.raycast then -- only use if minetest 5.0 is detected
+		return ray_line_of_sight(self, pos1, pos2)
+	end
+
 	return line_of_sight(self, pos1, pos2, stepsize)
---	return ray_line_of_sight(self, pos1, pos2) -- MT 5.0
 end
 
 -- global function
@@ -813,16 +821,19 @@ function mob_class:check_for_death(cmi_cause)
 
 	-- drop items
 	self:item_drop()
-	self:mob_sound(self.sounds.death)
 
 	local pos = self.object:get_pos()
 
-	-- execute custom death function
-	if pos and self.on_die then
-		self:on_die(pos)
-		remove_mob(self, true)
+	if pos then
+		self:mob_sound(self.sounds.death)
 
-		return true
+		-- execute custom death function
+		if self.on_die then
+			self:on_die(pos)
+			remove_mob(self, true)
+
+			return true
+		end
 	end
 
 	-- check for custom death function and die animation
@@ -1224,7 +1235,7 @@ function mob_class:breed()
 	if self.child then
 		self.hornytimer = self.hornytimer + 1
 
-		if self.hornytimer > CHILD_GROW_TIME  then
+		if self.hornytimer > CHILD_GROW_TIME then
 			self.child = false
 			self.hornytimer = 0
 			self.object:set_properties({
@@ -1240,11 +1251,11 @@ function mob_class:breed()
 				self.on_grown(self)
 			else
 				-- jump when fully grown so as not to fall into ground
-				self.object:set_velocity({
-					x = 0,
-					y = self.jump_height,
-					z = 0
-				})
+				local pos = self.object:get_pos()
+				if not pos then return end
+				local ent = self.object:get_luaentity()
+				pos.y = pos.y + (ent.collisionbox[2] * -1) - 0.4
+				self.object:set_pos(pos)
 			end
 
 			self:mob_sound("mobs_spell")
@@ -1264,7 +1275,7 @@ function mob_class:breed()
 	end
 
 	-- find another same animal who is also horny and mate if nearby
-	if self.horny and self.hornytimer <= HORNY_TIME  then
+	if self.horny and self.hornytimer <= HORNY_TIME then
 		local pos = self.object:get_pos()
 
 		effect({x = pos.x, y = pos.y + 1.5, z = pos.z}, 8, "heart.png", 3, 4, 1, 0.1)
@@ -1334,6 +1345,8 @@ function mob_class:breed()
 						effect(pos, 15, "heart.png", 1, 2, 2, 15, 5)
 						self:mob_sound("mobs_spell")
 					end
+
+					pos.y = pos.y + 0.5 -- spawn child a little higher
 
 					local mob = minetest.add_entity(pos, self.name)
 					local ent2 = mob:get_luaentity()
@@ -1888,7 +1901,7 @@ function mob_class:follow_flop()
 	else
 		-- stop following player if not holding specific item or mob is horny
 		if self.following
- 		and self.following:is_player()
+		and self.following:is_player()
 		and (self:follow_holding(self.following) == false
 		or self.horny) then
 			self.following = nil
@@ -3261,7 +3274,7 @@ end
 -- will also return true for second value if player is inside area
 local count_mobs = function(pos, type)
 	local total = 0
-	local objs = minetest.get_objects_inside_radius(pos, 32)
+	local objs = minetest.get_objects_inside_radius(pos, aoc_range)
 	local ent
 	local players
 
