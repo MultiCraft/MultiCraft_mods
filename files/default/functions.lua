@@ -602,9 +602,10 @@ local moss_correspondences = {
 }
 minetest.register_abm({
 	label = "Moss growth",
-	nodenames = {"default:cobble", "stairs:slab_default_cobble", "stairs:stair_default_cobble",
-		"stairs:innerstair_default_cobble", "stairs:outerstair_default_cobble",
-		"walls:cobble"
+	nodenames = {
+		"default:cobble", "stairs:slab_default_cobble",
+		"stairs:stair_default_cobble", "stairs:innerstair_default_cobble",
+		"stairs:outerstair_default_cobble", "walls:cobble"
 	},
 	neighbors = {"group:water"},
 	interval = 15,
@@ -703,7 +704,8 @@ local function snowball_impact(thrower, pos, dir, hit_object)
 			end
 		end
 		if node_pos then
-			if not minetest.is_protected(node_pos, thrower and thrower:get_player_name() or "") then
+			local player_name = thrower and thrower:get_player_name() or ""
+			if not minetest.is_protected(node_pos, player_name) then
 				minetest.add_node(pos, {name = "default:snow"})
 				minetest.spawn_falling_node(pos)
 			end
