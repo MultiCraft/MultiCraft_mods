@@ -20,7 +20,7 @@ local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 local b = "blank.png"
 player_api.register_model("character.b3d", {
 	animation_speed = 30,
-	textures = {player_api.default_texture, b, b, b, b},
+	textures = {player_api.default_skin, player_api.default_hair, b, b, b, b, b},
 	animations = {
 		-- Standard animations.
 		stand           = {x = 0,   y =   0}, -- y = 79
@@ -48,12 +48,14 @@ player_api.hand = {
 	tiles = {"character_1.png"},
 	inventory_image = b,
 	drop = "",
-	node_placement_prediction = ""
+	node_placement_prediction = "",
+	groups = {oddly_breakable_by_hand = 3, not_in_creative_inventory = 1},
+	on_place = function(i) return i end
 }
 
 local hand = player_api.hand
 if creative_mode_cache then
-	local digtime = 128
+	local digtime = 96
 	local caps = {times = {digtime, digtime, digtime}, uses = 0, maxlevel = 192}
 
 	hand.range = 10
