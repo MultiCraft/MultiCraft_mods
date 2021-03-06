@@ -2006,7 +2006,7 @@ minetest.register_node("default:slimeblock", {
 	},
 	use_texture_alpha = true,
 	sunlight_propagates = true,
-	groups = {oddly_breakable_by_hand = 3, fall_damage_add_percent = -100, bouncy = 75}
+	groups = {oddly_breakable_by_hand = 3, fall_damage_add_percent = -100, bouncy = 75, wieldview = 4}
 })
 
 --

@@ -12,7 +12,8 @@ function player_api.register_model(name, def)
 	models[name] = def
 end
 
-player_api.default_texture = "character_1.png^player_haircut_1.png"
+player_api.default_skin = "character_1.png"
+player_api.default_hair = "player_haircut_1.png"
 
 -- Player stats and animations
 local player_model = {}
@@ -21,15 +22,19 @@ local player_anim = {}
 local player_sneak = {}
 
 player_api.player_skin = {}
+player_api.player_hair = {}
 player_api.player_armor = {}
 player_api.player_cape = {}
+player_api.player_cosmetic = {}
 local player_wielditem = {}
 local player_cube = {}
 
 local b = "blank.png"
 
-local player_skin, player_armor, player_cape =
-		player_api.player_skin, player_api.player_armor, player_api.player_cape
+local player_skin, player_hair, player_armor =
+		player_api.player_skin, player_api.player_hair, player_api.player_armor
+local player_cape, player_cosmetic =
+		player_api.player_cape, player_api.player_cosmetic
 
 player_api.wielded_item = {}
 player_api.player_attached = {}
@@ -71,23 +76,31 @@ function player_api.set_model(player, model_name)
 	player_model[name] = model_name
 end
 
-function player_api.set_textures(player, skin, armor, wielditem, cube, cape)
+function player_api.set_textures(player, skin, hair, armor,
+		wielditem, cube, cape, cosmetic)
 	local name = player:get_player_name()
 
-	local oldskin      = player_skin[name]      or player_api.default_texture
+	local oldskin      = player_skin[name]      or player_api.default_skin
+	local oldhair      = player_hair[name]      or player_api.default_hair
 	local oldarmor     = player_armor[name]     or b
 	local oldwielditem = player_wielditem[name] or b
 	local oldcube      = player_cube[name]      or b
 	local oldcape      = player_cape[name]      or b
+	local oldcosmetic  = player_cosmetic[name]  or b
 
 	skin      = skin      or oldskin
+	hair      = hair      or oldhair
 	armor     = armor     or oldarmor
 	wielditem = wielditem or oldwielditem
 	cube      = cube      or oldcube
 	cape      = cape      or oldcape
+	cosmetic  = cosmetic  or oldcosmetic
 
 	if oldskin ~= skin then
 		player_skin[name] = skin
+	end
+	if oldhair ~= hair then
+		player_hair[name] = hair
 	end
 	if oldarmor ~= armor then
 		player_armor[name] = armor
@@ -101,8 +114,11 @@ function player_api.set_textures(player, skin, armor, wielditem, cube, cape)
 	if oldcape ~= cape then
 		player_cape[name] = cape
 	end
+	if oldcosmetic ~= cosmetic then
+		player_cosmetic[name] = cosmetic
+	end
 
-	local texture = {skin, armor, wielditem, cube, cape}
+	local texture = {skin, hair, armor, wielditem, cube, cape, cosmetic}
 
 	local skip = false
 	if player_textures[name] then
@@ -178,9 +194,12 @@ function player_api.preview(player, skin, head)
 	local c = b
 	if player then
 		local name = player:get_player_name()
-		local model = models[player_model[name]] or models["character.b3d"]
-		local texture = player_textures[name] or model.textures
-		c = "(" .. texture[1] .. "^" .. texture[2] .. ")"
+		local texture = player_textures[name]
+		if not texture then
+			local model = models[player_model[name]] or models["character.b3d"]
+			texture = model.textures
+		end
+		c = "(" .. texture[1] .. "^" .. texture[2] .. "^" .. texture[3] .. ")"
 	elseif skin then
 		c = skin
 	end
@@ -188,11 +207,11 @@ function player_api.preview(player, skin, head)
 	-- Escape characters for combine
 	c = c:gsub("%^", "\\^"):gsub(":", "\\:")
 
-	local texture
+	local preview
 	if head then
-		texture = "[combine:16x16:-16,-16=" .. c											-- Head
+		preview = "[combine:16x16:-16,-16=" .. c											-- Head
 	else
-		texture = "((" ..
+		preview = "((" ..
 			"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png)^" ..					-- Left Leg
 			"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png^[transformFX)^" ..	-- Right Leg
 
@@ -208,7 +227,7 @@ function player_api.preview(player, skin, head)
 			")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
 	end
 
-	return minetest.formspec_escape(texture)
+	return minetest.formspec_escape(preview)
 end
 
 -- Localize for better performance
@@ -223,10 +242,12 @@ minetest.register_on_leaveplayer(function(player)
 	player_textures[name] = nil
 
 	player_skin[name] = nil
+	player_hair[name] = nil
 	player_armor[name] = nil
-	player_cape[name] = nil
 	player_wielditem[name] = nil
 	player_cube[name] = nil
+	player_cape[name] = nil
+	player_cosmetic[name] = nil
 	player_api.wielded_item[name] = nil
 
 	player_attached[name] = nil
