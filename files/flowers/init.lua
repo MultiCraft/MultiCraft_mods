@@ -17,6 +17,7 @@ end
 dofile(minetest.get_modpath("flowers") .. "/mapgen.lua")
 
 local min, random = math.min, math.random
+local vadd, vsubtract = vector.add, vector.subtract
 
 --
 -- Flowers
@@ -283,8 +284,8 @@ function flowers.flower_spread(pos, node)
 		return
 	end
 
-	local pos0 = vector.subtract(pos, 4)
-	local pos1 = vector.add(pos, 4)
+	local pos0 = vsubtract(pos, 4)
+	local pos1 = vadd(pos, 4)
 	-- Maximum flower density created by mapgen is 13 per 9x9 area.
 	-- The limit of 7 below was tuned by in-game testing to result in a maximum
 	-- flower density by ABM spread of 13 per 9x9 area.
