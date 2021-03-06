@@ -1,4 +1,5 @@
 local floor, pow = math.floor, math.pow
+local vequals, vmultiply = vector.equals, vector.multiply
 
 function mesecon.move_node(pos, newpos)
 	local node = minetest.get_node(pos)
@@ -102,7 +103,7 @@ function mesecon.rule2bit(findrule, allrules)
 	end
 	for m,metarule in ipairs( allrules) do
 	for _,	rule in ipairs(metarule ) do
-		if vector.equals(findrule, rule) then
+		if vequals(findrule, rule) then
 			return m
 		end
 	end
@@ -121,7 +122,7 @@ function mesecon.rule2metaindex(findrule, allrules)
 
 	for m, metarule in ipairs( allrules) do
 	for _, rule in ipairs(metarule ) do
-		if vector.equals(findrule, rule) then
+		if vequals(findrule, rule) then
 			return m
 		end
 	end
@@ -184,7 +185,7 @@ function mesecon.set_bit(binary,bit,value)
 end
 
 function mesecon.invertRule(r)
-	return vector.multiply(r, -1)
+	return vmultiply(r, -1)
 end
 
 local table_copy = table.copy

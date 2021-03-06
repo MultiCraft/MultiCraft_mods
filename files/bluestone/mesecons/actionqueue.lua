@@ -26,6 +26,7 @@ Also note: Some of the guarantees here might be dropped at some time.
 -- localize for speed
 local queue = mesecon.queue
 local table_remove, table_sort = table.remove, table.sort
+local vequals = vector.equals
 
 queue.actions = {} -- contains all ActionQueue actions
 
@@ -53,7 +54,7 @@ function queue:add_action(pos, func, params, time, overwritecheck, priority)
 	-- check if old action has to be overwritten / removed:
 	if overwritecheck then
 		for i, ac in pairs(queue.actions) do
-			if vector.equals(pos, ac.pos)
+			if vequals(pos, ac.pos)
 					and mesecon.cmpAny(overwritecheck, ac.owcheck) then
 				-- remove the old action
 				table_remove(queue.actions, i)

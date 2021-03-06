@@ -1,9 +1,11 @@
+local S = mesecon.S
+
 mesecon.register_node("bluestone_lamp:lightstone", {
 	is_ground_content = false,
 	sounds = default.node_sound_glass_defaults(),
 	on_blast = mesecon.on_blastnode
 },{
-	description = "Lamp",
+	description = S("Lamp"),
 	tiles = {"bluestone_lamp_off.png"},
 	groups = {cracky = 2, mesecon = 2},
 

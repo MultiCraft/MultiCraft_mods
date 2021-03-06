@@ -2,6 +2,8 @@
 -- A button that when pressed emits power for 1 second
 -- and then turns off again
 
+local S = mesecon.S
+
 local function button_turnoff(pos, material)
 	local node = minetest.get_node(pos)
 	minetest.swap_node(pos, {name = "bluestone_button:button_" .. material .. "_off", param2 = node.param2})
@@ -69,7 +71,7 @@ mesecon.register_node("bluestone_button:button_stone", {
 	sounds = default.node_sound_stone_defaults(),
 	on_blast = mesecon.on_blastnode
 },{
-	description = "Stone Button",
+	description = S("Stone Button"),
 	on_rotate = mesecon.buttonlike_onrotate,
 	node_box = {
 		type = "fixed",
@@ -114,7 +116,7 @@ mesecon.register_node("bluestone_button:button_wood", {
 	sounds = default.node_sound_stone_defaults(),
 	on_blast = mesecon.on_blastnode
 },{
-	description = "Wood Button",
+	description = S("Wood Button"),
 	on_rotate = mesecon.buttonlike_onrotate,
 	node_box = {
 		type = "fixed",

@@ -1,3 +1,5 @@
+local S = mesecon.S
+
 local pp_box_off = {
 	type = "fixed",
 	fixed = {-7/16, -8/16, -7/16, 7/16, -7/16, 7/16}
@@ -89,7 +91,7 @@ end
 
 mesecon.register_pressure_plate(
 	"mesecons_pressureplates:pressure_plate_wood",
-	"Wooden Pressure Plate",
+	S("Wooden Pressure Plate"),
 	{"default_wood.png"},
 	{{"default:wood", "default:wood"}},
 	{choppy = 3, oddly_breakable_by_hand = 3, attached_node = 1},
@@ -97,7 +99,7 @@ mesecon.register_pressure_plate(
 
 mesecon.register_pressure_plate(
 	"mesecons_pressureplates:pressure_plate_stone",
-	"Stone Pressure Plate",
+	S("Stone Pressure Plate"),
 	{"default_stone.png"},
 	{{"default:cobble", "default:cobble"}},
 	{cracky = 3, oddly_breakable_by_hand = 3, attached_node = 1},
