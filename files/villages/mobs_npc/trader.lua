@@ -214,7 +214,7 @@ function mobs_trader.trader_show_goods(self, clicker, race)
 
 	local player = clicker and clicker:get_player_name() or ""
 	minetest.chat_send_player(player,
-		S("<[NPC] Trader @1> Hello @2, have a look at my wares.",
+		S("Trader @1: Hello @2, have a look at my wares.",
 			game_name, S(player)))
 
 	-- Make formspec trade list

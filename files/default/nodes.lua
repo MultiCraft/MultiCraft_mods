@@ -71,28 +71,32 @@ minetest.register_node("default:stonebrickmossy", {
 
 minetest.register_node("default:sandstone", {
 	description = "Sandstone",
-	tiles = {"default_sandstone_top.png", "default_sandstone_bottom.png", "default_sandstone_normal.png"},
+	tiles = {"default_sandstone_top.png", "default_sandstone_bottom.png",
+		"default_sandstone_normal.png"},
 	groups = {crumbly = 1, cracky = 3},
 	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("default:sandstonesmooth", {
 	description = "Smooth Sandstone",
-	tiles = {"default_sandstone_top.png", "default_sandstone_bottom.png", "default_sandstone_smooth.png"},
+	tiles = {"default_sandstone_top.png", "default_sandstone_bottom.png",
+		"default_sandstone_smooth.png"},
 	groups = {crumbly = 2, cracky = 2},
 	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("default:redsandstone", {
 	description = "Red Sandstone",
-	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png", "default_redsandstone_normal.png"},
+	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png",
+		"default_redsandstone_normal.png"},
 	groups = {crumbly = 2, cracky = 2},
 	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("default:redsandstonesmooth", {
 	description = "Red Sandstone Smooth",
-	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png", "default_redsandstone_smooth.png"},
+	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png",
+		"default_redsandstone_smooth.png"},
 	groups = {crumbly = 2, cracky = 2},
 	sounds = default.node_sound_stone_defaults()
 })
@@ -107,7 +111,8 @@ minetest.register_node("default:obsidian", {
 minetest.register_node("default:bedrock", {
 	description = "Bedrock",
 	tiles = {"default_bedrock.png"},
-	groups = {oddly_breakable_by_hand = 5, speed = -30, not_in_creative_inventory = 1},
+	groups = {oddly_breakable_by_hand = 5, speed = -30,
+		not_in_creative_inventory = 1},
 	drop = "",
 	sounds = default.node_sound_stone_defaults()
 })
@@ -243,7 +248,8 @@ minetest.register_node("default:snow", {
 			{-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 		}
 	},
-	groups = {crumbly = 3, falling_node = 1, snowy = 1, speed = -30, not_in_creative_inventory = 1},
+	groups = {crumbly = 3, falling_node = 1, snowy = 1, speed = -30,
+		not_in_creative_inventory = 1},
 	sounds = default.node_sound_snow_defaults(),
 	drop = "default:snowball",
 
@@ -734,7 +740,8 @@ minetest.register_node("default:birch_sapling", {
 
 minetest.register_node("default:cherry_blossom_tree", {
 	description = "Cherry Blossom Tree",
-	tiles = {"default_cherry_blossom_tree_top.png", "default_cherry_blossom_tree_top.png", "default_cherry_blossom_tree.png"},
+	tiles = {"default_cherry_blossom_tree_top.png",
+		"default_cherry_blossom_tree_top.png", "default_cherry_blossom_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -937,7 +944,9 @@ minetest.register_node("default:diamondblock", {
 minetest.register_node("default:cactus", {
 	description = "Cactus",
 	drawtype = "nodebox",
-	tiles = {"default_cactus_top.png", "default_cactus_bottom.png", "default_cactus_side.png"},
+	tiles = {"default_cactus_top.png", "default_cactus_bottom.png",
+		"default_cactus_side.png"},
+	paramtype = "light",
 	paramtype2 = "facedir",
 	groups = {choppy = 3, flammable = 2, attached_node = 1, flora = 2},
 	sounds = default.node_sound_wood_defaults(),
@@ -1331,7 +1340,8 @@ local water_source = {
 	liquid_alternative_source = "default:water_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 90, r = 30, g = 60, b = 90},
-	groups = {water = 3, liquid = 3, cools_lava = 1, not_in_creative_inventory = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1,
+		not_in_creative_inventory = 1},
 	sounds = default.node_sound_water_defaults(),
 	node_placement_prediction = "",
 	on_place = liquid_place
@@ -1445,7 +1455,8 @@ local river_water_source =  {
 	liquid_renewable = false,
 	liquid_range = 2,
 	post_effect_color = {a = 90, r = 30, g = 76, b = 90},
-	groups = {water = 3, liquid = 3, cools_lava = 1, not_in_creative_inventory = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1,
+		not_in_creative_inventory = 1},
 	sounds = default.node_sound_water_defaults(),
 	node_placement_prediction = "",
 	on_place = liquid_place
@@ -1656,7 +1667,8 @@ local function update_bookshelf(pos)
 		meta:set_string("infotext", Sl("Empty Bookshelf"))
 	else
 		meta:set_string("infotext", Sl("Bookshelf") .. "\n(" ..
-			Sl("Books:") .. " " .. n_written .. ", " .. Sl("Empty Books:") .. " " .. n_empty .. ")")
+			Sl("Books:") .. " " .. n_written .. ", " ..
+			Sl("Empty Books:") .. " " .. n_empty .. ")")
 	end
 end
 
@@ -1699,8 +1711,8 @@ minetest.register_node("default:bookshelf", {
 		return inv:is_empty("books")
 	end,
 	allow_metadata_inventory_put = function(pos, listname, _, stack, player)
-		if not minetest.is_protected(pos, player and player:get_player_name() or "") and
-				minetest.get_item_group(stack:get_name(), "book") ~= 0 then
+		if not minetest.is_protected(pos, player and player:get_player_name() or "")
+				and minetest.get_item_group(stack:get_name(), "book") ~= 0 then
 			if listname == "split" then
 				return 1
 			else
@@ -1735,13 +1747,17 @@ minetest.register_node("default:bookshelf", {
 	end
 })
 
+local ladder_wood_groups = {
+	choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1,
+	wood_ladder = 1
+}
 
 default.register_ladder("default:ladder_wood", {
 	description = "Apple Wood Ladder",
 	tiles = {"default_wood.png"},
 	inventory_image = "default_ladder_wood.png",
 	wield_image = "default_ladder_wood.png",
-	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	groups = ladder_wood_groups,
 	sounds = default.node_sound_wood_defaults(),
 	material = "default:wood"
 })
@@ -1751,7 +1767,7 @@ default.register_ladder("default:ladder_acacia_wood", {
 	tiles = {"default_acacia_wood.png"},
 	inventory_image = "default_ladder_acacia_wood.png",
 	wield_image = "default_ladder_acacia_wood.png",
-	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	groups = ladder_wood_groups,
 	sounds = default.node_sound_wood_defaults(),
 	material = "default:acacia_wood"
 })
@@ -1761,7 +1777,7 @@ default.register_ladder("default:ladder_birch_wood", {
 	tiles = {"default_birch_wood.png"},
 	inventory_image = "default_ladder_birch_wood.png",
 	wield_image = "default_ladder_birch_wood.png",
-	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	groups = ladder_wood_groups,
 	sounds = default.node_sound_wood_defaults(),
 	material = "default:birch_wood"
 })
@@ -1771,7 +1787,7 @@ default.register_ladder("default:ladder_jungle_wood", {
 	tiles = {"default_junglewood.png"},
 	inventory_image = "default_ladder_jungle_wood.png",
 	wield_image = "default_ladder_jungle_wood.png",
-	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	groups = ladder_wood_groups,
 	sounds = default.node_sound_wood_defaults(),
 	material = "default:junglewood"
 })
@@ -1781,7 +1797,7 @@ default.register_ladder("default:ladder_pine_wood", {
 	tiles = {"default_pine_wood.png"},
 	inventory_image = "default_ladder_pine_wood.png",
 	wield_image = "default_ladder_pine_wood.png",
-	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	groups = ladder_wood_groups,
 	sounds = default.node_sound_wood_defaults(),
 	material = "default:pine_wood"
 })
@@ -1791,7 +1807,7 @@ default.register_ladder("default:ladder_cherry_blossom_wood", {
 	tiles = {"default_cherry_blossom_wood.png"},
 	inventory_image = "default_ladder_cherry_blossom_wood.png",
 	wield_image = "default_ladder_cherry_blossom_wood.png",
-	groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1, wood_ladder = 1},
+	groups = ladder_wood_groups,
 	sounds = default.node_sound_wood_defaults(),
 	material = "default:cherry_blossom_wood"
 })
@@ -1842,13 +1858,16 @@ minetest.register_node("default:grill_bar", {
 	sounds = default.node_sound_metal_defaults()
 })
 
+local fence_wood_groups = {
+	choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1
+}
 
 default.register_fence("default:fence_wood", {
 	description = "Apple Wood Fence",
 	texture = "default_wood.png",
 	inventory_image = "default_fence_wood.png",
 	material = "default:wood",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	groups = fence_wood_groups,
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -1857,7 +1876,7 @@ default.register_fence("default:fence_acacia_wood", {
 	texture = "default_acacia_wood.png",
 	inventory_image = "default_fence_acacia_wood.png",
 	material = "default:acacia_wood",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	groups = fence_wood_groups,
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -1866,7 +1885,7 @@ default.register_fence("default:fence_birch_wood", {
 	texture = "default_birch_wood.png",
 	inventory_image = "default_fence_birch_wood.png",
 	material = "default:birch_wood",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	groups = fence_wood_groups,
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -1875,7 +1894,7 @@ default.register_fence("default:fence_jungle_wood", {
 	texture = "default_junglewood.png",
 	inventory_image = "default_fence_jungle_wood.png",
 	material = "default:junglewood",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	groups = fence_wood_groups,
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -1884,7 +1903,7 @@ default.register_fence("default:fence_pine_wood", {
 	texture = "default_pine_wood.png",
 	inventory_image = "default_fence_pine_wood.png",
 	material = "default:pine_wood",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	groups = fence_wood_groups,
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -1893,7 +1912,7 @@ default.register_fence("default:fence_cherry_blossom_wood", {
 	texture = "default_cherry_blossom_wood.png",
 	inventory_image = "default_fence_cherry_blossom_wood.png",
 	material = "default:cherry_blossom_wood",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence_wood = 1},
+	groups = fence_wood_groups,
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -1922,7 +1941,8 @@ minetest.register_node("default:vine", {
 	selection_box = {
 		type = "wallmounted"
 	},
-	groups = {snappy = 2, oddly_breakable_by_hand = 3, flammable = 2, attached_node = 1},
+	groups = {snappy = 2, oddly_breakable_by_hand = 3, flammable = 2,
+		attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_construct = function(pos)
@@ -2022,14 +2042,16 @@ minetest.register_node("default:quartz_ore", {
 
 minetest.register_node("default:quartz_block", {
 	description = "Quartz Block",
-	tiles = {"default_quartz_block_top.png", "default_quartz_block_bottom.png", "default_quartz_block_side.png"},
+	tiles = {"default_quartz_block_top.png", "default_quartz_block_bottom.png",
+		"default_quartz_block_side.png"},
 	groups = {snappy = 1, quartz = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("default:quartz_chiseled", {
 	description = "Chiseled Quartz",
-	tiles = {"default_quartz_chiseled_top.png", "default_quartz_chiseled_top.png", "default_quartz_chiseled_side.png"},
+	tiles = {"default_quartz_chiseled_top.png", "default_quartz_chiseled_top.png",
+		"default_quartz_chiseled_side.png"},
 	groups = {snappy = 1, quartz = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults()
 })
@@ -2038,7 +2060,8 @@ minetest.register_node("default:quartz_pillar", {
 	description = "Quartz Pillar",
 	paramtype2 = "facedir",
 	on_place = minetest.rotate_node,
-	tiles = {"default_quartz_pillar_top.png", "default_quartz_pillar_top.png", "default_quartz_pillar_side.png"},
+	tiles = {"default_quartz_pillar_top.png", "default_quartz_pillar_top.png",
+		"default_quartz_pillar_side.png"},
 	groups = {snappy = 1, quartz = 2, cracky = 1},
 	sounds = default.node_sound_stone_defaults()
 })
