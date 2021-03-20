@@ -142,6 +142,17 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	player:set_wielded_item(stack)
 end)
 
+--
+-- Craftitem registry
+--
+
+minetest.register_craftitem("default:blueberries", {
+	description = "Blueberries",
+	inventory_image = "default_blueberries.png",
+	groups = {food = 1, food_blueberries = 1, food_berry = 1},
+	on_use = minetest.item_eat(1)
+})
+
 minetest.register_craftitem("default:book", {
 	description = "Book",
 	inventory_image = "default_book.png",

@@ -1125,6 +1125,106 @@ minetest.register_node("default:bush_sapling", {
 	end
 })
 
+minetest.register_node("default:blueberry_bush_stem", {
+	description = "Blueberry Bush Stem",
+	drawtype = "plantlike",
+	visual_scale = 1.41,
+	tiles = {"default_blueberry_bush_stem.png"},
+	inventory_image = "default_blueberry_bush_stem.png",
+	wield_image = "default_blueberry_bush_stem.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	sounds = default.node_sound_wood_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = {-7 / 16, -0.5, -7 / 16, 7 / 16, 0.5, 7 / 16}
+	}
+})
+
+minetest.register_node("default:blueberry_bush_leaves_with_berries", {
+	description = "Blueberry Bush Leaves with Berries",
+	drawtype = "allfaces_optional",
+	tiles = {"default_blueberry_bush_leaves.png^default_blueberry_overlay.png"},
+	paramtype = "light",
+	walkable = false,
+	groups = {snappy = 3, flammable = 2, leaves = 1, dig_immediate = 2},
+	drop = "default:blueberries",
+	sounds = default.node_sound_leaves_defaults(),
+	node_dig_prediction = "default:blueberry_bush_leaves",
+
+	on_punch = function(pos)
+		minetest.after(0.1, function()
+			minetest.set_node(pos, {name = "default:blueberry_bush_leaves"})
+			minetest.add_item({x = pos.x, y = pos.y + 1, z = pos.z},
+				"default:blueberries")
+			minetest.get_node_timer(pos):start(random(300, 1500))
+		end)
+	end
+})
+
+minetest.register_node("default:blueberry_bush_leaves", {
+	description = "Blueberry Bush Leaves",
+	drawtype = "allfaces_optional",
+	tiles = {"default_blueberry_bush_leaves.png"},
+	paramtype = "light",
+	walkable = false,
+	groups = {snappy = 3, flammable = 2, leaves = 1},
+	drop = {
+		max_items = 1,
+		items = {
+			{items = {"default:blueberry_bush_sapling"}, rarity = 5},
+			{items = {"default:blueberry_bush_leaves"}}
+		}
+	},
+	sounds = default.node_sound_leaves_defaults(),
+
+	on_timer = function(pos)
+		if minetest.get_node_light(pos) < 11 then
+			minetest.get_node_timer(pos):start(200)
+		else
+			minetest.set_node(pos, {name = "default:blueberry_bush_leaves_with_berries"})
+		end
+	end,
+
+	after_place_node = after_place_leaves
+})
+
+minetest.register_node("default:blueberry_bush_sapling", {
+	description = "Blueberry Bush Sapling",
+	drawtype = "plantlike",
+	tiles = {"default_blueberry_bush_sapling.png"},
+	inventory_image = "default_blueberry_bush_sapling.png",
+	wield_image = "default_blueberry_bush_sapling.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	on_timer = grow_sapling,
+	selection_box = {
+		type = "fixed",
+		fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, 2 / 16, 4 / 16}
+	},
+	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
+		attached_node = 1, sapling = 1},
+	sounds = default.node_sound_leaves_defaults(),
+
+	on_construct = function(pos)
+		minetest.get_node_timer(pos):start(random(300, 1500))
+	end,
+
+	on_place = function(itemstack, placer, pointed_thing)
+		itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
+			"default:blueberry_bush_sapling",
+			-- minp, maxp to be checked, relative to sapling pos
+			{x = -1, y = 0, z = -1},
+			{x = 1, y = 1, z = 1},
+			-- maximum interval of interior volume check
+			2)
+
+		return itemstack
+	end
+})
+
 minetest.register_node("default:acacia_bush_stem", {
 	description = "Acacia Bush Stem",
 	drawtype = "plantlike",

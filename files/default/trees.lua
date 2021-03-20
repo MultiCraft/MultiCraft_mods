@@ -192,17 +192,23 @@ end
 -- Bush
 
 function default.grow_bush(pos)
-	local path = minetest.get_modpath("default") ..
-		"/schematics/bush.mts"
+	local path = modpath .. "/schematics/bush.mts"
 	minetest.place_schematic({x = pos.x - 1, y = pos.y - 1, z = pos.z - 1},
+		path, "0", nil, true)
+end
+
+-- Blueberry bush
+
+function default.grow_blueberry_bush(pos)
+	local path = modpath .. "/schematics/blueberry_bush.mts"
+	minetest.place_schematic({x = pos.x - 1, y = pos.y, z = pos.z - 1},
 		path, "0", nil, true)
 end
 
 -- Acacia bush
 
 function default.grow_acacia_bush(pos)
-	local path = minetest.get_modpath("default") ..
-		"/schematics/acacia_bush.mts"
+	local path = modpath .. "/schematics/acacia_bush.mts"
 	minetest.place_schematic({x = pos.x - 1, y = pos.y - 1, z = pos.z - 1},
 		path, "0", nil, true)
 end
@@ -210,8 +216,7 @@ end
 -- Pine bush
 
 function default.grow_pine_bush(pos)
-	local path = minetest.get_modpath("default") ..
-		"/schematics/pine_bush.mts"
+	local path = modpath .. "/schematics/pine_bush.mts"
 	minetest.place_schematic({x = pos.x - 1, y = pos.y - 1, z = pos.z - 1},
 		path, "0", nil, true)
 end
