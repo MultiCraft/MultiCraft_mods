@@ -16,17 +16,9 @@ farming.register_plant("farming_addons:carrot", {
 minetest.override_item("farming_addons:carrot", {
 	on_use = minetest.item_eat(3),
 	on_place = function(itemstack, placer, pointed_thing)
-		local under = pointed_thing.under
-		local node = minetest.get_node(under)
-		local udef = minetest.registered_nodes[node.name]
-		if udef and udef.on_rightclick and
-				not (placer and placer:is_player() and
-				placer:get_player_control().sneak) then
-			return udef.on_rightclick(under, node, placer, itemstack,
-				pointed_thing) or itemstack
-		end
-
-		return farming.place_seed(itemstack, placer, pointed_thing, "farming_addons:seed_carrot") or itemstack
+		return farming.on_rightclick(itemstack, placer, pointed_thing)
+			or farming.place_seed(itemstack, placer, pointed_thing, "farming_addons:seed_carrot")
+			or itemstack
 	end
 })
 

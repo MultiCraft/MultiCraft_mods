@@ -47,66 +47,60 @@ function farming_addons.grow_cocoa_plant(pos)
 	return
 end
 
-function farming_addons.place_cocoa_bean(itemstack, placer, pointed_thing)
-	local pt = pointed_thing
+function farming_addons.place_cocoa_bean(itemstack, placer, pt)
 	-- check if pointing at a node
 	if not pt or pt.type ~= "node" then
 		return itemstack
 	end
 
-	local under = minetest.get_node(pt.under)
-	local above = minetest.get_node(pt.above)
+	if not farming.on_rightclick(itemstack, placer, pt) then
+		local under = minetest.get_node(pt.under)
+		local above = minetest.get_node(pt.above)
 
-	local udef = minetest.registered_nodes[under.name]
-	if udef and udef.on_rightclick and
-			not (placer and placer:is_player() and
-			placer:get_player_control().sneak) then
-		return udef.on_rightclick(pt.under, under, placer, itemstack,
-			pointed_thing) or itemstack
-	end
+		local player_name = placer and placer:get_player_name() or ""
 
-	local player_name = placer and placer:get_player_name() or ""
+		if minetest.is_protected(pt.under, player_name) or
+				minetest.is_protected(pt.above, player_name) then
+			minetest.record_protection_violation(pt.under, player_name)
+			return itemstack
+		end
 
-	if minetest.is_protected(pt.under, player_name) or
-			minetest.is_protected(pt.above, player_name) then
-		minetest.record_protection_violation(pt.under, player_name)
+		-- return if any of the nodes is not registered
+		if not minetest.registered_nodes[under.name] then
+			return itemstack
+		end
+		if not minetest.registered_nodes[above.name] then
+			return itemstack
+		end
+
+		-- check if NOT pointing at the top/below of the node
+		if pt.above.y == pt.under.y - 1 or
+			pt.above.y == pt.under.y + 1 then
+			return itemstack
+		end
+
+		-- check if you can replace the node above the pointed node
+		if not minetest.registered_nodes[above.name].buildable_to then
+			return itemstack
+		end
+
+		-- check if pointing at soil
+		if under.name ~= "default:jungletree" then
+			return itemstack
+		end
+
+		local direction = vector.direction(pt.above, pt.under)
+		local new_param2 = minetest.dir_to_facedir(direction)
+
+		-- add the node and remove 1 item from the itemstack
+		minetest.set_node(pt.above, {name = "farming_addons:cocoa_1", param2 = new_param2})
+
+		tick(pt.above)
+		if not minetest.is_creative_enabled(player_name) then
+			itemstack:take_item()
+		end
 		return itemstack
 	end
-
-	-- return if any of the nodes is not registered
-	if not minetest.registered_nodes[under.name] then
-		return itemstack
-	end
-	if not minetest.registered_nodes[above.name] then
-		return itemstack
-	end
-
-	-- check if NOT pointing at the top/below of the node
-	if pt.above.y == pt.under.y - 1 or
-		pt.above.y == pt.under.y + 1 then
-		return itemstack
-	end
-	-- check if you can replace the node above the pointed node
-	if not minetest.registered_nodes[above.name].buildable_to then
-		return itemstack
-	end
-
-	-- check if pointing at soil
-	if under.name ~= "default:jungletree" then
-		return itemstack
-	end
-
-	local direction = vector.direction(pt.above, pt.under)
-	local new_param2 = minetest.dir_to_facedir(direction)
-
-	-- add the node and remove 1 item from the itemstack
-	minetest.set_node(pt.above, {name = "farming_addons:cocoa_1", param2 = new_param2})
-
-	tick(pt.above)
-	if not minetest.is_creative_enabled(player_name) then
-		itemstack:take_item()
-	end
-	return itemstack
 end
 
 -- COCOA
