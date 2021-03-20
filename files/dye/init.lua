@@ -51,6 +51,13 @@ minetest.register_craft({
 	}
 })
 
+-- Manually add blueberries->violet dye
+minetest.register_craft({
+	output = "dye:violet 2",
+	recipe = {
+		{"default:blueberries"}
+	}
+})
 
 -- Manually add flowers recipes
 local flowers_recipes = {
