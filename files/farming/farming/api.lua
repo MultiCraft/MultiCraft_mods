@@ -208,6 +208,21 @@ farming.grow_plant = function(pos)
 	return
 end
 
+
+-- on_rightclick override helper
+function farming.on_rightclick(itemstack, clicker, pointed_thing)
+	local under = pointed_thing.under
+	local node = minetest.get_node_or_nil(under)
+	local udef = node and minetest.registered_nodes[node.name]
+
+	if udef and udef.on_rightclick and
+			not (clicker and clicker:is_player() and
+			clicker:get_player_control().sneak) then
+		return udef.on_rightclick(under, node, clicker, itemstack,
+			pointed_thing) or itemstack
+	end
+end
+
 -- Register plants
 local singleplayer = minetest.is_singleplayer()
 local find_node_near = minetest.find_node_near
@@ -271,19 +286,11 @@ function farming.register_plant(name, def)
 		}),
 
 		on_place = function(itemstack, placer, pointed_thing)
-			local under = pointed_thing.under
-			local node = minetest.get_node(under)
-			local udef = minetest.registered_nodes[node.name]
-			if udef and udef.on_rightclick and
-					not (placer and placer:is_player() and
-					placer:get_player_control().sneak) then
-				return udef.on_rightclick(under, node, placer, itemstack,
-					pointed_thing) or itemstack
-			end
-
-			return farming.place_seed(itemstack, placer, pointed_thing,
-				mname .. ":seed_" .. pname) or itemstack
+			return farming.on_rightclick(itemstack, placer, pointed_thing)
+				or farming.place_seed(itemstack, placer, pointed_thing,
+					mname .. ":seed_" .. pname) or itemstack
 		end,
+
 		next_plant = mname .. ":" .. pname .. "_1",
 		on_timer = farming.grow_plant,
 		minlight = def.minlight,
