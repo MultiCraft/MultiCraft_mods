@@ -231,7 +231,7 @@ pep.register_potion({
 	longdesc = "Drinking it will make you walk slower for 60 seconds",
 	effect_type = "pepspeedminus",
 	duration = 60,
-	recipe = {"default:dry_grass", "default:ice", "vessels:glass_bottle"}
+	recipe = {"group:dry_grass", "default:ice", "vessels:glass_bottle"}
 })
 
 playereffects.register_effect_type("pepbreath", S("Perfect Breath"), "pep_breath.png", {"breath"},
@@ -330,7 +330,7 @@ pep.register_potion({
 	effect_type = "pepjumpplus",
 	duration = 60,
 	recipe = {
-		"flowers:tulip", "default:grass", "mesecons:wire_00000000_off",
+		"flowers:tulip", "group:grass", "mesecons:wire_00000000_off",
 		"mesecons:wire_00000000_off", "vessels:glass_bottle"
 	}
 })

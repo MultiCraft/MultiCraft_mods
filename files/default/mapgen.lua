@@ -42,6 +42,7 @@ minetest.register_alias("mapgen_mossycobble", "default:mossycobble")
 minetest.register_alias("mapgen_sandstonebrick", "default:sandstone") -- 0.4 compatibility
 minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_default_sandstone")
 
+
 local modpath = minetest.get_modpath("default")
 
 --
@@ -656,6 +657,7 @@ function default.register_biomes()
 		heat_point = 50,
 		humidity_point = 35,
 	})
+
 	-- Coniferous forest
 
 	minetest.register_biome({
@@ -964,14 +966,14 @@ function default.register_mgv6_decorations()
 	-- Long grasses
 
 	minetest.register_decoration({
-		name = "default:grass",
+		name = "default:grass_4",
 		deco_type = "simple",
 		place_on = {"default:dirt_with_grass"},
 		sidelen = 16,
 		fill_ratio = 0.05,
 		y_max = 30,
 		y_min = 1,
-		decoration = "default:grass",
+		decoration = "default:grass_4",
 	})
 
 	-- Dry shrubs
@@ -994,6 +996,51 @@ function default.register_mgv6_decorations()
 		y_min = 1,
 		decoration = "default:dry_shrub",
 		param2 = 4,
+	})
+end
+
+
+local function register_grass_decoration(offset, scale, length)
+	minetest.register_decoration({
+		name = "default:grass_" .. length,
+		deco_type = "simple",
+		place_on = {"default:dirt_with_grass"},
+		sidelen = 16,
+		noise_params = {
+			offset = offset,
+			scale = scale,
+			spread = {x = 200, y = 200, z = 200},
+			seed = 329,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = {"grassland", "deciduous_forest",
+			"deciduous_forest", "coniferous_forest",
+			"coniferous_forest_dunes"},
+		y_max = 31000,
+		y_min = 1,
+		decoration = "default:grass_" .. length,
+	})
+end
+
+local function register_dry_grass_decoration(offset, scale, length)
+	minetest.register_decoration({
+		name = "default:dry_grass_" .. length,
+		deco_type = "simple",
+		place_on = {"default:dirt_with_dry_grass"},
+		sidelen = 16,
+		noise_params = {
+			offset = offset,
+			scale = scale,
+			spread = {x = 200, y = 200, z = 200},
+			seed = 329,
+			octaves = 3,
+			persist = 0.6
+		},
+		biomes = {"savanna"},
+		y_max = 31000,
+		y_min = 1,
+		decoration = "default:dry_grass_" .. length,
 	})
 end
 
@@ -1368,7 +1415,7 @@ function default.register_decorations()
 		biomes = {"grassland", "deciduous_forest"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/bush.mts",
+		schematic = modpath .. "/schematics/bush.mts",
 		flags = "place_center_x, place_center_z",
 	})
 
@@ -1391,7 +1438,7 @@ function default.register_decorations()
 		y_max = 31000,
 		y_min = 1,
 		place_offset_y = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/blueberry_bush.mts",
+		schematic = modpath .. "/schematics/blueberry_bush.mts",
 		flags = "place_center_x, place_center_z",
 	})
 
@@ -1400,7 +1447,7 @@ function default.register_decorations()
 	minetest.register_decoration({
 		name = "default:acacia_bush",
 		deco_type = "schematic",
-		place_on = {"default:dry_dirt_with_dry_grass"},
+		place_on = {"default:dirt_with_dry_grass"},
 		sidelen = 16,
 		noise_params = {
 			offset = -0.004,
@@ -1413,7 +1460,7 @@ function default.register_decorations()
 		biomes = {"savanna"},
 		y_max = 31000,
 		y_min = 1,
-		schematic = minetest.get_modpath("default") .. "/schematics/acacia_bush.mts",
+		schematic = modpath .. "/schematics/acacia_bush.mts",
 		flags = "place_center_x, place_center_z",
 	})
 
@@ -1435,51 +1482,25 @@ function default.register_decorations()
 		biomes = {"taiga", "snowy_grassland"},
 		y_max = 31000,
 		y_min = 4,
-		schematic = minetest.get_modpath("default") .. "/schematics/pine_bush.mts",
+		schematic = modpath .. "/schematics/pine_bush.mts",
 		flags = "place_center_x, place_center_z",
 	})
 
 	-- Grasses
 
-	minetest.register_decoration({
-		deco_type = "simple",
-		place_on = {"default:dirt_with_grass", "default:sand"},
-		sidelen = 16,
-		noise_params = {
-			offset = 0.15,
-			scale = 0.15,
-			spread = {x = 200, y = 200, z = 200},
-			seed = 329,
-			octaves = 3,
-			persist = 0.6
-		},
-		biomes = {"grassland", "deciduous_forest",
-			"deciduous_forest", "coniferous_forest",
-			"coniferous_forest_dunes"},
-		y_max = 31000,
-		y_min = 1,
-		decoration = "default:grass",
-	})
+	register_grass_decoration(-0.02,  0.1,   5)
+	register_grass_decoration(-0.005, 0.085, 4)
+	register_grass_decoration(0.01,   0.07,  3)
+	register_grass_decoration(0.025,  0.055, 2)
+	register_grass_decoration(0.04,   0.04,  1)
 
 	-- Dry grasses
 
-	minetest.register_decoration({
-		deco_type = "simple",
-		place_on = {"default:dirt_with_dry_grass"},
-		sidelen = 16,
-		noise_params = {
-			offset = 0.15,
-			scale = 0.15,
-			spread = {x = 200, y = 200, z = 200},
-			seed = 329,
-			octaves = 3,
-			persist = 0.6
-		},
-		biomes = {"savanna"},
-		y_max = 31000,
-		y_min = 1,
-		decoration = "default:dry_grass",
-	})
+	register_dry_grass_decoration(0.01, 0.05,  5)
+	register_dry_grass_decoration(0.03, 0.03,  4)
+	register_dry_grass_decoration(0.05, 0.01,  3)
+	register_dry_grass_decoration(0.07, -0.01, 2)
+	register_dry_grass_decoration(0.09, -0.03, 1)
 
 	-- Junglegrass
 

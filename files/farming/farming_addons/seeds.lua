@@ -3,24 +3,28 @@
 --
 
 -- Pumpkin
-minetest.override_item("default:dry_grass", {drop = {
-	max_items = 1,
-	items = {
-		{items = {"farming_addons:seed_pumpkin"}, rarity = 6},
-		{items = {"default:dry_grass"}}
-	}
-}})
+for i = 1, 5 do
+	minetest.override_item("default:dry_grass_" .. i, {drop = {
+		max_items = 1,
+		items = {
+			{items = {"farming_addons:seed_pumpkin"}, rarity = 5},
+			{items = {"default:dry_grass_1"}}
+		}
+	}})
+end
 
 -- Carrot
 -- Wheat
-minetest.override_item("default:grass", {drop = {
-	max_items = 1,
-	items = {
-		{items = {"farming:seed_wheat"}, rarity = 5},
-		{items = {"farming_addons:seed_carrot"}, rarity = 12},
-		{items = {"default:grass"}}
-	}
-}})
+for i = 1, 5 do
+	minetest.override_item("default:grass_" .. i, {drop = {
+		max_items = 1,
+		items = {
+			{items = {"farming:seed_wheat"}, rarity = 5},
+			{items = {"farming_addons:seed_carrot"}, rarity = 12},
+			{items = {"default:grass_1"}}
+		}
+	}})
+end
 
 -- Potato
 minetest.override_item("default:junglegrass", {drop = {
