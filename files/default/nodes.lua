@@ -340,7 +340,7 @@ minetest.register_node("default:sapling", {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0.35, 0.3}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 2,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -418,7 +418,7 @@ minetest.register_node("default:apple_gold", {
 		type = "fixed",
 		fixed = {-3/16, -7/16, -3/16, 3/16, 1/4, 3/16}
 	},
-	groups = {fleshy = 3, dig_immediate = 3, flammable = 2, food = 1},
+	groups = {fleshy = 3, dig_immediate = 1, flammable = 2, food = 1},
 	on_use = minetest.item_eat(8),
 	sounds = default.node_sound_defaults()
 })
@@ -481,7 +481,7 @@ minetest.register_node("default:junglesapling", {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0.35, 0.3}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 2,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -559,7 +559,7 @@ minetest.register_node("default:pine_sapling", {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0.35, 0.3}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 3,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 3,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -639,7 +639,7 @@ minetest.register_node("default:acacia_sapling", {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0.35, 0.3}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 2,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -716,7 +716,7 @@ minetest.register_node("default:birch_sapling", {
 		type = "fixed",
 		fixed = {-3 / 16, -0.5, -3 / 16, 3 / 16, 0.5, 3 / 16}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 3,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 3,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -773,7 +773,7 @@ minetest.register_node("default:cherry_blossom_sapling", {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0.35, 0.3}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 2,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -1013,46 +1013,253 @@ minetest.register_node("default:junglegrass", {
 	description = "Jungle Grass",
 	drawtype = "plantlike",
 	waving = 1,
-	visual_scale = 1.3,
+	visual_scale = 1.25,
 	tiles = {"default_junglegrass.png"},
 	inventory_image = "default_junglegrass.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1},
-	sounds = default.node_sound_leaves_defaults()
+	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
+		dig_immediate = 2},
+	sounds = default.node_sound_leaves_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.5, 0.5, 12 / 16, 0.5}
+	}
 })
 
-minetest.register_node("default:grass", {
+-- Grass
+
+minetest.register_node("default:grass_1", {
 	description = "Grass",
 	drawtype = "plantlike",
 	waving = 1,
-	tiles = {"default_tallgrass.png"},
-	inventory_image = "default_tallgrass.png",
+	tiles = {"default_grass_1.png"},
+	-- Use texture of a taller grass stage in inventory
+	inventory_image = "default_grass_4.png",
+	wield_image = "default_grass_4.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, flora = 1, attached_node = 1, grass = 1,
-		flammable = 1, dig_immediate = 3},
-	sounds = default.node_sound_leaves_defaults()
+	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
+		grass = 1, dig_immediate = 3},
+	sounds = default.node_sound_leaves_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, -5 / 16, 6 / 16}
+	},
+
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.type == "node" then
+			local under = pointed_thing.under
+			local node = minetest.get_node(under)
+			local node_def = minetest.registered_nodes[node.name]
+			if node_def and node_def.on_rightclick and
+					not (placer and placer:is_player() and
+					placer:get_player_control().sneak) then
+				return node_def.on_rightclick(under, node, placer, itemstack,
+					pointed_thing) or itemstack
+			end
+
+			-- place a random grass node
+			local stack = ItemStack("default:grass_" .. random(1, 5))
+			local ret = minetest.item_place(stack, placer, pointed_thing)
+			return ItemStack("default:grass_1 " ..
+				itemstack:get_count() - (1 - ret:get_count()))
+		end
+
+		return itemstack
+	end
 })
 
-minetest.register_node("default:dry_grass", {
+for i = 2, 5 do
+	minetest.register_node("default:grass_" .. i, {
+		description = "Grass",
+		drawtype = "plantlike",
+		waving = 1,
+		tiles = {"default_grass_" .. i .. ".png"},
+		inventory_image = "default_grass_" .. i .. ".png",
+		wield_image = "default_grass_" .. i .. ".png",
+		paramtype = "light",
+		sunlight_propagates = true,
+		walkable = false,
+		buildable_to = true,
+		drop = "default:grass_1",
+		groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
+			grass = 1, dig_immediate = 3, not_in_creative_inventory = 1},
+		sounds = default.node_sound_leaves_defaults(),
+		selection_box = {
+			type = "fixed",
+			fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, (-1 / 16 + i / 12), 6 / 16}
+		}
+	})
+end
+
+-- Compatiability Grass node
+minetest.register_node("default:grass", {
+	description = "Grass",
+	drawtype = "plantlike",
+	waving = 1,
+	tiles = {"default_grass_4.png"},
+	inventory_image = "default_grass_4.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	buildable_to = true,
+	drop = "default:grass_1",
+	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
+		grass = 1, dig_immediate = 3},
+	sounds = default.node_sound_leaves_defaults(),
+
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.type == "node" then
+			local under = pointed_thing.under
+			local node = minetest.get_node(under)
+			local node_def = minetest.registered_nodes[node.name]
+			if node_def and node_def.on_rightclick and
+					not (placer and placer:is_player() and
+					placer:get_player_control().sneak) then
+				return node_def.on_rightclick(under, node, placer, itemstack,
+					pointed_thing) or itemstack
+			end
+
+			-- place a random grass node
+			local stack = ItemStack("default:grass_" .. random(1, 5))
+			local ret = minetest.item_place(stack, placer, pointed_thing)
+			return ItemStack("default:grass_1 " ..
+				itemstack:get_count() - (1 - ret:get_count()))
+		end
+
+		return itemstack
+	end
+})
+
+-- LBM for updating Grass
+minetest.register_lbm({
+	label = "Grass updater",
+	name = "default:grass_updater",
+	nodenames = "default:grass",
+	action = function(pos)
+		minetest.swap_node(pos, {name = "default:grass_" .. random(1, 5)})
+	end
+})
+
+-- Dry Grass
+
+minetest.register_node("default:dry_grass_1", {
 	description = "Dry Grass",
 	drawtype = "plantlike",
 	waving = 1,
-	tiles = {"default_dry_tallgrass.png"},
-	inventory_image = "default_dry_tallgrass.png",
+	tiles = {"default_dry_grass_1.png"},
+	inventory_image = "default_dry_grass_4.png",
+	wield_image = "default_dry_grass_4.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
 	groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
 		dry_grass = 1, dig_immediate = 3},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = default.node_sound_leaves_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, -3 / 16, 6 / 16}
+	},
+
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.type == "node" then
+			local under = pointed_thing.under
+			local node = minetest.get_node(under)
+			local node_def = minetest.registered_nodes[node.name]
+			if node_def and node_def.on_rightclick and
+					not (placer and placer:is_player() and
+					placer:get_player_control().sneak) then
+				return node_def.on_rightclick(under, node, placer, itemstack,
+					pointed_thing) or itemstack
+			end
+
+			-- place a random dry grass node
+			local stack = ItemStack("default:dry_grass_" .. random(1, 5))
+			local ret = minetest.item_place(stack, placer, pointed_thing)
+			return ItemStack("default:dry_grass_1 " ..
+				itemstack:get_count() - (1 - ret:get_count()))
+		end
+
+		return itemstack
+	end
 })
+
+-- Compatiability Dry Grass node
+minetest.register_node("default:dry_grass", {
+	description = "Dry Grass",
+	drawtype = "plantlike",
+	waving = 1,
+	tiles = {"default_dry_grass_4.png"},
+	inventory_image = "default_dry_grass_4.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	buildable_to = true,
+	groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
+		dry_grass = 1, dig_immediate = 3},
+	sounds = default.node_sound_leaves_defaults(),
+
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.type == "node" then
+			local under = pointed_thing.under
+			local node = minetest.get_node(under)
+			local node_def = minetest.registered_nodes[node.name]
+			if node_def and node_def.on_rightclick and
+					not (placer and placer:is_player() and
+					placer:get_player_control().sneak) then
+				return node_def.on_rightclick(under, node, placer, itemstack,
+					pointed_thing) or itemstack
+			end
+
+			-- place a random dry grass node
+			local stack = ItemStack("default:dry_grass_" .. random(1, 5))
+			local ret = minetest.item_place(stack, placer, pointed_thing)
+			return ItemStack("default:dry_grass_1 " ..
+				itemstack:get_count() - (1 - ret:get_count()))
+		end
+
+		return itemstack
+	end
+})
+
+-- LBM for updating Dry Grass
+minetest.register_lbm({
+	label = "Dry Grass updater",
+	name = "default:dry_grass_updater",
+	nodenames = "default:dry_grass",
+	action = function(pos)
+		minetest.swap_node(pos, {name = "default:dry_grass_" .. random(1, 5)})
+	end
+})
+
+for i = 2, 5 do
+	minetest.register_node("default:dry_grass_" .. i, {
+		description = "Dry Grass",
+		drawtype = "plantlike",
+		waving = 1,
+		tiles = {"default_dry_grass_" .. i .. ".png"},
+		inventory_image = "default_dry_grass_" .. i .. ".png",
+		wield_image = "default_dry_grass_" .. i .. ".png",
+		paramtype = "light",
+		sunlight_propagates = true,
+		walkable = false,
+		buildable_to = true,
+		groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
+			dry_grass = 1, not_in_creative_inventory = 1},
+		drop = "default:dry_grass_1",
+		sounds = default.node_sound_leaves_defaults(),
+		selection_box = {
+			type = "fixed",
+			fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, (-1 / 16 + i / 12), 6 / 16}
+		}
+	})
+end
 
 minetest.register_node("default:bush_stem", {
 	description = "Bush Stem",
@@ -1104,7 +1311,7 @@ minetest.register_node("default:bush_sapling", {
 		type = "fixed",
 		fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, 2 / 16, 4 / 16}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 2,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -1150,7 +1357,9 @@ minetest.register_node("default:blueberry_bush_leaves_with_berries", {
 	walkable = false,
 	groups = {snappy = 3, flammable = 2, leaves = 1, dig_immediate = 2},
 	drop = "default:blueberries",
-	sounds = default.node_sound_leaves_defaults(),
+	sounds = default.node_sound_leaves_defaults({
+		dig = {name = "default_dig_snappy", gain = 0.5}
+	}),
 	node_dig_prediction = "default:blueberry_bush_leaves",
 
 	on_punch = function(pos)
@@ -1275,7 +1484,7 @@ minetest.register_node("default:acacia_bush_sapling", {
 		type = "fixed",
 		fixed = {-3 / 16, -0.5, -3 / 16, 3 / 16, 2 / 16, 3 / 16}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 2,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -1345,7 +1554,7 @@ minetest.register_node("default:pine_bush_sapling", {
 		type = "fixed",
 		fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, 2 / 16, 4 / 16}
 	},
-	groups = {snappy = 2, dig_immediate = 3, flammable = 2,
+	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
