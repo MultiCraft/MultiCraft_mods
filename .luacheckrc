@@ -29,6 +29,7 @@ read_globals = {
 	"mobs",
 	"playerphysics",
 	"screwdriver",
+	"bonemeal",
 	"sscsm",
 	"hunger",
 	"workbench",

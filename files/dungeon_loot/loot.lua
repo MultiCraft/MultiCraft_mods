@@ -13,12 +13,6 @@ dungeon_loot.registered_loot = {
 	{name = "carts:rail", chance = 0.35, count = {1, 6}},
 
 	-- farming / consumable
-	{name = "farming:string", chance = 0.5, count = {1, 8}},
-	{name = "farming:wheat", chance = 0.5, count = {2, 5}},
-	{name = "farming_addons:seed_carrot", chance = 0.5, count = {2, 4}},
-	{name = "farming_addons:cocoa_3", chance = 0.5, count = {2, 4}},
-	{name = "farming_addons:melon", chance = 0.5, count = {1, 2}},
-	{name = "farming_addons:pumpkin", chance = 0.5, count = {1, 2}},
 	{name = "default:apple", chance = 0.4, count = {1, 4}},
 	{name = "default:cactus", chance = 0.4, count = {1, 4}, types = {"sandstone", "desert"}},
 
