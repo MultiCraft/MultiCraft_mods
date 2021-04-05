@@ -109,10 +109,10 @@ minetest.register_node("itemframes:frame",{
 	drawtype = "nodebox",
 	node_box = {
 		type = "wallmounted",
-		wall_side = {-0.5, -15/32, -15/32, -7/16, 15/32, 15/32}
+		wall_side = {-0.5, -14/32, -14/32, -7/16, 14/32, 14/32}
 	},
 	tiles = {"itemframe.png"},
-	inventory_image = "itemframe.png",
+	inventory_image = "itemframe_inv.png",
 	wield_image = "itemframe.png",
 	paramtype = "light",
 	paramtype2 = "wallmounted",
@@ -123,12 +123,13 @@ minetest.register_node("itemframes:frame",{
 
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type == "node" then
+			local pt_above = pointed_thing.above
 			local undery = pointed_thing.under.y
-			local posy = pointed_thing.above.y
-			if undery == posy then -- allowed wall-mounted only
+			local abovey = pt_above.y
+			if undery == abovey then -- allowed wall-mounted only
 				itemstack = minetest.item_place(itemstack, placer, pointed_thing)
 				minetest.sound_play({name = "default_place_node_hard"},
-						{pos = pointed_thing.above})
+						{pos = pt_above})
 			end
 		end
 		return itemstack
