@@ -41,7 +41,7 @@ for i = 1, #dyes do
 			walk_start = 81,	walk_end = 100
 		},
 		fear_height = 3,
-		follow = {"flora", "farming:wheat"},
+		follow = {"group:flora", "farming:wheat"},
 		replace_rate = 10,
 		replace_what = {
 			{"group:flora", "air", -1},
