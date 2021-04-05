@@ -340,9 +340,8 @@ minetest.register_abm({
 minetest.register_node("flowers:mushroom_red", {
 	description = S"Red Mushroom",
 	tiles = {"flowers_mushroom_red.png"},
-	inventory_image = "flowers_mushroom_red_inv.png",
-	drawtype = "mesh",
-	mesh = "flowers_mushroom.b3d",
+	inventory_image = "flowers_mushroom_red.png",
+	drawtype = "plantlike",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -352,16 +351,15 @@ minetest.register_node("flowers:mushroom_red", {
 	on_use = minetest.item_eat(2, nil, -5),
 	selection_box = {
 		type = "fixed",
-		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
+		fixed = {-0.22, -0.5, -0.22, 0.22, 0.13, 0.22}
 	}
 })
 
 minetest.register_node("flowers:mushroom_brown", {
 	description = S"Brown Mushroom",
 	tiles = {"flowers_mushroom_brown.png"},
-	inventory_image = "flowers_mushroom_brown_inv.png",
-	drawtype = "mesh",
-	mesh = "flowers_mushroom.b3d",
+	inventory_image = "flowers_mushroom_brown.png",
+	drawtype = "plantlike",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -371,7 +369,7 @@ minetest.register_node("flowers:mushroom_brown", {
 	on_use = minetest.item_eat(3),
 	selection_box = {
 		type = "fixed",
-		fixed = {-0.3, -0.5, -0.3, 0.3, 0, 0.3}
+		fixed = {-0.23, -0.5, -0.23, 0.23, 0.13, 0.23}
 	}
 })
 
@@ -408,16 +406,6 @@ minetest.register_abm({
 		flowers.mushroom_spread(...)
 	end
 })
-
-
--- These old mushroom related nodes can be simplified now
-
-minetest.register_alias("flowers:mushroom_spores_brown", "flowers:mushroom_brown")
-minetest.register_alias("flowers:mushroom_spores_red", "flowers:mushroom_red")
-minetest.register_alias("flowers:mushroom_fertile_brown", "flowers:mushroom_brown")
-minetest.register_alias("flowers:mushroom_fertile_red", "flowers:mushroom_red")
-minetest.register_alias("mushroom:brown_natural", "flowers:mushroom_brown")
-minetest.register_alias("mushroom:red_natural", "flowers:mushroom_red")
 
 
 --
@@ -486,7 +474,7 @@ minetest.register_node("flowers:waterlily_flower", {
 	drop = "flowers:waterlily",
 	node_box = {
 		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -15/32, 0.5}
+		fixed = {-0.5, -31 / 64, -0.5, 0.5, -15 / 32, 0.5}
 	},
 	selection_box = {
 		type = "fixed",
