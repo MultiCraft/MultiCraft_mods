@@ -468,6 +468,24 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
+	recipe = "group:grass",
+	burntime = 2
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "group:dry_grass",
+	burntime = 2
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:junglegrass",
+	burntime = 3
+})
+
+minetest.register_craft({
+	type = "fuel",
 	recipe = "group:tree",
 	burntime = 15
 })

@@ -75,9 +75,13 @@ end
 local function get_tile(def)
 	local tiles = {"flowerpot.png"}
 	local drawtype = def.drawtype
+	local inventory_image = def.inventory_image
 
 	if drawtype == "mesh" then
 		tiles[2] = "[combine:64x64:0,10=" .. def.inventory_image
+		tiles[3] = b
+	elseif inventory_image ~= "" then
+		tiles[2] = inventory_image
 		tiles[3] = b
 	else
 		local tile = def.tiles[1]
@@ -93,7 +97,6 @@ local function get_tile(def)
 			tiles[3] = tile
 		end
 	end
-
 
 	return tiles
 end
@@ -191,11 +194,18 @@ minetest.register_craft({
 local function register_pots()
 	local register_pot = flowerpot.register_node
 	for node, def in pairs(minetest.registered_nodes) do
-		local groups = def.groups or {}
-		if groups.flora or groups.sapling then
-			register_pot(node)
+		if not def.groups.grass and not def.groups.dry_grass then
+			local groups = def.groups or {}
+			if groups.flora or groups.sapling then
+				register_pot(node)
+			end
 		end
 	end
+
+	register_pot("default:grass_1")
+	register_pot("default:dry_grass_1")
+	minetest.register_alias("flowerpot:default_grass", "flowerpot:default_grass_1")
+	minetest.register_alias("flowerpot:default_dry_grass", "flowerpot:default_dry_grass_1")
 end
 
 if minetest.register_on_mods_loaded then
