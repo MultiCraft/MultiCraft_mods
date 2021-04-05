@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20210206",
+	version = "20210323",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -226,10 +226,19 @@ end
 local check_for = function(look_for, look_inside)
 	if type(look_inside) == "string" and look_inside == look_for then
 		return true
+
 	elseif type(look_inside) == "table" then
 		for _, str in pairs(look_inside) do
 			if str == look_for then
 				return true
+			end
+
+			if str:find("group:") then
+				local group = str:split(":")[2]
+
+				if minetest.get_item_group(look_for, group) ~= 0 then
+					return true
+				end
 			end
 		end
 	end
@@ -1200,26 +1209,25 @@ local entity_physics = function(pos, radius)
 end
 
 
+-- can mob see player
+local is_invisible = function(self, player_name)
+	if mobs.invis[player_name] and not self.ignore_invisibility then
+		return true
+	end
+end
+
+
 -- should mob follow what I'm holding?
 function mob_class:follow_holding(clicker)
-	if mobs.invis[clicker:get_player_name()] then
+	if is_invisible(self, clicker:get_player_name()) then
 		return false
 	end
 
 	local item = clicker:get_wielded_item()
-	local t = type(self.follow)
 
-	-- single item
-	if t == "string"
-			and (item:get_name() == self.follow or minetest.get_item_group(item:get_name(), self.follow) == 1) then
+	-- are we holding an item mob can follow?
+	if check_for(item:get_name(), self.follow) then
 		return true
-	-- multiple items
-	elseif t == "table" then
-		for no = 1, #self.follow do
-			if (self.follow[no] == item:get_name() or minetest.get_item_group(item:get_name(), self.follow[no]) == 1) then
-				return true
-			end
-		end
 	end
 
 	return false
@@ -1736,7 +1744,7 @@ function mob_class:general_attack()
 			if not damage_enabled
 					or not self.attack_players
 					or (self.owner and self.type ~= "monster")
-					or mobs.invis[objs[n]:get_player_name()]
+					or is_invisible(self, objs[n]:get_player_name())
 					or mobs.is_creative(objs[n]:get_player_name())
 					or (self.specific_attack
 							and not check_for("player", self.specific_attack)) then
@@ -1811,7 +1819,7 @@ function mob_class:do_runaway_from()
 		if objs[n]:is_player() then
 			pname = objs[n]:get_player_name()
 
-			if mobs.invis[pname]
+			if is_invisible(self, pname)
 					or mobs.is_creative(pname)
 					or self.owner == pname then
 				name = ""
@@ -1880,7 +1888,7 @@ function mob_class:follow_flop()
 				break
 			end
 			local player = minetest.get_player_by_name(name)
-			if player and not mobs.invis[name] and
+			if player and not is_invisible(self, name) and
 					vdistance(player:get_pos(), s) < self.view_range then
 				self.following = player
 				break
@@ -2140,7 +2148,7 @@ function mob_class:do_states(dtime)
 				or not self.attack:get_pos()
 				or self.attack:get_hp() <= 0
 				or (self.attack:is_player()
-				and mobs.invis[self.attack:get_player_name()]) then
+				and is_invisible(self, self.attack:get_player_name())) then
 		--	print(" ** stop attacking **", dist, self.view_range)
 			self.state = "stand"
 			self:set_velocity(0)
@@ -2688,7 +2696,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 			and not self.child
 			and self.attack_players
 			and hitter:get_player_name() ~= self.owner
-			and not mobs.invis[name]
+			and not is_invisible(self, name)
 			and self.object ~= hitter then
 		-- attack whoever punched mob
 		self.state = ""
@@ -4021,7 +4029,8 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 	-- if mob has been tamed you can name it with a nametag
 	if item:get_name() == "mobs:nametag"
-			and name == self.owner then
+			and (name == self.owner
+			or minetest.check_player_privs(name, {server = true})) then
 		-- store mob and nametag stack in external variables
 		mob_obj[name] = self
 		mob_sta[name] = item
@@ -4030,9 +4039,10 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 		minetest.show_formspec(name, "mobs_nametag",
 				"size[5,3]" ..
+				"background[0,0;0,0;formspec_background_color.png^formspec_backround.png;true]" ..
 				"field[1.35,1.25;2.9,1;name;" ..
 				esc(S("Enter name:")) ..
-				";" .. tag .. "]" ..
+				";" .. esc(tag) .. "]" ..
 				"button_exit[1.06,1.65;2.9,1;mob_rename;" ..
 				esc(S("Rename")) .. "]")
 
@@ -4063,17 +4073,30 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			return
 		end
 
-		-- limit name entered to 48 characters long
-		fields.name = fields.name:sub(1, 48)
+		if fields.name == "{remove_owner}" then
+			mob_obj[name].nametag = nil
+			mob_obj[name]:update_tag()
 
-		-- update nametag
-		mob_obj[name].nametag = fields.name
-		mob_obj[name]:update_tag()
+			mob_obj[name].infotext = ""
+			mob_obj[name].object:set_properties({
+				infotext = ""
+			})
 
-		-- if not in creative then take item
-		if not mobs.is_creative(name) then
-			mob_sta[name]:take_item()
-			player:set_wielded_item(mob_sta[name])
+			mob_obj[name].owner = nil
+			mob_obj[name].tamed = false
+		else
+			-- limit name entered to 48 characters long
+			fields.name = fields.name:sub(1, 48)
+
+			-- update nametag
+			mob_obj[name].nametag = fields.name
+			mob_obj[name]:update_tag()
+
+			-- if not in creative then take item
+			if not mobs.is_creative(name) then
+				mob_sta[name]:take_item()
+				player:set_wielded_item(mob_sta[name])
+			end
 		end
 
 		-- reset external variables
