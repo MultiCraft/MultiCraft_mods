@@ -1031,6 +1031,28 @@ minetest.register_node("default:junglegrass", {
 
 -- Grass
 
+local function grass_place(itemstack, placer, pointed_thing)
+	if pointed_thing.type == "node" then
+		local under = pointed_thing.under
+		local node = minetest.get_node(under)
+		local node_def = minetest.registered_nodes[node.name]
+		if node_def and node_def.on_rightclick and
+				not (placer and placer:is_player() and
+				placer:get_player_control().sneak) then
+			return node_def.on_rightclick(under, node, placer, itemstack,
+				pointed_thing) or itemstack
+		end
+
+		-- place a random grass node
+		local stack = ItemStack("default:grass_" .. random(1, 5))
+		local ret = minetest.item_place(stack, placer, pointed_thing)
+		return ItemStack("default:grass_1 " ..
+			itemstack:get_count() - (1 - ret:get_count()))
+	end
+
+	return itemstack
+end
+
 minetest.register_node("default:grass_1", {
 	description = "Grass",
 	drawtype = "plantlike",
@@ -1051,27 +1073,7 @@ minetest.register_node("default:grass_1", {
 		fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, -5 / 16, 6 / 16}
 	},
 
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.type == "node" then
-			local under = pointed_thing.under
-			local node = minetest.get_node(under)
-			local node_def = minetest.registered_nodes[node.name]
-			if node_def and node_def.on_rightclick and
-					not (placer and placer:is_player() and
-					placer:get_player_control().sneak) then
-				return node_def.on_rightclick(under, node, placer, itemstack,
-					pointed_thing) or itemstack
-			end
-
-			-- place a random grass node
-			local stack = ItemStack("default:grass_" .. random(1, 5))
-			local ret = minetest.item_place(stack, placer, pointed_thing)
-			return ItemStack("default:grass_1 " ..
-				itemstack:get_count() - (1 - ret:get_count()))
-		end
-
-		return itemstack
-	end
+	on_place = grass_place
 })
 
 for i = 2, 5 do
@@ -1110,30 +1112,10 @@ minetest.register_node("default:grass", {
 	buildable_to = true,
 	drop = "default:grass_1",
 	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
-		grass = 1, dig_immediate = 3},
+		grass = 1, dig_immediate = 3, not_in_creative_inventory = 1},
 	sounds = default.node_sound_leaves_defaults(),
 
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.type == "node" then
-			local under = pointed_thing.under
-			local node = minetest.get_node(under)
-			local node_def = minetest.registered_nodes[node.name]
-			if node_def and node_def.on_rightclick and
-					not (placer and placer:is_player() and
-					placer:get_player_control().sneak) then
-				return node_def.on_rightclick(under, node, placer, itemstack,
-					pointed_thing) or itemstack
-			end
-
-			-- place a random grass node
-			local stack = ItemStack("default:grass_" .. random(1, 5))
-			local ret = minetest.item_place(stack, placer, pointed_thing)
-			return ItemStack("default:grass_1 " ..
-				itemstack:get_count() - (1 - ret:get_count()))
-		end
-
-		return itemstack
-	end
+	on_place = grass_place
 })
 
 -- LBM for updating Grass
@@ -1147,6 +1129,28 @@ minetest.register_lbm({
 })
 
 -- Dry Grass
+
+local function dry_grass_place(itemstack, placer, pointed_thing)
+	if pointed_thing.type == "node" then
+		local under = pointed_thing.under
+		local node = minetest.get_node(under)
+		local node_def = minetest.registered_nodes[node.name]
+		if node_def and node_def.on_rightclick and
+				not (placer and placer:is_player() and
+				placer:get_player_control().sneak) then
+			return node_def.on_rightclick(under, node, placer, itemstack,
+				pointed_thing) or itemstack
+		end
+
+		-- place a random dry grass node
+		local stack = ItemStack("default:dry_grass_" .. random(1, 5))
+		local ret = minetest.item_place(stack, placer, pointed_thing)
+		return ItemStack("default:dry_grass_1 " ..
+			itemstack:get_count() - (1 - ret:get_count()))
+	end
+
+	return itemstack
+end
 
 minetest.register_node("default:dry_grass_1", {
 	description = "Dry Grass",
@@ -1167,75 +1171,7 @@ minetest.register_node("default:dry_grass_1", {
 		fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, -3 / 16, 6 / 16}
 	},
 
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.type == "node" then
-			local under = pointed_thing.under
-			local node = minetest.get_node(under)
-			local node_def = minetest.registered_nodes[node.name]
-			if node_def and node_def.on_rightclick and
-					not (placer and placer:is_player() and
-					placer:get_player_control().sneak) then
-				return node_def.on_rightclick(under, node, placer, itemstack,
-					pointed_thing) or itemstack
-			end
-
-			-- place a random dry grass node
-			local stack = ItemStack("default:dry_grass_" .. random(1, 5))
-			local ret = minetest.item_place(stack, placer, pointed_thing)
-			return ItemStack("default:dry_grass_1 " ..
-				itemstack:get_count() - (1 - ret:get_count()))
-		end
-
-		return itemstack
-	end
-})
-
--- Compatiability Dry Grass node
-minetest.register_node("default:dry_grass", {
-	description = "Dry Grass",
-	drawtype = "plantlike",
-	waving = 1,
-	tiles = {"default_dry_grass_4.png"},
-	inventory_image = "default_dry_grass_4.png",
-	paramtype = "light",
-	sunlight_propagates = true,
-	walkable = false,
-	buildable_to = true,
-	groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
-		dry_grass = 1, dig_immediate = 3},
-	sounds = default.node_sound_leaves_defaults(),
-
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.type == "node" then
-			local under = pointed_thing.under
-			local node = minetest.get_node(under)
-			local node_def = minetest.registered_nodes[node.name]
-			if node_def and node_def.on_rightclick and
-					not (placer and placer:is_player() and
-					placer:get_player_control().sneak) then
-				return node_def.on_rightclick(under, node, placer, itemstack,
-					pointed_thing) or itemstack
-			end
-
-			-- place a random dry grass node
-			local stack = ItemStack("default:dry_grass_" .. random(1, 5))
-			local ret = minetest.item_place(stack, placer, pointed_thing)
-			return ItemStack("default:dry_grass_1 " ..
-				itemstack:get_count() - (1 - ret:get_count()))
-		end
-
-		return itemstack
-	end
-})
-
--- LBM for updating Dry Grass
-minetest.register_lbm({
-	label = "Dry Grass updater",
-	name = "default:dry_grass_updater",
-	nodenames = "default:dry_grass",
-	action = function(pos)
-		minetest.swap_node(pos, {name = "default:dry_grass_" .. random(1, 5)})
-	end
+	on_place = dry_grass_place
 })
 
 for i = 2, 5 do
@@ -1260,6 +1196,34 @@ for i = 2, 5 do
 		}
 	})
 end
+
+-- Compatiability Dry Grass node
+minetest.register_node("default:dry_grass", {
+	description = "Dry Grass",
+	drawtype = "plantlike",
+	waving = 1,
+	tiles = {"default_dry_grass_4.png"},
+	inventory_image = "default_dry_grass_4.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	buildable_to = true,
+	groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
+		dry_grass = 1, dig_immediate = 3, not_in_creative_inventory = 1},
+	sounds = default.node_sound_leaves_defaults(),
+
+	on_place = dry_grass_place
+})
+
+-- LBM for updating Dry Grass
+minetest.register_lbm({
+	label = "Dry Grass updater",
+	name = "default:dry_grass_updater",
+	nodenames = "default:dry_grass",
+	action = function(pos)
+		minetest.swap_node(pos, {name = "default:dry_grass_" .. random(1, 5)})
+	end
+})
 
 minetest.register_node("default:bush_stem", {
 	description = "Bush Stem",
