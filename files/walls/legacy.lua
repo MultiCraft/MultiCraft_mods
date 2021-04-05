@@ -1,3 +1,8 @@
+local S = walls.S
+
+local floor = math.floor
+local vadd = vector.add
+
 local directions = {
 	{x = 1, y = 0, z = 0},
 	{x = 0, y = 0, z = 1},
@@ -16,9 +21,9 @@ local function update_wall(pos)
 
 	local sum = 0
 	for i = 1, 4 do
-		local dir = directions[i]
-		local node = minetest.get_node({x = pos.x + dir.x, y = pos.y + dir.y, z = pos.z + dir.z})
+		local node = minetest.get_node(vadd(pos, directions[i]))
 		local def = minetest.registered_nodes[node.name]
+
 		if def and def.walkable and def.groups.wall then
 			sum = sum + 2 ^ (i - 1)
 		end
@@ -32,10 +37,6 @@ local function update_wall(pos)
 		end
 	end
 
---	if sum == 0 then
---		sum = 15
---	end
-
 	if oldname:find("wallet:wallmossy") == 1 then
 		minetest.set_node(pos, {name = "wallet:wallmossy" .. "_" .. sum})
 	elseif oldname:find("wallet:wall") == 1 then
@@ -45,8 +46,7 @@ end
 
 local function update_wall_global(pos)
 	for i = 1, 5 do
-		local dir = directions[i]
-		update_wall({x = pos.x + dir.x, y = pos.y + dir.y, z = pos.z + dir.z})
+		update_wall(vadd(pos, directions[i]))
 	end
 end
 
@@ -66,13 +66,10 @@ local full_blocks = {
 
 local not_connected = {-1/4, -0.5, -1/4, 1/4, 0.5, 1/4}
 
-local collision = {
-	{-1/4, -0.5, -1/4, 1/4, 1, 1/4}
-}
+local collision = {-1/4, -0.5, -1/4, 1/4, 1, 1/4}
 
 local groups = {cracky = 3, wall = 1, stone = 2, wall_not_full = 1}
 
-local floor = math.floor
 for i = 1, 15 do
 	local need = {}
 	local need_pillar = false
@@ -141,9 +138,6 @@ for i = 1, 15 do
 	})
 end
 
---minetest.register_alias("wallet:wall_0", "wallet:wall_15")
---minetest.register_alias("wallet:wallmossy_0", "wallet:wallmossy_15")
-
 -- Wall
 minetest.register_node(":wallet:wall_16", {
 	drawtype = "nodebox",
@@ -200,7 +194,7 @@ minetest.register_node(":wallet:wall_0", {
 })
 
 minetest.register_node(":wallet:wall", {
-	description = walls.S"Cobblestone Wall",
+	description = S"Cobblestone Wall",
 	paramtype = "light",
 	tiles = {"default_cobble.png"},
 	groups = groups,
@@ -280,7 +274,7 @@ minetest.register_node(":wallet:wallmossy_0", {
 })
 
 minetest.register_node(":wallet:wallmossy", {
-	description = walls.S"Mossy Cobblestone Wall",
+	description = S"Mossy Cobblestone Wall",
 	paramtype = "light",
 	collision_box = {
 		type = "fixed",
