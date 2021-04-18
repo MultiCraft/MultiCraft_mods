@@ -129,8 +129,11 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 				end
 
 				minetest.set_node(lpos, {name = source})
+
 				if place_restriction
 						or not minetest.is_creative_enabled(pn) then
+				minetest.get_meta(lpos):set_string("infotext",
+					S("Liquid placed by @1", pn))
 					return ItemStack("bucket:bucket_empty")
 				else
 					return itemstack
