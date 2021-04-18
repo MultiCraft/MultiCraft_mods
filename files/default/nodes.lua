@@ -396,7 +396,7 @@ minetest.register_node("default:apple", {
 	is_ground_content = false,
 	selection_box = {
 		type = "fixed",
-		fixed = {-3/16, -7/16, -3/16, 3/16, 1/4, 3/16}
+		fixed = {-3/16, -0.5, -3/16, 3/16, 1/4, 3/16}
 	},
 	groups = {fleshy = 3, dig_immediate = 3, flammable = 2,
 		leafdecay = 3, leafdecay_drop = 1, food = 1},
@@ -416,11 +416,12 @@ minetest.register_node("default:apple_gold", {
 	is_ground_content = false,
 	selection_box = {
 		type = "fixed",
-		fixed = {-3/16, -7/16, -3/16, 3/16, 1/4, 3/16}
+		fixed = {-3/16, -0.5, -3/16, 3/16, 1/4, 3/16}
 	},
-	groups = {fleshy = 3, dig_immediate = 1, flammable = 2, food = 1},
-	on_use = minetest.item_eat(8),
-	sounds = default.node_sound_defaults()
+	groups = {fleshy = 3, dig_immediate = 1, flammable = 2, cracky = 2,
+		food = 1},
+	on_use = minetest.item_eat(10),
+	sounds = default.node_sound_stone_defaults()
 })
 
 
@@ -1022,7 +1023,9 @@ minetest.register_node("default:junglegrass", {
 	buildable_to = true,
 	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
 		dig_immediate = 2},
-	sounds = default.node_sound_leaves_defaults(),
+	sounds = default.node_sound_leaves_defaults({
+		dig = {name = "default_dig_snappy", gain = 0.5}
+	}),
 	selection_box = {
 		type = "fixed",
 		fixed = {-0.5, -0.5, -0.5, 0.5, 12 / 16, 0.5}

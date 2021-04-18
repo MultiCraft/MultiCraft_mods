@@ -1,3 +1,6 @@
+local random = math.random
+local vadd, vnew, vsubtract = vector.add, vector.new, vector.subtract
+
 --
 -- Sounds
 --
@@ -163,7 +166,7 @@ if minetest.settings:get_bool("enable_lavacooling") ~= false then
 		label = "Lava cooling",
 		nodenames = {"default:lava_source", "default:lava_flowing"},
 		neighbors = {"group:cools_lava", "group:water"},
-		interval = 3,
+		interval = 2,
 		chance = 2,
 		catch_up = false,
 		action = function(...)
@@ -259,25 +262,6 @@ minetest.register_abm({
 		default.grow_cactus(...)
 	end
 })
-
-if not minetest.settings:get_bool("creative_mode") then
-	local objects = minetest.get_objects_inside_radius
-	minetest.register_abm({
-		label = "Cactus damage",
-		nodenames = {"default:cactus"},
-		interval = 1,
-		chance = 1,
-		catch_up = false,
-		action = function(pos)
-			local players = objects(pos, 1)
-			for _, player in pairs(players) do
-				if player:is_player() then
-					player:set_hp(player:get_hp() - 2)
-				end
-			end
-		end
-	})
-end
 
 minetest.register_abm({
 	label = "Grow sugarcane",
@@ -432,6 +416,7 @@ function default.register_ladder(name, def)
 	-- Always add to the fence group, even if no group provided
 	def.groups.ladder = 1
 
+	def.texture = nil
 	def.material = nil
 
 	minetest.register_node(name, def)
@@ -453,9 +438,6 @@ default.after_place_leaves = function(pos, placer)
 end
 
 -- Leafdecay
-local random = math.random
-local vadd, vsubtract = vector.add, vector.subtract
-
 local function leafdecay_after_destruct(pos, _, def)
 	for _, v in pairs(minetest.find_nodes_in_area(vsubtract(pos, def.radius),
 			vadd(pos, def.radius), def.leaves)) do
@@ -467,13 +449,17 @@ local function leafdecay_after_destruct(pos, _, def)
 	end
 end
 
+local movement_gravity = tonumber(
+	minetest.settings:get("movement_gravity")) or 9.81
+
 local function leafdecay_on_timer(pos, def)
 	if minetest.find_node_near(pos, def.radius, def.trunks) then
 		return false
 	end
 
 	local node = minetest.get_node(pos)
-	local drops = minetest.get_node_drops(node.name)
+	local node_name = node.name
+	local drops = minetest.get_node_drops(node_name)
 	for _, item in ipairs(drops) do
 		local is_leaf
 		for _, v in pairs(def.leaves) do
@@ -493,6 +479,26 @@ local function leafdecay_on_timer(pos, def)
 
 	minetest.remove_node(pos)
 	minetest.check_for_falling(pos)
+
+	-- spawn a few particles for the removed node
+	local tiles = minetest.registered_nodes[node_name].tiles
+	local texture = tiles[1]
+	if texture.name ~= nil then
+		texture = texture.name
+	end
+	minetest.add_particlespawner({
+		amount = 5,
+		time = 0.001,
+		minpos = vsubtract(pos, {x = 0.5, y = 0.5, z = 0.5}),
+		maxpos = vadd(pos, {x = 0.5, y = 0.5, z = 0.5}),
+		minvel = vnew(-0.5, -1, -0.5),
+		maxvel = vnew(0.5, 0, 0.5),
+		minacc = vnew(0, -movement_gravity, 0),
+		maxacc = vnew(0, -movement_gravity, 0),
+		minsize = 0,
+		maxsize = 1,
+		texture = texture
+	})
 end
 
 function default.register_leafdecay(def)
@@ -673,6 +679,29 @@ function default.can_interact_with_node(player, pos)
 end
 
 --
+-- Cactus damage
+--
+
+if not minetest.settings:get_bool("creative_mode") then
+	local objects = minetest.get_objects_inside_radius
+	minetest.register_abm({
+		label = "Cactus damage",
+		nodenames = {"default:cactus"},
+		interval = 1,
+		chance = 1,
+		catch_up = false,
+		action = function(pos)
+			local players = objects(pos, 1)
+			for _, player in pairs(players) do
+				if player:is_player() then
+					player:set_hp(player:get_hp() - 2)
+				end
+			end
+		end
+	})
+end
+
+--
 -- Snowballs
 --
 
@@ -688,7 +717,7 @@ local function snowball_impact(thrower, pos, dir, hit_object)
 	local node_pos
 	local node = minetest.get_node(pos)
 	if node.name == "air" then
-		local pos_under = vector.subtract(pos, {x = 0, y = 1, z = 0})
+		local pos_under = vsubtract(pos, {x = 0, y = 1, z = 0})
 		node = minetest.get_node(pos_under)
 		if node.name then
 			local def = minetest.registered_items[node.name] or {}
@@ -769,8 +798,8 @@ if minetest.settings:get_bool("enable_liquid_particles") ~= false then
 				add_particlespawner({
 					amount = 5,
 					time = 15,
-					minpos = {x = pos.x - 0.5, y = pos.y - 1, z = pos.z - 0.5},
-					maxpos = {x = pos.x + 0.5, y = pos.y - 1, z = pos.z + 0.5},
+					minpos = vsubtract(pos, {x = 0.5, y = 1, z = 0.5}),
+					maxpos = vadd(pos, {x = 0.5, y = 1, z = 0.5}),
 					minvel = {x = 0, y = -1, z = 0},
 					maxvel = {x = 0, y = -1, z = 0},
 					minexptime = 2,
@@ -785,8 +814,8 @@ if minetest.settings:get_bool("enable_liquid_particles") ~= false then
 				add_particlespawner({
 					amount = 5,
 					time = 15,
-					minpos = {x = pos.x - 0.5, y = pos.y, z = pos.z - 0.5},
-					maxpos = {x = pos.x + 0.5, y = pos.y, z = pos.z + 0.5},
+					minpos = vsubtract(pos, {x = 0.5, y = 0, z = 0.5}),
+					maxpos = vadd(pos, {x = 0.5,  y = 0, z = 0.5}),
 					minvel = {x = 0, y = 1, z = 0},
 					maxvel = {x = 0, y = 1, z = 0},
 					minexptime = 2,

@@ -113,6 +113,28 @@ minetest.register_craftitem("mobs:rotten_flesh", {
 	groups = {flammable = 2, food = 1}
 })
 
+-- fish
+minetest.register_craftitem(":default:fish_raw", {
+	description = "Raw Fish",
+	inventory_image = "default_fish.png",
+	groups = {food_fish_raw = 1, food = 1},
+	on_use = minetest.item_eat(2, nil, -3)
+})
+
+minetest.register_craftitem(":default:fish", {
+	description = "Cooked Fish",
+	inventory_image = "default_fish_cooked.png",
+	groups = {food = 1},
+	on_use = minetest.item_eat(6)
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:fish",
+	recipe = "default:fish_raw"
+})
+
+
 minetest.register_alias("mobs_monster:rotten_flesh", "mobs:rotten_flesh")
 minetest.register_alias("mobs:magic_lasso", "default:diamond")
 minetest.register_alias("mobs:lasso", "default:diamond")
