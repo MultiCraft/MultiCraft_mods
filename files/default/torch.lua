@@ -1,3 +1,5 @@
+local S = default.S
+
 function default.register_torch(name, def)
 	def.drawtype = "mesh"
 	def.paramtype = "light"
@@ -7,6 +9,7 @@ function default.register_torch(name, def)
 	def.liquids_pointable = false
 	def.drop = name
 	def.floodable = true
+
 	def.on_flood = function(pos, oldnode, newnode)
 		oldnode.name = name or name .. "_wall" or name .. "_celling"
 		minetest.add_item(pos, ItemStack(oldnode))
@@ -18,6 +21,7 @@ function default.register_torch(name, def)
 		-- Remove the torch node
 		return false
 	end
+
 	def.on_place = function(itemstack, placer, pointed_thing)
 		local under = pointed_thing.under
 		local node = minetest.get_node(under)
@@ -69,7 +73,7 @@ function default.register_torch(name, def)
 end
 
 default.register_torch("default:torch", {
-	description = "Torch",
+	description = S("Torch"),
 	tiles = {{
 		name = "default_torch_animated.png",
 		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 2}

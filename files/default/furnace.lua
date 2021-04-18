@@ -1,3 +1,5 @@
+local S = default.S
+
 --
 -- Formspecs
 --
@@ -5,7 +7,7 @@
 function default.get_furnace_active_formspec(fuel_percent, item_percent)
 	return default.gui ..
 		"item_image[0,-0.1;1,1;default:furnace_active]" ..
-		"label[0.9,0.1;" .. Sl("Furnace") .. "]" ..
+		"label[0.9,0.1;" .. S("Furnace") .. "]" ..
 		"item_image[3,0.5;1,1;default:cell]" ..
 		"list[context;src;3,0.5;1,1;]" ..
 		"item_image[3,2.5;1,1;default:cell]" ..
@@ -24,7 +26,7 @@ end
 function default.get_furnace_inactive_formspec()
 	return default.gui ..
 		"item_image[0,-0.1;1,1;default:furnace]" ..
-		"label[0.9,0.1;" .. Sl("Furnace") .. "]" ..
+		"label[0.9,0.1;" .. S("Furnace") .. "]" ..
 		"item_image[3,0.5;1,1;default:cell]" ..
 		"list[context;src;3,0.5;1,1;]" ..
 		"item_image[3,2.5;1,1;default:cell]" ..
@@ -65,7 +67,7 @@ local function allow_metadata_inventory_put(pos, listname, _, stack, player)
 	if listname == "fuel" then
 		if minetest.get_craft_result({method="fuel", width=1, items={stack}}).time ~= 0 then
 			if inv:is_empty("src") then
-				meta:set_string("infotext", Sl("Furnace is empty"))
+				meta:set_string("infotext", S("Furnace is empty"))
 			end
 			return stack:get_count()
 		else
@@ -223,33 +225,33 @@ local function furnace_node_timer(pos, elapsed)
 	if cookable then
 		item_percent = math.floor(src_time / cooked.time * 100)
 		if dst_full then
-			item_state = "100% " .. Sl("output full")
+			item_state = S("100% (output full)")
 		else
-			item_state = item_percent .. "%"
+			item_state = S("@1%", item_percent)
 		end
 	else
 		if srclist and not srclist[1]:is_empty() then
-			item_state = Sl("Not cookable")
+			item_state = S("Not cookable")
 		else
-			item_state = Sl("Empty")
+			item_state = S("Empty")
 		end
 	end
 
-	local fuel_state = Sl("Empty")
+	local fuel_state = S("Empty")
 	local active = false
 	local result = false
 
 	if fuel_totaltime ~= 0 then
 		active = true
 		local fuel_percent = 100 - math.floor(fuel_time / fuel_totaltime * 100)
-		fuel_state = fuel_percent .. "%"
+		fuel_state = S("@1%", fuel_percent)
 		formspec = default.get_furnace_active_formspec(fuel_percent, item_percent)
 		swap_node(pos, "default:furnace_active")
 		-- make sure timer restarts automatically
 		result = true
 	else
 		if fuellist and not fuellist[1]:is_empty() then
-			fuel_state = "0%"
+			fuel_state = S("@1%", 0)
 		end
 		formspec = default.get_furnace_inactive_formspec()
 		swap_node(pos, "default:furnace")
@@ -259,11 +261,11 @@ local function furnace_node_timer(pos, elapsed)
 
 	local infotext
 	if active then
-		infotext = Sl("Furnace active")
+		infotext = S("Furnace active")
 	else
-		infotext = Sl("Furnace inactive")
+		infotext = S("Furnace inactive")
 	end
-	infotext = infotext .. "\n" .. Sl("Item: @1; Fuel: @2", item_state, fuel_state)
+	infotext = infotext .. "\n" .. S("Item: @1; Fuel: @2", item_state, fuel_state)
 
 		--
 		-- Set meta values
@@ -282,7 +284,7 @@ end
 --
 
 minetest.register_node("default:furnace", {
-	description = "Furnace",
+	description = S("Furnace"),
 	tiles = {
 		"default_furnace_top.png",  "default_furnace_top.png",
 		"default_furnace_side.png", "default_furnace_side.png",
@@ -340,7 +342,7 @@ minetest.register_node("default:furnace_active", {
 		"default_furnace_side.png", "default_furnace_front_active.png"
 	},
 	paramtype2 = "facedir",
-	light_source = minetest.LIGHT_MAX - 5,
+	light_source = 8,
 	drop = "default:furnace",
 	groups = {cracky = 2, not_in_creative_inventory = 1},
 	is_ground_content = false,
