@@ -3,17 +3,27 @@
 
 -- The API documentation in here was moved into doc/lua_api.txt
 
+default = {}
+
+local translator = minetest.get_translator
+default.S = translator and translator("default") or intllib.make_gettext_pair()
+
+if translator and not minetest.is_singleplayer() then
+	local lang = minetest.settings:get("language")
+	if lang and lang == "ru" then
+		default.S = intllib.make_gettext_pair()
+	end
+end
+
 -- Definitions made by this mod that other mods can use too
 local Cesc = minetest.get_color_escape_sequence
-default = {
-	colors = {
-		grey = Cesc("#9d9d9d"),
-		green = Cesc("#1eff00"),
-		gold = Cesc("#ffdf00"),
-		white = Cesc("#ffffff"),
-		emerald = Cesc("#00e87e"),
-		ruby = Cesc("#d80a1b")
-	}
+default.colors = {
+	grey = Cesc("#9d9d9d"),
+	green = Cesc("#1eff00"),
+	gold = Cesc("#ffdf00"),
+	white = Cesc("#ffffff"),
+	emerald = Cesc("#00e87e"),
+	ruby = Cesc("#d80a1b")
 }
 
 minetest.register_craftitem("default:cell", {

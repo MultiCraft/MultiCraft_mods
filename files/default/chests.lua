@@ -1,3 +1,5 @@
+local S = default.S
+
 local neighbor = {
 	[0] = {{x =  1, z =  0}, {x = -1, z =  0}},
 	[1] = {{x =  0, z = -1}, {x =  0, z =  1}},
@@ -21,7 +23,7 @@ end
 
 local chest_formspec = default.gui ..
 	"item_image[0,-0.1;1,1;default:chest]" ..
-	"label[0.9,0.1;" .. Sl("Chest") .. "]" ..
+	"label[0.9,0.1;" .. S("Chest") .. "]" ..
 	"image[7.95,3.1;1.1,1.1;^[colorize:#D6D5E6]]" ..
 	chest_cells ..
 	"list[current_name;main;0,0.85;9,3;]" ..
@@ -36,7 +38,7 @@ local large_chest_formspec = "size[9,11.6]" ..
 	"background[-0.19,2.68;9.4,9.43;formspec_inventory.png]" ..
 	"image_button_exit[8.4,-0.2;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
 	"item_image[0,-0.2;1,1;default:chest]" ..
-	"label[0.9,0;" .. Sl("Large Chest") .. "]" ..
+	"label[0.9,0;" .. S("Large Chest") .. "]" ..
 	"image[7.95,6;1.1,1.1;^[colorize:#D6D5E6]]" ..
 	large_chest_cells ..
 	"list[current_player;main;0.01,7.4;9,3;9]" ..
@@ -61,7 +63,7 @@ local function set_large_chest(pos_l, pos_r)
 	meta_l:set_string("formspec", formspec_l)
 	meta_r:set_string("formspec", formspec_r)
 
-	local infotext = Sl("Large Chest")
+	local infotext = S("Large Chest")
 	meta_l:set_string("infotext", infotext)
 	meta_r:set_string("infotext", infotext)
 end
@@ -82,7 +84,7 @@ local function on_construct(pos)
 		set_large_chest(pos2, pos)
 	else
 		meta:set_string("formspec", chest_formspec)
-		meta:set_string("infotext", Sl("Chest"))
+		meta:set_string("infotext", S("Chest"))
 		meta:set_string("version", "2")
 	end
 
@@ -132,7 +134,7 @@ local function on_destruct(pos, large)
 				or name == "default:chest_right" then
 			local meta = minetest.get_meta(pos2)
 			meta:set_string("formspec", chest_formspec)
-			meta:set_string("infotext", Sl("Chest"))
+			meta:set_string("infotext", S("Chest"))
 			minetest.swap_node(pos2, {name = "default:chest", param2 = param2})
 		end
 	end
@@ -157,7 +159,7 @@ def_chest.tiles = {
 	"default_chest_top.png", "default_chest_top.png", "default_chest_side.png",
 	"default_chest_side.png", "default_chest_side.png", "default_chest_front.png"
 }
-def_chest.description = "Chest"
+def_chest.description = S("Chest")
 def_chest.on_construct = on_construct
 def_chest.on_destruct = on_destruct
 minetest.register_node("default:chest", def_chest)

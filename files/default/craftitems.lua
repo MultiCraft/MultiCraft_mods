@@ -1,4 +1,4 @@
--- mods/default/craftitems.lua
+local S = Sl
 
 local lpp = 14 -- Lines per book's page
 local function book_on_use(itemstack, user)
@@ -39,21 +39,21 @@ local function book_on_use(itemstack, user)
 	local esc = minetest.formspec_escape
 	if owner == player_name then
 		formspec = "size[8,8]" ..
-			"field[0.5,1;7.5,0;title;" .. Sl("Title:") .. ";" ..
+			"field[0.5,1;7.5,0;title;" .. esc(S("Title:")) .. ";" ..
 				esc(title) .. "]" ..
-			"textarea[0.5,1.5;7.5,7;text;" .. Sl("Contents:") .. ";" ..
+			"textarea[0.5,1.5;7.5,7;text;" .. esc(S("Contents:")) .. ";" ..
 				esc(text) .. "]" ..
-			"button_exit[2.5,7.5;3,1;save;" .. Sl("Save") .. "]"
+			"button_exit[2.5,7.5;3,1;save;" .. esc(S("Save")) .. "]"
 	else
 		formspec = "size[8,8]" ..
-			"label[0.5,0.5;" .. Sl("by @1", owner) .. "]" ..
+			"label[0.5,0.5;" .. esc(S("by @1", owner)) .. "]" ..
 			"tablecolumns[color;text]" ..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
 			"table[0.4,0;7,0.5;title;#FFFF00," .. esc(title) .. "]" ..
 			"textarea[0.5,1.5;7.5,7;;" ..
 				minetest.formspec_escape(string ~= "" and string or text) .. ";]" ..
 			"button[2.4,7.6;0.8,0.8;book_prev;<]" ..
-			"label[3.2,7.7;" .. Sl("Page: @1 of @2", page, page_max) .. "]" ..
+			"label[3.2,7.7;" .. esc(S("Page @1 of @2", page, page_max)) .. "]" ..
 			"button[4.9,7.6;0.8,0.8;book_next;>]"
 	end
 
@@ -96,7 +96,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if #short_title > short_title_size + 3 then
 			short_title = short_title:sub(1, short_title_size) .. "..."
 		end
-		data.description = Sl("\"@1\" by @2", short_title, data.owner)
+		data.description = S("\"@1\" by @2", short_title, data.owner)
 		data.text = fields.text:sub(1, max_text_size)
 		data.text = data.text:gsub("\r\n", "\n"):gsub("\r", "\n")
 		data.page = 1
@@ -168,6 +168,16 @@ minetest.register_craftitem("default:book_written", {
 	on_use = book_on_use
 })
 
+minetest.register_craftitem("default:clay_brick", {
+	description = "Clay Brick",
+	inventory_image = "default_clay_brick.png"
+})
+
+minetest.register_craftitem("default:clay_lump", {
+	description = "Clay Lump",
+	inventory_image = "default_clay_lump.png"
+})
+
 minetest.register_craftitem("default:coal_lump", {
 	description = "Coal Lump",
 	inventory_image = "default_coal_lump.png",
@@ -185,9 +195,14 @@ minetest.register_craftitem("default:diamond", {
 	inventory_image = "default_diamond.png"
 })
 
-minetest.register_craftitem("default:clay_lump", {
-	description = "Clay Lump",
-	inventory_image = "default_clay_lump.png"
+minetest.register_craftitem("default:flint", {
+	description = "Flint",
+	inventory_image = "default_flint.png"
+})
+
+minetest.register_craftitem("default:gold_ingot", {
+	description = "Gold Ingot",
+	inventory_image = "default_gold_ingot.png"
 })
 
 minetest.register_craftitem("default:paper", {
@@ -207,25 +222,14 @@ minetest.register_craftitem("default:stick", {
 	groups = {stick = 1, flammable = 2, wieldview = 2}
 })
 
-
-minetest.register_craftitem("default:gold_ingot", {
-	description = "Gold Ingot",
-	inventory_image = "default_gold_ingot.png"
-})
-
 minetest.register_craftitem("default:emerald", {
-	description = default.colors.emerald .. Sl("Emerald"),
+	description = default.colors.emerald .. S("Emerald"),
 	inventory_image = "default_emerald.png"
 })
 
 minetest.register_craftitem("default:ruby", {
-	description = default.colors.ruby .. Sl("Ruby"),
+	description = default.colors.ruby .. S("Ruby"),
 	inventory_image = "default_ruby.png"
-})
-
-minetest.register_craftitem("default:clay_brick", {
-	description = "Clay Brick",
-	inventory_image = "default_clay_brick.png"
 })
 
 minetest.register_craftitem("default:gunpowder", {
@@ -244,20 +248,6 @@ minetest.register_craftitem("default:glowstone_dust", {
 	inventory_image = "default_glowstone_dust.png"
 })
 
-minetest.register_craftitem("default:fish_raw", {
-	description = "Raw Fish",
-	inventory_image = "default_fish.png",
-	groups = {food_fish_raw = 1, food = 1},
-	on_use = minetest.item_eat(2, nil, -3)
-})
-
-minetest.register_craftitem("default:fish", {
-	description = "Cooked Fish",
-	inventory_image = "default_fish_cooked.png",
-	groups = {food = 1},
-	on_use = minetest.item_eat(6)
-})
-
 minetest.register_craftitem("default:sugar", {
 	description = "Sugar",
 	inventory_image = "default_sugar.png"
@@ -266,11 +256,6 @@ minetest.register_craftitem("default:sugar", {
 minetest.register_craftitem("default:quartz_crystal", {
 	description = "Quartz Crystal",
 	inventory_image = "default_quartz_crystal.png"
-})
-
-minetest.register_craftitem("default:flint", {
-	description = "Flint",
-	inventory_image = "default_flint.png"
 })
 
 minetest.register_craftitem("default:snowball", {
@@ -303,3 +288,190 @@ minetest.register_craft({
 })
 
 default.register_craft_metadata_copy("default:book", "default:book_written")
+
+minetest.register_craft({
+	output = "default:clay_brick 4",
+	recipe = {
+		{"default:brick"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:coal_lump 9",
+	recipe = {
+		{"default:coalblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:diamond 9",
+	recipe = {
+		{"default:diamondblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:gold_ingot 9",
+	recipe = {
+		{"default:goldblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:paper",
+	recipe = {
+		{"default:sugarcane", "default:sugarcane", "default:sugarcane"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:steel_ingot 9",
+	recipe = {
+		{"default:steelblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:stick 4",
+	recipe = {
+		{"group:wood"},
+		{"group:wood"}
+	}
+})
+
+
+minetest.register_craft({
+	output = "default:snowball 9",
+	recipe = {
+		{"default:snowblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:emerald 9",
+	recipe = {
+		{"default:emeraldblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:ruby 9",
+	recipe = {
+		{"default:rubyblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "default:glowstone_dust 4",
+	recipe = {
+		{"default:glowstone"}
+	}
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "default:gunpowder",
+	recipe = {
+		"default:sand",
+		"default:gravel"
+	}
+})
+
+minetest.register_craft({
+	output = "default:sugar",
+	recipe = {
+		{"default:sugarcane"}
+	}
+})
+
+--
+-- Cooking recipes
+--
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:clay_brick",
+	recipe = "default:clay_lump"
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:hardened_clay",
+	recipe = "default:clay"
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:gold_ingot",
+	recipe = "default:stone_with_gold"
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:steel_ingot",
+	recipe = "default:stone_with_iron"
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:diamond",
+	recipe = "default:stone_with_diamond"
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:charcoal_lump",
+	recipe = "group:tree"
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:coal_lump",
+	recipe = "default:stone_with_coal"
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "default:quartz_crystal",
+	recipe = "default:quartz_ore"
+})
+
+--
+-- Fuels
+--
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:book",
+	burntime = 3
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:book_written",
+	burntime = 3
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:coal_lump",
+	burntime = 60
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:charcoal_lump",
+	burntime = 60
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "default:paper",
+	burntime = 1
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "group:stick",
+	burntime = 1
+})

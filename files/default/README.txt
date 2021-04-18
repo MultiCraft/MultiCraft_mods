@@ -125,6 +125,7 @@ sofar (CC BY-SA 3.0):
   torch_floor.obj
   torch_wall.obj
 
+
 Schematics
 ----------
 paramat (CC BY-SA 3.0):
@@ -158,3 +159,6 @@ Shara RedCat (CC BY-SA 3.0):
 
 TumeniNodes (CC BY-SA 3.0):
   pine_bush.mts
+
+MoNTE48 (CC BY-SA 4.0):
+  blueberry_bush.mts
