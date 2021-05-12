@@ -13,7 +13,14 @@ default.register_torch("bluestone_torch:torch", {
 	sounds = default.node_sound_wood_defaults(),
 
 	mesecons = {receptor = {
-		state = mesecon.state.on
+		state = mesecon.state.on,
+		rules = {
+			{x =  1, y =  0,  z =  0},
+			{x = -1, y =  0,  z =  0},
+			{x =  0, y = -1,  z =  0},
+			{x =  0, y =  0,  z =  1},
+			{x =  0, y =  0,  z = -1}
+		}
 	}},
 
 	on_blast = mesecon.on_blastnode
@@ -26,6 +33,3 @@ minetest.register_craft({
 		{"default:stick"}
 	}
 })
-
-minetest.register_alias("mesecons_torch:mesecon_torch_off", "bluestone_torch:torch")
-minetest.register_alias("mesecons_torch:mesecon_torch_on", "bluestone_torch:torch")

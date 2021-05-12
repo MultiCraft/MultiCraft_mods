@@ -2288,23 +2288,6 @@ minetest.register_node("default:glowstone", {
 	light_source = minetest.LIGHT_MAX - 3
 })
 
-minetest.register_node("default:slimeblock", {
-	description = "Slime Block",
-	drawtype = "nodebox",
-	tiles = {"default_slimeblock.png"},
-	paramtype = "light",
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
-			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}
-		}
-	},
-	use_texture_alpha = true,
-	sunlight_propagates = true,
-	groups = {oddly_breakable_by_hand = 3, fall_damage_add_percent = -100, bouncy = 75, wieldview = 4}
-})
-
 --
 -- Quartz
 --

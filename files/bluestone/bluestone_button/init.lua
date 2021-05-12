@@ -148,8 +148,3 @@ minetest.register_craft({
 	output = "bluestone_button:button_wood_off 2",
 	recipe = {{"group:wood"}}
 })
-
-minetest.register_alias("mesecons_button:button_stone_off", "bluestone_button:button_stone_off")
-minetest.register_alias("mesecons_button:button_stone_on", "bluestone_button:button_stone_on")
-minetest.register_alias("mesecons_button:button_wood_off", "bluestone_button:button_wood_off")
-minetest.register_alias("mesecons_button:button_wood_on", "bluestone_button:button_wood_on")
