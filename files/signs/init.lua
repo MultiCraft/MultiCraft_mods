@@ -10,8 +10,10 @@ end
 
 local floor, pi = math.floor, math.pi
 local vadd = vector.add
-local objects_inside_radius = minetest.get_objects_inside_radius
 local b = "blank.png"
+local function objects_inside_radius(p)
+	return minetest.get_objects_inside_radius(p, 0.5)
+end
 
 -- Cyrillic transliteration library
 local slugify = dofile(minetest.get_modpath("signs") .. "/slugify.lua")
@@ -217,7 +219,7 @@ local function place(itemstack, placer, pointed_thing)
 end
 
 local function destruct(pos)
-	for _, obj in pairs(objects_inside_radius(pos, 0.5)) do
+	for _, obj in pairs(objects_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "signs:sign_text" then
 			obj:remove()
@@ -228,7 +230,7 @@ end
 local function check_text(pos)
 	local meta = minetest.get_meta(pos)
 	local text = meta:get_string("sign_text")
-	local objects = objects_inside_radius(pos, 0.5)
+	local objects = objects_inside_radius(pos)
 
 	if text and text ~= "" then
 		local count = 0
@@ -281,7 +283,7 @@ local function edit_text(pos, _, clicker)
 
 	local edit_fs = "size[5,3]" ..
 		"textarea[1.15,0.3;3.3,2;Dtext;" .. S("Enter your text:") ..
-		";" .. text .. "]" ..
+		";" .. minetest.formspec_escape(text) .. "]" ..
 		"button_exit[0.85,2;3.3,1;;" .. S("Save") .. "]" ..
 		"field[0,0;0,0;spos;;" .. minetest.pos_to_string(pos) .. "]"
 
@@ -317,7 +319,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	local sign
-	for _, obj in pairs(objects_inside_radius(pos, 0.5)) do
+	for _, obj in pairs(objects_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "signs:sign_text" then
 			sign = obj
@@ -357,7 +359,7 @@ end)
 
 -- Sign nodes
 minetest.register_node("signs:sign", {
-	description = S"Sign",
+	description = S("Sign"),
 	tiles = {
 		"signs_top.png", "signs_top.png", "signs_top.png",
 		"signs_top.png", "signs_sign.png", "signs_sign.png"
