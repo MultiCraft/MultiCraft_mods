@@ -129,7 +129,7 @@ minetest.register_craft({
 minetest.register_node("vessels:glass_bottle", {
 	description = S"Empty Glass Bottle",
 	drawtype = "plantlike",
-	tiles = {"[combine:32x32:0,2=vessels_glass_bottle.png"},
+	tiles = {"[combine:64x64:0,4=vessels_glass_bottle.png"},
 	wield_image = "vessels_glass_bottle.png",
 	inventory_image = "vessels_glass_bottle.png",
 	paramtype = "light",
