@@ -144,7 +144,7 @@ local on_state = {
 		"mesecons_delayer_sides_on.png"
 	},
 	groups = {bendy = 2, snappy = 1, dig_immediate = 2, not_in_creative_inventory = 1},
-	on_rightclick  = function(pos, node, clicker)
+	on_rightclick = function(pos, node, clicker)
 		if minetest.is_protected(pos, clicker and clicker:get_player_name()) then
 			return
 		end

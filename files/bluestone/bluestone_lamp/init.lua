@@ -10,7 +10,8 @@ mesecon.register_node("bluestone_lamp:lightstone", {
 	groups = {cracky = 2, mesecon = 2},
 
 	mesecons = {effector = {
-		action_on = mesecon.flipstate
+		action_on = mesecon.flipstate,
+		rules = mesecon.rules.all
 	}}
 },{
 	tiles = {"bluestone_lamp_on.png"},
@@ -18,7 +19,8 @@ mesecon.register_node("bluestone_lamp:lightstone", {
 	light_source = minetest.LIGHT_MAX,
 
 	mesecons = {effector = {
-		action_off = mesecon.flipstate
+		action_off = mesecon.flipstate,
+		rules = mesecon.rules.all
 	}}
 })
 
@@ -30,6 +32,3 @@ minetest.register_craft({
 		{"", "mesecons:wire_00000000_off", ""},
 	}
 })
-
-minetest.register_alias("mesecons_lightstone:lightstone_off", "bluestone_lamp:lightstone_off")
-minetest.register_alias("mesecons_lightstone:lightstone_on", "bluestone_lamp:lightstone_on")
