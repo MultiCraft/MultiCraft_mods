@@ -32,19 +32,6 @@ end
 --== mesecons_pistons ==--
 dofile(path .. "/mesecons_pistons.lua")
 
---== mesecons_solarpanel ==--
-minetest.register_lbm({
-	label = "Enable timer on ABM Solar Panels",
-	name = ":mesecons_solarpanel:timer_start",
-	nodenames = {"mesecons_solarpanel:solar_panel_off", "mesecons_solarpanel:solar_panel_on"},
-	action = function(pos)
-		minetest.get_node_timer(pos):start(mesecon.setting("spanel_interval", 1))
-	end
-})
-
-register_alias("mesecons_solarpanel:solar_panel_inverted_off", "mesecons_solarpanel:solar_panel_off")
-register_alias("mesecons_solarpanel:solar_panel_inverted_on", "mesecons_solarpanel:solar_panel_on")
-
 --== carts ==--
 local carts = {
 	{"railcart:cart", "carts:cart"},
