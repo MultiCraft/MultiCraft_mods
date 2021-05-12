@@ -435,66 +435,38 @@ pep.register_potion({
 })
 
 --
--- Mole
+-- Immortal
+-- We cannot override the fall damage at 0.4. This API was added in 5.0.
 --
 
-pep.moles = {}
+pep.immortals = {}
 
-function pep.moledig(playername)
-	local player = minetest.get_player_by_name(playername)
-	if not player then return end
-
-	local dir = minetest.yaw_to_dir(player:get_look_horizontal())
-	local pos = vector.round(player:get_pos())
-
-	local digpos1 = vector.add(pos, dir)
-	local digpos2 = {x = digpos1.x, y = digpos1.y + 1, z = digpos1.z}
-
-	local function dig(digpos)
-		if not minetest.is_protected(digpos, playername) then
-			local node = minetest.get_node(digpos)
-			local def = minetest.registered_nodes[node.name]
-			if def and def.walkable and def.diggable and
-					(def.can_dig == nil or def.can_dig(digpos, player)) then
-				minetest.node_dig(digpos, node, player)
-
-				if def.sounds and def.sounds.dug then
-					minetest.sound_play(def.sounds.dug, {pos = digpos})
-				end
-			end
-		end
-	end
-
-	dig(digpos1)
-	dig(digpos2)
-end
-
-local mtimer = 0
-minetest.register_globalstep(function(dtime)
-	mtimer = mtimer + dtime
-	if mtimer > 0.5 then
-		for playername, is_mole in pairs(pep.moles) do
-			if is_mole then
-				pep.moledig(playername)
-			end
-		end
-		mtimer = 0
-	end
-end)
-
-playereffects.register_effect_type("pepmole", S("Autodig Mode"), "pep_mole.png", {"autodig"},
+playereffects.register_effect_type("pepimmortal", S("Immortal"), "pep_immortal.png", {"immortal"},
 	function(player)
-		pep.moles[player:get_player_name()] = true
+		local gimmortal = player:get_armor_groups().immortal
+		if not gimmortal or gimmortal ~= 1 then
+			player:set_armor_groups({immortal = 1})
+			pep.immortals[player:get_player_name()] = true
+		end
 	end,
 	function(_, player)
-		pep.moles[player:get_player_name()] = false
+		if pep.immortals[player:get_player_name()] then
+			player:set_armor_groups({immortal = 0})
+		end
 	end
 )
+
 pep.register_potion({
-	basename = "mole",
-	contentstring = "Autodig Potion",
-	longdesc = "Drinking it will start an effect which will attempt to mine any two blocks in front of you.\nThe effect lasts for 30 seconds",
-	effect_type = "pepmole",
-	duration = 30,
-	recipe = {"default:pick_steel", "default:shovel_steel", "vessels:glass_bottle"}
+	basename = "immortal",
+	contentstring = "Immortal Potion",
+	longdesc = "After drinking it, you will become immortal. Does not apply to fall and node damage.\nThe effect lasts for 20 seconds",
+	effect_type = "pepimmortal",
+	duration = 20,
+	recipe = {
+		"default:gold_ingot", "default:glowstone_dust",
+		"flowers:mushroom_red", "vessels:glass_bottle"
+	}
 })
+
+-- Replace useless Mole
+minetest.register_alias("pep:mole", "pep:immortal")

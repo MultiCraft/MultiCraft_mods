@@ -11,7 +11,7 @@ High Jump=Сильный Прыжок
 Low Jump=Слабый Прыжок
 Night Vision=Ночное Видение
 Invisible=Невидимость
-Autodig Mode=Режим Автодобычи
+Immortal=Бессмертие
 
 # Potions
 Running Potion=Зелье Ускорения
@@ -47,5 +47,5 @@ Drinking it, you will see in the dark for 60 seconds.@nThe potion works only out
 Invisible Potion=Зелье Невидимости
 Drinking it, you will invisible for 30 seconds=Выпив его, вы будете невидимыми в течении 30 секунд
 
-Autodig Potion=Зелье Автодобычи
-Drinking it will start an effect which will attempt to mine any two blocks in front of you.@nThe effect lasts for 30 seconds=Выпив его, вы активируете эффект, который попытается сломать любые два блока перед вами.@nЭффект длится 30 секунд
+Immortal Potion=Зелье Бессмертия
+After drinking it, you will become immortal. Does not apply to fall and node damage.@nThe effect lasts for 20 seconds=Выпив его, вы станете бессмертным. Не влияет на урон от падения и узлов.@nЭффект длится 30 секунд
