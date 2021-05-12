@@ -120,13 +120,17 @@ minetest.register_on_dieplayer(function(player)
 	-- Drop inventory items
 	local stack
 	local item_drop = minetest.item_drop
-	for i = 1, inv:get_size("main") do
-		stack = inv:get_stack("main", i)
-		if stack:get_count() > 0 then
-			item_drop(stack, nil, pos)
+
+	for _, inv_name in pairs({"craft", "main"}) do
+		for i = 1, inv:get_size(inv_name) do
+			stack = inv:get_stack(inv_name, i)
+			if stack:get_count() > 0 then
+				item_drop(stack, nil, pos)
+			end
 		end
+
+		inv:set_list(inv_name, {})
 	end
-	inv:set_list("main", {})
 
 	-- Display death coordinates
 	local name = player:get_player_name()
