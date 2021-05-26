@@ -25,7 +25,7 @@ local vadd, vsubtract = vector.add, vector.subtract
 
 -- Flower registration
 
-local function add_simple_flower(name, desc, box, f_groups, inv)
+local function add_simple_flower(name, desc, box, f_groups, inv, drop)
 	-- Common flowers' groups
 	f_groups.snappy = 3
 	f_groups.flower = 1
@@ -36,8 +36,8 @@ local function add_simple_flower(name, desc, box, f_groups, inv)
 	local image = "flowers_" .. name .. ".png"
 	local inventory_image = inv and "flowers_" .. name .. "_inv.png" or image
 
-	minetest.register_node("flowers:" .. name, {
-		description = S(desc),
+	minetest.register_node(":flowers:" .. name, {
+		description = desc,
 		drawtype = "plantlike",
 		waving = 1,
 		tiles = {image},
@@ -49,12 +49,16 @@ local function add_simple_flower(name, desc, box, f_groups, inv)
 		buildable_to = true,
 		groups = f_groups,
 		sounds = default.node_sound_leaves_defaults(),
+		drop = drop or nil,
 		selection_box = {
 			type = "fixed",
 			fixed = box
 		}
 	})
 end
+
+-- add public function to use by other mods
+flowers.add_simple_flower = add_simple_flower
 
 local rose_size			= {-0.18, -0.5, -0.18, 0.18, 0.27, 0.18}
 local tulip_size		= {-0.16, -0.5, -0.16, 0.16, 0.18, 0.16}
@@ -67,31 +71,31 @@ flowers.datas = {
 	-- Rose
 	{
 		"rose",
-		"Red Rose",
+		S"Red Rose",
 		rose_size,
 		{color_red = 1}
 	},
 	{
 		"rose_burgundy",
-		"Burgundy Rose",
+		S"Burgundy Rose",
 		rose_size,
 		{color_red = 1}
 	},
 	{
 		"rose_pink",
-		"Pink Rose",
+		S"Pink Rose",
 		rose_size,
 		{color_pink = 1}
 	},
 	{
 		"rose_white",
-		"White Rose",
+		S"White Rose",
 		rose_size,
 		{color_white = 1}
 	},
 	{
 		"rose_yellow",
-		"Yellow Rose",
+		S"Yellow Rose",
 		rose_size,
 		{color_yellow = 1}
 	},
@@ -99,43 +103,43 @@ flowers.datas = {
 	-- Tulip
 	{
 		"tulip",
-		"Orange Tulip",
+		S"Orange Tulip",
 		tulip_size,
 		{color_orange = 1}
 	},
 	{
 		"tulip_burgundy",
-		"Burgundy Tulip",
+		S"Burgundy Tulip",
 		tulip_size,
 		{color_red = 1}
 	},
 	{
 		"tulip_pink",
-		"Pink Tulip",
+		S"Pink Tulip",
 		tulip_size,
 		{color_pink = 1}
 	},
 	{
 		"tulip_red",
-		"Red Tulip",
+		S"Red Tulip",
 		tulip_size,
 		{color_red = 1}
 	},
 	{
 		"tulip_violet",
-		"Violet Tulip",
+		S"Violet Tulip",
 		tulip_size,
 		{color_violet = 1}
 	},
 	{
 		"tulip_white",
-		"White Tulip",
+		S"White Tulip",
 		tulip_size,
 		{color_white = 1}
 	},
 	{
 		"tulip_yellow",
-		"Yellow Tulip",
+		S"Yellow Tulip",
 		tulip_size,
 		{color_yellow = 1}
 	},
@@ -143,7 +147,7 @@ flowers.datas = {
 	-- Dandelion
 	{
 		"dandelion_yellow",
-		"Yellow Dandelion",
+		S"Yellow Dandelion",
 		{-0.25, -0.5, -0.25, 0.25, 0, 0.25},
 		{color_yellow = 1}, true
 	},
@@ -151,40 +155,39 @@ flowers.datas = {
 	-- Houstonia
 	{
 		"houstonia",
-		"White Houstonia",
+		S"White Houstonia",
 		houstonia_size,
 		{color_white = 1}
 	},
 	{
 		"houstonia_blue",
-		"Blue Houstonia",
+		S"Blue Houstonia",
 		houstonia_size,
 		{color_blue = 1}
 	},
 	{
 		"houstonia_pink",
-		"Pink Houstonia",
+		S"Pink Houstonia",
 		houstonia_size,
 		{color_pink = 1}
 	},
 
-
 	-- Orchid
 	{
 		"orchid",
-		"Blue Orchid",
+		S"Blue Orchid",
 		orchid_size,
 		{color_blue = 1}
 	},
 	{
 		"orchid_pink",
-		"Pink Orchid",
+		S"Pink Orchid",
 		orchid_size,
 		{color_pink = 1}
 	},
 	{
 		"orchid_white",
-		"White Orchid",
+		S"White Orchid",
 		orchid_size,
 		{color_white = 1}
 	},
@@ -192,25 +195,25 @@ flowers.datas = {
 	-- Allium
 	{
 		"allium",
-		"Violet Allium",
+		S"Violet Allium",
 		allium_size,
 		{color_violet = 1}
 	},
 	{
 		"allium_blue",
-		"Blue Allium",
+		S"Blue Allium",
 		allium_size,
 		{color_blue = 1}
 	},
 	{
 		"allium_white",
-		"White Allium",
+		S"White Allium",
 		allium_size,
 		{color_white = 1}
 	},
 	{
 		"allium_magenta",
-		"Magenta Allium",
+		S"Magenta Allium",
 		allium_size,
 		{color_magenta = 1}
 	},
@@ -218,23 +221,15 @@ flowers.datas = {
 	-- Oxeye
 	{
 		"oxeye_daisy",
-		"White Oxeye",
+		S"White Oxeye",
 		oxeye_daisy_size,
 		{color_white = 1}
 	},
 	{
 		"oxeye_daisy_pink",
-		"Pink Oxeye",
+		S"Pink Oxeye",
 		oxeye_daisy_size,
 		{color_pink = 1}
-	},
-
-	-- Sunflower
-	{
-		"sunflower",
-		"Sunflower",
-		{-0.33, -0.5, -0.33, 0.33, 0.95, 0.33},
-		{color_yellow = 1}
 	}
 }
 
@@ -242,24 +237,6 @@ for _, item in pairs(flowers.datas) do
 	add_simple_flower(unpack(item))
 end
 
--- Set sunflower scale and drop
-local sunflower_drops = {
-	{items = {"flowers:sunflower"}}
-}
-if minetest.get_modpath("farming_plants") then
-	sunflower_drops = {
-		{items = {"flowers:sunflower"}, rarity = 2},
-		{items = {"farming_plants:seed_sunflower"}}
-	}
-end
-
-minetest.override_item("flowers:sunflower", {
-	visual_scale = 1.5,
-	drop = {
-		max_items = 1,
-		items = sunflower_drops
-	}
-})
 
 -- Flower spread
 -- Public function to enable override by mods
