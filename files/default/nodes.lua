@@ -975,6 +975,7 @@ minetest.register_node("default:sugarcane", {
 	drawtype = "plantlike",
 	tiles = {"default_sugarcane.png"},
 	inventory_image = "default_sugarcane_inv.png",
+	wield_image = "default_sugarcane_inv.png",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,

@@ -287,5 +287,6 @@ minetest.register_craft({
 })
 
 minetest.register_privilege("bucket", {
-	description = "Can use the bucket at any height"
+	description = "Can use the bucket at any height",
+	give_to_singleplayer = false
 })
