@@ -35,9 +35,8 @@ default.listcolors = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"
 default.gui = "size[9,8.75]" ..
 	default.gui_bg ..
 	default.listcolors ..
-	"background[0,0;0,0;formspec_background_color.png;true]" ..
-	"background[0,0;0,0;formspec_backround.png;true]" ..
-	"background[0,0;0,0;formspec_inventory.png;true]" ..
+	"background[0,0;0,0;formspec_background_color.png^" ..
+		"formspec_backround.png^formspec_inventory.png;true]" ..
 	"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
 	"list[current_player;main;0.01,4.51;9,3;9]" ..
 	"list[current_player;main;0.01,7.75;9,1;]"

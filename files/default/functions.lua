@@ -272,7 +272,7 @@ minetest.register_abm({
 		"default:dirt_with_dry_grass"
 	},
 	interval = 15,
-	chance = 70,
+	chance = 50,
 	action = function(...)
 		default.grow_sugarcane(...)
 	end
@@ -707,7 +707,7 @@ end
 
 -- Shoot snowball
 local function snowball_impact(thrower, pos, dir, hit_object)
-	if hit_object then
+	if thrower and hit_object then
 		local punch_damage = {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = 1}

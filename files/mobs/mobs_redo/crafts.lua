@@ -115,15 +115,15 @@ minetest.register_craftitem("mobs:rotten_flesh", {
 
 -- fish
 minetest.register_craftitem(":default:fish_raw", {
-	description = "Raw Fish",
-	inventory_image = "default_fish.png",
+	description = S"Raw Fish",
+	inventory_image = "mobs_fish.png",
 	groups = {food_fish_raw = 1, food = 1},
 	on_use = minetest.item_eat(2, nil, -3)
 })
 
 minetest.register_craftitem(":default:fish", {
-	description = "Cooked Fish",
-	inventory_image = "default_fish_cooked.png",
+	description = S"Cooked Fish",
+	inventory_image = "mobs_fish_cooked.png",
 	groups = {food = 1},
 	on_use = minetest.item_eat(6)
 })
