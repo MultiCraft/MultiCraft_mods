@@ -112,9 +112,13 @@ if not creative_mode_cache and minetest.is_singleplayer() then
 	end)
 end
 
--- Drop items at death
+-- Drop items at death and add waypoint
+local dead_waypoint = {}
+local waypoint_live = tonumber(minetest.settings:get("item_entity_ttl")) or 600
+
 minetest.register_on_dieplayer(function(player)
-	local pos = player:get_pos()
+	local name = player:get_player_name()
+	local pos = vector.round(player:get_pos())
 	local inv = player:get_inventory()
 
 	-- Drop inventory items
@@ -133,9 +137,39 @@ minetest.register_on_dieplayer(function(player)
 	end
 
 	-- Display death coordinates
-	local name = player:get_player_name()
-	local pos_string = minetest.pos_to_string(pos, 1)
+	local pos_string = minetest.pos_to_string(pos)
 
-	minetest.chat_send_player(name, S("Your last coordinates: @1", pos_string))
+	minetest.chat_send_player(name,
+		S("Your last coordinates: @1", pos_string))
 	minetest.log("action", "Player \"" .. name .. "\" died at " .. pos_string)
+
+	-- Add Waypoint
+	if dead_waypoint[name] then
+		player:hud_remove(dead_waypoint[name])
+	end
+
+	local hud = player:hud_add({
+		hud_elem_type = "waypoint",
+		name = S("Your point of death:"),
+		text = S("m left"),
+		number = "0xd80a1b",
+		world_pos = pos
+	})
+	dead_waypoint[name] = hud
+
+	minetest.after(waypoint_live, function()
+		if dead_waypoint[name] then
+			player:hud_remove(dead_waypoint[name])
+			dead_waypoint[name] = nil
+		end
+	end)
+end)
+
+minetest.register_on_leaveplayer(function(player)
+	local name = player:get_player_name()
+
+	if dead_waypoint[name] then
+		player:hud_remove(dead_waypoint[name])
+		dead_waypoint[name] = nil
+	end
 end)
