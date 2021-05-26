@@ -54,6 +54,7 @@ end
 
 -- Rain
 weather.register("rain", {
+	desc = S("Rain"),
 	falling_speed = 5,
 	amount = 6,
 	size = 20,
@@ -64,6 +65,7 @@ weather.register("rain", {
 
 -- Snow
 weather.register("snow", {
+	desc = S("Snow"),
 	falling_speed = 2,
 	amount = 5,
 	size = 35,
@@ -89,9 +91,9 @@ function weather.set(weather_type, wind)
 	end
 end
 
-local function weather_change()
-	if weather.type == "none" then
-		for id, _ in pairs(weather.registered) do
+local function weather_change(disable)
+	if weather.type == "none" and not disable then
+		for id in pairs(weather.registered) do
 			if random(3) == 1 then
 				weather.set(id, {
 					x = random(0, 8),
@@ -102,7 +104,7 @@ local function weather_change()
 				break
 			end
 		end
-		minetest.after(random(60, 300), weather_change)
+		minetest.after(random(60, 300), function() weather_change(true) end)
 	else
 		weather.set("none")
 		minetest.after(random(1800, 3600), weather_change)
@@ -241,13 +243,18 @@ minetest.register_chatcommand("weather", {
 	func = function(name, param)
 		if param and (weather.registered[param] or param == "none") then
 			weather.set(param)
-			minetest.chat_send_player(name, S("Set weather type:") .. " " .. param)
+			if param == "none" then
+				minetest.chat_send_player(name, S("Set clear weather."))
+			else
+				local setw = weather.registered[param].desc or param:gsub("^%l", string.upper)
+				minetest.chat_send_player(name, S("Set weather type: @1.", setw))
+			end
 		else
 			local types = "none"
-			for w, _ in pairs(weather.registered) do
+			for w in pairs(weather.registered) do
 				types = types .. ", " .. w
 			end
-			minetest.chat_send_player(name, S("Avalible weather types:") .. " " .. types)
+			minetest.chat_send_player(name, S("Avalible weather types: @1.", types))
 		end
 	end
 })
