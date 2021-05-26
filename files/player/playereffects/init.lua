@@ -481,12 +481,13 @@ function playereffects.hud_effect(effect_type_id, player, pos)
 
 		local icon = effect_type.icon
 		if icon then
+			local scale = icon.scale or {x = 1, y = 1}
 			icon_id = player:hud_add({
 				hud_elem_type = "image",
-				scale = {x = 1, y = 1},
+				scale = scale,
 				position = {x = 1, y = 0.3},
 				name = "effect_icon_" .. effect_type_id,
-				text = icon,
+				text = (type(icon) == "table" and icon.image) or icon,
 				alignment = {x = -1, y = 0},
 				direction = 0,
 				offset = {x = -230, y = pos * 30}

@@ -66,7 +66,7 @@ minetest.register_node("vessels:shelf", {
 	},
 	paramtype2 = "facedir",
 	is_ground_content = false,
-	groups = {cracky = 2, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
+	groups = {vessel = 1, cracky = 2, choppy = 2, oddly_breakable_by_hand = 1, flammable = 3},
 	sounds = default.node_sound_wood_defaults(),
 
 	on_construct = function(pos)
