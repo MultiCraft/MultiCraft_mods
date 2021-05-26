@@ -1,13 +1,29 @@
 -- how often a growth failure tick is retried (e.g. too dark)
-local function tick_short(pos)
+function tick(pos)
 	minetest.get_node_timer(pos):start(math.random(256, 768))
 end
 
--- grow blocks next to the plant
-function farming_addons.grow_block(pos)
+local function check_free(pos)
 	local node = minetest.get_node(pos)
+	if node.name ~= "air" then
+		return false
+	end
+
+	local nb = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z})
+	local nb_def = minetest.registered_nodes[nb.name]
+	if not nb_def or not nb_def.walkable then
+		return false
+	end
+
+	return true
+end
+
+-- grow blocks next to the plant
+function farming_addons.grow_block(pos, connect, rotate)
+	local node = minetest.get_node(pos)
+	local spos = minetest.pos_to_string(pos)
 	local def = minetest.registered_nodes[node.name]
-	local random_pos = false
+	local block_pos
 	local right_pos = {x = pos.x + 1, y = pos.y, z = pos.z}
 	local front_pos = {x = pos.x, y = pos.y, z = pos.z + 1}
 	local left_pos = {x = pos.x - 1, y = pos.y, z = pos.z}
@@ -35,12 +51,11 @@ function farming_addons.grow_block(pos)
 
 	-- check if the fruit belongs to this stem
 	for _, child_pos in pairs(children) do
-		-- print(side, minetest.pos_to_string(child_pos))
+		local parent_pos = minetest.get_meta(child_pos):get_string("parent")
 
-		local parent_pos_from_child = minetest.get_meta(child_pos):get_string("parent")
-
-		-- disable timer for fully grown plant - fruit for this stem already exists
-		if minetest.pos_to_string(pos) == parent_pos_from_child then
+		-- disable timer for fully grown plant,
+		-- fruit for this stem already exists
+		if spos == parent_pos then
 			return
 		end
 	end
@@ -48,36 +63,30 @@ function farming_addons.grow_block(pos)
 	-- make sure that at least one side of the plant has space to put fruit
 	local spawn_pos = {}
 
-	if right.name == "air" then
+	if check_free(right_pos) then
 		spawn_pos[#spawn_pos+1] = right_pos
 	end
-	if front.name == "air" then
+	if check_free(front_pos) then
 		spawn_pos[#spawn_pos+1] = front_pos
 	end
-	if left.name == "air" then
+	if check_free(left_pos) then
 		spawn_pos[#spawn_pos+1] = left_pos
 	end
-	if back.name == "air" then
+	if check_free(back_pos) then
 		spawn_pos[#spawn_pos+1] = back_pos
 	end
 
 	-- plant is closed from all sides
 	if #spawn_pos < 1 then
-		tick_short(pos)
+		tick(pos)
 		return
 	else
 		-- pick random from the open sides
-		local pick_random
-
-		if #spawn_pos == 1 then
-			pick_random = #spawn_pos
-		else
-			pick_random = math.random(1, #spawn_pos)
-		end
+		local pick_random = math.random(#spawn_pos)
 
 		for k, v in pairs(spawn_pos) do
 			if k == pick_random then
-				random_pos = v
+				block_pos = v
 			end
 		end
 	end
@@ -85,14 +94,27 @@ function farming_addons.grow_block(pos)
 	-- check light
 	local light = minetest.get_node_light(pos)
 	if not light or light < 12 then
-		tick_short(pos)
+		tick(pos)
 		return
 	end
 
 	-- spawn block
-	if random_pos then
-		minetest.set_node(random_pos, {name = def.next_plant})
-		minetest.get_meta(random_pos):set_string("parent", minetest.pos_to_string(pos))
+	if block_pos then
+		local p2_r
+		if connect then
+			local direction = vector.direction(pos, block_pos)
+			local p2 = minetest.dir_to_facedir(direction)
+			minetest.swap_node(pos, {name = def.next_stage, param2 = p2})
+
+			if rotate then
+				-- FIX me if there is an API
+				p2_r = (p2 == 0 and 8) or (p2 == 1 and 17)
+					or (p2 == 2 and 6) or (p2 == 3 and 15)
+			end
+		end
+
+		minetest.set_node(block_pos, {name = def.next_plant, param2 = p2_r})
+		minetest.get_meta(block_pos):set_string("parent", spos)
 	end
 	return
 end
