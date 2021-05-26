@@ -147,7 +147,8 @@ armor.set_player_armor = function(self, player)
 		armor_groups.level = floor(armor_level / 20)
 		armor_groups.fleshy = 100 - armor_level
 	end
-	player:set_physics_override(physics)
+	-- temporary disable physics override
+--	player:set_physics_override(physics)
 	self.textures[name].armor = texture
 	self.def[name].state = state
 	self.def[name].count = count
