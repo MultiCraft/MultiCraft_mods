@@ -335,7 +335,7 @@ function farming.register_plant(name, def)
 			place_param2 = def.place_param2 or nil,
 			walkable = false,
 			buildable_to = true,
-			drop = drop,
+			drop = def.drop and def.drop[i] or drop,
 			selection_box = {
 				type = "fixed",
 				fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
