@@ -22,6 +22,9 @@ local function register_mgv6_flower(flower_name)
 	})
 end
 
+-- add public function to use by other mods
+flowers.register_mgv6_flower = register_mgv6_flower
+
 local function register_mgv6_mushroom(mushroom_name)
 	minetest.register_decoration({
 		name = "flowers:" .. mushroom_name,
@@ -90,7 +93,6 @@ function flowers.register_mgv6_decorations()
 	register_mgv6_flower("allium_magenta")
 	register_mgv6_flower("oxeye_daisy")
 	register_mgv6_flower("oxeye_daisy_pink")
-	register_mgv6_flower("sunflower")
 
 	register_mgv6_mushroom("mushroom_brown")
 	register_mgv6_mushroom("mushroom_red")
@@ -124,6 +126,9 @@ local function register_flower(seed, flower_name)
 		decoration = "flowers:" .. flower_name
 	})
 end
+
+-- add public function to use by other mods
+flowers.register_flower = register_flower
 
 local function register_mushroom(mushroom_name)
 	minetest.register_decoration({
@@ -192,7 +197,6 @@ function flowers.register_decorations()
 	register_flower(63145,	"allium_magenta")
 	register_flower(73133,	"oxeye_daisy")
 	register_flower(232452,	"oxeye_daisy_pink")
-	register_flower(48923,	"sunflower")
 
 	register_mushroom("mushroom_brown")
 	register_mushroom("mushroom_red")
