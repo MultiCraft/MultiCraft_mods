@@ -11,6 +11,7 @@ end
 local floor, pi = math.floor, math.pi
 local vadd = vector.add
 local b = "blank.png"
+local esc = minetest.formspec_escape
 local function objects_inside_radius(p)
 	return minetest.get_objects_inside_radius(p, 0.5)
 end
@@ -275,17 +276,23 @@ end
 local function edit_text(pos, _, clicker)
 	local player_name = clicker:get_player_name()
 
-	if minetest.is_protected(pos, player_name) then
-		return
-	end
-
-	local text = minetest.get_meta(pos):get_string("sign_text")
+	local text = esc(minetest.get_meta(pos):get_string("sign_text"))
 
 	local edit_fs = "size[5,3]" ..
-		"textarea[1.15,0.3;3.3,2;Dtext;" .. S("Enter your text:") ..
-		";" .. minetest.formspec_escape(text) .. "]" ..
-		"button_exit[0.85,2;3.3,1;;" .. S("Save") .. "]" ..
-		"field[0,0;0,0;spos;;" .. minetest.pos_to_string(pos) .. "]"
+		"background[0,0;0,0;formspec_background_color.png^" ..
+		"formspec_backround.png;true]"
+	if not minetest.is_protected(pos, player_name) then
+		edit_fs = edit_fs ..
+			"textarea[1.15,0.3;3.3,2;Dtext;" ..
+			S("Enter your text:") .. ";" .. text .. "]" ..
+			"button_exit[0.85,2;3.3,1;;" .. S("Save") .. "]" ..
+			"field[0,0;0,0;spos;;" .. minetest.pos_to_string(pos) .. "]"
+	else
+		edit_fs = edit_fs ..
+			"textarea[1.15,0.3;3.3,2;read_only;" ..
+			S("Sign") .. ":;" .. text .. "]" ..
+			"button_exit[0.85,2;3.3,1;;" .. S("Close") .. "]"
+	end
 
 	minetest.show_formspec(player_name, "signs:edit_text", edit_fs)
 end
