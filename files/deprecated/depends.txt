@@ -1,6 +1,2 @@
 default
-mesecons_pistons
-mesecons_solarpanel
-pep
 workbench
-carts

@@ -277,8 +277,6 @@ minetest.register_craftitem("bucket:bucket_milk", {
 	groups = {food_milk = 1, food = 1}
 })
 
-minetest.register_alias("mobs:bucket_milk", "bucket:bucket_milk")
-
 minetest.register_craft({
 	type = "fuel",
 	recipe = "bucket:bucket_lava",

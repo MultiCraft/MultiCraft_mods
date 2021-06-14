@@ -88,11 +88,6 @@ minetest.register_craft({
 	recipe = {{"farming:straw"}}
 })
 
-
--- Aliases
-minetest.register_alias("default:string", "farming:string")
-minetest.register_alias("default:haybale", "farming:straw")
-
 -- Fuels
 
 minetest.register_craft({
