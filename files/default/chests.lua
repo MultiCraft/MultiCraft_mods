@@ -71,8 +71,9 @@ end
 local function on_construct(pos)
 	local param2 = minetest.get_node(pos).param2
 	local meta = minetest.get_meta(pos)
-	local pos1 = {x = pos.x + neighbor[param2][1].x, y = pos.y, z = pos.z + neighbor[param2][1].z}
-	local pos2 = {x = pos.x + neighbor[param2][2].x, y = pos.y, z = pos.z + neighbor[param2][2].z}
+	local nparam2 = neighbor[param2]
+	local pos1 = {x = pos.x + nparam2[1].x, y = pos.y, z = pos.z + nparam2[1].z}
+	local pos2 = {x = pos.x + nparam2[2].x, y = pos.y, z = pos.z + nparam2[2].z}
 
 	if minetest.get_node(pos1).name == "default:chest" then
 		minetest.set_node(pos, {name="default:chest_left", param2 = param2})
@@ -103,11 +104,11 @@ local function on_receive_fields(pos, _, fields)
 	end
 end
 
-local function allow_take_put(pos, _, _, stack, player)
+local function allow_take_put(pos, count, player)
 	if minetest.is_protected(pos, player and player:get_player_name() or "") then
 		return 0
 	end
-	return stack:get_count()
+	return count
 end
 
 local function on_destruct(pos, large)
@@ -123,7 +124,7 @@ local function on_destruct(pos, large)
 	end
 
 	if large then
-		local right = large == "right" and true
+		local right = large == "right"
 		local param2 = minetest.get_node(pos).param2
 		local neighbor_pos = neighbor[param2][right and 2 or 1]
 		local pos2 =
@@ -149,8 +150,31 @@ local def = {
 	sounds = default.node_sound_wood_defaults(),
 	on_rightclick = on_rightclick,
 	on_receive_fields = on_receive_fields,
-	allow_metadata_inventory_put = allow_take_put,
-	allow_metadata_inventory_take = allow_take_put
+
+	allow_metadata_inventory_move = function(pos, _, _, _, _, count, player)
+		return allow_take_put(pos, count, player)
+	end,
+	allow_metadata_inventory_put = function(pos, _, _, stack, player)
+		return allow_take_put(pos, stack:get_count(), player)
+	end,
+	allow_metadata_inventory_take = function(pos, _, _, stack, player)
+		return allow_take_put(pos, stack:get_count(), player)
+	end,
+
+	on_metadata_inventory_move = function(pos, _, _, _, _, _, player)
+		minetest.log("action", player:get_player_name() ..
+			" moves stuff in chest at " .. minetest.pos_to_string(pos))
+	end,
+	on_metadata_inventory_put = function(pos, _, _, stack, player)
+		minetest.log("action", player:get_player_name() ..
+			" moves " .. stack:get_name() ..
+			" to chest at " .. minetest.pos_to_string(pos))
+	end,
+	on_metadata_inventory_take = function(pos, _, _, stack, player)
+		minetest.log("action", player:get_player_name() ..
+			" takes " .. stack:get_name() ..
+			" from chest at " .. minetest.pos_to_string(pos))
+	end
 }
 
 local tcopy = table.copy
@@ -171,7 +195,7 @@ def_chest_left.tiles = {
 	"default_chest_side_big.png^[transformFX", "default_chest_front_big.png"
 }
 def_chest_left.groups.not_in_creative_inventory = 1
-def_chest_left.on_destruct =  function(pos) on_destruct(pos, "left") end
+def_chest_left.on_destruct = function(pos) on_destruct(pos, "left") end
 minetest.register_node("default:chest_left", def_chest_left)
 
 local def_chest_right = tcopy(def)
@@ -222,9 +246,10 @@ minetest.register_lbm({
 		local meta = minetest.get_meta(pos)
 		if meta:get_string("version") ~= "2" then
 			local param2 = minetest.get_node(pos).param2
+			local nparam2 = neighbor[param2]
 
 			if node.name == "default:chest_left" then
-				local pos_r = {x = pos.x + neighbor[param2][1].x, y = pos.y, z = pos.z + neighbor[param2][1].z}
+				local pos_r = {x = pos.x + nparam2[1].x, y = pos.y, z = pos.z + nparam2[1].z}
 				local chest_l = pos_r.x .. "," .. pos_r.y .. "," .. pos_r.z
 
 				local formspec_l = large_chest_formspec ..
@@ -233,7 +258,7 @@ minetest.register_lbm({
 					"listring[nodemeta:" .. chest_l .. ";main]"
 				meta:set_string("formspec", formspec_l)
 			elseif node.name == "default:chest_right" then
-				local pos_l = {x = pos.x + neighbor[param2][2].x, y = pos.y, z = pos.z + neighbor[param2][2].z}
+				local pos_l = {x = pos.x + nparam2[2].x, y = pos.y, z = pos.z + nparam2[2].z}
 				local chest_r = pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z
 
 				local formspec_r = large_chest_formspec ..
