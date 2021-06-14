@@ -385,7 +385,7 @@ minetest.register_node("default:leaves", {
 })
 
 minetest.register_node("default:apple", {
-	description = "Apple",
+	description = "Red Apple",
 	drawtype = "plantlike",
 	visual_scale = 0.75,
 	tiles = {"default_apple.png"},
@@ -399,7 +399,27 @@ minetest.register_node("default:apple", {
 		fixed = {-3/16, -0.5, -3/16, 3/16, 1/4, 3/16}
 	},
 	groups = {fleshy = 3, dig_immediate = 3, flammable = 2,
-		leafdecay = 3, leafdecay_drop = 1, food = 1},
+		leafdecay = 3, leafdecay_drop = 1, apple = 1, food = 1},
+	on_use = minetest.item_eat(3),
+	sounds = default.node_sound_leaves_defaults()
+})
+
+minetest.register_node("default:apple_green", {
+	description = "Green Apple",
+	drawtype = "plantlike",
+	visual_scale = 0.75,
+	tiles = {"default_apple_green.png"},
+	inventory_image = "default_apple_green.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	is_ground_content = false,
+	selection_box = {
+		type = "fixed",
+		fixed = {-3/16, -0.5, -3/16, 3/16, 1/4, 3/16}
+	},
+	groups = {fleshy = 3, dig_immediate = 3, flammable = 2,
+		leafdecay = 3, leafdecay_drop = 1, apple = 1, food = 1},
 	on_use = minetest.item_eat(2),
 	sounds = default.node_sound_leaves_defaults()
 })
@@ -691,7 +711,7 @@ minetest.register_node("default:birch_leaves", {
 	paramtype = "light",
 	walkable = false,
 	is_ground_content = false,
-	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1, speed = -20},
 	drop = {
 		max_items = 1,
 		items = {
@@ -1249,10 +1269,11 @@ minetest.register_node("default:bush_stem", {
 minetest.register_node("default:bush_leaves", {
 	description = "Bush Leaves",
 	drawtype = "allfaces_optional",
+	waving = 1,
 	tiles = {"default_leaves.png"},
 	paramtype = "light",
 	walkable = false,
-	groups = {snappy = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, flammable = 2, leaves = 1, speed = -20},
 	drop = {
 		max_items = 1,
 		items = {
@@ -1320,10 +1341,11 @@ minetest.register_node("default:blueberry_bush_stem", {
 minetest.register_node("default:blueberry_bush_leaves_with_berries", {
 	description = "Blueberry Bush Leaves with Berries",
 	drawtype = "allfaces_optional",
+	waving = 1,
 	tiles = {"default_blueberry_bush_leaves.png^default_blueberry_overlay.png"},
 	paramtype = "light",
 	walkable = false,
-	groups = {snappy = 3, flammable = 2, leaves = 1, dig_immediate = 2},
+	groups = {snappy = 3, flammable = 2, leaves = 1, dig_immediate = 2, speed = -20},
 	drop = "default:blueberries",
 	sounds = default.node_sound_leaves_defaults({
 		dig = {name = "default_dig_snappy", gain = 0.5}
@@ -1343,10 +1365,11 @@ minetest.register_node("default:blueberry_bush_leaves_with_berries", {
 minetest.register_node("default:blueberry_bush_leaves", {
 	description = "Blueberry Bush Leaves",
 	drawtype = "allfaces_optional",
+	waving = 1,
 	tiles = {"default_blueberry_bush_leaves.png"},
 	paramtype = "light",
 	walkable = false,
-	groups = {snappy = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, flammable = 2, leaves = 1, speed = -20},
 	drop = {
 		max_items = 1,
 		items = {
@@ -1422,10 +1445,11 @@ minetest.register_node("default:acacia_bush_stem", {
 minetest.register_node("default:acacia_bush_leaves", {
 	description = "Acacia Bush Leaves",
 	drawtype = "allfaces_optional",
+	waving = 1,
 	tiles = {"default_acacia_leaves.png"},
 	paramtype = "light",
 	walkable = false,
-	groups = {snappy = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, flammable = 2, leaves = 1, speed = -20},
 	drop = {
 		max_items = 1,
 		items = {
