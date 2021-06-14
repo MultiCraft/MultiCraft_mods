@@ -10,7 +10,7 @@ local function book_on_use(itemstack, user)
 	-- Backwards compatibility
 	local old_data = minetest.deserialize(itemstack:get_metadata())
 	if old_data then
-		meta:from_table({ fields = old_data })
+		meta:from_table({fields = old_data})
 	end
 
 	local data = meta:to_table().fields
@@ -21,7 +21,7 @@ local function book_on_use(itemstack, user)
 		owner = data.owner
 
 		for str in (text .. "\n"):gmatch("([^\n]*)[\n]") do
-			lines[#lines+1] = str
+			lines[#lines + 1] = str
 		end
 
 		if data.page then
@@ -62,8 +62,8 @@ local function book_on_use(itemstack, user)
 end
 
 local max_text_size = 10000
-local max_title_size = 80
-local short_title_size = 35
+local max_title_size = 50
+local short_title_size = 30
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "default:book" then return end
 	local inv = player:get_inventory()
@@ -103,14 +103,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		data.page_max = math.ceil((#data.text:gsub("[^\n]", "") + 1) / lpp)
 
 		if new_stack then
-			new_stack:get_meta():from_table({ fields = data })
+			new_stack:get_meta():from_table({fields = data})
 			if inv:room_for_item("main", new_stack) then
 				inv:add_item("main", new_stack)
 			else
 				minetest.add_item(player:get_pos(), new_stack)
 			end
 		else
-			stack:get_meta():from_table({ fields = data })
+			stack:get_meta():from_table({fields = data})
 		end
 
 	elseif fields.book_next or fields.book_prev then
@@ -378,7 +378,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:sugar",
+	output = "default:sugar 2",
 	recipe = {
 		{"default:sugarcane"}
 	}

@@ -1,11 +1,4 @@
 dungeon_loot.registered_loot = {
-	-- buckets
-	{name = "bucket:bucket_empty", chance = 0.55},
-	-- water in deserts or above ground, lava otherwise
-	{name = "bucket:bucket_water", chance = 0.45, types = {"sandstone", "desert"}},
-	{name = "bucket:bucket_water", chance = 0.45, y = {0, 256}, types = {"normal"}},
-	{name = "bucket:bucket_lava", chance = 0.45, y = {-64, -1}, types = {"normal"}},
-
 	-- various items
 	{name = "default:stick", chance = 0.6, count = {3, 6}},
 	{name = "default:flint", chance = 0.4, count = {1, 3}},
@@ -13,7 +6,8 @@ dungeon_loot.registered_loot = {
 	{name = "carts:rail", chance = 0.35, count = {1, 6}},
 
 	-- farming / consumable
-	{name = "default:apple", chance = 0.4, count = {1, 4}},
+	{name = "default:apple", chance = 0.3, count = {1, 3}},
+	{name = "default:apple_green", chance = 0.3, count = {1, 3}},
 	{name = "default:cactus", chance = 0.4, count = {1, 4}, types = {"sandstone", "desert"}},
 
 	-- trees sappling

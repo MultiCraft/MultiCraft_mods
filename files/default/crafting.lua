@@ -243,6 +243,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "default:quartz_chiseled 3",
+	recipe = {
+		{"default:quartz_pillar"},
+		{"default:quartz_pillar"},
+		{"default:quartz_pillar"}
+	}
+})
+
+minetest.register_craft({
 	output = "default:glowstone",
 	recipe = {
 		{"default:glowstone_dust", "default:glowstone_dust"},
@@ -283,7 +292,7 @@ minetest.register_craft({
 	output = "default:apple_gold",
 	recipe = {
 		{"", "default:gold_ingot", ""},
-		{"default:gold_ingot", "default:apple", "default:gold_ingot"},
+		{"default:gold_ingot", "group:apple", "default:gold_ingot"},
 		{"", "default:gold_ingot", ""}
 	}
 })
