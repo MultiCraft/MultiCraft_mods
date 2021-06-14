@@ -39,7 +39,7 @@ mobs:register_mob("mobs_animal:pig", {
 		walk_start = 61,	walk_end = 80,
 		punch_start = 90,	punch_end = 110
 	},
-	follow = {"default:apple", "farming_addons:carrot", "farming_addons:potato"},
+	follow = {"group:apple", "farming_addons:carrot", "farming_addons:potato"},
 
 	on_rightclick = function(self, clicker)
 		mobs:feed_tame(self, clicker, 8, true, true)
