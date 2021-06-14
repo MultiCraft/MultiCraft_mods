@@ -1,7 +1,7 @@
 -- Media and code needed to upgrade to the new version.
 -- Must be removed no earlier than 12 months after release.
 
-local path = minetest.get_modpath("deprecated")
+--local path = minetest.get_modpath("deprecated")
 
 -- Localization for better performance
 local register_alias = minetest.register_alias
@@ -17,41 +17,31 @@ local default = {
 	{"default:reeds", "default:sugarcane"},
 	{"default:papyrus", "default:sugarcane"},
 	{"hardened_clay:hardened_clay", "default:hardened_clay"},
-	{"fences:fence_wood", "default:fence_wood"}
+	{"fences:fence_wood", "default:fence_wood"},
+	{"mobs:bucket_milk", "bucket:bucket_milk"}, -- new
+	{"default:string", "farming:string"}, -- new
+	{"default:haybale", "farming:straw"}, -- new
 }
 
 for _, d in pairs(default) do
 	register_alias(d[1], d[2])
 end
 
+local fnames = {}
 for _, f in pairs({"1", "2", "3", "11", "12", "13", "14",
 		"21", "22", "23", "24", "32", "33", "34", "35"}) do
-	register_alias("fences:fence_wood_" .. f, "default:fence_wood")
-end
+	fnames[#fnames + 1] = "fences:fence_wood_" .. f
+end 
 
---== mesecons_pistons ==--
-dofile(path .. "/mesecons_pistons.lua")
-
---== carts ==--
-local carts = {
-	{"railcart:cart", "carts:cart"},
-	{"railcart:cart_entity", "carts:cart"},
-	{"default:rail", "carts:rail"},
-	{"boost_cart:rail", "carts:rail"},
-	{"railtrack:powerrail", "carts:powerrail"},
-	{"railtrack:superrail", "carts:powerrail"},
-	{"railtrack:brakerail", "carts:brakerail"},
-	{"railtrack:switchrail", "carts:brakerail"},
-	{"boost_cart:detectorrail", "carts:detectorrail"},
-	{"boost_cart:startstoprail", "carts:brakerail"},
-	{"railtrack:fixer", "default:stick"},
-	{"railtrack:inspector", "default:stick"},
-	{"carts:startstoprail", "carts:brakerail"}
-}
-
-for _, c in pairs(carts) do
-	register_alias(c[1], c[2])
-end
+minetest.register_lbm({
+	label = "Replace Fences",
+	name = "deprecated:fences",
+	nodenames = fnames,
+	run_at_every_load = true,
+	action = function(pos)
+		minetest.set_node(pos, {name = "default:fence_wood"})
+	end
+})
 
 --== workbench ==--
 minetest.after(2, function()
@@ -99,8 +89,9 @@ minetest.after(2, function()
 	end
 
 	for _, d in pairs(workbench.defs) do
-		register_alias("stairs:" .. d[1] .. "_coal",		"stairs:" .. d[1] .. "_default_coalblock")
-		register_alias("stairs:" .. d[1] .. "_lapis_block",	"stairs:" .. d[1] .. "_default_lapisblock")
+		register_alias("stairs:" .. d[1] .. "_coal",			 "stairs:" .. d[1] .. "_default_coalblock")
+		register_alias("stairs:" .. d[1] .. "_lapis_block",		 "stairs:" .. d[1] .. "_default_lapisblock")
+		register_alias("stairs:" .. d[1] .. "_mobs_cheeseblock", "stairs:" .. d[1] .. "_mobs_animals_cheeseblock")
 	end
 
 	for _, e in pairs(stairs_aliases) do
