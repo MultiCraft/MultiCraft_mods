@@ -19,16 +19,5 @@ Authors of media (textures and models)
 --------------------------------------
 Copyright (C) MultiCraft Development Team
 
-farming_addons_carrot.png
-farming_addons_carrot_golden.png
-farming_addons_carrot_seed.png
-farming_addons_chocolate.png
-farming_addons_cocoa_*.png
-farming_addons_corn_*.png
-farming_addons_extra_face.b3d
-farming_addons_melon_*.png
-farming_addons_pumpkin_*.png
-farming_addons_watermelon_*.png
-
 Graphics in this mod is NOT free and can be used only as part of the official MultiCraft build.
 Allowed to be used in non-official builds ONLY for personal use.
