@@ -45,7 +45,7 @@ minetest.register_node("sponge:sponge", {
 
 	after_place_node = function(pos, placer)
 		local name = placer:get_player_name()
-		if not minetest.is_protected_action(pos, name) then
+		if not minetest.is_protected(pos, name) then
 			local count = 0
 			for x = pos.x - area, pos.x + area do
 			for y = pos.y - area, pos.y + area do

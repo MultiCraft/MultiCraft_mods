@@ -22,7 +22,7 @@ bucket.liquids = {}
 local singleplayer = minetest.is_singleplayer()
 
 local function check_protection(pos, name, text)
-	if minetest.is_protected_action(pos, name) then
+	if minetest.is_protected(pos, name) then
 		minetest.log("action", (name ~= "" and name or "A mod")
 			.. " tried to " .. text
 			.. " at protected position "
