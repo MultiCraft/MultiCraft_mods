@@ -1,5 +1,6 @@
 # textdomain: 3d_armor
 Your @1 got destroyed!=Ваша броня "@1" была сломана!
+Protect: @1%, Healing: @2%=Защита: @1%, Отражение урона: @2%
 Leather Helmet=Кожаный Шлем
 Steel Helmet=Стальной Шлем
 Golden Helmet=Золотой Шлем

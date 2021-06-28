@@ -1,14 +1,16 @@
 armor = {}
 
 local translator = minetest.get_translator
-armor.S = translator and translator("3d_armor") or intllib.make_gettext_pair()
+local S = translator and translator("3d_armor") or intllib.make_gettext_pair()
 
 if translator and not minetest.is_singleplayer() then
 	local lang = minetest.settings:get("language")
 	if lang and lang == "ru" then
-		armor.S = intllib.make_gettext_pair()
+		S = intllib.make_gettext_pair()
 	end
 end
+
+armor.S = S
 
 local ARMOR_LEVEL_MULTIPLIER = 1
 local ARMOR_HEAL_MULTIPLIER = 1
@@ -50,6 +52,19 @@ armor.register_armor = function(_, name, def)
 	if def.desc_color then
 		def.description = def.desc_color .. def.description
 	end
+
+	local group = def.groups
+	local protect
+	for _, element in pairs(armor.elements) do
+		protect = group["armor_" .. element]
+		if protect ~= nil then
+			break
+		end
+	end
+
+	def._doc_items_longdesc = S("Protect: @1%, Healing: @2%",
+		protect or 0, group.armor_heal or 0)
+
 	minetest.register_tool(name, def)
 end
 
