@@ -253,11 +253,6 @@ minetest.register_craftitem("default:sugar", {
 	inventory_image = "default_sugar.png"
 })
 
-minetest.register_craftitem("default:quartz_crystal", {
-	description = "Quartz Crystal",
-	inventory_image = "default_quartz_crystal.png"
-})
-
 minetest.register_craftitem("default:snowball", {
 	description = "Snowball",
 	inventory_image = "default_snowball.png",
@@ -428,12 +423,6 @@ minetest.register_craft({
 	type = "cooking",
 	output = "default:coal_lump",
 	recipe = "default:stone_with_coal"
-})
-
-minetest.register_craft({
-	type = "cooking",
-	output = "default:quartz_crystal",
-	recipe = "default:quartz_ore"
 })
 
 --
