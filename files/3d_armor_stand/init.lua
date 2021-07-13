@@ -141,6 +141,21 @@ local function register_armor_stand(name, def)
 			fixed = {-0.5, -0.5, -0.5, 0.5, 1.5, 0.5}
 		},
 		groups = {},
+		on_rotate = function(pos, node, user, mode)
+			if not minetest.is_protected(pos, user:get_player_name())
+					and mode == 1 then
+				node.param2 = (node.param2 % 8) + 1
+				if node.param2 > 3 then
+					node.param2 = 0
+				end
+				minetest.swap_node(pos, node)
+				update_entity(pos)
+
+				return true
+			end
+
+			return false
+		end,
 
 		after_place_node = function(pos, placer)
 			local meta = minetest.get_meta(pos)

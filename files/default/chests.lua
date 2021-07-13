@@ -126,9 +126,10 @@ local function on_destruct(pos, large)
 	if large then
 		local right = large == "right"
 		local param2 = minetest.get_node(pos).param2
-		local neighbor_pos = neighbor[param2][right and 2 or 1]
-		local pos2 =
-			{x = pos.x + neighbor_pos.x, y = pos.y, z = pos.z + neighbor_pos.z}
+		local nparam2 = neighbor[param2]
+		if not nparam2 then return end
+		local nghbr_p = nparam2[right and 2 or 1]
+		local pos2 = {x = pos.x + nghbr_p.x, y = pos.y, z = pos.z + nghbr_p.z}
 		local name = minetest.get_node(pos2).name
 
 		if (right and name == "default:chest_left")
@@ -148,6 +149,7 @@ local def = {
 	groups = {choppy = 2, oddly_breakable_by_hand = 2},
 	drop = "default:chest",
 	sounds = default.node_sound_wood_defaults(),
+	on_rotate = false,
 	on_rightclick = on_rightclick,
 	on_receive_fields = on_receive_fields,
 
