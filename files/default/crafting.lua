@@ -227,31 +227,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:quartz_block",
-	recipe = {
-		{"default:quartz_crystal", "default:quartz_crystal"},
-		{"default:quartz_crystal", "default:quartz_crystal"}
-	}
-})
-
-minetest.register_craft({
-	output = "default:quartz_pillar 2",
-	recipe = {
-		{"default:quartz_block"},
-		{"default:quartz_block"}
-	}
-})
-
-minetest.register_craft({
-	output = "default:quartz_chiseled 3",
-	recipe = {
-		{"default:quartz_pillar"},
-		{"default:quartz_pillar"},
-		{"default:quartz_pillar"}
-	}
-})
-
-minetest.register_craft({
 	output = "default:glowstone",
 	recipe = {
 		{"default:glowstone_dust", "default:glowstone_dust"},
