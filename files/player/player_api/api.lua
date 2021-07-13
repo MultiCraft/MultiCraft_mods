@@ -2,6 +2,7 @@
 -- Note: This is currently broken due to a bug in Irrlicht, leave at 0
 local animation_blend = 0
 local enable_sscsm = minetest.global_exists("sscsm")
+local fmt, esc = string.format, minetest.formspec_escape
 
 player_api.registered_models = {}
 
@@ -14,6 +15,10 @@ end
 
 player_api.default_skin = "character_1.png"
 player_api.default_hair = "player_haircut_1.png"
+player_api.default_model = "character.b3d"
+
+local default_skin, default_hair, default_model =
+		player_api.default_skin, player_api.default_hair, player_api.default_model
 
 -- Player stats and animations
 local player_model = {}
@@ -76,12 +81,13 @@ function player_api.set_model(player, model_name)
 	player_model[name] = model_name
 end
 
+local update_sscsm_preview
 function player_api.set_textures(player, skin, hair, armor,
 		wielditem, cube, cape, cosmetic)
 	local name = player:get_player_name()
 
-	local oldskin      = player_skin[name]      or player_api.default_skin
-	local oldhair      = player_hair[name]      or player_api.default_hair
+	local oldskin      = player_skin[name]      or default_skin
+	local oldhair      = player_hair[name]      or default_hair
 	local oldarmor     = player_armor[name]     or b
 	local oldwielditem = player_wielditem[name] or b
 	local oldcube      = player_cube[name]      or b
@@ -136,7 +142,7 @@ function player_api.set_textures(player, skin, hair, armor,
 		player:set_properties({textures = texture})
 
 		if enable_sscsm and sscsm.has_sscsms_enabled(name) then
-			sscsm.com_send(name, "player_api:preview", player_api.preview(player))
+			update_sscsm_preview(player, name)
 		end
 	end
 end
@@ -196,7 +202,7 @@ function player_api.preview(player, skin, head)
 		local name = player:get_player_name()
 		local texture = player_textures[name]
 		if not texture then
-			local model = models[player_model[name]] or models["character.b3d"]
+			local model = models[player_model[name]] or models[default_model]
 			texture = model.textures
 		end
 		c = "(" .. texture[1] .. "^" .. texture[2] .. "^" .. texture[3] .. ")"
@@ -205,7 +211,7 @@ function player_api.preview(player, skin, head)
 	end
 
 	-- Escape characters for combine
-	c = c:gsub("%^", "\\^"):gsub(":", "\\:")
+	c = c:gsub("%^%[", "\\%^\\%["):gsub(":", "\\:")
 
 	local preview
 	if head then
@@ -227,7 +233,84 @@ function player_api.preview(player, skin, head)
 			")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
 	end
 
-	return minetest.formspec_escape(preview)
+	return esc(preview)
+end
+
+local function parse_preview_params(player, rot, textures, animation, speed,
+		gender, hair_reset)
+	local mesh = default_model
+
+	if player then
+		local props = player:get_properties()
+		mesh = props.mesh
+
+		-- model texture from player or variable
+		if props and not textures then
+			local t = {}
+
+			for _, v in ipairs(props.textures) do
+				t[#t + 1] = esc(v):gsub(",", "!")
+			end
+
+			textures = table.concat(t, ",")
+			textures = textures:gsub("!", ",")
+		end
+	end
+
+	-- nil check
+	textures = textures or (default_skin .. "," .. default_hair ..
+		"," .. b .. "," .. b .. "," .. b .. "," .. b .. "," .. b)
+
+	-- swap gender for preview
+	if gender == "male" then
+		textures = textures:gsub("character_female_", "character_")
+		textures = textures:gsub("haircut_female_", "haircut_")
+		if not hair_reset then
+			textures = textures:gsub("haircut_(%d+)", "haircut_1")
+		end
+	elseif gender == "female" then
+		if not textures:find("character_female_") then
+			textures = textures:gsub("character_", "character_female_")
+		end
+		if not textures:find("haircut_female_") then
+			textures = textures:gsub("haircut_", "haircut_female_")
+		end
+		if not hair_reset then
+			textures = textures:gsub("haircut_female_(%d+)", "haircut_female_1")
+		end
+	end
+
+	-- model rotation
+	if type(rot) ~= "table" then
+		rot = {}
+	end
+	rot.start = rot.start or -180
+	rot.cont = rot.cont or "false"
+	rot.mouse = rot.mouse or "false"
+
+	-- model animation
+	local dmodel = models[default_model]
+	local anim = dmodel.animations["relax"]
+	anim.speed = dmodel.animation_speed
+	if player and animation then
+		local name = player:get_player_name()
+		local model = player_model[name] and models[player_model[name]]
+		anim = model.animations[animation]
+		anim.speed = speed or model.animation_speed
+	end
+
+	return "player_preview", mesh, textures, rot.start, rot.cont, rot.mouse,
+		anim.x, anim.y, anim.speed
+end
+
+function player_api.preview_model(player, x, y, w, h, rot, textures, animation,
+		speed, gender, hair_reset)
+	local model_fs = -- "style[player_preview;bgcolor=black]" ..
+		fmt("model[%f,%f;%f,%f;%s;%s;%s;0,%d;%s;%s;%f,%f;%f]",
+			x, y, w, h, parse_preview_params(player, rot, textures, animation,
+			speed, gender, hair_reset))
+
+	return model_fs
 end
 
 -- Localize for better performance
@@ -326,8 +409,13 @@ if enable_sscsm then
 		file = minetest.get_modpath("player_api") .. "/sscsm.lua"
 	})
 
+	-- Declared as a local variable before player_api.set_textures.
+	function update_sscsm_preview(player, name)
+		sscsm.com_send(name, "player_api:preview",
+			fmt("%s;%s;%s;0,%d;%s;%s;%f,%f;%f", parse_preview_params(player)))
+	end
+
 	sscsm.register_on_sscsms_loaded(function(name)
-		local player = minetest.get_player_by_name(name)
-		sscsm.com_send(name, "player_api:preview", player_api.preview(player))
+		update_sscsm_preview(minetest.get_player_by_name(name), name)
 	end)
 end

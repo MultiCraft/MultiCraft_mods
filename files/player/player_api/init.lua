@@ -23,7 +23,8 @@ player_api.register_model("character.b3d", {
 	textures = {player_api.default_skin, player_api.default_hair, b, b, b, b, b},
 	animations = {
 		-- Standard animations.
-		stand           = {x = 0,   y =   0}, -- y = 79
+		stand           = {x = 0,   y =   0},
+		relax           = {x = 0,   y =  79},
 		sit             = {x = 81,  y = 160},
 		lay             = {x = 162, y = 166},
 		walk            = {x = 168, y = 187},
