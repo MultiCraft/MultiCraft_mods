@@ -12,24 +12,25 @@ end
 
 local C = default.colors
 
+local floor, log  = math.floor, math.log
+local fmt = string.format
+local max_level = 16
+
 function toolranks.get_level(uses)
-	if uses >= 16384 then
-		return 8
-	elseif uses >= 8192 then
-		return 7
-	elseif uses >= 4096 then
-		return 6
-	elseif uses >= 2048 then
-		return 5
-	elseif uses >= 1024 then
-		return 4
-	elseif uses >= 512 then
-		return 3
-	elseif uses >= 256 then
-		return 2
-	else
-		return 1
-	end
+	uses = uses or 0
+	local result = floor(log(uses) / log(2)) - 6
+
+	return (result > 0 and result < max_level and result)
+		or (result <= 0 and 1) or max_level
+end
+
+function toolranks.create_description(description, uses)
+	local newdesc = fmt("%s%s\n%s%s %s\n%s%s %s",
+		C.green, description,
+		C.gold, S"Level:", toolranks.get_level(uses),
+		C.grey, S"Uses:", uses or 0)
+
+	return newdesc
 end
 
 function toolranks.new_afteruse(itemstack, user, _, digparams)
@@ -62,11 +63,10 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 
 	local level = toolranks.get_level(dugnodes)
 
-	-- Alert player when tool got a new level
 	if lastlevel < level then
 		minetest.chat_send_player(name,
-			S("Your tool \"@1\" got a new level!",
-			(C.green .. itemdesc .. C.white)))
+			S("Your tool \"@1\" got a new @2 level!",
+			C.green .. itemdesc .. C.white, level))
 
 		minetest.sound_play("toolranks_levelup", {to_player = name})
 		itemmeta:set_string("lastlevel", level)
@@ -74,15 +74,13 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 
 	-- Set new description
 	itemmeta:set_string("description",
-		C.green .. itemdesc .. "\n" ..
-		C.gold .. S("Level: @1", level) .. "\n" ..
-		C.grey .. S("Uses: @1", dugnodes))
+		toolranks.create_description(itemdesc, dugnodes))
 
 	-- Set wear level
 	if not minetest.is_creative_enabled(name) then
 		local wear = digparams.wear
 		if level > 1 then
-			wear = digparams.wear * 4 / (4 + level)
+			wear = wear * 4 / (4 + level - 1)
 		end
 		itemstack:add_wear(wear)
 	end
