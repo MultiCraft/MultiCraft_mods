@@ -435,19 +435,6 @@ function default.register_ores()
 		y_min          = -59,
 		y_max          = -0,
 	})
-
-	-- Quartz
-
-	minetest.register_ore({
-		ore_type       = "scatter",
-		ore            = "default:quartz_ore",
-		wherein        = "default:stone",
-		clust_scarcity = 22 * 22 * 22,
-		clust_num_ores = 5,
-		clust_size     = 4,
-		y_min          = -59,
-		y_max          = -10,
-	})
 end
 
 
