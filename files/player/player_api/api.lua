@@ -305,12 +305,23 @@ end
 
 function player_api.preview_model(player, x, y, w, h, rot, textures, animation,
 		speed, gender, hair_reset)
+	local anim = not player_api.compat_mode(player, 5)
+	local model = "model[%f,%f;%f,%f;%s;%s;%s;0,%d;%s;%s" ..
+		(anim and ";%f,%f;%f" or ";0,0") .. "]"
+
 	local model_fs = -- "style[player_preview;bgcolor=black]" ..
-		fmt("model[%f,%f;%f,%f;%s;%s;%s;0,%d;%s;%s;%f,%f;%f]",
-			x, y, w, h, parse_preview_params(player, rot, textures, animation,
-			speed, gender, hair_reset))
+		fmt(model, x, y, w, h, parse_preview_params(
+			player, rot, textures, animation, speed, gender, hair_reset))
 
 	return model_fs
+end
+
+function player_api.compat_mode(player, mt_ver)
+	local player_name = player:get_player_name()
+	local info = minetest.get_player_information(player_name)
+	return (not info or not info.formspec_version) or
+		(info.major == 5 and info.minor < (mt_ver or 3)) or
+		info.formspec_version < 3
 end
 
 -- Localize for better performance
