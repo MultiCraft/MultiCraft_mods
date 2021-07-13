@@ -85,9 +85,15 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 			end
 		end
 
+		-- Check if player is attached to an object
+		if player:get_attach() then
+			return false
+		end
+
 		-- Check if player is moving
 		if vector.length(player:get_player_velocity()) > 0 then
-			return
+			minetest.chat_send_player(name, S("You have to stop moving before going to bed!"))
+			return false
 		end
 
 		beds.pos[name] = pos
@@ -103,7 +109,7 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 		if sit then
 			beds.player[name] = 2
 			player:set_eye_offset({x = 0, y = -7, z = 0}, {x = 0, y = 0, z = 0})
-			player:move_to({x = bed_pos.x + dir.x / 3.75, y = bed_pos.y, z = bed_pos.z + dir.z / 3.75})
+			player:set_pos({x = bed_pos.x + dir.x / 3.75, y = bed_pos.y, z = bed_pos.z + dir.z / 3.75})
 			hud_flags.wielditem = true
 			minetest.after(0.2, function()
 				if player then
@@ -113,7 +119,7 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 		else
 			beds.player[name] = 1
 			player:set_eye_offset({x = 0, y = -13, z = 0}, {x = 0, y = 0, z = 0})
-			player:move_to({x = bed_pos.x + dir.x / 2, y = bed_pos.y, z = bed_pos.z + dir.z / 2})
+			player:set_pos({x = bed_pos.x + dir.x / 2, y = bed_pos.y, z = bed_pos.z + dir.z / 2})
 			hud_flags.wielditem = false
 			minetest.after(0.2, function()
 				if player then
@@ -202,7 +208,13 @@ function beds.on_rightclick(pos, player)
 	-- skip the night and let all players stand up
 	if check_in_beds() then
 		minetest.after(2, function()
-			if not is_sp then
+			if is_sp then
+				if player then
+					-- sleep restores health and makes hungry
+					player:set_hp(20)
+					hunger.change_saturation(player, -4)
+				end
+			else
 				update_formspecs(is_night_skip_enabled())
 			end
 			if is_night_skip_enabled() then
