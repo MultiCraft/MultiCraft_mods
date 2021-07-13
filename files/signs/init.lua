@@ -386,6 +386,28 @@ minetest.register_node("signs:sign", {
 		}
 	},
 	groups = {oddly_breakable_by_hand = 1, choppy = 3, attached_node = 1},
+	on_rotate = function(pos, node, user, mode)
+		local pn = user and user:get_player_name() or ""
+		if not minetest.is_protected(pos, pn) and mode == 1 then
+			node.param2 = (node.param2 % 8) + 1
+			if node.param2 > 3 then
+				node.param2 = 0
+			end
+			minetest.swap_node(pos, node)
+
+			-- Checks can be skipped if there is no text
+			local meta = minetest.get_meta(pos)
+			local text = meta:get_string("sign_text")
+			if text and text ~= "" then
+				destruct(pos)
+				check_text(pos)
+			end
+
+			return true
+		end
+
+		return false
+	end,
 
 	on_place = place,
 	on_destruct = destruct,
@@ -406,6 +428,7 @@ minetest.register_node("signs:wall_sign", {
 	walkable = false,
 	groups = {oddly_breakable_by_hand = 1, choppy = 3,
 		not_in_creative_inventory = 1, attached_node = 1},
+	on_rotate = false,
 
 	on_destruct = destruct,
 	on_punch = check_text,
