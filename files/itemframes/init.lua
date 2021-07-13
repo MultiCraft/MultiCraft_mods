@@ -120,6 +120,7 @@ minetest.register_node("itemframes:frame",{
 	sunlight_propagates = true,
 	groups = {choppy = 2, dig_immediate = 2, attached_node = 1},
 	sounds = default.node_sound_wood_defaults(),
+	on_rotate = false,
 
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type == "node" then

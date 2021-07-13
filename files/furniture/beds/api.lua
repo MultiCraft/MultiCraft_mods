@@ -28,6 +28,7 @@ function beds.register_bed(name, def)
 			type = "fixed",
 			fixed = def.collisionbox
 		},
+		on_rotate = false,
 
 		on_place = function(itemstack, placer, pointed_thing)
 			local under = pointed_thing.under
