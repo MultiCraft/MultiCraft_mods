@@ -114,7 +114,7 @@ mobs:register_mob("mobs_animal:dog", {
 
 mobs:spawn({
 	name = "mobs_animal:wolf",
-	mobs_animal.spawn_nodes,
+	nodes = mobs_animal.spawn_nodes,
 	chance = 20000,
 	min_height = 0,
 	day_toggle = true
