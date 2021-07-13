@@ -1,13 +1,13 @@
 MultiCraft Game mod: mobs_animal
 ================================
-See ../license.txt for license information.
+See ../mobs_redo/license.txt for license information.
 
 Adds Peaceful Mobs
 
 License of source code
 ----------------------
 Copyright (C) 2016 TenPlus1
-Copyright (C) 2019 MultiCraft Development Team
+Copyright (C) 2019-2021 MultiCraft Development Team
 
 Credits:
 --------
@@ -25,7 +25,7 @@ Models in this mod is NOT free and can be used only as part of the official Mult
 Allowed to be used in non-official builds ONLY for personal use.
 
 * Exceptions:
-"Bear", "Wolf", "Kitten" and "Bunny" (MIT)
+"Wolf", "Kitten" and "Bunny" (MIT)
 "Pig" by MultiCraft Development Team (CC-BY-SA 4.0)
 
 License of textures
