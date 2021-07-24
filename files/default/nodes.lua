@@ -1064,25 +1064,11 @@ minetest.register_node("default:junglegrass", {
 -- Grass
 
 local function grass_place(itemstack, placer, pointed_thing)
-	if pointed_thing.type == "node" then
-		local under = pointed_thing.under
-		local node = minetest.get_node(under)
-		local node_def = minetest.registered_nodes[node.name]
-		if node_def and node_def.on_rightclick and
-				not (placer and placer:is_player() and
-				placer:get_player_control().sneak) then
-			return node_def.on_rightclick(under, node, placer, itemstack,
-				pointed_thing) or itemstack
-		end
-
-		-- place a random grass node
-		local stack = ItemStack("default:grass_" .. random(1, 5))
-		local ret = minetest.item_place(stack, placer, pointed_thing)
-		return ItemStack("default:grass_1 " ..
-			itemstack:get_count() - (1 - ret:get_count()))
-	end
-
-	return itemstack
+	-- place a random grass node
+	local stack = ItemStack("default:grass_" .. random(1, 5))
+	local ret = minetest.item_place(stack, placer, pointed_thing)
+	return ItemStack("default:grass_1 " ..
+		itemstack:get_count() - (1 - ret:get_count()))
 end
 
 minetest.register_node("default:grass_1", {
@@ -1163,25 +1149,11 @@ minetest.register_lbm({
 -- Dry Grass
 
 local function dry_grass_place(itemstack, placer, pointed_thing)
-	if pointed_thing.type == "node" then
-		local under = pointed_thing.under
-		local node = minetest.get_node(under)
-		local node_def = minetest.registered_nodes[node.name]
-		if node_def and node_def.on_rightclick and
-				not (placer and placer:is_player() and
-				placer:get_player_control().sneak) then
-			return node_def.on_rightclick(under, node, placer, itemstack,
-				pointed_thing) or itemstack
-		end
-
-		-- place a random dry grass node
-		local stack = ItemStack("default:dry_grass_" .. random(1, 5))
-		local ret = minetest.item_place(stack, placer, pointed_thing)
-		return ItemStack("default:dry_grass_1 " ..
-			itemstack:get_count() - (1 - ret:get_count()))
-	end
-
-	return itemstack
+	-- place a random dry grass node
+	local stack = ItemStack("default:dry_grass_" .. random(1, 5))
+	local ret = minetest.item_place(stack, placer, pointed_thing)
+	return ItemStack("default:dry_grass_1 " ..
+		itemstack:get_count() - (1 - ret:get_count()))
 end
 
 minetest.register_node("default:dry_grass_1", {
@@ -1256,6 +1228,58 @@ minetest.register_lbm({
 		minetest.swap_node(pos, {name = "default:dry_grass_" .. random(1, 5)})
 	end
 })
+
+minetest.register_node("default:fern_1", {
+	description = "Fern",
+	drawtype = "plantlike",
+	waving = 1,
+	tiles = {"default_fern_1.png"},
+	inventory_image = "default_fern_3.png",
+	wield_image = "default_fern_3.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	buildable_to = true,
+	groups = {snappy = 3, flammable = 3, flora = 1, grass = 1,
+		fern = 1, attached_node = 1},
+	sounds = default.node_sound_leaves_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, -0.15, 4 / 16}
+	},
+
+	on_place = function(itemstack, placer, pointed_thing)
+		-- place a random fern node
+		local stack = ItemStack("default:fern_" .. random(1, 3))
+		local ret = minetest.item_place(stack, placer, pointed_thing)
+		return ItemStack("default:fern_1 " ..
+			itemstack:get_count() - (1 - ret:get_count()))
+	end
+})
+
+for i = 2, 3 do
+	minetest.register_node("default:fern_" .. i, {
+		description = "Fern",
+		drawtype = "plantlike",
+		waving = 1,
+		tiles = {"default_fern_" .. i .. ".png"},
+		inventory_image = "default_fern_" .. i .. ".png",
+		wield_image = "default_fern_" .. i .. ".png",
+		paramtype = "light",
+		sunlight_propagates = true,
+		walkable = false,
+		buildable_to = true,
+		groups = {snappy = 3, flammable = 3, flora = 1, grass = 1,
+			fern = 1, attached_node = 1, not_in_creative_inventory = 1},
+		drop = "default:fern_1",
+		sounds = default.node_sound_leaves_defaults(),
+		selection_box = {
+			type = "fixed",
+			fixed = {(-4 / 16 - i / 32), -0.5, (-4 / 16 - i / 32),
+				(4 / 16 + i / 32), (-3 / 16 + i / 6), (4 / 16 + i / 32)}
+		}
+	})
+end
 
 minetest.register_node("default:bush_stem", {
 	description = "Bush Stem",
