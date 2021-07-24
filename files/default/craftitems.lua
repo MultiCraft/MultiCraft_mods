@@ -35,26 +35,31 @@ local function book_on_use(itemstack, user)
 		end
 	end
 
-	local formspec
 	local esc = minetest.formspec_escape
+	local item_name = itemstack:get_name()
+	local formspec = "size[9,8.75]" ..
+		default.gui_bg .. default.gui_bg_img ..
+		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
+		"item_image[0,-0.1;1,1;" .. item_name .. "]"
+
 	if owner == player_name then
-		formspec = "size[8,8]" ..
-			"field[0.5,1;7.5,0;title;" .. esc(S("Title:")) .. ";" ..
+		formspec = formspec ..
+			"label[0.9,0.1;" .. esc(S("Book")) .. "]" ..
+			"field[0.5,1.8;8.5,0;title;" .. esc(S("Title:")) .. ";" ..
 				esc(title) .. "]" ..
-			"textarea[0.5,1.5;7.5,7;text;" .. esc(S("Contents:")) .. ";" ..
+			"textarea[0.5,2.25;8.6,6.75;text;" .. esc(S("Contents:")) .. ";" ..
 				esc(text) .. "]" ..
-			"button_exit[2.5,7.5;3,1;save;" .. esc(S("Save")) .. "]"
+			"button_exit[3,8.1;3,1;save;" .. esc(S("Save")) .. "]"
 	else
-		formspec = "size[8,8]" ..
-			"label[0.5,0.5;" .. esc(S("by @1", owner)) .. "]" ..
-			"tablecolumns[color;text]" ..
-			"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
-			"table[0.4,0;7,0.5;title;#FFFF00," .. esc(title) .. "]" ..
-			"textarea[0.5,1.5;7.5,7;;" ..
-				minetest.formspec_escape(string ~= "" and string or text) .. ";]" ..
-			"button[2.4,7.6;0.8,0.8;book_prev;<]" ..
-			"label[3.2,7.7;" .. esc(S("Page @1 of @2", page, page_max)) .. "]" ..
-			"button[4.9,7.6;0.8,0.8;book_next;>]"
+		formspec = formspec ..
+			"label[0.9,0.1;" .. esc(S("Book")) .. ": " ..
+				default.colors.gold .. "\"" .. esc(title) .. "\", " ..
+				default.colors.white .. esc(S("by @1", owner)) .. "]" ..
+			"textarea[0.5,0.9;8.5,8;;" .. esc(string ~= "" and string or text) .. ";]" ..
+			"button[2.4,8;0.8,0.8;book_prev;<]" ..
+			"image_button[3,8;3,0.8;blank.png;;" ..
+				S("Page: @1 of @2", page, page_max) .. ";false;false;]" ..
+				"button[5.8,8;0.8,0.8;book_next;>]"
 	end
 
 	minetest.show_formspec(player_name, "default:book", formspec)
@@ -138,8 +143,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		stack = book_on_use(stack, player)
 	end
 
-	-- Update stack
-	player:set_wielded_item(stack)
+	-- Update stack (check current stack first)
+	local wield_item = player:get_wielded_item():get_name()
+	if wield_item == "default:book" or
+			wield_item == "default:book_written" then
+		player:set_wielded_item(stack)
+	end
 end)
 
 --
