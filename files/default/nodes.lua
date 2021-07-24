@@ -74,7 +74,9 @@ minetest.register_node("default:sandstone", {
 	tiles = {"default_sandstone_top.png", "default_sandstone_bottom.png",
 		"default_sandstone_normal.png"},
 	groups = {crumbly = 1, cracky = 3},
-	sounds = default.node_sound_stone_defaults()
+	sounds = default.node_sound_dirt_defaults({
+		dig = {name = "default_dig_cracky", gain = 0.24}
+	})
 })
 
 minetest.register_node("default:sandstonesmooth", {
@@ -82,7 +84,9 @@ minetest.register_node("default:sandstonesmooth", {
 	tiles = {"default_sandstone_top.png", "default_sandstone_bottom.png",
 		"default_sandstone_smooth.png"},
 	groups = {crumbly = 2, cracky = 2},
-	sounds = default.node_sound_stone_defaults()
+	sounds = default.node_sound_dirt_defaults({
+		dig = {name = "default_dig_cracky", gain = 0.24}
+	})
 })
 
 minetest.register_node("default:redsandstone", {
@@ -90,7 +94,9 @@ minetest.register_node("default:redsandstone", {
 	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png",
 		"default_redsandstone_normal.png"},
 	groups = {crumbly = 2, cracky = 2},
-	sounds = default.node_sound_stone_defaults()
+	sounds = default.node_sound_dirt_defaults({
+		dig = {name = "default_dig_cracky", gain = 0.24}
+	})
 })
 
 minetest.register_node("default:redsandstonesmooth", {
@@ -98,7 +104,9 @@ minetest.register_node("default:redsandstonesmooth", {
 	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png",
 		"default_redsandstone_smooth.png"},
 	groups = {crumbly = 2, cracky = 2},
-	sounds = default.node_sound_stone_defaults()
+	sounds = default.node_sound_dirt_defaults({
+		dig = {name = "default_dig_cracky", gain = 0.24}
+	})
 })
 
 minetest.register_node("default:obsidian", {
@@ -500,7 +508,7 @@ minetest.register_node("default:junglesapling", {
 	on_timer = grow_sapling,
 	selection_box = {
 		type = "fixed",
-		fixed = {-0.3, -0.5, -0.3, 0.3, 0.35, 0.3}
+		fixed = {-0.3, -0.5, -0.3, 0.3, 0.4, 0.3}
 	},
 	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
@@ -735,7 +743,7 @@ minetest.register_node("default:birch_sapling", {
 	on_timer = grow_sapling,
 	selection_box = {
 		type = "fixed",
-		fixed = {-3 / 16, -0.5, -3 / 16, 3 / 16, 0.5, 3 / 16}
+		fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, 5 / 16, 4 / 16}
 	},
 	groups = {snappy = 2, dig_immediate = 2, flammable = 3,
 		attached_node = 1, sapling = 1},
@@ -1270,7 +1278,7 @@ minetest.register_node("default:bush_leaves", {
 	description = "Bush Leaves",
 	drawtype = "allfaces_optional",
 	waving = 1,
-	tiles = {"default_leaves.png"},
+	tiles = {"default_bush_leaves.png"},
 	paramtype = "light",
 	walkable = false,
 	groups = {snappy = 3, flammable = 2, leaves = 1, speed = -20},
@@ -1446,7 +1454,7 @@ minetest.register_node("default:acacia_bush_leaves", {
 	description = "Acacia Bush Leaves",
 	drawtype = "allfaces_optional",
 	waving = 1,
-	tiles = {"default_acacia_leaves.png"},
+	tiles = {"default_acacia_bush_leaves.png"},
 	paramtype = "light",
 	walkable = false,
 	groups = {snappy = 3, flammable = 2, leaves = 1, speed = -20},
@@ -1474,7 +1482,7 @@ minetest.register_node("default:acacia_bush_sapling", {
 	on_timer = grow_sapling,
 	selection_box = {
 		type = "fixed",
-		fixed = {-3 / 16, -0.5, -3 / 16, 3 / 16, 2 / 16, 3 / 16}
+		fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, 2 / 16, 4 / 16}
 	},
 	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
@@ -1544,7 +1552,7 @@ minetest.register_node("default:pine_bush_sapling", {
 	on_timer = grow_sapling,
 	selection_box = {
 		type = "fixed",
-		fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, 2 / 16, 4 / 16}
+		fixed = {-3 / 16, -0.5, -3 / 16, 3 / 16, 2 / 16, 3 / 16}
 	},
 	groups = {snappy = 2, dig_immediate = 2, flammable = 2,
 		attached_node = 1, sapling = 1},
