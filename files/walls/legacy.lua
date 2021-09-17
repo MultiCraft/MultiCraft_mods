@@ -68,7 +68,7 @@ local not_connected = {-1/4, -0.5, -1/4, 1/4, 0.5, 1/4}
 
 local collision = {-1/4, -0.5, -1/4, 1/4, 1, 1/4}
 
-local groups = {cracky = 3, wall = 1, stone = 2, wall_not_full = 1}
+local groups = {cracky = 3, wall = 1, stone = 2, wall_not_full = 1, not_in_creative_inventory = 1}
 
 for i = 1, 15 do
 	local need = {}
@@ -197,7 +197,7 @@ minetest.register_node(":wallet:wall", {
 	description = S"Cobblestone Wall",
 	paramtype = "light",
 	tiles = {"default_cobble.png"},
-	groups = groups,
+	groups = {cracky = 3, wall = 1, stone = 2, wall_not_full = 1},
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
@@ -283,7 +283,7 @@ minetest.register_node(":wallet:wallmossy", {
 	tiles = {"default_mossycobble.png"},
 	sunlight_propagates = true,
 	is_ground_content = false,
-	groups = groups,
+	groups = {cracky = 3, wall = 1, stone = 2, wall_not_full = 1},
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",

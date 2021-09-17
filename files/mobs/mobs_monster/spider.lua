@@ -9,7 +9,7 @@ mobs:register_mob("mobs_monster:spider", {
 	group_attack = true,
 	type = "monster",
 	passive = false,
-	damage = 2,
+	damage = 3,
 	hp_min = 15,
 	hp_max = 20,
 	collisionbox = {-0.8, -0.5, -0.8, 0.8, 0, 0.8},
