@@ -23,7 +23,7 @@ mobs:register_mob("mobs_monster:skeleton", {
 	light_damage = 2,
 	water_damage = 2,
 	lava_damage = 5,
-	damage = 1,
+	damage = 2,
 	group_attack = true,
 	attack_npcs = true,
 	view_range = 15,
