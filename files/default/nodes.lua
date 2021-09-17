@@ -1011,8 +1011,72 @@ minetest.register_node("default:sugarcane", {
 		type = "fixed",
 		fixed = {-0.3, -0.5, -0.3, 0.3, 0.5, 0.3}
 	},
-	groups = {snappy = 3, flammable = 2, flora = 1},
+	groups = {snappy = 3, flammable = 2, flora = 1, wieldview = 2},
 	sounds = default.node_sound_leaves_defaults(),
+	node_placement_prediction = "",
+
+	mesecon = {
+		on_mvps_move = function(pos, _, oldpos)
+			minetest.get_node_timer(pos):start(1)
+
+			local check_pos = {x = oldpos.x, y = oldpos.y + 1, z = oldpos.z}
+			local oldnode = minetest.get_node(check_pos)
+			local height = 1
+			local drop = false
+			while oldnode.name == "default:sugarcane" do
+				local new_pos = {x = pos.x, y = pos.y + height, z = pos.z}
+				minetest.remove_node(check_pos)
+				if drop or minetest.get_node(new_pos).name ~= "air" then
+					minetest.add_item(check_pos, "default:sugarcane")
+					drop = true
+				else
+					minetest.add_node(new_pos, {name = "default:sugarcane"})
+					minetest.get_node_timer(new_pos):start(1)
+				end
+				height = height + 1
+				check_pos.y = check_pos.y + 1
+				oldnode = minetest.get_node(check_pos)
+			end
+		end
+	},
+
+	on_timer = function(pos)
+		local below = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z})
+		local below_nn = below.name
+
+		if below_nn ~= "default:sugarcane" and
+				minetest.get_item_group(below_nn, "soil") < 1 and
+				minetest.get_item_group(below_nn, "sand") < 1 then
+			minetest.remove_node(pos)
+			minetest.add_item(pos, "default:sugarcane")
+		end
+	end,
+
+	on_place = function(itemstack, placer, pointed_thing)
+		local under = pointed_thing.under
+		local node = minetest.get_node(under)
+		local node_name = node.name
+		local udef = minetest.registered_nodes[node_name]
+		if udef and udef.on_rightclick and
+				not (placer and placer:is_player() and
+				placer:get_player_control().sneak) then
+			return udef.on_rightclick(under, node, placer, itemstack,
+				pointed_thing) or itemstack
+		end
+
+		if pointed_thing.type ~= "node" then
+			return itemstack
+		end
+
+		if node_name == "default:sugarcane" or
+				minetest.get_item_group(node_name, "soil") > 0 or
+				minetest.get_item_group(node_name, "sand") > 0 then
+			itemstack = minetest.item_place(itemstack, placer, pointed_thing)
+			minetest.sound_play({name = "default_place_node"}, {pos = under})
+		end
+
+		return itemstack
+	end,
 
 	after_dig_node = function(pos, node, _, digger)
 		default.dig_up(pos, node, digger)

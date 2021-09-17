@@ -217,7 +217,7 @@ function default.grow_cactus(pos, node)
 	if height == 4 or node.name ~= "air" then
 		return
 	end
-	if minetest.get_node_light(pos) < 13 then
+	if minetest.get_node_light(pos) < 12 then
 		return
 	end
 	minetest.set_node(pos, {name = "default:cactus"})
@@ -227,9 +227,9 @@ end
 function default.grow_sugarcane(pos, node)
 	pos.y = pos.y - 1
 	local name = minetest.get_node(pos).name
-	if name ~= "default:dirt" and
-			name ~= "default:dirt_with_grass" and
-			name ~= "default:dirt_with_dry_grass" then
+	if name ~= "default:sugarcane" and
+			minetest.get_item_group(name, "soil") == 0 and
+			minetest.get_item_group(name, "sand") == 0 then
 		return
 	end
 	if not minetest.find_node_near(pos, 3, {"group:water"}) then
@@ -245,10 +245,22 @@ function default.grow_sugarcane(pos, node)
 	if height == 4 or node.name ~= "air" then
 		return
 	end
-	if minetest.get_node_light(pos) < 13 then
+	if minetest.get_node_light(pos) < 12 then
 		return
 	end
 	minetest.set_node(pos, {name = "default:sugarcane"})
+	return true
+end
+
+function default.drop_sugarcane(pos)
+	local name = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z}).name
+	if name ~= "ignore" and name ~= "default:sugarcane" and
+			minetest.get_item_group(name, "soil") == 0 and
+			minetest.get_item_group(name, "sand") == 0 then
+		-- drop if it grows on the wrong block
+		minetest.remove_node(pos)
+		minetest.add_item(pos, "default:sugarcane")
+	end
 	return true
 end
 
@@ -267,14 +279,23 @@ minetest.register_abm({
 	label = "Grow sugarcane",
 	nodenames = {"default:sugarcane"},
 	neighbors = {
-		"default:dirt",
-		"default:dirt_with_grass",
-		"default:dirt_with_dry_grass"
+		"group:soil",
+		"group:sand"
 	},
 	interval = 15,
 	chance = 50,
 	action = function(...)
 		default.grow_sugarcane(...)
+	end
+})
+
+minetest.register_abm({
+	label = "Drop sugarcane",
+	nodenames = {"default:sugarcane"},
+	interval = 5,
+	chance = 25,
+	action = function(...)
+		default.drop_sugarcane(...)
 	end
 })
 
