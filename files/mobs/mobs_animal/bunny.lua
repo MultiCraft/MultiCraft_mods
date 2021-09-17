@@ -37,9 +37,9 @@ mobs:register_mob("mobs_animal:bunny", {
 		walk_start = 16,	walk_end = 24,
 		punch_start = 16,	punch_end = 24
 	},
-	follow = {"group:flora", "farming_addons:carrot"},
+	follow = {"group:flora", "farming_plants:carrot"},
 	replace_rate = 10,
-	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
+	replace_what = {"farming_plants:carrot_3", "farming_plants:carrot_4", "farming_plants:carrot_5"},
 	replace_with = "air",
 
 	on_rightclick = function(self, clicker)
