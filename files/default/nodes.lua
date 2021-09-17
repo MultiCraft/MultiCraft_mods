@@ -995,6 +995,28 @@ minetest.register_node("default:cactus", {
 		fixed = {
 			{-7/16, -8/16, -7/16, 7/16, 8/16, 7/16}
 		}
+	},
+
+	mesecon = {
+		on_mvps_move = function(pos, _, oldpos)
+			local check_pos = {x = oldpos.x, y = oldpos.y + 1, z = oldpos.z}
+			local oldnode = minetest.get_node(check_pos)
+			local height = 1
+			local drop = false
+			while oldnode.name == "default:cactus" do
+				local new_pos = {x = pos.x, y = pos.y + height, z = pos.z}
+				minetest.remove_node(check_pos)
+				if drop or minetest.get_node(new_pos).name ~= "air" then
+					minetest.add_item(check_pos, "default:cactus")
+					drop = true
+				else
+					minetest.add_node(new_pos, {name = "default:cactus"})
+				end
+				height = height + 1
+				check_pos.y = check_pos.y + 1
+				oldnode = minetest.get_node(check_pos)
+			end
+		end
 	}
 })
 
