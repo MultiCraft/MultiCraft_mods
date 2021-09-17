@@ -323,7 +323,8 @@ minetest.register_node("flowers:mushroom_red", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, attached_node = 1, flammable = 1, food = 1, flora = 1},
+	groups = {mushroom = 1, snappy = 3, attached_node = 1, flammable = 1,
+		food = 1, flora = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	on_use = minetest.item_eat(2, nil, -5),
 	selection_box = {
@@ -341,7 +342,8 @@ minetest.register_node("flowers:mushroom_brown", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {food_mushroom = 1, snappy = 3, attached_node = 1, flammable = 1, food = 1, flora = 1},
+	groups = {mushroom = 1, food_mushroom = 1, snappy = 3, attached_node = 1,
+		flammable = 1, food = 1, flora = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	on_use = minetest.item_eat(3),
 	selection_box = {
@@ -376,7 +378,7 @@ end
 
 minetest.register_abm({
 	label = "Mushroom spread",
-	nodenames = {"flowers:mushroom_brown", "flowers:mushroom_red"},
+	nodenames = {"group:mushroom"},
 	interval = 15,
 	chance = 150,
 	action = function(...)
@@ -443,7 +445,8 @@ minetest.register_node("flowers:waterlily_flower", {
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",
-	tiles = {"flowers_waterlily.png^flowers_waterlily_flower.png", "flowers_waterlily.png"},
+	tiles = {"flowers_waterlily.png^flowers_waterlily_flower.png",
+		"flowers_waterlily.png"},
 	walkable = false,
 	floodable = true,
 	groups = {snappy = 3, flammable = 1, not_in_creative_inventory = 1},
