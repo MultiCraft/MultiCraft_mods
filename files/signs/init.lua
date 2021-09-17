@@ -9,6 +9,8 @@ if translator and not minetest.is_singleplayer() then
 end
 
 local floor, pi = math.floor, math.pi
+local upper = string.upper
+local tconcat = table.concat
 local vadd = vector.add
 local b = "blank.png"
 local esc = minetest.formspec_escape
@@ -31,6 +33,13 @@ local wall_sign_positions = {
 	[1] = {{x = -0.43, y = -0.005, z =  0},    pi * 1.5},
 	[2] = {{x =  0,    y = -0.005, z =  0.43}, pi},
 	[3] = {{x =  0,    y = -0.005, z = -0.43}, 0}
+}
+
+local colors_list = {
+	"Black", "Silver", "Gray", "White",
+	"Maroon", "Red", "Purple", "Fuchsia",
+	"Green", "Lime", "Olive", "Yellow",
+	"Navy", "Blue", "Teal", "Aqua"
 }
 
 local function generate_sign_line_texture(str, row)
@@ -69,7 +78,7 @@ local wrap_chars = {
 	"\n", "\r", "\t", " ", "-", "/", ";", ":", ",", ".", "?", "!"
 }
 
-local function generate_sign_texture(str)
+local function generate_sign_texture(str, color)
 	local row = 0
 	local texture = "[combine:" .. 16 * 20 .. "x100"
 	local result = {}
@@ -141,6 +150,10 @@ local function generate_sign_texture(str)
 		texture = texture .. generate_sign_line_texture(s, r + empty)
 	end
 
+	if color and color ~= "" then
+		texture = texture .. "^[colorize:" .. color
+	end
+
 	return texture
 end
 
@@ -148,7 +161,7 @@ minetest.register_entity("signs:sign_text", {
 	visual = "upright_sprite",
 	visual_size = {x = 0.7, y = 0.6},
 	collisionbox = {0},
-	pointable = false,
+	physical = false,
 	on_activate = function(self)
 		local ent = self.object
 		local pos = ent:get_pos()
@@ -170,7 +183,8 @@ minetest.register_entity("signs:sign_text", {
 		else
 			local meta_text = meta:get_string("sign_text")
 			if meta_text and meta_text ~= "" then
-				texture = generate_sign_texture(meta_text)
+				local meta_color = meta:get_string("sign_color")
+				texture = generate_sign_texture(meta_text, meta_color)
 			else
 				texture = b
 			end
@@ -212,7 +226,7 @@ local function place(itemstack, placer, pointed_thing)
 		end
 		if result then
 			minetest.sound_play({name = "default_place_node_hard"},
-					{pos = pointed_thing.above})
+				{pos = result})
 		end
 	end
 
@@ -276,22 +290,39 @@ end
 local function edit_text(pos, _, clicker)
 	local player_name = clicker:get_player_name()
 
-	local text = esc(minetest.get_meta(pos):get_string("sign_text"))
+	local meta = minetest.get_meta(pos)
+	local text = esc(meta:get_string("sign_text"))
 
-	local edit_fs = "size[5,3]" ..
+	local edit_fs = "size[5,3.4]" ..
 		"background[0,0;0,0;formspec_background_color.png^" ..
 		"formspec_backround.png;true]"
 	if not minetest.is_protected(pos, player_name) then
+		local ccolor = meta:get_string("sign_color")
+		if ccolor then
+			ccolor = ccolor:gsub("^%l", upper)
+		end
+
+		local clist = {}
+		local csel = 1
+		for i, clr in pairs(colors_list) do
+			if ccolor == clr then
+				csel = i
+			end
+			clist[#clist + 1] = clr
+		end
+		clist = tconcat(clist, ",")
+
 		edit_fs = edit_fs ..
-			"textarea[1.15,0.3;3.3,2;Dtext;" ..
+			"textarea[1.15,0.2;3.3,2;Dtext;" ..
 			S("Enter your text:") .. ";" .. text .. "]" ..
-			"button_exit[0.85,2;3.3,1;;" .. S("Save") .. "]" ..
+			"dropdown[0.86,1.93;3.36;color;" .. clist .. ";" .. csel .. "]" ..
+			"button_exit[0.86,2.66;3.3,1;;" .. S("Save") .. "]" ..
 			"field[0,0;0,0;spos;;" .. minetest.pos_to_string(pos) .. "]"
 	else
 		edit_fs = edit_fs ..
-			"textarea[1.15,0.3;3.3,2;read_only;" ..
+			"textarea[1.15,0.2;3.3,2.7;read_only;" ..
 			S("Sign") .. ":;" .. text .. "]" ..
-			"button_exit[0.85,2;3.3,1;;" .. S("Close") .. "]"
+			"button_exit[0.86,2.66;3.3,1;;" .. S("Close") .. "]"
 	end
 
 	minetest.show_formspec(player_name, "signs:edit_text", edit_fs)
@@ -302,11 +333,25 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		return
 	end
 
-	local text = fields.Dtext
 	local pos = fields.spos and minetest.string_to_pos(fields.spos)
 
-	if not text or not pos then
+	if not pos then
 		return
+	end
+
+	local meta = minetest.get_meta(pos)
+
+	local text = fields.Dtext
+	local color = fields.color
+
+	if not text and not color then
+		return
+	elseif not text then
+		text = meta:get_string("sign_text")
+	end
+
+	if color then
+		color = color:lower()
 	end
 
 	if minetest.is_protected(pos, player:get_player_name()) then
@@ -344,12 +389,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	local texture = b
-	if text ~= "" then
+	if text and text ~= "" then
 		-- Serialization longer values may cause a crash
 		-- because we are serializing the texture too
 		text = text:sub(1, 256)
 
-		texture = generate_sign_texture(text)
+		texture = generate_sign_texture(text, color)
 		sign:set_properties({
 			textures = {texture, b}
 		})
@@ -357,9 +402,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	sign:set_yaw(sign_pos[p2][2])
 
-	local meta = minetest.get_meta(pos)
 	meta:set_string("sign_text", text)
 	meta:set_string("sign_texture", texture)
+	meta:set_string("sign_color", color)
 	meta:set_string("infotext", text)
 end)
 
