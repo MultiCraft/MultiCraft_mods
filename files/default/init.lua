@@ -32,6 +32,8 @@ minetest.register_craftitem("default:cell", {
 
 default.gui_bg = "bgcolor[#08080880;true]"
 default.listcolors = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"
+default.gui_bg_img = "background[0,0;0,0;formspec_background_color.png^" ..
+	"formspec_backround.png;true]"
 default.gui = "size[9,8.75]" ..
 	default.gui_bg ..
 	default.listcolors ..

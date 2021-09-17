@@ -99,7 +99,12 @@ mobs:register_mob("mobs_monster:zombie_giant", {
 			{name = "mobs_monster:rotten_flesh", chance = 3},
 			{name = "mobs_monster:rotten_flesh", chance = 3}
 		}
-	end
+	end,
+
+	after_activate = function(self)
+		 self.object:remove()
+		 return false
+	 end
 })
 
 --[[mobs:spawn({

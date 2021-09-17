@@ -207,6 +207,8 @@ function doors.register(name, def)
 		name = "doors:" .. name
 	end
 
+	def.groups.door = 1
+
 	minetest.register_craftitem(":" .. name, {
 		description = S(def.description),
 		inventory_image = def.inventory_image,
@@ -514,6 +516,8 @@ function doors.register_trapdoor(name, def)
 		def.tile_side,
 		def.tile_side
 	}
+
+	def_closed.groups.door = 1
 
 	def_opened.node_box = def.node_box_open or {
 		type = "fixed",

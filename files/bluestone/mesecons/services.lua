@@ -53,7 +53,7 @@ mesecon.on_placenode = function(pos, node)
 	end
 end
 
-mesecon.on_dignode = function (pos, node)
+mesecon.on_dignode = function(pos, node)
 	if mesecon.is_conductor_on(node) then
 		mesecon.receptor_off(pos, mesecon.conductor_get_rules(node))
 	elseif mesecon.is_receptor_on(node.name) then
@@ -132,5 +132,5 @@ local function global_cooldown(dtime)
 			object_heat[id] = heat
 		end
 	end
-	end
+end
 minetest.register_globalstep(global_cooldown)]]

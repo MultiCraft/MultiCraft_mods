@@ -102,7 +102,7 @@ function mesecon.rule2bit(findrule, allrules)
 		return 1
 	end
 	for m,metarule in ipairs( allrules) do
-	for _,	rule in ipairs(metarule ) do
+	for _, rule in ipairs(metarule ) do
 		if vequals(findrule, rule) then
 			return m
 		end
@@ -136,7 +136,7 @@ function mesecon.rule2meta(findrule, allrules)
 	if index == nil then
 		if allrules[1].x then
 			return allrules
-else
+		else
 			return {}
 		end
 	end
@@ -146,7 +146,7 @@ end
 function mesecon.dec2bin(n)
 	local x, y = floor(n / 2), n % 2
 	if (n > 1) then
-	return mesecon.dec2bin(x)..y
+		return mesecon.dec2bin(x)..y
 	else
 		return ""..y
 	end
@@ -200,8 +200,14 @@ function mesecon.cmpAny(t1, t2)
 	if type(t1) ~= type(t2) then return false end
 	if type(t1) ~= "table" and type(t2) ~= "table" then return t1 == t2 end
 
+	-- Check that for each key of `t1` both tables have the same value
 	for i, e in pairs(t1) do
 		if not mesecon.cmpAny(e, t2[i]) then return false end
+	end
+
+	-- Check that all keys of `t2` are also keys of `t1` so were checked in the previous loop
+	for i, _ in pairs(t2) do
+		if t1[i] == nil then return false end
 	end
 
 	return true
@@ -358,7 +364,7 @@ function mesecon.vm_swap_node(pos, name)
 	local index = tbl.va:indexp(pos)
 	tbl.data[index] = minetest.get_content_id(name)
 	tbl.dirty = true
-		end
+end
 
 -- Gets the node at a given position, regardless of whether it is loaded or
 -- not, respecting a transaction if one is in progress.
@@ -395,7 +401,7 @@ end
 function mesecon.swap_node_force(pos, name)
 	if vm_cache then
 		return mesecon.vm_swap_node(pos, name)
-		else
+	else
 		-- This serves to both ensure the mapblock is loaded and also hand us
 		-- the old node table so we can preserve param2.
 		local node = mesecon.get_node_force(pos)
@@ -426,8 +432,8 @@ end
 function mesecon.execute_autoconnect_hooks_now(pos, node)
 	for _, fct in pairs(mesecon.autoconnect_hooks) do
 		fct(pos, node)
-		end
 	end
+end
 
 function mesecon.execute_autoconnect_hooks_queue(pos, node)
 	for name in pairs(mesecon.autoconnect_hooks) do
