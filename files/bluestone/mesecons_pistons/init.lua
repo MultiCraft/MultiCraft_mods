@@ -305,6 +305,7 @@ minetest.register_node("mesecons_pistons:piston_normal_off", {
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front.png"
 	},
+	wield_cube = "mesecons_piston_back.png",
 	groups = {cracky = 3},
 	stack_max = 1,
 	paramtype2 = "facedir",
@@ -382,6 +383,7 @@ minetest.register_node("mesecons_pistons:piston_sticky_off", {
 		"mesecons_piston_back.png",
 		"mesecons_piston_pusher_front_sticky.png"
 	},
+	wield_cube = "mesecons_piston_back.png",
 	groups = {cracky = 3},
 	stack_max = 1,
 	paramtype2 = "facedir",

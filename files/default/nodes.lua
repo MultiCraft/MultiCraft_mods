@@ -146,6 +146,7 @@ minetest.register_node("default:dirt", {
 minetest.register_node("default:dirt_with_grass", {
 	description = "Dirt with Grass",
 	tiles = {"default_grass.png", "default_dirt.png", "default_grass_side.png"},
+	wield_cube = "default_dirt.png",
 	groups = {crumbly = 3, soil = 1, spreading_dirt_type = 1},
 	drop = "default:dirt",
 	sounds = default.node_sound_dirt_defaults({
@@ -157,6 +158,7 @@ minetest.register_node("default:dirt_with_dry_grass", {
 	description = "Dirt with Dry Grass",
 	tiles = {"default_dry_grass.png", "default_dirt.png",
 		"default_dry_grass_side.png"},
+	wield_cube = "default_dirt.png",
 	groups = {crumbly = 3, soil = 1, spreading_dirt_type = 1},
 	drop = "default:dirt",
 	sounds = default.node_sound_dirt_defaults({
@@ -168,6 +170,7 @@ minetest.register_node("default:dirt_with_snow", {
 	description = "Dirt with Snow",
 	tiles = {"default_snow.png", "default_dirt.png",
 		"default_snow_side.png"},
+	wield_cube = "default_dirt.png",
 	groups = {crumbly = 3, soil = 1, spreading_dirt_type = 1, snowy = 1},
 	drop = "default:dirt",
 	sounds = default.node_sound_dirt_defaults({
@@ -975,6 +978,7 @@ minetest.register_node("default:cactus", {
 	drawtype = "nodebox",
 	tiles = {"default_cactus_top.png", "default_cactus_bottom.png",
 		"default_cactus_side.png"},
+	wield_cube = "[combine:56x56:-4,-4=default_cactus_top.png",
 	paramtype = "light",
 	paramtype2 = "facedir",
 	groups = {choppy = 3, flammable = 2, attached_node = 1, flora = 2},
