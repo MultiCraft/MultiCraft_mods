@@ -22,7 +22,7 @@ for i = 2, 5 do
 		max_items = 1,
 		items = {
 			{items = {"farming:seed_wheat"}, rarity = 5},
-			{items = {"farming_addons:seed_carrot"}, rarity = 12},
+			{items = {"farming_plants:seed_carrot"}, rarity = 12},
 			{items = {"default:grass_1"}}
 		}
 	}})
