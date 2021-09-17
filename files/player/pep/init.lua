@@ -450,8 +450,10 @@ playereffects.register_effect_type("pepimmortal", S("Immortal"), "pep_immortal.p
 		end
 	end,
 	function(_, player)
-		if pep.immortals[player:get_player_name()] then
+		local player_name = player:get_player_name()
+		if pep.immortals[player_name] then
 			player:set_armor_groups({immortal = 0})
+			pep.immortals[player_name] = nil
 		end
 	end
 )
