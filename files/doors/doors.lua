@@ -178,7 +178,7 @@ doors.register_trapdoor("doors:trapdoor", {
 	tile_side = "doors_trapdoor_wood_side.png",
 	material = "default:wood",
 	fuel = 7,
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, door = 1}
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2}
 })
 
 doors.register_trapdoor("doors:trapdoor_steel", {
@@ -200,7 +200,7 @@ doors.register_trapdoor("doors:trapdoor_steel", {
 	sound_open = "doors_steel_door_open",
 	sound_close = "doors_steel_door_close",
 	material = "default:steel_ingot",
-	groups = {cracky = 1, level = 2, door = 1}
+	groups = {cracky = 1, level = 2}
 })
 
 if mvps then

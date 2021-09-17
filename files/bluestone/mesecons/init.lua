@@ -114,7 +114,7 @@ mesecon.queue:add_function("receptor_off", function (pos, rules)
 		local rulenames = mesecon.rules_link_rule_all(pos, rule)
 		for _, rulename in ipairs(rulenames) do
 			mesecon.vm_begin()
-				mesecon.changesignal(np, minetest.get_node(np), rulename, mesecon.state.off, 2)
+			mesecon.changesignal(np, minetest.get_node(np), rulename, mesecon.state.off, 2)
 
 			-- Turnoff returns true if turnoff process was successful, no onstate receptor
 			-- was found along the way. Commit changes that were made in voxelmanip. If turnoff
@@ -124,8 +124,8 @@ mesecon.queue:add_function("receptor_off", function (pos, rules)
 			else
 				mesecon.vm_abort()
 			end
+		end
 	end
-end
 end)
 
 function mesecon.receptor_off(pos, rules)

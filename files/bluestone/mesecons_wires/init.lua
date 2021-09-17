@@ -71,9 +71,9 @@ end
 
 local update_on_place_dig = function (pos, node)
 	-- Update placed node (get_node again as it may have been dug)
-	local _ = minetest.get_node(pos)
-	if (minetest.registered_nodes[_.name])
-	and (minetest.registered_nodes[_.name].mesecon_wire) then
+	local nn = minetest.get_node(pos).name
+	if (minetest.registered_nodes[nn])
+	and (minetest.registered_nodes[nn].mesecon_wire) then
 		wire_updateconnect(pos)
 	end
 
@@ -105,8 +105,7 @@ mesecon.register_autoconnect_hook("wire", update_on_place_dig)
 local box_center = {-1/16, -.5, -1/16, 1/16, -.5+1/16, 1/16}
 local box_bump1 =  { -2/16, -8/16,  -2/16, 2/16, -13/32, 2/16 }
 
-local nbox_nid =
-{
+local nbox_nid = {
 	[0] = {1/16, -.5, -1/16, 8/16, -.5+1/16, 1/16}, -- x positive
 	[1] = {-1/16, -.5, 1/16, 1/16, -.5+1/16, 8/16}, -- z positive
 	[2] = {-8/16, -.5, -1/16, -1/16, -.5+1/16, 1/16}, -- x negative
@@ -121,8 +120,7 @@ local nbox_nid =
 local tiles_off = { "mesecons_wire_off.png" }
 local tiles_on = { "mesecons_wire_on.png" }
 
-local selectionbox =
-{
+local selectionbox = {
 	type = "fixed",
 	fixed = {-.5, -.5, -.5, .5, -.5+4/16, .5}
 }

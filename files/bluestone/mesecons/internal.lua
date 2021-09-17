@@ -77,7 +77,7 @@ function mesecon.get_conductor(nodename)
 	end
 end
 
-function mesecon.get_any_outputrules (node)
+function mesecon.get_any_outputrules(node)
 	if not node then return nil end
 
 	if mesecon.is_conductor(node.name) then
@@ -87,7 +87,7 @@ function mesecon.get_any_outputrules (node)
 	end
 end
 
-function mesecon.get_any_inputrules (node)
+function mesecon.get_any_inputrules(node)
 	if not node then return nil end
 
 	if mesecon.is_conductor(node.name) then
@@ -199,7 +199,7 @@ mesecon.queue:add_function("activate", function (pos, rulename)
 	local effector = mesecon.get_effector(node.name)
 
 	if effector and effector.action_on then
-		effector.action_on (pos, node, rulename)
+		effector.action_on(pos, node, rulename)
 	end
 end)
 
@@ -222,7 +222,7 @@ mesecon.queue:add_function("deactivate", function (pos, rulename)
 	local effector = mesecon.get_effector(node.name)
 
 	if effector and effector.action_off then
-		effector.action_off (pos, node, rulename)
+		effector.action_off(pos, node, rulename)
 	end
 end)
 
@@ -319,8 +319,8 @@ function mesecon.get_conductor_on(node_off, rulename)
 	local conductor = mesecon.get_conductor(node_off.name)
 	if conductor then
 		if conductor.onstate then
-		return conductor.onstate
-	end
+			return conductor.onstate
+		end
 		if conductor.states then
 			local bit = mesecon.rule2bit(rulename, mesecon.conductor_get_rules(node_off))
 			local binstate = mesecon.getbinstate(node_off.name, conductor.states)
@@ -335,8 +335,8 @@ function mesecon.get_conductor_off(node_on, rulename)
 	local conductor = mesecon.get_conductor(node_on.name)
 	if conductor then
 		if conductor.offstate then
-		return conductor.offstate
-	end
+			return conductor.offstate
+		end
 		if conductor.states then
 			local bit = mesecon.rule2bit(rulename, mesecon.conductor_get_rules(node_on))
 			local binstate = mesecon.getbinstate(node_on.name, conductor.states)
@@ -400,19 +400,19 @@ function mesecon.turnon(pos, link)
 				local np = vadd(f.pos, r)
 				for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
 					frontiers[#frontiers+1] = {pos = np, link = l}
+				end
 			end
-		end
 
 			mesecon.swap_node_force(f.pos, mesecon.get_conductor_on(node, f.link))
 		elseif mesecon.is_effector(node.name) then
 			mesecon.changesignal(f.pos, node, f.link, mesecon.state.on, depth)
 			if mesecon.is_effector_off(node.name) then
 				mesecon.activate(f.pos, node, f.link, depth)
+			end
+		end
+		depth = depth + 1
 	end
 end
-		depth = depth + 1
-				end
-			end
 
 -- Turn on an equipotential section starting at `pos`, which outputs in the direction of `link`.
 -- Breadth-first search. Map is abstracted away in a voxelmanip.
@@ -449,7 +449,7 @@ function mesecon.turnoff(pos, link)
 				-- Check if an onstate receptor is connected. If that is the case,
 				-- abort this turnoff process by returning false. `receptor_off` will
 				-- discard all the changes that we made in the voxelmanip:
-				for _, _ in ipairs(mesecon.rules_link_rule_all_inverted(f.pos, r)) do
+				for _ in ipairs(mesecon.rules_link_rule_all_inverted(f.pos, r)) do
 					if mesecon.is_receptor_on(mesecon.get_node_force(np).name) then
 						return false
 					end
@@ -491,7 +491,7 @@ function mesecon.rules_link_rule_all(output, rule)
 	local inputrules = mesecon.get_any_inputrules (inputnode)
 	if not inputrules then
 		return {}
-end
+	end
 	local rules = {}
 
 	for _, inputrule in ipairs(mesecon.flattenrules(inputrules)) do
@@ -509,7 +509,7 @@ end
 function mesecon.rules_link_rule_all_inverted(input, rule)
 	local output = vadd(input, rule)
 	local outputnode = mesecon.get_node_force(output)
-	local outputrules = mesecon.get_any_outputrules (outputnode)
+	local outputrules = mesecon.get_any_outputrules(outputnode)
 	if not outputrules then
 		return {}
 	end

@@ -81,7 +81,7 @@ local function piston_remove_pusher(pos, node, check_falling)
 	if check_falling then
 		minetest.check_for_falling(pusherpos)
 	end
-	end
+end
 
 local function piston_after_dig(pos, node)
 	piston_remove_pusher(pos, node, true)
@@ -98,14 +98,14 @@ local function piston_on(pos, node)
 	if not success then
 		return
 	end
-	minetest.set_node(pos, {param2 = node.param2, name = pistonspec.onname})
+	minetest.swap_node(pos, {param2 = node.param2, name = pistonspec.onname})
 	minetest.set_node(pusher_pos, {param2 = node.param2, name = pistonspec.pusher})
-		minetest.sound_play("piston_extend", {
-			pos = pos,
-			max_hear_distance = 20,
-			gain = 0.3
-		})
-		mesecon.mvps_process_stack(stack)
+	minetest.sound_play("piston_extend", {
+		pos = pos,
+		max_hear_distance = 20,
+		gain = 0.3
+	})
+	mesecon.mvps_process_stack(stack)
 	mesecon.mvps_move_objects(pusher_pos, dir, oldstack)
 end
 
@@ -114,7 +114,7 @@ local function piston_off(pos, node)
 	if not pistonspec then
 		return
 	end
-	minetest.set_node(pos, {param2 = node.param2, name = pistonspec.offname})
+	minetest.swap_node(pos, {param2 = node.param2, name = pistonspec.offname})
 	piston_remove_pusher(pos, node, not pistonspec.sticky)
 
 	if not pistonspec.sticky then
@@ -140,7 +140,7 @@ end)
 
 local piston_on_delayed, piston_off_delayed
 local delay = mesecon.setting("piston_delay", 0.15)
-if delay >= 0 then
+if delay > 0 then
 	local function piston_switch_delayed(pos)
 		mesecon.queue:add_action(pos, "piston_switch", {}, delay, "piston_switch")
 	end
@@ -446,6 +446,7 @@ minetest.register_node("mesecons_pistons:piston_pusher_sticky", {
 	drop = "",
 	sounds = default.node_sound_wood_defaults()
 })
+
 
 -- Register pushers as stoppers if they would be seperated from the piston
 local function piston_pusher_get_stopper(node, _, stack, stackid)
