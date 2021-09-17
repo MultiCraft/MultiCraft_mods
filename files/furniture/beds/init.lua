@@ -15,10 +15,10 @@ if translator and not minetest.is_singleplayer() then
 	end
 end
 
-beds.formspec = "size[8,11;true]" ..
+beds.formspec = "size[8,10]" ..
 	"no_prepend[]" ..
 	default.gui_bg ..
-	"button_exit[2,10;4,0.75;leave;" .. beds.S("Leave Bed") .. "]"
+	"button_exit[1.9,7;4.1,0.75;leave;" .. beds.S("Leave Bed") .. "]"
 
 local modpath = minetest.get_modpath("beds")
 
