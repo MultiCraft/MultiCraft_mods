@@ -1,8 +1,9 @@
 # textdomain: beds
 Bed=Кровать
 Leave Bed=Встать с кровати
+This bed is already occupied!=Эта кровать уже занята!
 You have to stop moving before going to bed!=Вы должны перестать двигаться чтобы лечь в кровать!
 Good morning.=Доброе утро.
+Good night.=Доброй ночи.
 @1 of @2 players are in bed=@1 из @2 игроков в кровати
 Force night skip=Пропустить ночь
-You can only sleep at night.=Вы можете спать только ночью.
