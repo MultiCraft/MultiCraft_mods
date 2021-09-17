@@ -1,13 +1,24 @@
 fire = {}
 
+local sp = minetest.is_singleplayer()
+
 local translator = minetest.get_translator
 local S = translator and translator("fire") or intllib.make_gettext_pair()
 
-if translator and not minetest.is_singleplayer() then
+if translator and not sp then
 	local lang = minetest.settings:get("language")
 	if lang and lang == "ru" then
 		S = intllib.make_gettext_pair()
 	end
+end
+
+-- 'Enable fire' setting
+local fire_enabled = minetest.settings:get_bool("enable_fire")
+if fire_enabled == nil then
+	if minetest.settings:get_bool("singleplayer") then
+		sp = true
+	end
+	fire_enabled = sp
 end
 
 local vadd, vdivide, vsubtract = vector.add, vector.divide, vector.subtract
@@ -27,6 +38,7 @@ local function flood_flame(pos, _, newnode)
 	return false
 end
 
+-- Flame nodes
 local fire_node = {
 	drawtype = "firelike",
 	tiles = {{
@@ -51,35 +63,32 @@ local fire_node = {
 	on_flood = flood_flame
 }
 
--- Flame nodes
+-- Basic flame node
 local flame_fire_node = table.copy(fire_node)
 flame_fire_node.on_timer = function(pos)
-	local f = minetest.find_node_near(pos, 1, {"group:flammable"})
-	if not f then
+	if not minetest.find_node_near(pos, 1, {"group:flammable"}) then
 		minetest.remove_node(pos)
-	return
+		return
 	end
 	-- Restart timer
 	return true
 end
 flame_fire_node.on_construct = function(pos)
-	if minetest.is_singleplayer() then
-		minetest.get_node_timer(pos):start(math.random(30, 60))
-	else
-		minetest.get_node_timer(pos):start(math.random(10, 20))
-	end
+	minetest.get_node_timer(pos):start(math.random(30, 60))
 end
+
 minetest.register_node("fire:basic_flame", flame_fire_node)
 
--- Permanent flame nodes
+-- Permanent flame node
 minetest.register_node("fire:permanent_flame", fire_node)
 
 local tr = minetest.get_modpath("toolranks")
 
 -- Flint and Steel
 minetest.register_tool("fire:flint_and_steel", {
-	description = S"Flint and Steel",
+	description = S("Flint and Steel"),
 	inventory_image = "fire_flint_steel.png",
+	wield_image = "fire_flint_steel.png",
 	sound = {breaks = "default_tool_breaks"},
 
 	on_use = function(itemstack, user, pointed_thing)
@@ -100,7 +109,7 @@ minetest.register_tool("fire:flint_and_steel", {
 			if nodedef.on_ignite then
 				nodedef.on_ignite(pointed_thing.under, user)
 			elseif minetest.get_item_group(node_under, "flammable") >= 1
-				and minetest.get_node(pointed_thing.above).name == "air" then
+					and minetest.get_node(pointed_thing.above).name == "air" then
 				minetest.set_node(pointed_thing.above, {name = "fire:basic_flame"})
 			end
 		end
@@ -117,7 +126,8 @@ minetest.register_tool("fire:flint_and_steel", {
 
 			-- Tool break sound
 			if itemstack:get_count() == 0 and wdef.sound and wdef.sound.breaks then
-				minetest.sound_play(wdef.sound.breaks, {pos = sound_pos, gain = 0.5})
+				minetest.sound_play(wdef.sound.breaks,
+					{pos = sound_pos, gain = 0.5})
 			end
 			return itemstack
 		end
@@ -264,7 +274,7 @@ end
 -- ABMs
 --
 
-if minetest.is_singleplayer() then
+if fire_enabled then
 	-- Ignite neighboring nodes, add basic flames
 	minetest.register_abm({
 		label = "Ignite flame",
