@@ -186,6 +186,7 @@ def_chest.tiles = {
 	"default_chest_side.png", "default_chest_side.png", "default_chest_front.png"
 }
 def_chest.description = S("Chest")
+def_chest.wield_cube = "default_chest_top.png"
 def_chest.on_construct = on_construct
 def_chest.on_destruct = on_destruct
 minetest.register_node("default:chest", def_chest)
