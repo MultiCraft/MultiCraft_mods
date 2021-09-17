@@ -5,11 +5,6 @@ local function tick(pos)
 	minetest.get_node_timer(pos):start(math.random(332, 572))
 end
 
--- how often a growth failure tick is retried (e.g. too dark)
-local function tick_again(pos)
-	minetest.get_node_timer(pos):start(math.random(80, 160))
-end
-
 function farming_addons.grow_cocoa_plant(pos)
 	local node = minetest.get_node(pos)
 	local name = node.name
@@ -25,14 +20,14 @@ function farming_addons.grow_cocoa_plant(pos)
 	local below_pos = vector.add(pos, direction)
 	local below = minetest.get_node(below_pos)
 	if below.name ~= "default:jungletree" then
-		tick_again(pos)
+		farming_addons.tick_again(pos)
 		return
 	end
 
 	-- check light
 	local light = minetest.get_node_light(pos)
 	if not light or light < def.minlight then
-		tick_again(pos)
+		farming_addons.tick_again(pos)
 		return
 	end
 
