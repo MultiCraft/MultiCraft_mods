@@ -699,28 +699,49 @@ function default.can_interact_with_node(player, pos)
 	return false
 end
 
+
 --
 -- Cactus damage
 --
 
-if not minetest.settings:get_bool("creative_mode") then
-	local objects = minetest.get_objects_inside_radius
-	minetest.register_abm({
-		label = "Cactus damage",
-		nodenames = {"default:cactus"},
-		interval = 1,
-		chance = 1,
-		catch_up = false,
-		action = function(pos)
-			local players = objects(pos, 1)
-			for _, player in pairs(players) do
-				if player:is_player() then
-					player:set_hp(player:get_hp() - 2)
-				end
+minetest.register_entity("default:cactus_entity", {
+	physical = false,
+	collisionbox = {0},
+	visual = "sprite",
+	textures = {"blank.png"},
+	on_punch = function() return true end,
+	on_activate = function(self)
+		local ent = self.object
+		local pos = ent:get_pos()
+		if #minetest.get_objects_inside_radius(pos, 1) > 0 then
+			return
+		end
+		ent:remove()
+	end
+})
+
+minetest.register_abm({
+	label = "Cactus damage",
+	nodenames = {"default:cactus"},
+	interval = 1,
+	chance = 1,
+	catch_up = false,
+	action = function(pos)
+		for _, obj in pairs(minetest.get_objects_inside_radius(pos, 1)) do
+			-- Only entity can really do `punch`.
+			-- Attacking yourself (obj punched obj) is not a good idea
+			local cactus = minetest.add_entity(pos, "default:cactus_entity")
+			if cactus then
+				obj:punch(cactus, 1.0, {
+					full_punch_interval = 0,
+					damage_groups = {fleshy = 3}
+				}, nil)
+				cactus:remove()
 			end
 		end
-	})
-end
+	end
+})
+
 
 --
 -- Snowballs
