@@ -41,28 +41,6 @@ farming.register_plant("farming_addons:pumpkin", {
 	drop = drop
 })
 
--- how often node timers for plants will tick
-local function tick(pos)
-	minetest.get_node_timer(pos):start(math.random(166, 286))
-end
-
-local function dig_node(_, _, oldmetadata)
-	local parent = oldmetadata.fields.parent
-	local parent_pos_from_child = minetest.string_to_pos(parent)
-	local parent_node
-
-	-- make sure we have position
-	if parent_pos_from_child then
-		parent_node = minetest.get_node(parent_pos_from_child)
-	end
-
-	-- tick parent if parent stem still exists
-	if parent_node and parent_node.name == "farming_addons:pumpkin_9" then
-		minetest.swap_node(parent_pos_from_child, {name = "farming_addons:pumpkin_6"})
-		tick(parent_pos_from_child)
-	end
-end
-
 -- Pumpkin Fruit
 local pumpkin_def = {
 	description = S"Pumpkin",
@@ -80,7 +58,18 @@ local pumpkin_def = {
 	}),
 	drop = "farming_addons:pumpkin_fruit",
 
-	after_dig_node = dig_node,
+	mesecon = {
+		on_mvps_move = function(_, _, _, nodemeta)
+			farming_addons.dig_node(nodemeta,
+				"farming_addons:pumpkin_9", "farming_addons:pumpkin_6")
+		end
+	},
+
+	after_dig_node = function(_, _, oldmetadata)
+		farming_addons.dig_node(oldmetadata,
+			"farming_addons:pumpkin_9", "farming_addons:pumpkin_6")
+	end,
+
 --	on_construct = pumpkin_on_construct
 }
 
@@ -191,3 +180,8 @@ minetest.register_decoration({
 	y_min = 1,
 	decoration = "farming_addons:pumpkin_fruit"
 })
+
+-- MVPS stopper
+if mesecon and mesecon.register_mvps_stopper then
+	mesecon.register_mvps_stopper("farming_addons:pumpkin_9")
+end
