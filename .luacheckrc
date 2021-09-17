@@ -32,6 +32,7 @@ read_globals = {
 	"bonemeal",
 	"sscsm",
 	"hunger",
+	"hopper",
 	"workbench",
 	-- Silence errors about custom table methods.
 	table = { fields = { "copy", "indexof" } },
