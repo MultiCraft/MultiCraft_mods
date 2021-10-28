@@ -1,11 +1,18 @@
+local singleplayer = minetest.is_singleplayer()
+
 local translator = minetest.get_translator
 local S = translator and translator("bucket") or intllib.make_gettext_pair()
 
-if translator and not minetest.is_singleplayer() then
+if translator and not singleplayer then
 	local lang = minetest.settings:get("language")
 	if lang and lang == "ru" then
 		S = intllib.make_gettext_pair()
 	end
+end
+
+-- do not move up
+if minetest.settings:get_bool("singleplayer") then
+	singleplayer = true
 end
 
 minetest.register_craft({
@@ -18,8 +25,6 @@ minetest.register_craft({
 
 bucket = {}
 bucket.liquids = {}
-
-local singleplayer = minetest.is_singleplayer()
 
 local function check_protection(pos, name, text)
 	if minetest.is_protected(pos, name) then

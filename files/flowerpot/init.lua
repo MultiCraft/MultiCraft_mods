@@ -1,7 +1,7 @@
 --[[
 
   Copyright (C) 2015-2017 Auke Kok <sofar@foo-projects.org>
-  Copyright (C) 2019-2020 MultiCraft Development Team
+  Copyright (C) 2019-2021 MultiCraft Development Team
 
   "flowerpot" is free software; you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
@@ -45,13 +45,12 @@ end
 
 -- Handle plant insertion into flowerpot
 local function on_rightclick(pos, _, clicker, itemstack)
-	if clicker and not
-			minetest.check_player_privs(clicker, "protection_bypass") then
-		local name = clicker:get_player_name()
-		if minetest.is_protected(pos, name) then
-			minetest.record_protection_violation(pos, name)
-			return false
-		end
+	local player_name = clicker and clicker:get_player_name() or ""
+
+	if not minetest.check_player_privs(player_name, "protection_bypass") and
+			minetest.is_protected(pos, player_name) then
+		minetest.record_protection_violation(pos, player_name)
+		return false
 	end
 
 	local nodename = itemstack:get_name()
@@ -66,9 +65,11 @@ local function on_rightclick(pos, _, clicker, itemstack)
 	end
 	minetest.sound_play(def.sounds.place, {pos = pos})
 	minetest.swap_node(pos, {name = name})
-	if not minetest.settings:get_bool("creative_mode") then
+
+	if not minetest.is_creative_enabled(player_name) then
 		itemstack:take_item()
 	end
+
 	return itemstack
 end
 

@@ -65,7 +65,7 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 
 	if lastlevel < level then
 		minetest.chat_send_player(name,
-			S("Your tool \"@1\" got a new @2 level!",
+			S("Your tool @1 got a new @2 level!",
 			C.green .. itemdesc .. C.white, level))
 
 		minetest.sound_play("toolranks_levelup", {to_player = name})
@@ -76,8 +76,15 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 	itemmeta:set_string("description",
 		toolranks.create_description(itemdesc, dugnodes))
 
+	local disable_wear
+	local tool_cap = itemdef.tool_capabilities
+	if tool_cap then
+		disable_wear = tool_cap.punch_attack_uses and
+			tool_cap.punch_attack_uses == 0
+	end
+
 	-- Set wear level
-	if not minetest.is_creative_enabled(name) then
+	if not disable_wear and not minetest.is_creative_enabled(name) then
 		local wear = digparams.wear
 		if level > 1 then
 			wear = wear * 4 / (4 + level - 1)
