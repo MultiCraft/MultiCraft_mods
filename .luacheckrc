@@ -28,6 +28,7 @@ read_globals = {
 	"experience",
 	"mobs",
 	"playerphysics",
+	"node_attacher",
 	"screwdriver",
 	"bonemeal",
 	"sscsm",
