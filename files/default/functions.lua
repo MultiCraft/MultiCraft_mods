@@ -708,6 +708,7 @@ minetest.register_entity("default:cactus_entity", {
 	physical = false,
 	collisionbox = {0},
 	visual = "sprite",
+	visual_size = {x = 0, y = 0},
 	textures = {"blank.png"},
 	on_punch = function() return true end,
 	on_activate = function(self)
@@ -727,17 +728,36 @@ minetest.register_abm({
 	chance = 1,
 	catch_up = false,
 	action = function(pos)
-		for _, obj in pairs(minetest.get_objects_inside_radius(pos, 1)) do
-			-- Only entity can really do `punch`.
-			-- Attacking yourself (obj punched obj) is not a good idea
-			local cactus = minetest.add_entity(pos, "default:cactus_entity")
-			if cactus then
+		local objects = minetest.get_objects_inside_radius(pos, 1)
+		if #objects < 1 then
+			return
+		end
+
+		local cactus = minetest.add_entity(pos, "default:cactus_entity")
+		if cactus then
+			local entities = {}
+			for _, obj in pairs(objects) do
+				if obj:is_player() then
+					-- Only entity can really do `punch`.
+					-- Attacking yourself (obj punched obj) is not a good idea
+					obj:punch(cactus, 1.0, {
+						full_punch_interval = 0,
+						damage_groups = {fleshy = 3}
+					}, nil)
+				else
+					local entity = obj:get_luaentity()
+					if entity and not entity.name:find("^__builtin:") then
+						entities[#entities + 1] = obj
+					end
+				end
+			end
+			for _, obj in pairs(entities) do
 				obj:punch(cactus, 1.0, {
 					full_punch_interval = 0,
 					damage_groups = {fleshy = 3}
 				}, nil)
-				cactus:remove()
 			end
+			cactus:remove()
 		end
 	end
 })
