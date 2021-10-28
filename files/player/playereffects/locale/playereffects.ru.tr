@@ -1,2 +1,3 @@
 # textdomain: playereffects
-s=с.
+(@1 / @2 s)=(@1 / @2 с.)
+(@1 s)=(@1 с.)

@@ -6,7 +6,7 @@ Perfect Breath=Дыхание
 Regeneration=Регенерация
 Regeneration II=Регенерация II
 No Gravity=Невесомость
-Gravity Neutralizer=Нейтрализ. Невесомости
+Gravity Normalizer=Нормализ. Невесомости
 High Jump=Сильный Прыжок
 Low Jump=Слабый Прыжок
 Night Vision=Ночное Видение
@@ -32,7 +32,7 @@ Drinking it makes you regenerate health quickly.@nEvery second you get 2 HP, 30 
 Non-Gravity Potion=Зелье Невесомости
 When you drink this potion, gravity stops affecting you, as if you were in space.@nThe effect lasts for 30 seconds=Когда вы выпьете это зелье, гравитация перестанет действовать на вас, как будто вы в космосе.@nЭффект длится 30 секунд
 
-Gravity Neutralizer Potion=Зелье Нейтрализации Невесомости
+Gravity Normalizer Potion=Зелье Нормализации Невесомости
 Drinking it will stop all gravity effects you currently have=Выпив его, вы остановите все эффекты гравитации, которые у вас есть сейчас
 
 High Jumping Potion=Зелье Сильных Прыжков

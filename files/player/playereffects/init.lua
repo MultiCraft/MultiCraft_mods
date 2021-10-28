@@ -52,6 +52,21 @@ if translator and not minetest.is_singleplayer() then
 	end
 end
 
+-- Let's give ~~programming~~ lessons of common sense
+-- to the creator of this mod.
+-- `os.time` / `os.difftime` uses OS time,
+-- `minetest.after` uses globalstep dtime.
+-- Do you even see the difference?
+
+local time = 0.0
+minetest.register_globalstep(function(dtime)
+	time = time + dtime
+end)
+
+local function round(number)
+	return math.floor(number + 0.5)
+end
+
 --[=[ Load inactive_effects and last_effect_id from playereffects, if this file exists ]=]
 do
 	local filepath = minetest.get_worldpath() .. "/playereffects"
@@ -60,7 +75,7 @@ do
 		minetest.log("action", "[playereffects] playereffects loading...")
 		local string = file:read()
 		io.close(file)
-		if string ~= nil then
+		if string then
 			local savetable = minetest.deserialize(string)
 			playereffects.inactive_effects = savetable.inactive_effects
 		--	minetest.debug("[playereffects] playereffects successfully read.")
@@ -94,14 +109,13 @@ function playereffects.register_effect_type(effect_type_id, description, icon,
 end
 
 function playereffects.apply_effect_type(effect_type_id, duration, player, repeat_interval_time_left)
-	local start_time = os.time()
-	if type(player) == "userdata" and not player:is_player() then
+	local playername = player and player:get_player_name()
+
+	if not playername or type(player) == "userdata" and not player:is_player() then
 		minetest.log("error", "[playereffects] Attempted to apply effect type " .. effect_type_id .. " to a non-player!")
 		return false
 	end
 
-	local playername = player:get_player_name()
-	if not playername then return false end
 	local groups = playereffects.effect_types[effect_type_id].groups
 	for _, v in pairs(groups) do
 		playereffects.cancel_effect_group(v, playername)
@@ -144,13 +158,13 @@ function playereffects.apply_effect_type(effect_type_id, duration, player, repea
 	end
 
 	local repeat_interval = playereffects.effect_types[effect_type_id].repeat_interval
-	if repeat_interval ~= nil then
+	if repeat_interval then
 		repeat_interval_time_left = repeat_interval_time_left and repeat_interval_time_left or repeat_interval
 	end
 
 	--[[ show no more than 10 effects on the screen, so that hud_update does not need to be called so often ]]
 	local text_id, icon_id
-	if free_hudpos <= 10 then
+	if duration > 0 and free_hudpos <= 10 then
 		text_id, icon_id = playereffects.hud_effect(effect_type_id, player, free_hudpos, duration, repeat_interval_time_left)
 		local hudinfo = {
 			text_id = text_id,
@@ -165,8 +179,8 @@ function playereffects.apply_effect_type(effect_type_id, duration, player, repea
 		playername = playername,
 		effect_id = effect_id,
 		effect_type_id = effect_type_id,
-		start_time = start_time,
-		repeat_interval_start_time = start_time,
+		start_time = time,
+		repeat_interval_start_time = time,
 		time_left = duration,
 		repeat_interval_time_left = repeat_interval_time_left,
 		metadata = metadata
@@ -174,7 +188,7 @@ function playereffects.apply_effect_type(effect_type_id, duration, player, repea
 
 	playereffects.effects[effect_id] = effect
 
-	if repeat_interval ~= nil then
+	if repeat_interval then
 		minetest.after(repeat_interval_time_left, playereffects.repeater, effect_id,
 			duration, player, playereffects.effect_types[effect_type_id].apply)
 	else
@@ -196,7 +210,7 @@ function playereffects.repeater(effect_id, repetitions, player, apply)
 		else
 			local repeat_interval = playereffects.effect_types[effect.effect_type_id].repeat_interval
 			effect.repeat_interval_time_left = repeat_interval
-			effect.repeat_interval_start_time = os.time()
+			effect.repeat_interval_start_time = time
 			minetest.after(repeat_interval, playereffects.repeater, effect_id,
 				repetitions, player, apply)
 		end
@@ -231,10 +245,9 @@ function playereffects.cancel_effect_group(groupname, playername)
 end
 
 function playereffects.get_remaining_effect_time(effect_id)
-	local now = os.time()
 	local effect = playereffects.effects[effect_id]
 
-	return effect and (effect.time_left - os.difftime(now, effect.start_time)) or nil
+	return effect and (effect.time_left - (time - effect.start_time)) or nil
 end
 
 function playereffects.cancel_effect(effect_id)
@@ -243,10 +256,10 @@ function playereffects.cancel_effect(effect_id)
 		local player = minetest.get_player_by_name(effect.playername)
 		local hudinfo = playereffects.hudinfos[effect.playername][effect_id]
 		if player and hudinfo then
-			if hudinfo.text_id ~= nil then
+			if hudinfo.text_id then
 				player:hud_remove(hudinfo.text_id)
 			end
-			if hudinfo.icon_id ~= nil then
+			if hudinfo.icon_id then
 				player:hud_remove(hudinfo.icon_id)
 			end
 			playereffects.hudinfos[effect.playername][effect_id] = nil
@@ -258,7 +271,7 @@ end
 
 function playereffects.get_player_effects(playername)
 	local effects = {}
-	if minetest.get_player_by_name(playername) ~= nil then
+	if minetest.get_player_by_name(playername) then
 		for _, v in pairs(playereffects.effects) do
 			if v.playername == playername then
 				effects[#effects+1] = v
@@ -282,7 +295,6 @@ end
 
 --[=[ Saving all data to file ]=]
 function playereffects.save_to_file()
-	local save_time = os.time()
 	local savetable = {}
 	local inactive_effects = {}
 	for playername, effecttable in pairs(playereffects.inactive_effects) do
@@ -298,24 +310,26 @@ function playereffects.save_to_file()
 
 	for _, effect in pairs(playereffects.effects) do
 		local new_duration, new_repeat_duration
-		if playereffects.effect_types[effect.effect_type_id].repeat_interval ~= nil then
+		if playereffects.effect_types[effect.effect_type_id].repeat_interval then
 			new_duration = effect.time_left
-			new_repeat_duration = effect.repeat_interval_time_left - os.difftime(save_time, effect.repeat_interval_start_time)
+			new_repeat_duration = effect.repeat_interval_time_left - (time - effect.repeat_interval_start_time)
 		else
-			new_duration = effect.time_left - os.difftime(save_time, effect.start_time)
+			new_duration = effect.time_left - (time - effect.start_time)
 		end
-		local new_effect = {
-			effect_id = effect.effect_id,
-			effect_type_id = effect.effect_type_id,
-			time_left = new_duration,
-			repeat_interval_time_left = new_repeat_duration,
-			start_time = effect.start_time,
-			repeat_interval_start_time = effect.repeat_interval_start_time,
-			playername = effect.playername,
-			metadata = effect.metadata
-		}
-		local player_inactive_effects_effect = inactive_effects[effect.playername]
-		player_inactive_effects_effect[#player_inactive_effects_effect+1] = new_effect
+		if new_duration > 0 then
+			local new_effect = {
+				effect_id = effect.effect_id,
+				effect_type_id = effect.effect_type_id,
+				time_left = new_duration,
+				repeat_interval_time_left = new_repeat_duration,
+				start_time = effect.start_time,
+				repeat_interval_start_time = effect.repeat_interval_start_time,
+				playername = effect.playername,
+				metadata = effect.metadata
+			}
+			local player_inactive_effects_effect = inactive_effects[effect.playername]
+			player_inactive_effects_effect[#player_inactive_effects_effect+1] = new_effect
+		end
 	end
 
 	for playername, _ in pairs(inactive_effects) do
@@ -328,12 +342,10 @@ function playereffects.save_to_file()
 --	savetable.last_effect_id = playereffects.last_effect_id
 
 	local savestring = minetest.serialize(savetable)
-
 	local filepath = minetest.get_worldpath() .. "/playereffects"
-	local file = io.open(filepath, "w")
-	if file then
-		file:write(savestring)
-		io.close(file)
+	local result = minetest.safe_file_write(filepath, savestring)
+
+	if result then
 		minetest.log("action", "[playereffects] Wrote playereffects data into " .. filepath .. ".")
 	else
 		minetest.log("error", "[playereffects] Failed to write playereffects data into " .. filepath .. ".")
@@ -352,7 +364,6 @@ minetest.register_on_dieplayer(function(player)
 end)
 
 minetest.register_on_leaveplayer(function(player)
-	local leave_time = os.time()
 	local playername = player:get_player_name()
 	local effects = playereffects.get_player_effects(playername)
 
@@ -360,11 +371,13 @@ minetest.register_on_leaveplayer(function(player)
 
 	local inactive_effects = playereffects.inactive_effects[playername]
 	for e = 1, #effects do
-		local new_duration = effects[e].time_left - os.difftime(leave_time, effects[e].start_time)
-		local new_effect = effects[e]
-		new_effect.time_left = new_duration
-		inactive_effects[#inactive_effects+1] = new_effect
-		playereffects.cancel_effect(effects[e].effect_id)
+		local new_duration = effects[e].time_left - (time - effects[e].start_time)
+		if new_duration > 0 then
+			local new_effect = effects[e]
+			new_effect.time_left = new_duration
+			inactive_effects[#inactive_effects+1] = new_effect
+			playereffects.cancel_effect(effects[e].effect_id)
+		end
 	end
 end)
 
@@ -416,23 +429,25 @@ end)
 --[=[ HUD ]=]
 function playereffects.hud_update(player)
 	if playereffects.use_hud then
-		local now = os.time()
 		local playername = player:get_player_name()
 		local hudinfos = playereffects.hudinfos[playername]
 		if hudinfos ~= nil then
 			for effect_id, hudinfo in pairs(hudinfos) do
 				local effect = playereffects.effects[effect_id]
-				if effect ~= nil and hudinfo.text_id ~= nil then
+				if effect ~= nil and hudinfo.text_id then
 					local description = playereffects.effect_types[effect.effect_type_id].description
 					local repeat_interval = playereffects.effect_types[effect.effect_type_id].repeat_interval
-					if repeat_interval ~= nil then
-						local repeat_interval_time_left = os.difftime(effect.repeat_interval_start_time + effect.repeat_interval_time_left, now)
-						player:hud_change(hudinfo.text_id, "text",
-							description .. " (" .. effect.time_left .. " / " .. repeat_interval_time_left .. " " .. S("s") .. ")")
+					local timer
+					if repeat_interval then
+						local repeat_interval_time_left = round((effect.repeat_interval_start_time + effect.repeat_interval_time_left) - time)
+						timer = S("(@1 / @2 s)", effect.time_left, repeat_interval_time_left)
 					else
-						local time_left = os.difftime(effect.start_time + effect.time_left, now)
-						player:hud_change(hudinfo.text_id, "text",
-							description .. " (" .. time_left .. " " .. S("s") .. ")")
+						local time_left = round((effect.start_time + effect.time_left) - time)
+						timer = S("(@1 s)", time_left)
+					end
+					if hudinfo.timer ~= timer then
+						player:hud_change(hudinfo.text_id, "text", description .. " " .. timer)
+						hudinfo.timer = timer
 					end
 				end
 			end
@@ -462,12 +477,8 @@ function playereffects.hud_effect(effect_type_id, player, pos)
 	local text_id, icon_id
 	local effect_type = playereffects.effect_types[effect_type_id]
 	if playereffects.use_hud and not effect_type.hidden then
-		local color
-		if effect_type.cancel_on_death then
-			color = 0xFFFFFF
-		else
-			color = 0xF0BAFF
-		end
+		local color = effect_type.cancel_on_death and 0xFFFFFF or 0xF0BAFF
+
 		text_id = player:hud_add({
 			hud_elem_type = "text",
 			position = {x = 1, y = 0.3},
@@ -476,21 +487,20 @@ function playereffects.hud_effect(effect_type_id, player, pos)
 			alignment = {x = -1, y = 0},
 			direction = 1,
 			number = color,
-			offset = {x = -5, y = pos * 30}
+			offset = {x = -40, y = (pos * 30) + 3}
 		})
 
 		local icon = effect_type.icon
 		if icon then
-			local scale = icon.scale or {x = 1, y = 1}
 			icon_id = player:hud_add({
 				hud_elem_type = "image",
-				scale = scale,
 				position = {x = 1, y = 0.3},
 				name = "effect_icon_" .. effect_type_id,
-				text = (type(icon) == "table" and icon.image) or icon,
+				scale = icon.scale or {x = 1, y = 1},
+				text = icon.image or icon,
 				alignment = {x = -1, y = 0},
 				direction = 0,
-				offset = {x = -230, y = pos * 30}
+				offset = {x = 0, y = pos * 30}
 			})
 		end
 	end
