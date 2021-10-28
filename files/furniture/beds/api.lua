@@ -1,3 +1,4 @@
+local na_exists = minetest.global_exists("node_attacher")
 function beds.register_bed(name, def)
 	def.groups = def.groups or {}
 	def.groups.choppy = 2
@@ -20,6 +21,7 @@ function beds.register_bed(name, def)
 		groups = def.groups,
 		sounds = def.sounds or default.node_sound_wood_defaults(),
 		node_placement_prediction = "",
+		node_dig_prediction = "",
 		selection_box = {
 			type = "fixed",
 			fixed = def.selectionbox
@@ -29,6 +31,7 @@ function beds.register_bed(name, def)
 			fixed = def.collisionbox
 		},
 		on_rotate = false,
+		attach_shift = {x = 0, y = 0.6, z = -1},
 
 		on_place = function(itemstack, placer, pointed_thing)
 			local under = pointed_thing.under
@@ -96,7 +99,19 @@ function beds.register_bed(name, def)
 			return itemstack
 		end,
 
-		can_dig = beds.can_dig
+		on_punch = function(_, _, clicker)
+			if na_exists then
+				node_attacher.stand(clicker)
+			end
+		end,
+
+		can_dig = beds.can_dig,
+
+		after_destruct = function(pos)
+			if na_exists then
+				node_attacher.destruct(pos)
+			end
+		end
 	})
 
 	if def.recipe then

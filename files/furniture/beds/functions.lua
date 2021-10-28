@@ -10,6 +10,7 @@ if enable_night_skip == nil then
 	enable_night_skip = true
 end
 local hunger_exists = minetest.global_exists("hunger")
+local na_exists = minetest.global_exists("node_attacher")
 
 -- Helper functions
 
@@ -45,7 +46,7 @@ local function check_in_beds(players)
 	return #players > 0
 end
 
-local function lay_down(player, pos, bed_pos, state, skip, sit)
+local function lay_down(player, pos, bed_pos, state, skip)
 	local name = player:get_player_name()
 	local hud_flags = player:hud_get_flags()
 
@@ -54,26 +55,35 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 	end
 
 	-- stand up
-	if state ~= nil and not state and not sit then
-		local p = beds.pos[name] or nil
-		beds.player[name] = nil
+	if state ~= nil and not state then
+		if not beds.player[name] then
+			-- player not in bed, do nothing
+			return false
+		end
 		beds.bed_position[name] = nil
 		-- skip here to prevent sending player specific changes (used for leaving players)
 		if skip then
 			return
 		end
+		local p = beds.pos[name] or nil
 		if p then
-			player:move_to(p)
+			player:set_pos(p)
 		end
 
 		-- physics, eye_offset, etc
+	--	local physics_override = beds.player[name].physics_override
+		beds.player[name] = nil
+	--[[player:set_physics_override({
+			speed = physics_override.speed,
+			jump = physics_override.jump,
+			gravity = physics_override.gravity
+		})]]
 		player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 		player:set_look_horizontal(math.random(1, 180) / 100)
 		player_api.player_attached[name] = false
-		player:set_physics_override(1, 1, 1)
 		hud_flags.wielditem = true
 		player_api.set_animation(player, "stand", 30)
-	else -- sit or lay down
+	else -- lay down
 		-- Check if bed is occupied
 		for other_name, other_pos in pairs(beds.bed_position) do
 			if name ~= other_name and
@@ -94,37 +104,30 @@ local function lay_down(player, pos, bed_pos, state, skip, sit)
 			return false
 		end
 
+		if beds.player[name] then
+			-- player already in bed, do nothing
+			return false
+		end
+
 		beds.pos[name] = pos
 		beds.bed_position[name] = bed_pos
+	--	beds.player[name] = {physics_override = player:get_physics_override()}
+		beds.player[name] = true
 
 		-- physics, eye_offset, etc
+		player:set_eye_offset({x = 0, y = -13, z = 0}, {x = 0, y = 0, z = 0})
 		local yaw, param2 = get_look_yaw(bed_pos)
 		player:set_look_horizontal(yaw)
 		local dir = minetest.facedir_to_dir(param2)
+	--	player:set_physics_override({speed = 0, jump = 0, gravity = 0})
+		player:set_pos({x = bed_pos.x + dir.x / 2, y = bed_pos.y, z = bed_pos.z + dir.z / 2})
 		player_api.player_attached[name] = true
-		player:set_physics_override(0, 0, 0)
-
-		if sit then
-			beds.player[name] = 2
-			player:set_eye_offset({x = 0, y = -7, z = 0}, {x = 0, y = 0, z = 0})
-			player:set_pos({x = bed_pos.x + dir.x / 3.75, y = bed_pos.y, z = bed_pos.z + dir.z / 3.75})
-			hud_flags.wielditem = true
-			minetest.after(0.2, function()
-				if player then
-					player_api.set_animation(player, "sit", 30)
-				end
-			end)
-		else
-			beds.player[name] = 1
-			player:set_eye_offset({x = 0, y = -13, z = 0}, {x = 0, y = 0, z = 0})
-			player:set_pos({x = bed_pos.x + dir.x / 2, y = bed_pos.y, z = bed_pos.z + dir.z / 2})
-			hud_flags.wielditem = false
-			minetest.after(0.2, function()
-				if player then
-					player_api.set_animation(player, "lay", 0)
-				end
-			end)
-		end
+		hud_flags.wielditem = false
+		minetest.after(0.2, function()
+			if player then
+				player_api.set_animation(player, "lay", 0)
+			end
+		end)
 	end
 
 	player:hud_set_flags(hud_flags)
@@ -195,11 +198,15 @@ function beds.on_rightclick(pos, player)
 	local ppos = player:get_pos()
 	local tod = minetest.get_timeofday()
 
+	if na_exists and node_attacher.stand(player) then
+		return false
+	end
+
 	if tod > 0.2 and tod < 0.805 then
 		if beds.player[name] then
 			lay_down(player, nil, nil, false)
-		else
-			lay_down(player, ppos, pos, nil, false, true)
+		elseif na_exists then
+			node_attacher.sit(pos, minetest.get_node(pos), player)
 		end
 		return
 	end
@@ -215,13 +222,18 @@ function beds.on_rightclick(pos, player)
 	update_formspecs(false)
 end
 
-function beds.can_dig(bed_pos)
+function beds.can_dig(bed_pos, player)
 	-- Check all players in bed which one is at the expected position
 	for _, player_bed_pos in pairs(beds.bed_position) do
 		if vector.equals(bed_pos, player_bed_pos) then
 			return false
 		end
 	end
+
+	if na_exists then
+		return node_attacher.can_dig(bed_pos, player)
+	end
+
 	return true
 end
 
