@@ -166,6 +166,7 @@ function player_api.set_sneak(player, sneak, speed)
 	local model = player_model[name] and models[player_model[name]]
 	local anim = model.animations
 	local anim_speed = speed or model.animation_speed
+	local invis_exists = minetest.global_exists("invisibility")
 
 	if sneak then
 		-- Set snaaking local animation
@@ -177,9 +178,11 @@ function player_api.set_sneak(player, sneak, speed)
 			anim_speed)
 
 		-- Hide nametag
-		local nametag = player:get_nametag_attributes()
-		nametag.color.a = 0
-		player:set_nametag_attributes(nametag)
+		if not (invis_exists and invisibility[name]) then
+			local nametag = player:get_nametag_attributes()
+			nametag.color.a = 0
+			player:set_nametag_attributes(nametag)
+		end
 	else
 		-- Back normal local animation
 		player:set_local_animation(
@@ -190,9 +193,11 @@ function player_api.set_sneak(player, sneak, speed)
 			anim_speed)
 
 		-- Show nametag
-		local nametag = player:get_nametag_attributes()
-		nametag.color.a = 255
-		player:set_nametag_attributes(nametag)
+		if not (invis_exists and invisibility[name]) then
+			local nametag = player:get_nametag_attributes()
+			nametag.color.a = 255
+			player:set_nametag_attributes(nametag)
+		end
 	end
 end
 
