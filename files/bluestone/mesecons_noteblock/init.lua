@@ -5,7 +5,7 @@ minetest.register_node("mesecons_noteblock:noteblock", {
 	tiles = {"mesecons_noteblock.png"},
 	is_ground_content = false,
 	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 2},
-	stack_max = 1,
+	stack_max = 4,
 	on_rightclick = function(pos, node) -- change sound when punched
 		node.param2 = (node.param2 + 1) % 12
 		mesecon.noteblock_play(pos, node.param2)
