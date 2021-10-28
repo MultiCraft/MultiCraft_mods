@@ -9,13 +9,21 @@ local wield_cubes = {}
 local function prepare()
 	for name, def in pairs(minetest.registered_items) do
 		local inv_img = def.inventory_image
+		local wield_img = def.wield_image
 		local tiles = def.tiles
-		local groups = def.groups
-		local not_in_inv = groups.not_in_creative_inventory
-		if not not_in_inv or not_in_inv < 1 then
-			if inv_img and inv_img ~= "" then
-				if (minetest.registered_tools[name] or (groups.wieldview == 2)) and
-						not (groups.wieldview == 3) then
+		local group = def.groups
+		local wieldview = group.wieldview
+		local not_in_inv = group.not_in_creative_inventory
+		if (not not_in_inv or not_in_inv < 1) or wieldview ~= nil then
+			if wield_img and wield_img ~= "" then
+				if wieldview == 2 then
+					wield_tiles[name] = wield_img
+				else
+					wield_tiles[name] = wield_img .. "^[transformR270"
+				end
+			elseif inv_img and inv_img ~= "" then
+					if (minetest.registered_tools[name] or
+							wieldview == 2) and wieldview ~= 3 then
 					wield_tiles[name] = inv_img
 				else
 					wield_tiles[name] = inv_img .. "^[transformR270"
@@ -30,7 +38,7 @@ local function prepare()
 						 drawtype == "liquid" or
 						 drawtype:sub(1, 8) == "allfaces" or
 						 drawtype:sub(1, 5) == "glass") or
-						(groups.wieldview == 4) then
+						wieldview == 4 then
 					if tiles[3] ~= "" and type(tiles[3]) == "string" then
 						wield_cubes[name] = tiles[3]
 					else
