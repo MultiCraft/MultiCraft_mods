@@ -3,11 +3,13 @@ local modpath = minetest.get_modpath("3d_armor")
 dofile(modpath .. "/api.lua")
 dofile(modpath .. "/armor.lua")
 
-minetest.register_on_joinplayer(function(player)
-	local name = player:get_player_name()
+local S = armor.S
+
+local function init_player_armor(initplayer)
+	local name = initplayer:get_player_name()
 	local armor_inv = minetest.create_detached_inventory(name .. "_armor", {
-		allow_put = function(_, _, index, stack, player)
-			if player:get_player_name() == name then
+		allow_put = function(_, _, index, stack, initplayer)
+			if initplayer:get_player_name() == name then
 				local item = minetest.registered_tools[stack:get_name()]
 				local group = item and item.groups
 				if group then
@@ -27,8 +29,8 @@ minetest.register_on_joinplayer(function(player)
 			end
 			return 0
 		end,
-		allow_take = function(_, _, _, stack, player)
-			if player:get_player_name() == name then
+		allow_take = function(_, _, _, stack, initplayer)
+			if initplayer:get_player_name() == name then
 				return stack:get_count()
 			end
 			return 0
@@ -36,16 +38,16 @@ minetest.register_on_joinplayer(function(player)
 		allow_move = function()
 			return 0
 		end,
-		on_put = function(_, _, _, _, player)
-			armor:handle_inventory(player)
+		on_put = function(_, _, _, _, initplayer)
+			armor:handle_inventory(initplayer)
 		end,
-		on_take = function(_, _, _, _, player)
-			armor:handle_inventory(player)
+		on_take = function(_, _, _, _, initplayer)
+			armor:handle_inventory(initplayer)
 		end
 	}, name)
 
 	armor_inv:set_size("armor", 4)
-	armor:load_armor_inventory(player)
+	armor:load_armor_inventory(initplayer)
 	armor.def[name] = {
 		level = 0,
 		state = 0,
@@ -54,7 +56,37 @@ minetest.register_on_joinplayer(function(player)
 	}
 	armor.textures[name] = {armor = "blank.png"}
 	minetest.after(1, function()
-		armor:handle_inventory(player)
+		armor:handle_inventory(initplayer)
+	end)
+end
+
+local C = default.colors
+
+armor:register_on_damage(function(player, _, stack)
+	local name = player:get_player_name()
+	local def = stack:get_definition()
+	if name and def and def.description and stack:get_wear() > 63500 then
+		minetest.chat_send_player(name, C.gold ..
+			S("Your @1 is almost broken!", (C.ruby .. def.description .. C.gold)))
+		minetest.sound_play("default_tool_breaks", {to_player = name})
+	end
+end)
+
+armor:register_on_destroy(function(player, _, stack)
+	local name = player:get_player_name()
+	local def = stack:get_definition()
+	if name and def and def.description then
+		minetest.chat_send_player(name, C.gold ..
+			S("Your @1 got destroyed!", (C.ruby .. def.description .. C.gold)))
+		minetest.sound_play("default_tool_breaks", {to_player = name, gain = 2.0})
+	end
+end)
+
+minetest.register_on_joinplayer(function(player)
+	minetest.after(0, function()
+		if player then
+			init_player_armor(player)
+		end
 	end)
 end)
 
@@ -85,8 +117,9 @@ minetest.register_on_dieplayer(function(player)
 end)
 
 local random = math.random
-minetest.register_on_player_hpchange(function(player, hp_change)
-	if player and hp_change < 0 then
+minetest.register_on_player_hpchange(function(player, hp_change, reason)
+	if player and not (reason and reason.type and reason.type == "drown")
+			and hp_change < 0 then
 		local name = player:get_player_name()
 		if name then
 			local heal = armor.def[name].heal
