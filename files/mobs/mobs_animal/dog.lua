@@ -22,7 +22,7 @@ mobs:register_mob("mobs_animal:wolf", {
 	makes_footstep_sound = true,
 	sounds = {
 		war_cry = "mobs_wolf_attack",
-		death = "mobs_wolf_attack"
+		death = "mobs_wolf_death"
 	},
 	walk_chance = 75,
 	walk_velocity = 2,
@@ -72,7 +72,7 @@ mobs:register_mob("mobs_animal:dog", {
 	makes_footstep_sound = true,
 	sounds = {
 		war_cry = "mobs_wolf_attack",
-		death = "mobs_wolf_attack"
+		death = "mobs_wolf_death"
 	},
 	water_damage = 0,
 	fear_height = 4,

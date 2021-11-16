@@ -15,7 +15,7 @@ mobs:register_mob("mobs_monster:zombie", {
 		random = "mobs_zombie.1",
 		war_cry = "mobs_zombie.3",
 		attack = "mobs_zombie.2",
-		damage = "mobs_zombie_hit",
+		damage = "mobs_zombie_damage",
 		death = "mobs_zombie_death"
 	},
 	hp_min = 15,
@@ -28,7 +28,7 @@ mobs:register_mob("mobs_monster:zombie", {
 	view_range = 15,
 	walk_chance = 75,
 	walk_velocity = 0.5,
-	run_velocity = 0.5,
+	run_velocity = 0.6,
 	jump = false,
 	drops = function(pos)
 		if rawget(_G, "experience") then
@@ -102,9 +102,9 @@ mobs:register_mob("mobs_monster:zombie_giant", {
 	end,
 
 	after_activate = function(self)
-		 self.object:remove()
-		 return false
-	 end
+		self.object:remove()
+		return false
+	end
 })
 
 --[[mobs:spawn({

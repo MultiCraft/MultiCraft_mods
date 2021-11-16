@@ -15,7 +15,7 @@ mobs:register_mob("mobs_monster:skeleton", {
 		random = "mobs_skeleton",
 		war_cry = "mobs_zombie.3",
 		attack = "mobs_zombie.2",
-		damage = "mobs_zombie_hit",
+		damage = "mobs_skeleton_damage",
 		death = "mobs_zombie_death"
 	},
 	hp_min = 10,

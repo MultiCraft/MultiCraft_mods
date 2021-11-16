@@ -38,3 +38,17 @@ Allowed to be used in non-official builds ONLY for personal use.
 * Exceptions:
 mobs_bunny_*.png by ExeterDad (CC-BY-SA 3.0)
 mobs_pig.png, mobs_pig_egg.png by MultiCraft Development Team (CC-BY-SA 4.0)
+
+License of sounds
+-----------------
+
+Blender Foundation (CC BY 3.0)
+	`mobs_sheep.ogg`
+
+cmusounddesign (https://freesound.org/people/cmusounddesign/) (CC BY 3.0)
+	`mobs_kitten_angry.ogg`
+
+YleArkisto(https://freesound.org/people/YleArkisto/) (CC BY 3.0)
+	`mobs_bear_attack.ogg`
+	`mobs_bear_hurt.ogg`
+	`mobs_bear_death.ogg`
