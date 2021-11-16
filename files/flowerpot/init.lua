@@ -73,15 +73,15 @@ local function on_rightclick(pos, _, clicker, itemstack)
 	return itemstack
 end
 
-local function get_tile(def)
+local function get_tile(def, alt)
 	local tiles = {"flowerpot.png"}
 	local drawtype = def.drawtype
 	local inventory_image = def.inventory_image
 
-	if drawtype == "mesh" then
-		tiles[2] = "[combine:64x64:0,10=" .. def.inventory_image
+	if drawtype == "mesh" and not alt then
+		tiles[2] = "[combine:64x64:0,10=" .. inventory_image
 		tiles[3] = b
-	elseif inventory_image ~= "" then
+	elseif inventory_image ~= "" and not alt then
 		tiles[2] = inventory_image
 		tiles[3] = b
 	else
@@ -91,7 +91,7 @@ local function get_tile(def)
 		end
 
 		if drawtype == "plantlike" then
-			tiles[2] = tile
+			tiles[2] = "[combine:48x48:0,0=" .. tile
 			tiles[3] = b
 		else
 			tiles[2] = b
@@ -114,12 +114,12 @@ local pot = {
 	}
 }
 
-function flowerpot.register_node(nodename)
+function flowerpot.register_node(nodename, alt)
 	local def = minetest.registered_nodes[nodename]
 
 	local node = table.copy(pot)
 	node.mesh = "flowerpot.b3d"
-	node.tiles = get_tile(def)
+	node.tiles = get_tile(def, alt)
 	node.selection_box = {
 		type = "fixed",
 		fixed = {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25}
@@ -151,6 +151,7 @@ minetest.register_node("flowerpot:empty", empty)
 local inv = table.copy(pot)
 inv.description = S"Flowerpot"
 inv.mesh = "flowerpot_inv.b3d"
+inv.wield_image2 = "flowerpot_item.png"
 inv.tiles = {"flowerpot.png"}
 inv.node_placement_prediction = ""
 inv.on_place = function(itemstack, placer, pointed_thing)
@@ -195,16 +196,17 @@ minetest.register_craft({
 local function register_pots()
 	local register_pot = flowerpot.register_node
 	for node, def in pairs(minetest.registered_nodes) do
-		if not def.groups.grass and not def.groups.dry_grass then
-			local groups = def.groups or {}
-			if groups.flora or groups.sapling then
-				register_pot(node)
-			end
+		local group = def.groups or {}
+		if not group.grass and not group.dry_grass and
+				(group.flora or group.sapling) and
+				node ~= "default:sugarcane" then
+			register_pot(node)
 		end
 	end
 
 	register_pot("default:grass_1")
 	register_pot("default:dry_grass_1")
+	register_pot("default:sugarcane", true)
 	minetest.register_alias("flowerpot:default_grass", "flowerpot:default_grass_1")
 	minetest.register_alias("flowerpot:default_dry_grass", "flowerpot:default_dry_grass_1")
 end
