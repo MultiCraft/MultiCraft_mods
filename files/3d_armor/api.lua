@@ -227,17 +227,6 @@ armor.set_player_armor = function(self, player)
 		armor_groups.level = floor(armor_level / 20)
 		armor_groups.fleshy = 100 - armor_level
 	end
-	if use_pova_mod then
-		-- only add the changes, not the default 1.0 for each physics setting
-		pova.add_override(player, "3d_armor", {
-			speed = physics.speed - 1,
-			jump = physics.jump - 1,
-			gravity = physics.gravity - 1,
-		})
-		pova.do_override(player)
-	else
-		player:set_physics_override(physics)
-	end
 	self.textures[name].armor = texture
 	self.def[name].state = state
 	self.def[name].count = count
@@ -250,6 +239,20 @@ armor.set_player_armor = function(self, player)
 
 	if enable_damage then
 		player:set_armor_groups(armor_groups)
+
+		if use_pova_mod then
+			-- only add the changes, not the default 1.0 for each physics setting
+			pova.add_override(player, "3d_armor", {
+				speed = physics.speed - 1,
+				jump = physics.jump - 1,
+				gravity = physics.gravity - 1,
+			})
+			pova.do_override(player)
+		else
+			player:set_physics_override(physics)
+		end
+
+		-- Update HUD
 		local max_level = 80 -- full emerald armor
 		local armor_lvl = floor(20 * (armor_level/max_level)) or 0
 		hud.change_item(player, "armor", {number = armor_lvl})
