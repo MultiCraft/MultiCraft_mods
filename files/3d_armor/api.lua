@@ -12,10 +12,8 @@ end
 
 armor.S = S
 
-local ARMOR_LEVEL_MULTIPLIER = 1
-local ARMOR_HEAL_MULTIPLIER = 1
 local enable_damage = minetest.settings:get_bool("enable_damage")
-
+local use_pova_mod = minetest.get_modpath("pova")
 local armor_def = setmetatable({}, {
 	__index = function()
 		return setmetatable({
@@ -40,11 +38,23 @@ local armor_textures = setmetatable({}, {
 	end
 })
 
-armor.elements = {"head", "torso", "legs", "feet"}
-armor.physics = {"jump", "speed", "gravity"}
-armor.def = armor_def
-armor.textures = armor_textures
+armor = {
+	S = S,
+	elements = {"head", "torso", "legs", "feet"},
+	physics = {"jump", "speed", "gravity"},
+	def = armor_def,
+	textures = armor_textures,
+	registered_callbacks = {
+		on_damage = {},
+		on_destroy = {}
+	}
+}
 
+armor.config = {
+	level_multiplier = 1,
+	heal_multiplier = 1,
+	set_multiplier = 1.05
+}
 
 -- Armor Registration
 
@@ -62,8 +72,36 @@ armor.register_armor = function(_, name, def)
 		end
 	end
 
-	def._doc_items_longdesc = S("Protect: @1%, Healing: @2%",
+	local long_desc = S("Protect: @1%, Healing: @2%",
 		protect or 0, group.armor_heal or 0)
+
+	local physics = {}
+	local upper = string.upper
+	for _, physic in pairs(armor.physics) do
+		local value = group["physics_" .. physic]
+		if value ~= nil then
+			physics[#physics + 1] =
+				S("@1: @2%", S((physic:gsub("^%l", upper))), value * 100)
+		end
+	end
+
+	if next(physics) then
+		physics = table.concat(physics, ", ")
+		long_desc = long_desc .. "\n" .. physics
+	end
+
+	def._doc_items_longdesc = long_desc
+
+	if not group.armor_use or group.armor_use == 0 then
+		-- Any use will not add wear
+		def.tool_capabilities = {
+			full_punch_interval = 0.5,
+			max_drop_level = 0,
+			damage_groups = {fleshy = 1},
+			punch_attack_uses = 0
+		}
+		def.after_use = function(itemstack) return itemstack end
+	end
 
 	minetest.register_tool(name, def)
 end
@@ -71,6 +109,33 @@ end
 armor.register_armor_group = function(self, group, base)
 	base = base or 100
 	self.registered_groups[group] = base
+end
+
+armor.register_on_damage = function(self, func)
+	if type(func) == "function" then
+		table.insert(self.registered_callbacks.on_damage, func)
+	end
+end
+
+armor.register_on_destroy = function(self, func)
+	if type(func) == "function" then
+		table.insert(self.registered_callbacks.on_destroy, func)
+	end
+end
+
+armor.run_callbacks = function(self, callback, player, index, stack)
+	if stack then
+		local def = stack:get_definition() or {}
+		if type(def[callback]) == "function" then
+			def[callback](player, index, stack)
+		end
+	end
+	local callbacks = self.registered_callbacks[callback]
+	if callbacks then
+		for _, func in pairs(callbacks) do
+			func(player, index, stack)
+		end
+	end
 end
 
 armor.update_player_visuals = function(self, player)
@@ -153,17 +218,26 @@ armor.set_player_armor = function(self, player)
 		end
 	end
 	if material.name and material.count == #self.elements then
-		armor_level = armor_level * 1.1
+		armor_level = armor_level * armor.config.set_multiplier
 	end
-	armor_level = armor_level * ARMOR_LEVEL_MULTIPLIER
-	armor_heal = armor_heal * ARMOR_HEAL_MULTIPLIER
+	armor_level = armor_level * armor.config.level_multiplier
+	armor_heal = armor_heal * self.config.heal_multiplier
 	local armor_groups = {fleshy = 100}
 	if armor_level > 0 then
 		armor_groups.level = floor(armor_level / 20)
 		armor_groups.fleshy = 100 - armor_level
 	end
-	-- temporary disable physics override
---	player:set_physics_override(physics)
+	if use_pova_mod then
+		-- only add the changes, not the default 1.0 for each physics setting
+		pova.add_override(player, "3d_armor", {
+			speed = physics.speed - 1,
+			jump = physics.jump - 1,
+			gravity = physics.gravity - 1,
+		})
+		pova.do_override(player)
+	else
+		player:set_physics_override(physics)
+	end
 	self.textures[name].armor = texture
 	self.def[name].state = state
 	self.def[name].count = count
@@ -176,7 +250,7 @@ armor.set_player_armor = function(self, player)
 
 	if enable_damage then
 		player:set_armor_groups(armor_groups)
-		local max_level = 100 -- full diamond armor
+		local max_level = 80 -- full emerald armor
 		local armor_lvl = floor(20 * (armor_level/max_level)) or 0
 		hud.change_item(player, "armor", {number = armor_lvl})
 	end
@@ -213,16 +287,18 @@ armor.update_armor = function(self, player)
 	for i = 1, armor_inv:get_size("armor") do
 		local stack = armor_inv:get_stack("armor", i)
 		if stack:get_count() > 0 then
-			local use = stack:get_definition().groups["armor_use"] or 0
-			local item = stack:get_name()
-			stack:add_wear(use)
-			armor_inv:set_stack("armor", i, stack)
-			state = state + stack:get_wear()
-			count = count + 1
-			if stack:get_count() == 0 then
-				local desc = minetest.registered_tools[item].description
-				if desc then
-					minetest.chat_send_player(name, armor.S("Your @1 got destroyed!", desc))
+			local old_stack = ItemStack(stack)
+			local uses = stack:get_definition().groups["armor_use"]
+			if uses and uses > 0 then
+				local item = stack:get_name()
+				stack:add_wear(65535 / uses)
+				armor_inv:set_stack("armor", i, stack)
+				state = state + stack:get_wear()
+				count = count + 1
+				if stack:get_count() == 0 then
+					self:run_callbacks("on_destroy", player, nil, old_stack)
+				else
+					self:run_callbacks("on_damage", player, nil, stack)
 				end
 			end
 		end
@@ -248,9 +324,9 @@ armor.serialize_inventory_list = function(_, list)
 end
 
 armor.deserialize_inventory_list = function(_, list_string)
-	local list_table = minetest.deserialize(list_string) or {}
+	local list_table = minetest.deserialize(list_string)
 	local list = {}
-	for i, stack in pairs(list_table) do
+	for i, stack in pairs(list_table or {}) do
 		list[i] = ItemStack(stack)
 	end
 	return list
