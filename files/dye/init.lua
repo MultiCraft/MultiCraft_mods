@@ -30,7 +30,7 @@ dye.dyes = {
 }
 
 -- Define items
-for _, row in pairs(dye.dyes) do
+for _, row in ipairs(dye.dyes) do
 	local name = row[1]
 	local description = row[2]
 	local groups = {dye = 1, nohit = 1}
@@ -61,11 +61,11 @@ minetest.register_craft({
 
 -- Manually add flowers recipes
 local flowers_recipes = {
-	"blue", "orange", "red",
-	"violet", "yellow"
+	"blue", "magenta", "orange", "pink",
+	"red", "violet", "yellow"
 }
 
-for _, name in pairs(flowers_recipes) do
+for _, name in ipairs(flowers_recipes) do
 	minetest.register_craft({
 		output = "dye:" .. name .. " 4",
 		recipe = {
