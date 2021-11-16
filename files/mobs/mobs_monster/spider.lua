@@ -22,7 +22,8 @@ mobs:register_mob("mobs_monster:spider", {
 	},
 	sounds = {
 		random = "mobs_spider",
-		attack = "mobs_spider"
+		attack = "mobs_spider",
+		damage = "mobs_spider_damage"
 	},
 	run_velocity = 3,
 	view_range = 15,
@@ -84,7 +85,8 @@ mobs:register_mob("mobs_monster:small_spider", {
 	visual_size = {x = 0.3, y = 0.3},
 	sounds = {
 		random = "mobs_spider",
-		attack = "mobs_spider"
+		attack = "mobs_spider",
+		damage = "mobs_spider_damage"
 	},
 	run_velocity = 3,
 	view_range = 10,
