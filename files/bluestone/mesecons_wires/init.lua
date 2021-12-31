@@ -221,8 +221,11 @@ local function register_wires()
 			mesecon_wire = true,
 			sounds = default.node_sound_defaults(),
 			on_rotate = false,
-		}, {tiles = tiles_off, mesecons = meseconspec_off, groups = groups_off},
-		{tiles = tiles_on, mesecons = meseconspec_on, groups = groups_on})
+		}, {
+			tiles = tiles_off, mesecons = meseconspec_off, groups = groups_off
+		}, {
+			tiles = tiles_on, mesecons = meseconspec_on, groups = groups_on
+		})
 
 		if (nid_inc(nid) == false) then return end
 	end
@@ -236,5 +239,5 @@ register_wires()
 minetest.register_craft({
 	type = "cooking",
 	output = "mesecons:wire_00000000_off 8",
-	recipe = "default:stone_with_bluestone",
+	recipe = "default:stone_with_bluestone"
 })

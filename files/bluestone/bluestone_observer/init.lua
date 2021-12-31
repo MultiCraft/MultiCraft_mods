@@ -1,14 +1,38 @@
 local S = mesecon.S
 
-local screwdriver_exists = minetest.global_exists("screwdriver")
 local interval = mesecon.setting("observer_interval", 1)
+local deg = math.deg
+local vsubtract = vector.subtract
+
+local neighbor = {
+	[0] = {x =  0, y =  0, z =  1},
+	[1] = {x =  1, y =  0, z =  0},
+	[2] = {x =  0, y =  0, z = -1},
+	[3] = {x = -1, y =  0, z =  0},
+	[4] = {x =  0, y = -1, z =  0},
+	[8] = {x =  0, y =  1, z =  0}
+}
 
 local function get_rules_flat(node)
-	local rules = {{x = 0, y = 0, z = 1}}
-	for _ = 1, node.param2 do
-		rules = mesecon.rotate_rules_left(rules)
+	return {neighbor[node.param2]}
+end
+
+local function observer_orientate(pos, placer)
+	-- Not placed by player
+	if not placer then return end
+
+	-- Pitch in degrees
+	local pitch = deg(placer:get_look_vertical())
+	local node = minetest.get_node(pos)
+
+	if pitch > 55 then
+		node.param2 = 4
+	elseif pitch < -55 then
+		node.param2 = 8
+	else
+		return
 	end
-	return rules
+	minetest.swap_node(pos, node)
 end
 
 -- Scan the node in front of the observer
@@ -17,10 +41,9 @@ local function observer_scan(pos, initialize)
 	local node = minetest.get_node(pos)
 	local nodeparam2 = node.param2
 	local dir = minetest.facedir_to_dir(nodeparam2)
-	local front = {x = pos.x - dir.x, y = pos.y, z = pos.z - dir.z}
-	local frontnode = minetest.get_node(front)
-	local frontname = frontnode.name
-	local frontparam2 = frontnode.param2
+	local front = minetest.get_node(vsubtract(pos, dir))
+	local frontname = front.name
+	local frontparam2 = front.param2
 	local meta = minetest.get_meta(pos)
 	local oldnode = meta:get_string("node_name")
 	local oldparam2 = meta:get_string("node_param2")
@@ -45,16 +68,13 @@ end
 local ttop = "default_furnace_top.png"
 local tside = "default_furnace_side.png"
 
-mesecon.register_node("bluestone_observer:observer",
-{
+mesecon.register_node("bluestone_observer:observer", {
 	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
 	paramtype2 = "facedir",
-},
-{
+}, {
 	description = S("Observer"),
 	groups = {cracky = 3},
-	on_rotate = screwdriver_exists and screwdriver.rotate_simple,
 	tiles = {
 		ttop, ttop,
 		tside, tside,
@@ -66,6 +86,8 @@ mesecon.register_node("bluestone_observer:observer",
 		rules = get_rules_flat
 	}},
 
+	after_place_node = observer_orientate,
+
 	on_construct = function(pos)
 		minetest.get_node_timer(pos):start(interval)
 		observer_scan(pos, true)
@@ -75,8 +97,7 @@ mesecon.register_node("bluestone_observer:observer",
 		observer_scan(pos)
 		return true
 	end
-},
-{
+}, {
 	groups = {cracky = 3, not_in_creative_inventory = 1},
 	on_rotate = false,
 	tiles = {

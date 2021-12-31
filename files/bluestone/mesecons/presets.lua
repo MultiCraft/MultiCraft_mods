@@ -16,14 +16,14 @@ mesecon.rules.default = {
 	{x =  0, y = -1, z = -1}
 }
 
-mesecon.rules.floor = mesecon.mergetable(mesecon.rules.default, {{x = 0, y = -1, z = 0}})
+mesecon.rules.floor = mesecon.merge_rule_sets(mesecon.rules.default, {{x = 0, y = -1, z = 0}})
 
-mesecon.rules.all = mesecon.mergetable(mesecon.rules.default, {
+mesecon.rules.all = mesecon.merge_rule_sets(mesecon.rules.default, {
 	{x = 0, y =  1, z = 0},
 	{x = 0, y = -1, z = 0}
 })
 
-mesecon.rules.pplate = mesecon.mergetable(mesecon.rules.floor, {{x = 0, y = -2, z = 0}})
+mesecon.rules.pplate = mesecon.merge_rule_sets(mesecon.rules.floor, {{x = 0, y = -2, z = 0}})
 
 mesecon.rules.buttonlike = {
 	{x = 1,  y =  0, z =  0},

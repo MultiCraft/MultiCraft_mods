@@ -10,7 +10,7 @@ are so many weird tables below.
 
 local S = mesecon.S
 
-local random, pi = math.random, math.pi
+local deg, random = math.deg, math.random
 local tcopy, tinsert = table.copy, table.insert
 local vsubtract = vector.subtract
 
@@ -43,12 +43,12 @@ local function setup_dropper(pos)
 	inv:set_size("split", 1)
 end
 
-local function orientate_dropper(pos, placer)
+local function dropper_orientate(pos, placer)
 	-- Not placed by player
 	if not placer then return end
 
 	-- Pitch in degrees
-	local pitch = placer:get_look_vertical() * (180 / pi)
+	local pitch = deg(placer:get_look_vertical())
 
 	if pitch > 55 then
 		minetest.swap_node(pos, {name = "mesecons_dropper:dropper_up"})
@@ -189,7 +189,7 @@ horizontal_def.after_place_node = function(pos, placer)
 	minetest.get_meta(pos):set_string("owner", name)
 
 	setup_dropper(pos, placer)
-	orientate_dropper(pos, placer)
+	dropper_orientate(pos, placer)
 end
 horizontal_def.tiles = {
 	ttop, ttop,
