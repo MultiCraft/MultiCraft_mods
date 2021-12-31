@@ -270,10 +270,14 @@ local function parse_preview_params(player, rot, textures, animation, speed,
 	if gender == "male" then
 		textures = textures:gsub("character_female_", "character_")
 		textures = textures:gsub("haircut_female_", "haircut_")
+		textures = textures:gsub("_female", "")
+
 		if not hair_reset then
 			textures = textures:gsub("haircut_(%d+)", "haircut_1")
 		end
 	elseif gender == "female" then
+		textures = textures:gsub("_glasses.png", "_glasses_female.png")
+
 		if not textures:find("character_female_") then
 			textures = textures:gsub("character_", "character_female_")
 		end
