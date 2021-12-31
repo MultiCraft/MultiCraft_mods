@@ -342,7 +342,6 @@ minetest.register_craft({
 	burntime = 15
 })
 
-
 minetest.register_craft({
 	type = "fuel",
 	recipe = "default:vine",
@@ -363,20 +362,8 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "default:bush_stem",
+	recipe = "group:bush_stem",
 	burntime = 7
-})
-
-minetest.register_craft({
-	type = "fuel",
-	recipe = "default:acacia_bush_stem",
-	burntime = 8
-})
-
-minetest.register_craft({
-	type = "fuel",
-	recipe = "default:pine_bush_stem",
-	burntime = 6
 })
 
 minetest.register_craft({
