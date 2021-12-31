@@ -301,6 +301,13 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	type = "shapeless",
+	output = "default:sandstonecarved",
+	recipe = {"default:sandstonesmooth", "screwdriver:screwdriver"},
+	replacements = {{"screwdriver:screwdriver", "screwdriver:screwdriver"}}
+})
+
+minetest.register_craft({
 	type = "cooking",
 	output = "default:stonebrickcracked",
 	recipe = "default:stonebrick"
@@ -310,6 +317,13 @@ minetest.register_craft({
 	type = "cooking",
 	output = "default:redsandstonesmooth",
 	recipe = "default:redsandstone"
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "default:redsandstonecarved",
+	recipe = {"default:redsandstonesmooth", "screwdriver:screwdriver"},
+	replacements = {{"screwdriver:screwdriver", "screwdriver:screwdriver"}}
 })
 
 --

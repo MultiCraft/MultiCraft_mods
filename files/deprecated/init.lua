@@ -11,8 +11,6 @@ local default = {
 	{"default:pinetree", "default:pine_tree"},
 	{"default:pinewood", "default:pine_wood"},
 	{"default:gold_nugget", "default:gold_ingot"},
-	{"default:sandstonecarved", "default:sandstonesmooth"},
-	{"default:redsandstonecarved", "default:redsandstonesmooth"},
 	{"default:ladder", "default:ladder_wood"},
 	{"default:reeds", "default:sugarcane"},
 	{"default:papyrus", "default:sugarcane"},
