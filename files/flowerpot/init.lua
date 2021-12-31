@@ -107,6 +107,7 @@ local pot = {
 	paramtype = "light",
 	sunlight_propagates = true,
 	sounds = default.node_sound_defaults(),
+	use_texture_alpha = "clip",
 	groups = {falling_node = 1, oddly_breakable_by_hand = 3, cracky = 1},
 	collision_box = {
 		type = "fixed",

@@ -13,6 +13,7 @@ function beds.register_bed(name, def)
 		drawtype = "mesh",
 		mesh = def.mesh,
 		tiles = def.tiles,
+		use_texture_alpha = "clip",
 		paramtype = "light",
 		paramtype2 = "facedir",
 		is_ground_content = false,

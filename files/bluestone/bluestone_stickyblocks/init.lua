@@ -17,7 +17,7 @@ minetest.register_node("bluestone_stickyblocks:slimeblock", {
 			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}
 		}
 	},
-	use_texture_alpha = true,
+	use_texture_alpha = "blend",
 	sunlight_propagates = true,
 	is_ground_content = false,
 	groups = {oddly_breakable_by_hand = 3, fall_damage_add_percent = -100, bouncy = 75, wieldview = 4},

@@ -383,6 +383,7 @@ function doors.register(name, def)
 	local box = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, 1.5, -3/8}}
 	def.selection_box = box
 	def.collision_box = box
+	def.use_texture_alpha = "clip"
 
 	def.mesh = "door_a.obj"
 	minetest.register_node(":" .. name .. "_a", def)
@@ -455,6 +456,7 @@ function doors.register_trapdoor(name, def)
 	def.paramtype = "light"
 	def.paramtype2 = "facedir"
 	def.is_ground_content = false
+	def.use_texture_alpha = "clip"
 
 	if def.protected then
 		def.after_place_node = function(pos, placer)
