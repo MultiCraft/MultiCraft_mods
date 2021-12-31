@@ -21,7 +21,7 @@ mesecon.register_node("mesecons_walllever:wall_lever", {
 		end
 		minetest.sound_play("mesecons_lever", {pos = pos})
 	end
-},{
+}, {
 	tiles = {
 		"default_stone.png",
 		"default_stone.png^jeija_wall_lever_top.png^[transformFY",
@@ -40,7 +40,7 @@ mesecon.register_node("mesecons_walllever:wall_lever", {
 		state = mesecon.state.off
 	}},
 	groups = {dig_immediate = 2},
-},{
+}, {
 	tiles = {
 		"default_stone.png^jeija_wall_lever_top.png",
 		"default_stone.png",

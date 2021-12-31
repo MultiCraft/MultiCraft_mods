@@ -12,22 +12,18 @@ local pp_box_on = {
 
 local function pp_on_timer(pos)
 	local node = minetest.get_node(pos)
-	local basename = minetest.registered_nodes[node.name].pressureplate_basename
-
-	-- This is a workaround for a strange bug that occurs when the server is started
-	-- For some reason the first time on_timer is called, the pos is wrong
-	if not basename then return end
 
 	local objs = minetest.get_objects_inside_radius(pos, 0.8)
+	local is_on = mesecon.is_receptor_on(node.name)
 
-	if objs[1] == nil and node.name == basename .. "_on" then
-		minetest.set_node(pos, {name = basename .. "_off"})
+	if objs[1] == nil and is_on then
+		mesecon.flipstate(pos, node)
 		mesecon.receptor_off(pos, mesecon.rules.pplate)
-	elseif node.name == basename .. "_off" then
+	elseif not is_on then
 		for _, obj in pairs(objs) do
 			local objpos = obj:get_pos()
 			if objpos.y > pos.y-1 and objpos.y < pos.y then
-				minetest.set_node(pos, {name = basename .. "_on"})
+				mesecon.flipstate(pos, node)
 				mesecon.receptor_on(pos, mesecon.rules.pplate )
 			end
 		end
@@ -67,14 +63,14 @@ function mesecon.register_pressure_plate(basename, description, tile, recipe, gr
 		on_construct = function(pos)
 			minetest.get_node_timer(pos):start(mesecon.setting("pplate_interval", 0.1))
 		end
-	},{
+	}, {
 		mesecons = {receptor = {
 			state = mesecon.state.off, rules = mesecon.rules.pplate
 		}},
 		node_box = pp_box_off,
 		selection_box = pp_box_off,
 		groups = groups_off
-	},{
+	}, {
 		mesecons = {receptor = {
 			state = mesecon.state.on, rules = mesecon.rules.pplate
 		}},
