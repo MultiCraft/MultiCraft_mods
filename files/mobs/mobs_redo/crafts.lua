@@ -66,45 +66,6 @@ minetest.register_craft({
 	cooktime = 5
 })
 
--- raw rabbit
-minetest.register_craftitem("mobs:rabbit_raw", {
-	description = S"Raw Rabbit",
-	inventory_image = "mobs_rabbit_raw.png",
-	on_use = minetest.item_eat(3, nil, -4),
-	groups = {food_meat_raw = 1, flammable = 2, food = 1}
-})
-
--- cooked rabbit
-minetest.register_craftitem("mobs:rabbit_cooked", {
-	description = S"Cooked Rabbit",
-	inventory_image = "mobs_rabbit_cooked.png",
-	on_use = minetest.item_eat(5),
-	groups = {food_meat = 1, flammable = 2, food = 1}
-})
-
-minetest.register_craft({
-	type = "cooking",
-	output = "mobs:rabbit_cooked",
-	recipe = "mobs:rabbit_raw",
-	cooktime = 5
-})
-
--- rabbit hide
-minetest.register_craftitem("mobs:rabbit_hide", {
-	description = S"Rabbit Hide",
-	inventory_image = "mobs_rabbit_hide.png",
-	groups = {flammable = 2}
-})
-
-minetest.register_craft({
-	output = "mobs:leather",
-	type = "shapeless",
-	recipe = {
-		"mobs:rabbit_hide", "mobs:rabbit_hide",
-		"mobs:rabbit_hide", "mobs:rabbit_hide"
-	}
-})
-
 -- rotten flesh
 minetest.register_craftitem("mobs:rotten_flesh", {
 	description = S"Rotten Flesh",
@@ -189,10 +150,4 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "mobs:leather",
 	burntime = 4
-})
-
-minetest.register_craft({
-	type = "fuel",
-	recipe = "mobs:rabbit_hide",
-	burntime = 2
 })
