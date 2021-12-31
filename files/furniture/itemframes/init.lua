@@ -8,6 +8,10 @@ if translator and not minetest.is_singleplayer() then
 	end
 end
 
+local function objects_inside_radius(p)
+	return minetest.get_objects_inside_radius(p, 0.5)
+end
+
 minetest.register_entity("itemframes:item", {
 	visual = "wielditem",
 	visual_size = {x = 0.33, y = 0.33},
@@ -17,7 +21,7 @@ minetest.register_entity("itemframes:item", {
 	on_activate = function(self, staticdata)
 		local ent = self.object
 
-		-- remove entity for missing frames
+		-- remove entity with missing frames
 		local node = minetest.get_node_or_nil(ent:get_pos())
 		if not node or node.name ~= "itemframes:frame" then
 			ent:remove()
@@ -74,7 +78,7 @@ local drop_item = function(pos)
 		meta:set_string("item", "")
 	end
 
-	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+	for _, obj in pairs(objects_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "itemframes:item" then
 			obj:remove()
@@ -87,7 +91,7 @@ local function check_item(pos, node)
 	local item = meta:get_string("item")
 	if item == "" then return end
 
-	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+	for _, obj in pairs(objects_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "itemframes:item" then
 			return
@@ -105,7 +109,7 @@ local function after_dig_node(pos)
 end
 
 minetest.register_node("itemframes:frame",{
-	description = S"Item frame",
+	description = S("Item frame"),
 	drawtype = "nodebox",
 	node_box = {
 		type = "wallmounted",
@@ -129,8 +133,7 @@ minetest.register_node("itemframes:frame",{
 			local abovey = pt_above.y
 			if undery == abovey then -- allowed wall-mounted only
 				itemstack = minetest.item_place(itemstack, placer, pointed_thing)
-				minetest.sound_play({name = "default_place_node_hard"},
-						{pos = pt_above})
+				minetest.sound_play({name = "default_place_node_hard"}, {pos = pt_above})
 			end
 		end
 		return itemstack
@@ -139,7 +142,7 @@ minetest.register_node("itemframes:frame",{
 	after_place_node = function(pos, placer)
 		local meta = minetest.get_meta(pos)
 		local pn = placer and placer:get_player_name() or ""
-		meta:set_string("infotext", S"Item frame" .. "\n" .. S("Owned by @1", S(pn)))
+		meta:set_string("infotext", S("Item frame") .. "\n" .. S("Owned by @1", S(pn)))
 	end,
 
 	on_rightclick = function(pos, node, clicker, itemstack)
@@ -168,8 +171,7 @@ minetest.register_node("itemframes:frame",{
 	end,
 
 	can_dig = function(pos, player)
-		if not player or
-				minetest.is_protected(pos, player:get_player_name()) then
+		if minetest.is_protected(pos, player and player:get_player_name() or "") then
 			return false
 		end
 		return true
