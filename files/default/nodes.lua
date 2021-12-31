@@ -89,6 +89,16 @@ minetest.register_node("default:sandstonesmooth", {
 	})
 })
 
+minetest.register_node("default:sandstonecarved", {
+	description = "Carved Sandstone",
+	tiles = {"default_sandstone_top.png", "default_sandstone_bottom.png",
+		"default_sandstone_carved.png"},
+	groups = {crumbly = 2, cracky = 2},
+	sounds = default.node_sound_dirt_defaults({
+		dig = {name = "default_dig_cracky", gain = 0.24}
+	})
+})
+
 minetest.register_node("default:redsandstone", {
 	description = "Red Sandstone",
 	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png",
@@ -103,6 +113,16 @@ minetest.register_node("default:redsandstonesmooth", {
 	description = "Red Sandstone Smooth",
 	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png",
 		"default_redsandstone_smooth.png"},
+	groups = {crumbly = 2, cracky = 2},
+	sounds = default.node_sound_dirt_defaults({
+		dig = {name = "default_dig_cracky", gain = 0.24}
+	})
+})
+
+minetest.register_node("default:redsandstonecarved", {
+	description = "Red Carved Sandstone",
+	tiles = {"default_redsandstone_top.png", "default_redsandstone_bottom.png",
+		"default_redsandstone_carved.png"},
 	groups = {crumbly = 2, cracky = 2},
 	sounds = default.node_sound_dirt_defaults({
 		dig = {name = "default_dig_cracky", gain = 0.24}
@@ -2442,7 +2462,7 @@ minetest.register_node("default:glowstone", {
 if minetest.get_mapgen_setting("mg_name") == "v6" then
 	default.register_leafdecay({
 		trunks = {"default:tree"},
-		leaves = {"default:apple", "default:leaves"},
+		leaves = {"default:apple", "default:apple_green", "default:leaves"},
 		radius = 2
 	})
 
@@ -2454,7 +2474,7 @@ if minetest.get_mapgen_setting("mg_name") == "v6" then
 else
 	default.register_leafdecay({
 		trunks = {"default:tree"},
-		leaves = {"default:apple", "default:leaves"},
+		leaves = {"default:apple", "default:apple_green", "default:leaves"},
 		radius = 3
 	})
 
