@@ -83,7 +83,9 @@ armor:register_on_destroy(function(player, _, stack)
 end)
 
 minetest.register_on_joinplayer(function(player)
+	local name = player:get_player_name()
 	minetest.after(0, function()
+		player = minetest.get_player_by_name(name)
 		if player then
 			init_player_armor(player)
 		end

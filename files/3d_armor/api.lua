@@ -337,7 +337,8 @@ end
 armor.load_armor_inventory = function(self, player)
 	local inv = self:get_armor_inventory(player)
 	if inv then
-		local armor_list_string = player:get_attribute("3d_armor_inventory")
+		local meta = player:get_meta()
+		local armor_list_string = meta:get_string("3d_armor_inventory")
 		if armor_list_string then
 			inv:set_list("armor",
 				self:deserialize_inventory_list(armor_list_string))
@@ -371,7 +372,8 @@ armor.save_armor_inventory = function(self, player)
 			end
 		end
 
-		player:set_attribute("3d_armor_inventory",
+		local meta = player:get_meta()
+		meta:set_string("3d_armor_inventory",
 			self:serialize_inventory_list(armor_inv:get_list("armor")))
 	end
 end
