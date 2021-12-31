@@ -1,28 +1,16 @@
 -- lib_mount by Blert2112 (edited by TenPlus1)
 
-local abs, cos, floor, sin, sqrt, pi =
-		math.abs, math.cos, math.floor, math.sin, math.sqrt, math.pi
+local abs, cos, floor, sin, sign, pi =
+		math.abs, math.cos, math.floor, math.sin, math.sign, math.pi
+local vadd = vector.add
 ------------------------------------------------------------------------------
 
 --
 -- Helper functions
 --
 
-local node_ok = function(pos, fallback)
-	fallback = fallback or mobs.fallback_node
-
-	local node = minetest.get_node_or_nil(pos)
-
-	if node and minetest.registered_nodes[node.name] then
-		return node
-	end
-
-	return {name = fallback}
-end
-
-
 local function node_is(pos)
-	local node = node_ok(pos)
+	local node = mobs:node_ok(pos)
 
 	if node.name == "air" then
 		return "air"
@@ -43,30 +31,9 @@ local function node_is(pos)
 	return "other"
 end
 
-
-local function get_sign(i)
-	i = i or 0
-
-	if i == 0 then
-		return 0
-	else
-		return i / abs(i)
-	end
-end
-
-
-local function get_velocity(v, yaw, y)
-	local x = -sin(yaw) * v
-	local z =  cos(yaw) * v
-
-	return {x = x, y = y, z = z}
-end
-
-
 local function get_v(v)
-	return sqrt(v.x * v.x + v.z * v.z)
+	return (v.x * v.x + v.z * v.z) ^ 0.5
 end
-
 
 local function force_detach(player)
 	local attached_to = player:get_attach()
@@ -124,12 +91,11 @@ local function find_free_pos(pos)
 	}
 
 	for _, c in pairs(check) do
-		local npos = {x = pos.x + c.x, y = pos.y + c.y, z = pos.z + c.z}
+		local npos = vadd(pos, c)
 		local node = minetest.get_node_or_nil(npos)
 		if node and node.name then
 			local def = minetest.registered_nodes[node.name]
-			if def and not def.walkable and
-					def.liquidtype == "none" then
+			if def and not def.walkable and def.liquidtype == "none" then
 				return npos
 			end
 		end
@@ -194,6 +160,7 @@ end
 
 function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 	local yaw = entity.object:get_yaw() or 0
+	entity.v = entity.v or 0
 
 	local rot_view = 0
 
@@ -204,7 +171,7 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 	local acce_y = 0
 	local velo = entity.object:get_velocity()
 
-	entity.v = get_v(velo) * get_sign(entity.v)
+	entity.v = get_v(velo) * sign(entity.v)
 
 	-- process controls
 	if entity.driver then
@@ -287,11 +254,11 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 	end
 
 	-- Stop!
-	local s = get_sign(entity.v)
+	local s = sign(entity.v)
 
 	entity.v = entity.v - 0.02 * s
 
-	if s ~= get_sign(entity.v) then
+	if s ~= sign(entity.v) then
 		entity.object:set_velocity({x = 0, y = 0, z = 0})
 		entity.v = 0
 		return
@@ -300,12 +267,12 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 	-- enforce speed limit forward and reverse
 	local max_spd = entity.max_speed_reverse
 
-	if get_sign(entity.v) >= 0 then
+	if sign(entity.v) >= 0 then
 		max_spd = entity.max_speed_forward
 	end
 
 	if abs(entity.v) > max_spd then
-		entity.v = entity.v - get_sign(entity.v)
+		entity.v = entity.v - sign(entity.v)
 	end
 
 	-- Set position, velocity and acceleration
@@ -370,7 +337,9 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 		end
 	end
 
-	local new_velo = get_velocity(v, yaw - rot_view, velo.y)
+	local x = -sin(yaw - rot_view) * v
+	local z =  cos(yaw - rot_view) * v
+	local new_velo = {x = x, y = velo.y, z = z}
 	new_acce.y = new_acce.y + acce_y
 
 	entity.object:set_velocity(new_velo)
