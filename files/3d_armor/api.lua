@@ -293,7 +293,6 @@ armor.update_armor = function(self, player)
 			local old_stack = ItemStack(stack)
 			local uses = stack:get_definition().groups["armor_use"]
 			if uses and uses > 0 then
-				local item = stack:get_name()
 				stack:add_wear(65535 / uses)
 				armor_inv:set_stack("armor", i, stack)
 				state = state + stack:get_wear()

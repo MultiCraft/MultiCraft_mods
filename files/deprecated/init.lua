@@ -59,7 +59,7 @@ minetest.after(2, function()
 	local aliased_nodes = {}
 	local aliased_mods = {"default", "farming", "mobs", "wool"}
 
-	for node, _ in pairs(workbench.nodes) do
+	for node in pairs(workbench.nodes) do
 		if match_any(aliased_mods, node, "(.*):") then
 			aliased_nodes[node] = true
 		end
@@ -73,7 +73,7 @@ minetest.after(2, function()
 		{"nanoslab",	"microslab"}
 	}
 
-	for node, _ in pairs(aliased_nodes) do
+	for node in pairs(aliased_nodes) do
 		for _, d in pairs(workbench.defs) do
 			register_alias("stairs:" .. d[1] .. "_" .. node:match(":(.*)"),	"stairs:" .. d[1] .. "_" .. node:gsub(":", "_"))
 			register_alias(node .. "_" .. d[1],								"stairs:" .. d[1] .. "_" .. node:gsub(":", "_"))

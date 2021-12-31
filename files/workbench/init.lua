@@ -321,7 +321,7 @@ minetest.register_lbm({
 
 for i = 1, #workbench.defs do
 	local d = workbench.defs[i]
-	for node, _ in pairs(workbench.nodes) do
+	for node in pairs(workbench.nodes) do
 		local def = minetest.registered_nodes[node]
 		local groups, tiles, mesh, collision_box = {}, {}, {}, {}
 		local drawtype = "nodebox"
