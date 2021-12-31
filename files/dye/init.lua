@@ -12,21 +12,21 @@ end
 
 -- Make dye names and descriptions available globally
 dye.dyes = {
-	{"black",      S("Black"),      S("Black2"),      S("Black3")},
-	{"blue",       S("Blue"),       S("Blue2"),       S("Blue3")},
-	{"brown",      S("Brown"),      S("Brown2"),      S("Brown3")},
-	{"cyan",       S("Cyan"),       S("Cyan2"),       S("Cyan3")},
-	{"dark_green", S("Dark Green"), S("Dark Green2"), S("Dark Green3")},
-	{"dark_grey",  S("Dark Grey"),  S("Dark Grey2"),  S("Dark Grey3")},
-	{"green",      S("Green"),      S("Green2"),      S("Green3")},
-	{"grey",       S("Grey"),       S("Grey2"),       S("Grey3")},
-	{"magenta",    S("Magenta"),    S("Magenta2"),    S("Magenta3")},
-	{"orange",     S("Orange"),     S("Orange2"),     S("Orange3")},
-	{"pink",       S("Pink"),       S("Pink2"),       S("Pink3")},
-	{"red",        S("Red"),        S("Red2"),        S("Red3")},
-	{"violet",     S("Violet"),     S("Violet2"),     S("Violet3")},
-	{"white",      S("White"),      S("White2"),      S("White3")},
-	{"yellow",     S("Yellow"),     S("Yellow2"),     S("Yellow3")}
+	{"black",      "Black"},
+	{"blue",       "Blue"},
+	{"brown",      "Brown"},
+	{"cyan",       "Cyan"},
+	{"dark_green", "Dark Green"},
+	{"dark_grey",  "Dark Grey"},
+	{"green",      "Green"},
+	{"grey",       "Grey"},
+	{"magenta",    "Magenta"},
+	{"orange",     "Orange"},
+	{"pink",       "Pink"},
+	{"red",        "Red"},
+	{"violet",     "Violet"},
+	{"white",      "White"},
+	{"yellow",     "Yellow"}
 }
 
 -- Define items
@@ -38,7 +38,7 @@ for _, row in ipairs(dye.dyes) do
 
 	minetest.register_craftitem("dye:" .. name, {
 		inventory_image = "dye_" .. name .. ".png",
-		description = description .. " " .. S("Dye"),
+		description = S(description .. " Dye"),
 		groups = groups
 	})
 end
