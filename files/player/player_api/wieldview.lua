@@ -10,11 +10,14 @@ local function prepare()
 	for name, def in pairs(minetest.registered_items) do
 		local inv_img = def.inventory_image
 		local wield_img = def.wield_image
+		local wield_img2 = def.wield_image2
 		local tiles = def.tiles
 		local group = def.groups
 		local wieldview = group.wieldview
 		local not_in_inv = group.not_in_creative_inventory
-		if (not not_in_inv or not_in_inv < 1) or wieldview ~= nil then
+		if wield_img2 and wield_img2 ~= "" then
+			wield_tiles[name] = wield_img2 .. "^[transformR270"
+		elseif (not not_in_inv or not_in_inv < 1) or wieldview ~= nil then
 			if wield_img and wield_img ~= "" then
 				if wieldview == 2 then
 					wield_tiles[name] = wield_img
