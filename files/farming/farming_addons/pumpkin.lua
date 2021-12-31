@@ -103,7 +103,7 @@ minetest.register_node("farming_addons:pumpkin_9", {
 	drawtype = "mesh",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
-	use_texture_alpha = true,
+	use_texture_alpha = "blend",
 	walkable = false,
 	paramtype = "light",
 	groups = {snappy = 3, flammable = 4, plant = 1, attached_node = 1,

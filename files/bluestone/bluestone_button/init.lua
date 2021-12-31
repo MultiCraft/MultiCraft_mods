@@ -63,6 +63,7 @@ local mesecons_on = {
 mesecon.register_node("bluestone_button:button_stone", {
 	drawtype = "nodebox",
 	tiles = {"default_stone.png"},
+	use_texture_alpha = "opaque",
 	paramtype = "light",
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -102,6 +103,7 @@ minetest.register_craft({
 mesecon.register_node("bluestone_button:button_wood", {
 	drawtype = "nodebox",
 	tiles = {"default_wood.png"},
+	use_texture_alpha = "opaque",
 	paramtype = "light",
 	paramtype2 = "facedir",
 	is_ground_content = false,
