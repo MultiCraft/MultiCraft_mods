@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20210614",
+	version = "20210905",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -53,6 +53,7 @@ local peaceful_only = false
 local disable_blood = true
 local mobs_griefing = true
 local spawn_protected = settings:get_bool("mobs_spawn_protected") ~= false
+local spawn_monster_protected = false
 local remove_far = false
 local difficulty = tonumber(settings:get("mob_difficulty")) or 1.0
 local show_health = settings:get_bool("mob_show_health") ~= false
@@ -76,11 +77,11 @@ end
 -- pathfinding settings
 local enable_pathfinding = singleplayer -- disable pathfinder in multiplayer
 local stuck_timeout = 3 -- how long before stuck mod starts searching
-local stuck_path_timeout = 10 -- how long will mob follow path before giving up
+local stuck_path_timeout = 5 -- how long will mob follow path before giving up
 
 -- default nodes
-local node_fire = "fire:basic_flame"
-local node_permanent_flame = "fire:permanent_flame"
+--local node_fire = "fire:basic_flame"
+--local node_permanent_flame = "fire:permanent_flame"
 local node_ice = "default:ice"
 local node_snowblock = "default:snowblock"
 local node_snow = "default:snow"
@@ -92,7 +93,6 @@ local mob_class = {
 	stepheight = 1.1,
 	fly_in = "air",
 	owner = "",
-	infotext = "",
 	order = "",
 	jump_height = 4,
 	lifetimer = lifetime,
@@ -157,6 +157,7 @@ local mob_class = {
 	attack_players = true,
 	attack_npcs = false,
 	facing_fence = false,
+	_breed_countdown = nil,
 	obj_is_mob = true
 }
 
@@ -253,8 +254,9 @@ end
 function mob_class:set_velocity(v)
 	-- halt mob if it has been ordered to stay
 	if self.order == "stand" then
-		local cy = self.object:get_velocity().y
-		self.object:set_velocity({x = 0, y = cy, z = 0})
+		local vel = self.object:get_velocity() or {y = 0}
+		self.object:set_velocity({x = 0, y = vel.y, z = 0})
+
 		return
 	end
 
@@ -358,23 +360,24 @@ function mob_class:set_animation(anim, force)
 		anim = anim .. (num ~= 0 and num or "")
 	end
 
-	if anim == self.animation.current
-			or not self.animation[anim .. "_start"]
-			or not self.animation[anim .. "_end"] then
+	if force ~= true and anim == self.animation.current then
+		return
+	end
+
+	if not self.animation[anim .. "_start"]
+	or not self.animation[anim .. "_end"] then
 		return
 	end
 
 	self.animation.current = anim
 	self.object:set_animation({
 		x = self.animation[anim .. "_start"],
-		y = self.animation[anim .. "_end"]
-	},
+		y = self.animation[anim .. "_end"]},
 		self.animation[anim .. "_speed"] or
 				self.animation.speed_normal or 15,
 		0, self.animation[anim .. "_loop"] ~= false)
 end
 
--- above function exported for mount.lua
 function mobs:set_animation(entity, anim)
 	entity.set_animation(entity, anim)
 end
@@ -674,6 +677,11 @@ function mobs:effect(pos, amount, texture, min_size, max_size,
 end
 
 
+local HORNY_TIME = 30
+local HORNY_AGAIN_TIME = 60 * 5 -- 5 minutes
+local CHILD_GROW_TIME = 60 * 20 -- 20 minutes
+
+
 -- update nametag colour
 function mob_class:update_tag()
 	local col = "#00FF00"
@@ -691,9 +699,33 @@ function mob_class:update_tag()
 		col = "#FF0000"
 	end
 
+	local text = self.description ..
+		"\n" .. S("Health: @1 / @2", self.health, self.hp_max)
+
+	local owner = self.owner
+	if owner ~= "" then
+		owner = owner == "Player" and S(owner) or owner
+		text = text ..
+			"\n" .. S"Owner:" .. " " .. owner
+	end
+
+	--[[if self.horny == true then
+		text = text ..
+			"\n" .. S"Loving:" .. " " .. (self.hornytimer - (HORNY_TIME + HORNY_AGAIN_TIME))
+	elseif self.child == true then
+		text = text ..
+			"\n" .. S"Growing:" .. " " .. (self.hornytimer - CHILD_GROW_TIME)
+	elseif self._breed_countdown then
+		text = text ..
+			"\n" .. S"Breeding:" .. " " .. self._breed_countdown
+	end]]
+
+	-- set changes
+	self.infotext = text
 	self.object:set_properties({
 		nametag = self.nametag,
-		nametag_color = col
+		nametag_color = col,
+		infotext = self.infotext
 	})
 end
 
@@ -738,9 +770,7 @@ function mob_class:item_drop()
 			end
 
 			-- only drop rare items (drops.min=0) if killed by player
-			if death_by_player then
-				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
-			elseif self.drops[n].min ~= 0 then
+			if death_by_player or self.drops[n].min ~= 0 then
 				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
 			end
 
@@ -817,7 +847,7 @@ function mob_class:check_for_death(cmi_cause)
 		if show_health
 				and (cmi_cause and cmi_cause.type == "punch") then
 			self.htimer = 2
-			self.nametag = S("Health:") .. " " .. self.health .. " / " .. self.hp_max
+			self.nametag = S("Health: @1 / @2", self.health, self.hp_max)
 			self:update_tag()
 		end
 
@@ -892,6 +922,10 @@ local node_ok = function(pos, fallback)
 	return minetest.registered_nodes[fallback]
 end
 
+-- global version of above function
+function mobs:node_ok(pos, node, name)
+	return node_ok(pos, node, name)
+end
 
 -- Returns true is node can deal damage to self
 local is_node_dangerous = function(self, nodename)
@@ -995,7 +1029,7 @@ function mob_class:do_env_damage()
 		end
 
 	-- lava damage
-	elseif self.lava_damage ~= 0 and nodef.groups.lava  then
+	elseif self.lava_damage ~= 0 and nodef.groups.lava then
 		self.health = self.health - self.lava_damage
 
 		effect(pos, 15, "fire_basic_flame.png", 1, 5, 1, 0.2, 15, true)
@@ -1052,7 +1086,7 @@ function mob_class:do_env_damage()
 			effect(pos, 3, "fire_basic_flame.png", 4, 4, 2, nil, 5)
 
 			if show_health then
-				self.nametag = S("Health:") .. " " .. self.health .. " / " .. self.hp_max
+				self.nametag = S("Health: @1 / @2", self.health, self.hp_max)
 				self:update_tag()
 			end
 
@@ -1236,9 +1270,6 @@ function mob_class:follow_holding(clicker)
 	return false
 end
 
-local HORNY_TIME = 30
-local HORNY_AGAIN_TIME = 300
-local CHILD_GROW_TIME = 60 * 20 -- 20 minutes
 
 -- find two animals of same type and breed if nearby and horny
 function mob_class:breed()
@@ -1261,11 +1292,12 @@ function mob_class:breed()
 			if self.on_grown then
 				self.on_grown(self)
 			else
-				-- jump when fully grown so as not to fall into ground
 				local pos = self.object:get_pos()
 				if not pos then return end
 				local ent = self.object:get_luaentity()
+
 				pos.y = pos.y + (ent.collisionbox[2] * -1) - 0.4
+
 				self.object:set_pos(pos)
 			end
 
@@ -1287,6 +1319,8 @@ function mob_class:breed()
 			self.hornytimer = 0
 			self.horny = false
 		end
+
+		self:update_tag()
 	end
 
 	-- find another same animal who is also horny and mate if nearby
@@ -1337,6 +1371,8 @@ function mob_class:breed()
 				self.hornytimer = HORNY_TIME + 1
 				ent.hornytimer = HORNY_TIME + 1
 
+				self:update_tag()
+
 				-- have we reached active mob limit
 				if active_limit > 0 and active_mobs >= active_limit then
 					minetest.chat_send_player(self.owner,
@@ -1374,10 +1410,6 @@ function mob_class:breed()
 						textures = self.child_texture[1]
 					end
 
-					local owner = type(self.owner) == "string" and self.owner or ""
-
-					local infotext = S("Owned by @1", S(owner))
-
 					-- and resize to half height
 					mob:set_properties({
 						textures = textures,
@@ -1400,14 +1432,12 @@ function mob_class:breed()
 							self.base_selbox[4] * .5,
 							self.base_selbox[5] * .5,
 							self.base_selbox[6] * .5
-						},
-						infotext = infotext
+						}
 					})
 					-- tamed and owned by parents' owner
 					ent2.child = true
 					ent2.tamed = true
 					ent2.owner = self.owner
-					ent2.infotext = infotext
 				end, self, ent)
 
 				break
@@ -1514,6 +1544,8 @@ local can_dig_drop = function(pos)
 	return false
 end
 
+
+local pathfinder_mod = minetest.get_modpath("pathfinder")
 -- path finding and smart mob routine by rnd,
 -- line_of_sight and other edits by Elkien3
 function mob_class:smart_mobs(s, p, dist, dtime)
@@ -1626,8 +1658,12 @@ function mob_class:smart_mobs(s, p, dist, dtime)
 			jumpheight = 1
 		end
 
-		self.path.way = minetest.find_path(s, p1, 16, jumpheight,
-				dropheight, "Dijkstra")
+		if pathfinder_mod then
+			self.path.way = pathfinder.find_path(s, p1, self, dtime)
+		else
+			self.path.way = minetest.find_path(s, p1, 16, jumpheight,
+					dropheight, "Dijkstra")
+		end
 
 --[[
 		-- show path using particles
@@ -2447,6 +2483,12 @@ function mob_class:do_states(dtime)
 					local obj = minetest.add_entity(p, self.arrow)
 					local ent = obj:get_luaentity()
 					local amount = (vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) ^ 0.5
+
+					-- check for custom override for arrow
+					if self.arrow_override then
+						self.arrow_override(ent)
+					end
+
 					local v = ent.velocity or 1 -- or set to default
 
 					ent.switch = 1
@@ -2553,13 +2595,12 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 
 	-- error checking when mod profiling is enabled
 	if not tool_capabilities then
-		minetest.log("warning",
-				"[mobs] Mod profiling enabled, damage not enabled")
+		minetest.log("warning", "[mobs] Mod profiling enabled, damage not enabled")
 		return true
 	end
 
 	-- is mob protected
-	if self.tamed then
+	if self.tamed and self.type ~= "monster" then
 		-- did player hit mob and if so is it in protected area
 		if hitter:is_player() then
 			local player_name = hitter:get_player_name()
@@ -2649,8 +2690,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 			local pos = self.object:get_pos()
 			local blood = self.blood_texture
 			local amount = self.blood_amount
-			pos.y = pos.y + (-self.collisionbox[2]
-					+ self.collisionbox[5]) * .5
+			pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) * .5
 
 			-- lots of damage = more blood :)
 			if damage > 10 then
@@ -2711,11 +2751,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 		-- use tool knockback value or default
 		kb = tool_capabilities.damage_groups["knockback"] or kb
 
-		self.object:set_velocity({
-			x = dir.x * kb,
-			y = up,
-			z = dir.z * kb
-		})
+		self.object:set_velocity({x = dir.x * kb, y = up, z = dir.z * kb})
 
 		self.pause_timer = 0.25
 	end
@@ -2966,14 +3002,19 @@ function mob_class:mob_activate(staticdata, def, dtime)
 	-- set anything changed above
 	self.object:set_properties(self)
 	self:set_yaw((random(0, 360) - 180) / 180 * pi, 6)
-	self:update_tag()
+	
+	-- To set the tag after setting the owner
+	minetest.after(0, function()
+		self:update_tag()
+	end)
+
 	self:set_animation("stand")
 
 	-- apply any texture mods
 	self.object:set_texture_mod(self.texture_mods)
 
 	-- set 5.x flag to remove monsters when map area unloaded
-	if remove_far and self.type == "monster" then
+	if remove_far and self.type == "monster" and not self.tamed then
 		self.static_save = false
 	end
 
@@ -3244,6 +3285,7 @@ function mobs:register_mob(name, def)
 		on_rightclick = def.on_rightclick,
 		on_punch = def.on_punch,
 		arrow = def.arrow,
+		arrow_override = def.arrow_override,
 		shoot_interval = def.shoot_interval,
 		sounds = def.sounds,
 		animation = def.animation,
@@ -3424,9 +3466,11 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			return
 		end
 
-		-- mobs cannot spawn in protected areas when enabled
-		if spawn_protected
-				and minetest.is_protected(pos, "") then
+		-- check if mob can spawn inside protected areas
+		if (spawn_protected == false
+		or (spawn_monster_protected == false
+		and minetest.registered_entities[name].type == "monster"))
+		and minetest.is_protected(pos, "") then
 		--	print("--- inside protected area", name)
 			return
 		end
@@ -3547,7 +3591,6 @@ function mobs:spawn(def)
 end
 
 
---[[
 -- register arrow for shoot attack
 function mobs:register_arrow(name, def)
 	if not name or not def then return end
@@ -3613,7 +3656,9 @@ function mobs:register_arrow(name, def)
 						minetest.add_item(self.lastpos,
 								self.object:get_luaentity().name)
 					end
+
 					self.object:remove()
+
 					return
 				end
 			end
@@ -3622,7 +3667,9 @@ function mobs:register_arrow(name, def)
 				for _, player in pairs(minetest.get_objects_inside_radius(pos, 1.0)) do
 					if self.hit_player and player:is_player() then
 						self:hit_player(player)
+
 						self.object:remove()
+
 						return
 					end
 
@@ -3660,6 +3707,7 @@ function mobs:register_arrow(name, def)
 end
 
 
+--[[
 -- compatibility function
 function mobs:explosion(pos, radius)
 	mobs:boom({sounds = {explode = "tnt_explode"}}, pos, radius)
@@ -3730,15 +3778,10 @@ local function spawn_mob(pos, mob, data, placer, drop)
 		local ent = obj:get_luaentity()
 		if ent then
 			-- set owner if not a monster
-			if ent.type ~= "monster" then
+		--	if ent.type ~= "monster" then
 				ent.owner = player_name
 				ent.tamed = true
-				local infotext = S("Owned by @1", S(player_name))
-				ent.infotext = infotext
-				obj:set_properties({
-					infotext = infotext
-				})
-			end
+		--	end
 			return true
 		else
 			obj:remove()
@@ -3817,8 +3860,8 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 						pointed_thing.under, under, placer, itemstack)
 			end
 
-			local mob = itemstack:get_name():gsub("_set$", "")
-			if spawn_mob(pos, mob, itemstack:get_metadata(), placer) then
+			local _mob = itemstack:get_name():gsub("_set$", "")
+			if spawn_mob(pos, _mob, itemstack:get_metadata(), placer) then
 				-- since mob is unique we remove egg once spawned
 				itemstack:take_item()
 			end
@@ -3845,8 +3888,8 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 					pointed_thing.under, under, placer, itemstack)
 			end
 
-			local mob = itemstack:get_name():gsub("_set$", "")
-			if spawn_mob(pos, mob, itemstack:get_metadata(), placer) then
+			local _mob = itemstack:get_name():gsub("_set$", "")
+			if spawn_mob(pos, _mob, itemstack:get_metadata(), placer) then
 				-- if not in creative then take item and minimal protection
 				-- against creating a large number of mobs on the server
 				if not mobs.is_creative(placer) or not singleplayer then
@@ -4027,29 +4070,29 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 			if self.htimer < 1 then
 				minetest.chat_send_player(name,
 					S("\"@1\" at full health: @2",
-						self.description, tostring(self.health)))
+						self.description, self.health))
 				self.htimer = 5
 			end
 		end
 
 		self.object:set_hp(self.health)
 
-		self:update_tag()
-
 		-- make children grow quicker
 		if self.child then
 --			self.hornytimer = self.hornytimer + 20
 			-- deduct 10% of the time to adulthood
-			self.hornytimer = self.hornytimer + (
-					(CHILD_GROW_TIME - self.hornytimer) * 0.1)
+			self.hornytimer = floor(self.hornytimer + (
+					(CHILD_GROW_TIME - self.hornytimer) * 0.1))
 			return true
 		end
 
 		-- feed and tame
 		self.food = (self.food or 0) + 1
+		self._breed_countdown = feed_count - self.food
 
 		if self.food >= feed_count then
 			self.food = 0
+			self._breed_countdown = nil
 
 			if breed and self.hornytimer == 0 then
 				self.horny = true
@@ -4063,20 +4106,19 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 				end
 
 				self.tamed = true
+				self.static_save = true
+
 				if not self.owner or self.owner == "" then
 					self.owner = name
-
-					local infotext = S("Owned by @1", S(name))
-					self.infotext = infotext
-					self.object:set_properties({
-						infotext = infotext
-					})
 				end
 			end
 
 			-- make sound when fed so many times
 			self:mob_sound(self.sounds.random)
+
+			self:update_tag()
 		end
+
 		return true
 	end
 
@@ -4085,7 +4127,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 	-- if mob has been tamed you can name it with a nametag
 	if item:get_name() == "mobs:nametag"
 	and (name == self.owner
-	or minetest.check_player_privs(name, {server = true})) then
+	or minetest.check_player_privs(name, "server")) then
 		-- store mob and nametag stack in external variables
 		mob_obj[name] = self
 		mob_sta[name] = item
@@ -4131,15 +4173,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 		if fields.name == "{remove_owner}" then
 			mob_obj[name].nametag = nil
-			mob_obj[name]:update_tag()
-
-			mob_obj[name].infotext = ""
-			mob_obj[name].object:set_properties({
-				infotext = ""
-			})
-
 			mob_obj[name].owner = nil
 			mob_obj[name].tamed = false
+
+			mob_obj[name]:update_tag()
 		else
 			-- limit name entered to 48 characters long
 			fields.name = fields.name:sub(1, 48)
@@ -4171,11 +4208,11 @@ function mobs:alias_mob(old_name, new_name)
 	-- entity
 	minetest.register_entity(":" .. old_name, {
 		physical = false,
+		static_save = false,
 
 		on_activate = function(self, staticdata)
 			if minetest.registered_entities[new_name] then
-				minetest.add_entity(self.object:get_pos(),
-					new_name, staticdata)
+				minetest.add_entity(self.object:get_pos(), new_name, staticdata)
 			end
 
 			remove_mob(self)

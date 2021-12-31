@@ -1,3 +1,5 @@
+local S = mobs_monster.S
+
 local spider_replace = {"air", "mobs:cobweb"}
 if not minetest.is_singleplayer() then
 	spider_replace = {}
@@ -5,6 +7,7 @@ end
 
 -- Spider by AspireMint (fishyWET (CC-BY-SA 3.0 license for texture)
 mobs:register_mob("mobs_monster:spider", {
+	description = S"Spider",
 	docile_by_day = true,
 	group_attack = true,
 	type = "monster",
@@ -68,6 +71,7 @@ mobs:register_mob("mobs_monster:spider", {
 
 -- Small spider
 mobs:register_mob("mobs_monster:small_spider", {
+	description = S"Small Spider",
 	group_attack = true,
 	type = "animal",
 	passive = false,
@@ -109,8 +113,8 @@ mobs:register_mob("mobs_monster:small_spider", {
 	}
 })
 
-mobs:register_egg("mobs_monster:spider", mobs_monster.S"Spider Egg", "mobs_monster_egg.png^mobs_monster_spider_egg.png")
-mobs:register_egg("mobs_monster:small_spider", mobs_monster.S"Small Spider Egg", "mobs_monster_egg.png^mobs_monster_spider_small_egg.png")
+mobs:register_egg("mobs_monster:spider", S"Spider Egg", "mobs_monster_egg.png^mobs_monster_spider_egg.png")
+mobs:register_egg("mobs_monster:small_spider", S"Small Spider Egg", "mobs_monster_egg.png^mobs_monster_spider_small_egg.png")
 
 mobs:spawn({
 	name = "mobs_monster:spider",

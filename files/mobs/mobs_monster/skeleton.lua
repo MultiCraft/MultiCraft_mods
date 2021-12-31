@@ -1,4 +1,7 @@
+local S = mobs_monster.S
+
 mobs:register_mob("mobs_monster:skeleton", {
+	description = S"Skeleton",
 	type = "monster",
 	visual = "mesh",
 	mesh = "mobs_zombie.b3d",
@@ -49,4 +52,4 @@ mobs:spawn({
 	chance = 15000
 })
 
-mobs:register_egg("mobs_monster:skeleton", mobs_monster.S"Skeleton Egg", "mobs_monster_egg.png^default_bone.png")
+mobs:register_egg("mobs_monster:skeleton", S"Skeleton Egg", "mobs_monster_skeleton_egg.png")

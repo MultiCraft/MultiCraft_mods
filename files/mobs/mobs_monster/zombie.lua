@@ -1,4 +1,7 @@
+local S = mobs_monster.S
+
 mobs:register_mob("mobs_monster:zombie", {
+	description = S"Zombie",
 	type = "monster",
 	visual = "mesh",
 	mesh = "mobs_zombie.b3d",
@@ -48,7 +51,7 @@ mobs:spawn({
 	chance = 15000
 })
 
-mobs:register_egg("mobs_monster:zombie", mobs_monster.S"Zombie Egg", "mobs_monster_zombie_egg.png")
+mobs:register_egg("mobs_monster:zombie", S"Zombie Egg", "mobs_monster_zombie_egg.png")
 
 -- Giant Zombie, spawning disabled
 mobs:register_mob("mobs_monster:zombie_giant", {
