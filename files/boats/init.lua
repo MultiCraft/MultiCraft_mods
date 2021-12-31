@@ -52,10 +52,7 @@ local boat = {
 
 
 -- Compatible for MultiCraft Engine 2.0
-local aheight = 11
-if minetest.features and minetest.features.object_independent_selectionbox then
-	aheight = 1
-end
+local ah = minetest.features.object_independent_selectionbox and 0 or 10
 function boat.on_rightclick(self, clicker)
 	if not clicker or not clicker:is_player() then
 		return
@@ -85,7 +82,7 @@ function boat.on_rightclick(self, clicker)
 		end
 		self.driver = name
 		clicker:set_attach(self.object, "",
-			{x = 0, y = aheight, z = -2}, {x = 0, y = 0, z = 0})
+			{x = 0, y = ah + 1, z = -2}, {x = 0, y = 0, z = 0})
 		player_api.player_attached[name] = true
 		minetest.after(0.1, function()
 			if clicker then
@@ -325,10 +322,10 @@ minetest.register_craftitem("boats:boat", {
 			return itemstack
 		end
 		pointed_thing.under.y = pointed_thing.under.y + 0.5
-		boat = minetest.add_entity(pointed_thing.under, "boats:boat")
-		if boat then
+		local entity = minetest.add_entity(pointed_thing.under, "boats:boat")
+		if entity then
 			if placer then
-				boat:set_yaw(placer:get_look_horizontal())
+				entity:set_yaw(placer:get_look_horizontal())
 			end
 			local player_name = placer and placer:get_player_name() or ""
 			if not minetest.is_creative_enabled(player_name) or not sp then

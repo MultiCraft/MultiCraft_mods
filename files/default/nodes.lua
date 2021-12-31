@@ -249,8 +249,9 @@ minetest.register_node("default:cement", {
 	groups = {crumbly = 3, falling_node = 1},
 	sounds = default.node_sound_dirt_defaults(),
 	floodable = true,
-	on_flood = function(pos)
-		minetest.swap_node(pos, {name = "default:concrete"})
+	on_flood = function(pos, node)
+		node.name = "default:concrete"
+		minetest.swap_node(pos, node)
 		return true
 	end
 })
