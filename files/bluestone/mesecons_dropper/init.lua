@@ -64,17 +64,12 @@ local dropperdef = {
 	groups = {cracky = 3, dropper = 1},
 	on_rotate = screwdriver_exists and screwdriver.rotate_simple,
 	after_dig_node = function(pos, _, oldmetadata)
-		local meta = minetest.get_meta(pos)
-		local meta2 = meta
-		meta:from_table(oldmetadata)
-		local inv = meta:get_inventory()
-		for i = 1, inv:get_size("main") do
-			local stack = inv:get_stack("main", i)
+		if not oldmetadata.inventory.main then return end
+		for _, stack in ipairs(oldmetadata.inventory.main) do
 			if not stack:is_empty() then
 				minetest.item_drop(stack, nil, pos)
 			end
 		end
-		meta:from_table(meta2:to_table())
 	end,
 
 	allow_metadata_inventory_move = function(pos, _, _, to_list, _, count, player)
@@ -243,9 +238,9 @@ minetest.register_craft({
 if hopper_exists then
 	hopper.add_container({
 		{"bottom", "mesecons_dropper:dropper", "main"},
-		{"tside", "mesecons_dropper:dropper", "main"},
+		{"side", "mesecons_dropper:dropper", "main"},
 		{"bottom", "mesecons_dropper:dropper_down", "main"},
-		{"tside", "mesecons_dropper:dropper_down", "main"},
-		{"tside", "mesecons_dropper:dropper_up", "main"}
+		{"side", "mesecons_dropper:dropper_down", "main"},
+		{"side", "mesecons_dropper:dropper_up", "main"}
 	})
 end
