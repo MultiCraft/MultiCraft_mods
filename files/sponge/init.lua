@@ -12,7 +12,7 @@ end
 local area = 3
 
 -- removing the air-like nodes
-local destruct = function(pos)
+local function destruct(pos)
 	for x = pos.x - area, pos.x + area do
 	for y = pos.y - area, pos.y + area do
 	for z = pos.z - area, pos.z + area do
@@ -25,6 +25,35 @@ local destruct = function(pos)
 	end
 end
 
+local function construct(pos, placer)
+	local player_name = placer:get_player_name()
+
+	if not minetest.is_protected(pos, player_name) then
+		local count = 0
+		for x = pos.x - area, pos.x + area do
+		for y = pos.y - area, pos.y + area do
+		for z = pos.z - area, pos.z + area do
+			local n = minetest.get_node({x = x, y = y, z = z}).name
+			local d = minetest.registered_nodes[n]
+			if d ~= nil and (n == "air" or
+					d["drawtype"] == "liquid" or
+					d["drawtype"] == "flowingliquid") then
+				local p = {x = x, y = y, z = z}
+				if n ~= "air" then
+					count = count + 1 -- counting liquids
+				end
+				minetest.set_node(p, {name = "sponge:liquid_stop"})
+			end
+		end
+		end
+		end
+
+		if count > area then -- turns wet if it removed more than * nodes
+			minetest.set_node(pos, {name = "sponge:wet_sponge"})
+		end
+	end
+end
+
 -- air-like node
 minetest.register_node("sponge:liquid_stop", {
 	drawtype = "airlike",
@@ -32,6 +61,7 @@ minetest.register_node("sponge:liquid_stop", {
 	groups = {not_in_creative_inventory = 1},
 	pointable = false,
 	walkable = false,
+	floodable = false,
 	sunlight_propagates = true,
 	paramtype = "light",
 	buildable_to = true
@@ -42,36 +72,8 @@ minetest.register_node("sponge:sponge", {
 	description = S"Sponge",
 	tiles = {"sponge_sponge.png"},
 	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 3, flammable = 3, not_cuttable = 1},
-
-	after_place_node = function(pos, placer)
-		local name = placer:get_player_name()
-		if not minetest.is_protected(pos, name) then
-			local count = 0
-			for x = pos.x - area, pos.x + area do
-			for y = pos.y - area, pos.y + area do
-			for z = pos.z - area, pos.z + area do
-				local n = minetest.get_node({x = x, y = y, z = z}).name
-				local d = minetest.registered_nodes[n]
-				if d ~= nil and (n == "air" or
-						d["drawtype"] == "liquid" or
-						d["drawtype"] == "flowingliquid") then
-					local p = {x = x, y = y, z = z}
-					if n ~= "air" then
-						count = count + 1 -- counting liquids
-					end
-					minetest.set_node(p, {name = "sponge:liquid_stop"})
-				end
-			end
-			end
-			end
-
-			if count > area then -- turns wet if it removed more than * nodes
-				minetest.set_node(pos, {name = "sponge:wet_sponge"})
-			end
-		end
-	end,
-
-	after_dig_node = destruct
+	after_place_node = construct,
+	after_destruct = destruct
 })
 
 -- Wet Sponge
