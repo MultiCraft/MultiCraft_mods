@@ -51,7 +51,7 @@ local function piston_get_rules(node)
 			break
 		end
 	end
-	local rules = table_copy(mesecon.rules.default)
+	local rules = table_copy(mesecon.rules.all)
 	for i, rule in pairs(rules) do
 		if rule[dir[1]] == dir[2] then
 			table_remove(rules, i)
@@ -275,7 +275,7 @@ end
 
 -- Boxes:
 
-local pt = 3/16 -- pusher thickness
+local pt = 4/16 -- pusher thickness
 
 local piston_pusher_box = {
 	type = "fixed",
@@ -287,9 +287,7 @@ local piston_pusher_box = {
 
 local piston_on_box = {
 	type = "fixed",
-	fixed = {
-		{-.5, -.5, -.5 + pt, .5, .5, .5}
-	}
+	fixed = {-.5, -.5, -.5 + pt, .5, .5, .5}
 }
 
 

@@ -22,14 +22,13 @@ mesecon.register_node("mesecons_solarpanel:solar_panel", {
 	on_timer = function(pos)
 		local light = minetest.get_node_light(pos)
 		local node = minetest.get_node(pos)
+		local is_on = mesecon.is_receptor_on(node.name)
 
-		if light >= 10 and node.name == "mesecons_solarpanel:solar_panel_off" then
-			node.name = "mesecons_solarpanel:solar_panel_on"
-			minetest.swap_node(pos, node)
+		if light >= 10 and not is_on then
+			mesecon.flipstate(pos, node)
 			mesecon.receptor_on(pos, mesecon.rules.wallmounted_get(node))
-		elseif light < 10 and node.name == "mesecons_solarpanel:solar_panel_on" then
-			node.name = "mesecons_solarpanel:solar_panel_off"
-			minetest.swap_node(pos, node)
+		elseif light < 10 and is_on then
+			mesecon.flipstate(pos, node)
 			mesecon.receptor_off(pos, mesecon.rules.wallmounted_get(node))
 		end
 
@@ -39,14 +38,14 @@ mesecon.register_node("mesecons_solarpanel:solar_panel", {
 	on_construct = function(pos)
 		minetest.get_node_timer(pos):start(mesecon.setting("spanel_interval", 1))
 	end
-},{
+}, {
 	description = S("Solar Panel"),
 	groups = {dig_immediate = 3, attached_node = 1},
 	mesecons = {receptor = {
 		state = mesecon.state.off,
 		rules = mesecon.rules.wallmounted_get
 	}}
-},{
+}, {
 	groups = {dig_immediate = 3, attached_node = 1, not_in_creative_inventory = 1},
 	mesecons = {receptor = {
 		state = mesecon.state.on,

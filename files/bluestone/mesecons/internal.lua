@@ -11,7 +11,7 @@
 
 -- RECEPTORS
 -- mesecon.is_receptor(nodename)	--> Returns true if nodename is a receptor
--- mesecon.is_receptor_on(nodename	--> Returns true if nodename is an receptor with state = mesecon.state.on
+-- mesecon.is_receptor_on(nodename)	--> Returns true if nodename is an receptor with state = mesecon.state.on
 -- mesecon.is_receptor_off(nodename)	--> Returns true if nodename is an receptor with state = mesecon.state.off
 -- mesecon.receptor_get_rules(node)	--> Returns the rules of the receptor (mesecon.rules.default if none specified)
 
@@ -49,7 +49,7 @@
 -- mesecon.rotate_rules_down(rules)
 -- These functions return rules that have been rotated in the specific direction
 
-local table_remove = table.remove
+local fifo_queue = dofile(minetest.get_modpath("mesecons") .. "/fifo_queue.lua")
 local vadd, vequals = vector.add, vector.equals
 
 -- General
@@ -97,9 +97,9 @@ function mesecon.get_any_inputrules(node)
 	end
 end
 
-function mesecon.get_any_rules (node)
-	return mesecon.mergetable(mesecon.get_any_inputrules(node) or {},
-		mesecon.get_any_outputrules(node) or {})
+function mesecon.get_any_rules(node)
+	return mesecon.merge_rule_sets(mesecon.get_any_inputrules(node),
+		mesecon.get_any_outputrules(node))
 end
 
 -- Receptors
@@ -205,7 +205,7 @@ end)
 
 function mesecon.activate(pos, node, rulename, depth)
 	if rulename == nil then
-		for _,rule in ipairs(mesecon.effector_get_rules(node)) do
+		for _, rule in ipairs(mesecon.effector_get_rules(node)) do
 			mesecon.activate(pos, node, rule, depth + 1)
 		end
 		return
@@ -251,7 +251,7 @@ end)
 
 function mesecon.changesignal(pos, node, rulename, newstate, depth)
 	if rulename == nil then
-		for _,rule in ipairs(mesecon.effector_get_rules(node)) do
+		for _, rule in ipairs(mesecon.effector_get_rules(node)) do
 			mesecon.changesignal(pos, node, rule, newstate, depth + 1)
 		end
 		return
@@ -383,32 +383,45 @@ end
 -- Follow all all conductor paths replacing conductors that were already
 -- looked at, activating / changing all effectors along the way.
 function mesecon.turnon(pos, link)
-	local frontiers = {{pos = pos, link = link}}
+	local frontiers = fifo_queue.new()
+	frontiers:add({pos = pos, link = link})
+	local pos_can_be_skipped = {}
 
 	local depth = 1
-	while frontiers[1] do
-		local f = table_remove(frontiers, 1)
+	for f in frontiers:iter() do
 		local node = mesecon.get_node_force(f.pos)
 
 		if not node then
 			-- Area does not exist; do nothing
-		elseif mesecon.is_conductor_off(node, f.link) then
+			pos_can_be_skipped[minetest.hash_node_position(f.pos)] = true
+		elseif mesecon.is_conductor(node.name) then
 			local rules = mesecon.conductor_get_rules(node)
 
-			-- Call turnon on neighbors
-			for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
-				local np = vadd(f.pos, r)
-				for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
-					frontiers[#frontiers+1] = {pos = np, link = l}
+			if mesecon.is_conductor_off(node, f.link) then
+				-- Call turnon on neighbors
+				for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
+					local np = vadd(f.pos, r)
+					if not pos_can_be_skipped[minetest.hash_node_position(np)] then
+						for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
+							frontiers:add({pos = np, link = l})
+						end
+					end
 				end
+
+				mesecon.swap_node_force(f.pos, mesecon.get_conductor_on(node, f.link))
 			end
 
-			mesecon.swap_node_force(f.pos, mesecon.get_conductor_on(node, f.link))
+			-- Only conductors with flat rules can be reliably skipped later
+			if not rules[1] or rules[1].x then
+				pos_can_be_skipped[minetest.hash_node_position(f.pos)] = true
+			end
 		elseif mesecon.is_effector(node.name) then
 			mesecon.changesignal(f.pos, node, f.link, mesecon.state.on, depth)
 			if mesecon.is_effector_off(node.name) then
 				mesecon.activate(f.pos, node, f.link, depth)
 			end
+		else
+			pos_can_be_skipped[minetest.hash_node_position(f.pos)] = true
 		end
 		depth = depth + 1
 	end
@@ -431,37 +444,49 @@ end
 --	depth = indicates order in which signals wire fired, higher is later
 -- }
 function mesecon.turnoff(pos, link)
-	local frontiers = {{pos = pos, link = link}}
+	local frontiers = fifo_queue.new()
+	frontiers:add({pos = pos, link = link})
 	local signals = {}
+	local pos_can_be_skipped = {}
 
 	local depth = 1
-	while frontiers[1] do
-		local f = table_remove(frontiers, 1)
+	for f in frontiers:iter() do
 		local node = mesecon.get_node_force(f.pos)
 
 		if not node then
 			-- Area does not exist; do nothing
-		elseif mesecon.is_conductor_on(node, f.link) then
+			pos_can_be_skipped[minetest.hash_node_position(f.pos)] = true
+		elseif mesecon.is_conductor(node.name) then
 			local rules = mesecon.conductor_get_rules(node)
-			for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
-				local np = vadd(f.pos, r)
 
-				-- Check if an onstate receptor is connected. If that is the case,
-				-- abort this turnoff process by returning false. `receptor_off` will
-				-- discard all the changes that we made in the voxelmanip:
-				for _ in ipairs(mesecon.rules_link_rule_all_inverted(f.pos, r)) do
-					if mesecon.is_receptor_on(mesecon.get_node_force(np).name) then
-						return false
+			if mesecon.is_conductor_on(node, f.link) then
+				for _, r in ipairs(mesecon.rule2meta(f.link, rules)) do
+					local np = vadd(f.pos, r)
+
+					if not pos_can_be_skipped[minetest.hash_node_position(np)] then
+						-- Check if an onstate receptor is connected. If that is the case,
+						-- abort this turnoff process by returning false. `receptor_off` will
+						-- discard all the changes that we made in the voxelmanip:
+						if mesecon.rules_link_rule_all_inverted(f.pos, r)[1] then
+							if mesecon.is_receptor_on(mesecon.get_node_force(np).name) then
+								return false
+							end
+						end
+
+						-- Call turnoff on neighbors
+						for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
+							frontiers:add({pos = np, link = l})
+						end
 					end
 				end
 
-				-- Call turnoff on neighbors
-				for _, l in ipairs(mesecon.rules_link_rule_all(f.pos, r)) do
-					frontiers[#frontiers+1] = {pos = np, link = l}
-				end
+				mesecon.swap_node_force(f.pos, mesecon.get_conductor_off(node, f.link))
 			end
 
-			mesecon.swap_node_force(f.pos, mesecon.get_conductor_off(node, f.link))
+			-- Only conductors with flat rules can be reliably skipped later
+			if not rules[1] or rules[1].x then
+				pos_can_be_skipped[minetest.hash_node_position(f.pos)] = true
+			end
 		elseif mesecon.is_effector(node.name) then
 			signals[#signals+1] = {
 				pos = f.pos,
@@ -469,6 +494,8 @@ function mesecon.turnoff(pos, link)
 				link = f.link,
 				depth = depth
 			}
+		else
+			pos_can_be_skipped[minetest.hash_node_position(f.pos)] = true
 		end
 		depth = depth + 1
 	end
@@ -488,7 +515,7 @@ end
 function mesecon.rules_link_rule_all(output, rule)
 	local input = vadd(output, rule)
 	local inputnode = mesecon.get_node_force(input)
-	local inputrules = mesecon.get_any_inputrules (inputnode)
+	local inputrules = mesecon.get_any_inputrules(inputnode)
 	if not inputrules then
 		return {}
 	end

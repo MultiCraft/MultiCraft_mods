@@ -53,7 +53,7 @@ function queue:add_action(pos, func, params, time, overwritecheck, priority)
 
 	-- check if old action has to be overwritten / removed:
 	if overwritecheck then
-		for i, ac in pairs(queue.actions) do
+		for i, ac in ipairs(queue.actions) do
 			if vequals(pos, ac.pos)
 					and mesecon.cmpAny(overwritecheck, ac.owcheck) then
 				-- remove the old action
@@ -80,7 +80,7 @@ local function globalstep_func(dtime)
 	local actions_now = {}
 	queue.actions = {}
 
-	for _, ac in pairs(actions) do
+	for _, ac in ipairs(actions) do
 		if ac.time > 0 then
 			-- action ac is to be executed later
 			-- ~> insert into queue.actions
@@ -97,7 +97,7 @@ local function globalstep_func(dtime)
 	-- some constructions might depend on the execution order, hence we first
 	-- execute the actions that had a lower index in actions_now
 	local old_action_order = {}
-	for i, ac in pairs(actions_now) do
+	for i, ac in ipairs(actions_now) do
 		old_action_order[ac] = i
 	end
 	table_sort(actions_now, function(ac1, ac2)
@@ -109,7 +109,7 @@ local function globalstep_func(dtime)
 	end)
 
 	-- execute highest priorities first, until all are executed
-	for _, ac in pairs(actions_now) do
+	for _, ac in ipairs(actions_now) do
 		queue:execute(ac)
 	end
 end

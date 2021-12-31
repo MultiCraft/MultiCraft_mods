@@ -78,8 +78,8 @@ function mesecon.flattenrules(allrules)
 	end
 
 	local shallowrules = {}
-	for _, metarule in ipairs( allrules) do
-	for _, rule in ipairs(metarule ) do
+	for _, metarule in ipairs(allrules) do
+	for _, rule in ipairs(metarule) do
 		shallowrules[#shallowrules+1] = rule
 	end
 	end
@@ -101,8 +101,8 @@ function mesecon.rule2bit(findrule, allrules)
 		not findrule then
 		return 1
 	end
-	for m,metarule in ipairs( allrules) do
-	for _, rule in ipairs(metarule ) do
+	for m, metarule in ipairs(allrules) do
+	for _, rule in ipairs(metarule) do
 		if vequals(findrule, rule) then
 			return m
 		end
@@ -120,8 +120,8 @@ function mesecon.rule2metaindex(findrule, allrules)
 		return mesecon.flattenrules(allrules)
 	end
 
-	for m, metarule in ipairs( allrules) do
-	for _, rule in ipairs(metarule ) do
+	for m, metarule in ipairs(allrules) do
+	for _, rule in ipairs(metarule) do
 		if vequals(findrule, rule) then
 			return m
 		end
@@ -167,7 +167,9 @@ end
 
 function mesecon.get_bit(binary,bit)
 	bit = bit or 1
-	local c = binary:len()-(bit-1)
+	local len = binary:len()
+	if bit > len then return false end
+	local c = len-(bit-1)
 	return binary:sub(c,c) == "1"
 end
 
@@ -196,6 +198,9 @@ function mesecon.tablecopy(obj) -- deep copy
 	return obj
 end
 
+-- Returns whether two values are equal.
+-- In tables, keys are compared for identity but values are compared recursively.
+-- There is no protection from infinite recursion.
 function mesecon.cmpAny(t1, t2)
 	if type(t1) ~= type(t2) then return false end
 	if type(t1) ~= "table" and type(t2) ~= "table" then return t1 == t2 end
@@ -213,18 +218,30 @@ function mesecon.cmpAny(t1, t2)
 	return true
 end
 
--- does not overwrite values; number keys (ipairs) are appended, not overwritten
-function mesecon.mergetable(source, dest)
-	local rval = mesecon.tablecopy(dest)
-
-	for k, v in pairs(source) do
-		rval[k] = dest[k] or mesecon.tablecopy(v)
+-- Merges several rule sets in one. Order may not be preserved. Nil arguments
+-- are ignored.
+-- The rule sets must be of the same kind (either all single-level or all two-level).
+-- The function may be changed to normalize the resulting set in some way.
+function mesecon.merge_rule_sets(...)
+	local rval = {}
+	for _, t in pairs({...}) do -- ignores nils automatically
+		table.insert_all(rval, mesecon.tablecopy(t))
 	end
-	for _, v in ipairs(source) do
-		rval[#rval+1] = mesecon.tablecopy(v)
-	end
-
 	return rval
+end
+
+-- Merges two tables, with entries from `replacements` taking precedence over
+-- those from `base`. Returns the new table.
+-- Values are deep-copied from either table, keys are referenced.
+-- Numerical indices aren’t handled specially.
+function mesecon.merge_tables(base, replacements)
+	local ret = mesecon.tablecopy(replacements) -- these are never overriden so have to be copied in any case
+	for k, v in pairs(base) do
+		if ret[k] == nil then -- it could be `false`
+			ret[k] = mesecon.tablecopy(v)
+		end
+	end
+	return ret
 end
 
 function mesecon.register_node(name, spec_common, spec_off, spec_on)
@@ -234,8 +251,8 @@ function mesecon.register_node(name, spec_common, spec_off, spec_on)
 	spec_on.__mesecon_state = "on"
 	spec_off.__mesecon_state = "off"
 
-	spec_on = mesecon.mergetable(spec_common, spec_on);
-	spec_off = mesecon.mergetable(spec_common, spec_off);
+	spec_on = mesecon.merge_tables(spec_common, spec_on);
+	spec_off = mesecon.merge_tables(spec_common, spec_off);
 
 	minetest.register_node(name .. "_on", spec_on)
 	minetest.register_node(name .. "_off", spec_off)
