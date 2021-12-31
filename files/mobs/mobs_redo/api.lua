@@ -3520,6 +3520,8 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			interval = interval,
 			chance = max(1, chance),
 			catch_up = false,
+			min_y = min_height,
+			max_y = max_height,
 			action = spawn_action
 		})
 	end
