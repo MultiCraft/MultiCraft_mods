@@ -1,4 +1,5 @@
 local S = default.S
+local VER = "2"
 
 local neighbor = {
 	[0] = {{x =  1, z =  0}, {x = -1, z =  0}},
@@ -76,7 +77,7 @@ local function on_construct(pos)
 	local pos2 = {x = pos.x + nparam2[2].x, y = pos.y, z = pos.z + nparam2[2].z}
 
 	if minetest.get_node(pos1).name == "default:chest" then
-		minetest.set_node(pos, {name="default:chest_left", param2 = param2})
+		minetest.set_node(pos, {name = "default:chest_left", param2 = param2})
 		minetest.swap_node(pos1, {name = "default:chest_right", param2 = param2})
 		set_large_chest(pos, pos1)
 	elseif minetest.get_node(pos2).name == "default:chest" then
@@ -86,7 +87,7 @@ local function on_construct(pos)
 	else
 		meta:set_string("formspec", chest_formspec)
 		meta:set_string("infotext", S("Chest"))
-		meta:set_string("version", "2")
+		meta:set_string("version", VER)
 	end
 
 	meta:get_inventory():set_size("main", 9*3)
@@ -132,8 +133,7 @@ local function on_destruct(pos, large)
 		local pos2 = {x = pos.x + nghbr_p.x, y = pos.y, z = pos.z + nghbr_p.z}
 		local name = minetest.get_node(pos2).name
 
-		if (right and name == "default:chest_left")
-				or name == "default:chest_right" then
+		if (right and name == "default:chest_left") or name == "default:chest_right" then
 			local meta = minetest.get_meta(pos2)
 			meta:set_string("formspec", chest_formspec)
 			meta:set_string("infotext", S("Chest"))
@@ -227,51 +227,42 @@ minetest.register_craft({
 	burntime = 15
 })
 
--- LBM for updating Chest
+-- LBM for updating Chests
 minetest.register_lbm({
 	label = "Chest updater",
-	name = "default:chest_updater_v2",
-	nodenames = "default:chest",
-	action = function(pos)
-		local meta = minetest.get_meta(pos)
-		if meta:get_string("version") ~= "2" then
-			meta:set_string("formspec", chest_formspec)
-			meta:set_string("version", "2")
-		end
-	end
-})
-
-minetest.register_lbm({
-	label = "Chest updater (large)",
-	name = "default:chest_large_updater",
-	nodenames = {"default:chest_left", "default:chest_right"},
+	name = "default:chest_updater_v" .. VER,
+	nodenames = {"default:chest", "default:chest_left", "default:chest_right"},
 	action = function(pos, node)
 		local meta = minetest.get_meta(pos)
-		if meta:get_string("version") ~= "2" then
-			local param2 = minetest.get_node(pos).param2
-			local nparam2 = neighbor[param2]
+		if meta:get_string("version") == VER then return end
 
-			if node.name == "default:chest_left" then
-				local pos_r = {x = pos.x + nparam2[1].x, y = pos.y, z = pos.z + nparam2[1].z}
-				local chest_l = pos_r.x .. "," .. pos_r.y .. "," .. pos_r.z
+		local nname = node.name
+		if nname == "default:chest" then
+			meta:set_string("formspec", chest_formspec)
 
-				local formspec_l = large_chest_formspec ..
-					"list[nodemeta:" .. chest_l .. ";main;0.01,3.85;9,3;]" ..
-					"list[current_name;main;0.01,0.85;9,3;]" ..
-					"listring[nodemeta:" .. chest_l .. ";main]"
-				meta:set_string("formspec", formspec_l)
-			elseif node.name == "default:chest_right" then
-				local pos_l = {x = pos.x + nparam2[2].x, y = pos.y, z = pos.z + nparam2[2].z}
-				local chest_r = pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z
+		elseif nname == "default:chest_left" then
+			local nparam2 = neighbor[node.param2]
+			local pos_r = {x = pos.x + nparam2[1].x, y = pos.y, z = pos.z + nparam2[1].z}
+			local chest_l = pos_r.x .. "," .. pos_r.y .. "," .. pos_r.z
 
-				local formspec_r = large_chest_formspec ..
-					"list[nodemeta:" .. chest_r .. ";main;0.01,0.85;9,3;]" ..
-					"list[current_name;main;0.01,3.85;9,3;]" ..
-					"listring[nodemeta:" .. chest_r .. ";main]"
-				meta:set_string("formspec", formspec_r)
-			end
+			local formspec_l = large_chest_formspec ..
+				"list[nodemeta:" .. chest_l .. ";main;0.01,3.85;9,3;]" ..
+				"list[current_name;main;0.01,0.85;9,3;]" ..
+				"listring[nodemeta:" .. chest_l .. ";main]"
+			meta:set_string("formspec", formspec_l)
 
-			meta:set_string("version", "2")
+		elseif nname == "default:chest_right" then
+			local nparam2 = neighbor[node.param2]
+			local pos_l = {x = pos.x + nparam2[2].x, y = pos.y, z = pos.z + nparam2[2].z}
+			local chest_r = pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z
+
+			local formspec_r = large_chest_formspec ..
+				"list[nodemeta:" .. chest_r .. ";main;0.01,0.85;9,3;]" ..
+				"list[current_name;main;0.01,3.85;9,3;]" ..
+				"listring[nodemeta:" .. chest_r .. ";main]"
+			meta:set_string("formspec", formspec_r)
 		end
+
+		meta:set_string("version", VER)
 	end
 })

@@ -1161,8 +1161,8 @@ minetest.register_node("default:junglegrass", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
-		dig_immediate = 2},
+	groups = {snappy = 3, flora = 1, attached_node = 1, grass = 1,
+		junglegrass = 1, flammable = 1, dig_immediate = 2},
 	sounds = default.node_sound_leaves_defaults({
 		dig = {name = "default_dig_snappy", gain = 0.5}
 	}),
@@ -1194,8 +1194,8 @@ minetest.register_node("default:grass_1", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
-		grass = 1, dig_immediate = 3},
+	groups = {snappy = 3, flora = 1, attached_node = 1, grass = 1,
+		normal_grass = 1, flammable = 1, dig_immediate = 3},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
 		type = "fixed",
@@ -1218,8 +1218,9 @@ for i = 2, 5 do
 		walkable = false,
 		buildable_to = true,
 		drop = "default:grass_1",
-		groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
-			grass = 1, dig_immediate = 3, not_in_creative_inventory = 1},
+		groups = {snappy = 3, flora = 1, attached_node = 1,
+			not_in_creative_inventory = 1, grass = 1,
+			normal_grass = 1, flammable = 1, dig_immediate = 3},
 		sounds = default.node_sound_leaves_defaults(),
 		selection_box = {
 			type = "fixed",
@@ -1240,8 +1241,9 @@ minetest.register_node("default:grass", {
 	walkable = false,
 	buildable_to = true,
 	drop = "default:grass_1",
-	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 1,
-		grass = 1, dig_immediate = 3, not_in_creative_inventory = 1},
+	groups = {snappy = 3, flora = 1, attached_node = 1,
+		not_in_creative_inventory = 1, grass = 1,
+		normal_grass = 1, flammable = 1, dig_immediate = 3},
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_place = grass_place
@@ -1278,8 +1280,8 @@ minetest.register_node("default:dry_grass_1", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
-		dry_grass = 1, dig_immediate = 3},
+	groups = {snappy = 3, flammable = 3, flora = 1,
+		attached_node = 1, grass = 1, dry_grass = 1, dig_immediate = 2},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
 		type = "fixed",
@@ -1302,7 +1304,7 @@ for i = 2, 5 do
 		walkable = false,
 		buildable_to = true,
 		groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
-			dry_grass = 1, not_in_creative_inventory = 1},
+			not_in_creative_inventory = 1, grass = 1, dry_grass = 1, dig_immediate = 2},
 		drop = "default:dry_grass_1",
 		sounds = default.node_sound_leaves_defaults(),
 		selection_box = {
@@ -1324,7 +1326,7 @@ minetest.register_node("default:dry_grass", {
 	walkable = false,
 	buildable_to = true,
 	groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
-		dry_grass = 1, dig_immediate = 3, not_in_creative_inventory = 1},
+		not_in_creative_inventory = 1, grass = 1, dry_grass = 1, dig_immediate = 2},
 	sounds = default.node_sound_leaves_defaults(),
 
 	on_place = dry_grass_place
@@ -1380,8 +1382,8 @@ for i = 2, 3 do
 		sunlight_propagates = true,
 		walkable = false,
 		buildable_to = true,
-		groups = {snappy = 3, flammable = 3, flora = 1, grass = 1,
-			fern = 1, attached_node = 1, not_in_creative_inventory = 1},
+		groups = {snappy = 3, flammable = 3, flora = 1, attached_node = 1,
+			grass = 1, fern = 1, not_in_creative_inventory = 1},
 		drop = "default:fern_1",
 		sounds = default.node_sound_leaves_defaults(),
 		selection_box = {
@@ -1401,7 +1403,7 @@ minetest.register_node("default:bush_stem", {
 	wield_image = "default_bush_stem.png",
 	paramtype = "light",
 	sunlight_propagates = true,
-	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2, bush_stem = 1},
 	sounds = default.node_sound_wood_defaults(),
 	selection_box = {
 		type = "fixed",
@@ -1473,7 +1475,7 @@ minetest.register_node("default:blueberry_bush_stem", {
 	wield_image = "default_blueberry_bush_stem.png",
 	paramtype = "light",
 	sunlight_propagates = true,
-	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2, bush_stem = 1},
 	sounds = default.node_sound_wood_defaults(),
 	selection_box = {
 		type = "fixed",
@@ -1577,7 +1579,7 @@ minetest.register_node("default:acacia_bush_stem", {
 	wield_image = "default_acacia_bush_stem.png",
 	paramtype = "light",
 	sunlight_propagates = true,
-	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2, bush_stem = 1},
 	sounds = default.node_sound_wood_defaults(),
 	selection_box = {
 		type = "fixed",
@@ -1649,7 +1651,7 @@ minetest.register_node("default:pine_bush_stem", {
 	wield_image = "default_pine_bush_stem.png",
 	paramtype = "light",
 	sunlight_propagates = true,
-	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2, bush_stem = 1},
 	sounds = default.node_sound_wood_defaults(),
 	selection_box = {
 		type = "fixed",
@@ -1859,7 +1861,7 @@ water_flowing_poured.liquid_range = 3
 minetest.register_node("default:water_flowing_poured", water_flowing_poured)
 
 -- River Water
-local river_water_source =  {
+local river_water_source = {
 	drawtype = "liquid",
 	tiles = {
 		{
@@ -2505,6 +2507,12 @@ default.register_leafdecay({
 })
 
 default.register_leafdecay({
+	trunks = {"default:cherry_blossom_tree"},
+	leaves = {"default:cherry_blossom_leaves"},
+	radius = 3
+})
+
+default.register_leafdecay({
 	trunks = {"default:bush_stem"},
 	leaves = {"default:bush_leaves"},
 	radius = 1
@@ -2523,7 +2531,7 @@ default.register_leafdecay({
 })
 
 default.register_leafdecay({
-	trunks = {"default:cherry_blossom_tree"},
-	leaves = {"default:cherry_blossom_leaves"},
-	radius = 3
+	trunks = {"default:blueberry_bush_stem"},
+	leaves = {"default:blueberry_bush_leaves"},
+	radius = 1
 })
