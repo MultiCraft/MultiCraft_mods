@@ -68,6 +68,7 @@ for i = 1, 4 do
 -- Delayer definition defaults
 local def = {
 	drawtype = "nodebox",
+	use_texture_alpha = "opaque",
 	selection_box = {
 		type = "fixed",
 		fixed = {-8/16, -8/16, -8/16, 8/16, -6/16, 8/16}

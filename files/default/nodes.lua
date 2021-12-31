@@ -319,7 +319,7 @@ minetest.register_node("default:ice", {
 	tiles = {"default_ice.png"},
 	is_ground_content = false,
 	paramtype = "light",
-	use_texture_alpha = true,
+	use_texture_alpha = "blend",
 	groups = {cracky = 3, cools_lava = 1, slippery = 3},
 	sounds = default.node_sound_glass_defaults()
 })
@@ -329,7 +329,7 @@ minetest.register_node("default:packedice", {
 	drawtype = "glasslike",
 	tiles = {"default_ice_packed.png"},
 	paramtype = "light",
-	use_texture_alpha = true,
+	use_texture_alpha = "blend",
 	groups = {cracky = 3, cools_lava = 1, slippery = 3},
 	sounds = default.node_sound_glass_defaults()
 })
@@ -2273,7 +2273,7 @@ default.register_ladder("default:ladder_ice", {
 	tiles = {"default_ice.png"},
 	inventory_image = "default_ladder_ice.png",
 	wield_image = "default_ladder_ice.png",
-	use_texture_alpha = true,
+	use_texture_alpha = "blend",
 	groups = {cracky = 3, cools_lava = 1, attached_node = 1},
 	sounds = default.node_sound_wood_defaults(),
 	material = "default:ice"
@@ -2367,7 +2367,7 @@ default.register_fence("default:fence_ice", {
 	description = "Ice Fence",
 	texture = "default_ice.png",
 	inventory_image = "default_fence_ice.png",
-	use_texture_alpha = true,
+	use_texture_alpha = "blend",
 	material = "default:ice",
 	groups = {cracky = 3, cools_lava = 1, flammable = 2},
 	sounds = default.node_sound_glass_defaults()

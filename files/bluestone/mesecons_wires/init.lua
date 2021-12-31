@@ -221,6 +221,7 @@ local function register_wires()
 			mesecon_wire = true,
 			sounds = default.node_sound_defaults(),
 			on_rotate = false,
+			use_texture_alpha = "clip",
 		}, {
 			tiles = tiles_off, mesecons = meseconspec_off, groups = groups_off
 		}, {

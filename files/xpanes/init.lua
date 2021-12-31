@@ -117,7 +117,7 @@ function xpanes.register_pane(name, def)
 		groups = flatgroups,
 		drop = def.drop,
 		sounds = def.sounds,
-		use_texture_alpha = def.use_texture_alpha ~= nil or true,
+		use_texture_alpha = def.use_texture_alpha and "blend" or "clip",
 		node_box = {
 			type = "fixed",
 			fixed = {-1/2, -1/2, -1/32, 1/2, 1/2, 1/32}
@@ -141,7 +141,7 @@ function xpanes.register_pane(name, def)
 		groups = groups,
 		drop = def.drop,
 		sounds = def.sounds,
-		use_texture_alpha = def.use_texture_alpha ~= nil or true,
+		use_texture_alpha = def.use_texture_alpha and "blend" or "clip",
 		node_box = {
 			type = "connected",
 			fixed         = {-1/32, -1/2, -1/32,  1/32, 1/2,  1/32},
