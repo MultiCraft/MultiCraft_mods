@@ -4,8 +4,8 @@ MultiCraft_game | Open Source
 MultiCraft_game is based on the [Minetest Game](https://github.com/minetest/minetest_game), which is developed by a [number of contributors](https://github.com/minetest/minetest_game/graphs/contributors).
 It also uses many mods from various developers with various licenses. Carefully read the README and LICENSE files in each folder.
 
-Copyright © 2014-2020 Maksim Gamarnik [MoNTE48] <MoNTE48@mail.ua>
-Copyright © 2014-2020 MultiCraft Development Team
+Copyright © 2014-2022 Maksim Gamarnik [MoNTE48] <MoNTE48@mail.ua>
+Copyright © 2014-2022 MultiCraft Development Team
 
 MultiCraft_game is licensed under LGPLv3 (or higher). Resources games licensed under CC-BY-SA 4.0, unless otherwise stated.
 
