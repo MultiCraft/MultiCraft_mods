@@ -3,18 +3,27 @@ allow_defined_top = true
 max_line_length = 140
 
 ignore = {
-	"122", -- setting a read-only field of a global variable
 	"431", -- shadowing an upvalue
 	"432", -- shadowing an upvalue argument
 	"542", -- empty if branch
 }
 
+globals = {
+	"minetest",
+	"areas",
+	"experience",
+	"mobs",
+	"screwdriver",
+	"workbench",
+	"brewing",
+}
+	
 read_globals = {
 	"DIR_DELIM",
 	"PLATFORM",
-	"minetest",
 	"intllib",
 	"hud",
+	"hunger",
 	"Sl",
 	"dump",
 	"vector",
@@ -22,21 +31,16 @@ read_globals = {
 	"VoxelManip", "VoxelArea",
 	"PseudoRandom", "PcgRandom",
 	"ItemStack",
-	"Settings",
 	"unpack",
-	"creative",
-	"experience",
-	"mobs",
 	"playerphysics",
 	"node_attacher",
-	"screwdriver",
 	"bonemeal",
 	"sscsm",
-	"hunger",
 	"hopper",
 	"workbench",
-	-- Silence errors about custom table methods.
+	-- Silence errors about custom table and string methodss.
 	table = { fields = { "copy", "indexof", "insert_all" } },
+	string = { fields = { "split" } },
 	-- Silence warnings about accessing undefined fields of global 'math'
 	math = { fields = { "sign" } }
 }

@@ -316,7 +316,7 @@ minetest.register_craft({
 minetest.register_craftitem("farming_addons:chocolate", {
 	description = S"Chocolate",
 	inventory_image = "farming_addons_chocolate.png",
-	on_use = minetest.item_eat(3),
+	on_use = minetest.item_eat(3, "default:paper"),
 	groups = {food = 1, wieldview = 2}
 })
 

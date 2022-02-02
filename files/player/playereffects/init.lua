@@ -396,7 +396,10 @@ minetest.register_on_joinplayer(function(player)
 		minetest.after(2, function()
 			for i = 1, #inactive_effects do
 				local effect = inactive_effects[i]
-				playereffects.apply_effect_type(effect.effect_type_id, effect.time_left, player, effect.repeat_interval_time_left)
+				-- Don't apply unknown effects
+				if playereffects.effect_types[effect.effect_type_id] then
+					playereffects.apply_effect_type(effect.effect_type_id, effect.time_left, player, effect.repeat_interval_time_left)
+				end
 			end
 		end)
 	end
@@ -437,12 +440,13 @@ function playereffects.hud_update(player)
 				if effect ~= nil and hudinfo.text_id then
 					local description = playereffects.effect_types[effect.effect_type_id].description
 					local repeat_interval = playereffects.effect_types[effect.effect_type_id].repeat_interval
-					local timer
+					local timer, time_left
 					if repeat_interval then
 						local repeat_interval_time_left = round((effect.repeat_interval_start_time + effect.repeat_interval_time_left) - time)
-						timer = S("(@1 / @2 s)", effect.time_left, repeat_interval_time_left)
+						time_left = round(effect.time_left)
+						timer = S("(@1 / @2 s)", time_left, repeat_interval_time_left)
 					else
-						local time_left = round((effect.start_time + effect.time_left) - time)
+						time_left = round((effect.start_time + effect.time_left) - time)
 						timer = S("(@1 s)", time_left)
 					end
 					if hudinfo.timer ~= timer then

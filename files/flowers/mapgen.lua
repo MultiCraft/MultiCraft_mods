@@ -1,3 +1,5 @@
+local path = minetest.get_modpath("flowers")
+
 --
 -- Mgv6
 --
@@ -49,6 +51,7 @@ end
 
 local function register_mgv6_waterlily()
 	minetest.register_decoration({
+		name = "flowers:waterlily",
 		deco_type = "schematic",
 		place_on = {"default:dirt"},
 		sidelen = 16,
@@ -60,9 +63,9 @@ local function register_mgv6_waterlily()
 			octaves = 3,
 			persist = 0.7
 		},
-		y_min = 0,
 		y_max = 0,
-		schematic = minetest.get_modpath("flowers") .. "/schematics/waterlily.mts",
+		y_min = 0,
+		schematic = path .. "/schematics/waterlily.mts",
 		rotation = "random"
 	})
 end
@@ -119,8 +122,7 @@ local function register_flower(seed, flower_name)
 			octaves = 3,
 			persist = 0.5
 		},
-		biomes = {"stone_grassland", "sandstone_grassland",
-			"deciduous_forest", "coniferous_forest"},
+		biomes = {"grassland","deciduous_forest", "deciduous_forest", "coniferous_forest"},
 		y_max = 31000,
 		y_min = 1,
 		decoration = "flowers:" .. flower_name
@@ -153,6 +155,7 @@ end
 
 local function register_waterlily()
 	minetest.register_decoration({
+		name = "flowers:waterlily",
 		deco_type = "schematic",
 		place_on = {"default:dirt"},
 		sidelen = 16,
@@ -164,9 +167,9 @@ local function register_waterlily()
 			octaves = 3,
 			persist = 0.7
 		},
-		y_min = 0,
 		y_max = 0,
-		schematic = minetest.get_modpath("flowers") .. "/schematics/waterlily.mts",
+		y_min = 0,
+		schematic = path .. "/schematics/waterlily.mts",
 		rotation = "random"
 	})
 end

@@ -56,14 +56,6 @@ function mesecon.mvps_process_stack(stack)
 	end
 end
 
--- tests if the node can be pushed into, e.g. air, water, grass
-local function node_replaceable(name)
-	if minetest.registered_nodes[name] then
-		return minetest.registered_nodes[name].buildable_to or false
-	end
-
-	return false
-end
 
 function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 	-- determine the number of nodes to be pushed
@@ -73,17 +65,18 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 	while #frontiers > 0 do
 		local np = frontiers[1]
 		local nn = minetest.get_node(np)
+		local def = minetest.registered_nodes[nn.name]
 
-		if not node_replaceable(nn.name) then
+		-- tests if the node can be pushed into, e.g. air, water, grass
+		if not def or not def.buildable_to then
 			nodes[#nodes+1] = {node = nn, pos = np}
 			if #nodes > maximum then return nil end
 
 			-- add connected nodes to frontiers, connected is a vector list
 			-- the vectors must be absolute positions
 			local connected = {}
-			if minetest.registered_nodes[nn.name]
-			and minetest.registered_nodes[nn.name].mvps_sticky then
-				connected = minetest.registered_nodes[nn.name].mvps_sticky(np, nn)
+			if def and def.mvps_sticky then
+				connected = def.mvps_sticky(np, nn)
 			end
 			connected[#connected+1] = vadd(np, dir)
 
@@ -92,10 +85,9 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 			for _, r in ipairs(mesecon.rules.alldirs) do
 				local adjpos = vadd(np, r)
 				local adjnode = minetest.get_node(adjpos)
-				if minetest.registered_nodes[adjnode.name]
-				and minetest.registered_nodes[adjnode.name].mvps_sticky then
-					local sticksto = minetest.registered_nodes[adjnode.name]
-						.mvps_sticky(adjpos, adjnode)
+				local adjdef = minetest.registered_nodes[adjnode.name]
+				if adjdef and adjdef.mvps_sticky then
+					local sticksto = adjdef.mvps_sticky(adjpos, adjnode)
 
 					-- connects to this position?
 					for _, link in ipairs(sticksto) do
