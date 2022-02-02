@@ -1,3 +1,5 @@
+local S = carts.S
+
 local abs, floor, min, pi = math.abs, math.floor, math.min, math.pi
 local vector_add, vector_equals, vector_length, vector_multiply, vector_round =
 	vector.add, vector.equals, vector.length, vector.multiply, vector.round
@@ -9,7 +11,7 @@ local cart_entity = {
 		collisionbox = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
 		visual = "mesh",
 		mesh = "carts_cart.b3d",
-		textures = {"carts_cart.png"}
+		textures = {"carts_cart.png", "carts_cart_wheels.png"}
 	},
 
 	owner = nil,
@@ -103,7 +105,7 @@ function cart_entity:on_punch(puncher, time_from_last_punch, tool_capabilities)
 		local owner = self.owner
 		if owner and owner ~= puncher_name then
 			minetest.chat_send_player(puncher_name,
-				carts.S"You cannot pick up a Cart!" .. " " .. carts.S("Owned by @1", owner))
+				S("You cannot pick up a Cart!") .. " " .. S("Owned by @1", owner))
 			return
 		end
 		if self.sound_handle then
@@ -416,18 +418,22 @@ local function rail_on_step(self, dtime)
 	end
 	self.object:set_yaw(yaw * pi)
 
-	local anim = {x=0, y=0}
-	if dir.y == -1 then
-		anim = {x=1, y=1}
-	elseif dir.y == 1 then
-		anim = {x=2, y=2}
+	local anim = {x=0, y=12}
+	if dir.y < 0 then
+		anim = {x=13, y=24}
+	elseif dir.y > 0 then
+		anim = {x=25, y=37}
 	end
-	self.object:set_animation(anim, 1, 0)
+	if vel_len == 0 then
+		anim = {x=0, y=0}
+	end
+	local anim_speed = floor(vel_len * 10)
+	self.object:set_animation(anim, anim_speed, 0)
 
 	-- Change player model rotation, depending on the Y direction
 	if player and dir.y ~= old_y_dir then
 		local feet = {x=0, y=0, z=0}
-		local eye = {x=0, y=-4, z=0}
+		local eye = {x=0, y=-5, z=0}
 		feet.y = 6
 		if dir.y ~= 0 then
 			-- TODO: Find a better way to calculate this
@@ -466,10 +472,11 @@ end
 minetest.register_entity("carts:cart", cart_entity)
 
 minetest.register_node("carts:cart", {
-	description = carts.S"Cart (Sneak+Click to pick up)",
+	description = S("Cart (Sneak+Click to pick up)"),
 	drawtype = "mesh",
 	mesh = "carts_cart.b3d",
-	tiles = {"carts_cart.png"},
+	tiles = {"carts_cart.png", "carts_cart_wheels.png"},
+	use_texture_alpha = "clip",
 	visual_scale = 0.1,
 	wield_scale = {x = 0.1, y = 0.1, z = 0.1},
 	node_placement_prediction = "",

@@ -1,7 +1,9 @@
 -- Common rail registrations
 
+local S = carts.S
+
 carts:register_rail("carts:rail", {
-	description = carts.S"Rail",
+	description = S("Rail"),
 	tiles = {
 		"carts_rail_straight.png", "carts_rail_curved.png",
 		"carts_rail_t_junction.png", "carts_rail_crossing.png"
@@ -20,7 +22,7 @@ minetest.register_craft({
 
 -- Power rail
 carts:register_rail("carts:powerrail", {
-	description = carts.S"Powered Rail",
+	description = S("Powered Rail"),
 	tiles = {
 		"carts_rail_straight_pwr.png", "carts_rail_curved_pwr.png",
 		"carts_rail_t_junction_pwr.png", "carts_rail_crossing_pwr.png"
@@ -53,7 +55,7 @@ minetest.register_craft({
 
 -- Brake rail
 carts:register_rail("carts:brakerail", {
-	description = carts.S"Brake Rail",
+	description = S("Brake Rail"),
 	tiles = {
 		"carts_rail_straight_brk.png", "carts_rail_curved_brk.png",
 		"carts_rail_t_junction_brk.png", "carts_rail_crossing_brk.png"
