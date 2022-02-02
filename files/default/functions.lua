@@ -294,6 +294,7 @@ minetest.register_abm({
 	nodenames = {"default:sugarcane"},
 	interval = 5,
 	chance = 25,
+	catch_up = false,
 	action = function(...)
 		default.drop_sugarcane(...)
 	end
@@ -877,7 +878,7 @@ if minetest.settings:get_bool("enable_liquid_particles") ~= false then
 					amount = 5,
 					time = 15,
 					minpos = vsubtract(pos, {x = 0.5, y = 0, z = 0.5}),
-					maxpos = vadd(pos, {x = 0.5,  y = 0, z = 0.5}),
+					maxpos = vadd(pos, {x = 0.5, y = 0, z = 0.5}),
 					minvel = {x = 0, y = 1, z = 0},
 					maxvel = {x = 0, y = 1, z = 0},
 					minexptime = 2,

@@ -80,8 +80,8 @@ default.register_torch("default:torch", {
 	}},
 	inventory_image = "default_torch.png",
 	wield_image = "default_torch.png",
-	light_source = 12,
 	use_texture_alpha = "clip",
+	light_source = 12,
 	groups = {choppy = 2, dig_immediate = 3, flammable = 1, attached_node = 1, torch = 1},
 	sounds = default.node_sound_wood_defaults()
 })
