@@ -9,6 +9,11 @@ if translator and not minetest.is_singleplayer() then
 end
 
 local pi, vround = math.pi, vector.round
+local tconcat = table.concat
+local b = "blank.png"
+local function objects_inside_radius(p)
+	return minetest.get_objects_inside_radius(p, 0.5)
+end
 
 local armor_stand_formspec = default.gui ..
 	"label[0.9,0.05;" .. S"Armor Stand" .. "]" ..
@@ -38,7 +43,7 @@ end
 
 local function get_stand_object(pos)
 	local object
-	local objects = minetest.get_objects_inside_radius(pos, 0.5) or {}
+	local objects = objects_inside_radius(pos)
 	for _, obj in pairs(objects) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == "3d_armor_stand:armor_entity" then
@@ -57,7 +62,7 @@ local function update_entity(pos)
 	local node = minetest.get_node(pos)
 	local object = get_stand_object(pos)
 	if object then
-		if not node.name:find("3d_armor_stand:") then
+		if node.name:split(":")[1] ~= "3d_armor_stand" then
 			object:remove()
 			return
 		end
@@ -65,32 +70,32 @@ local function update_entity(pos)
 		object = minetest.add_entity(pos, "3d_armor_stand:armor_entity")
 	end
 	if object then
-		local texture = "blank.png"
+		local texture = b
 		local textures = {}
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
-		local yaw = 0
 		if inv then
 			for _, element in pairs(elements) do
 				local stack = inv:get_stack("armor_" .. element, 1)
 				if stack:get_count() == 1 then
 					local item = stack:get_name() or ""
-					local def = stack:get_definition() or {}
-					local groups = def.groups or {}
-					if groups["armor_" .. element] then
+					local def = stack:get_definition()
+					local groups = def and def.groups
+					if groups and groups["armor_" .. element] then
 						if def.texture then
-							table.insert(textures, def.texture)
+							textures[#textures + 1] = def.texture
 						else
-							table.insert(textures, item:gsub("%:", "_") .. ".png")
+							textures[#textures + 1] = item:gsub("%:", "_") .. ".png"
 						end
 					end
 				end
 			end
 		end
 		if #textures > 0 then
-			texture = table.concat(textures, "^")
+			texture = tconcat(textures, "^")
 		end
 		if node.param2 then
+			local yaw = 0
 			local rot = node.param2 % 4
 			if rot == 1 then
 				yaw = 3 * pi / 2
@@ -99,14 +104,14 @@ local function update_entity(pos)
 			elseif rot == 3 then
 				yaw = pi / 2
 			end
+			object:set_yaw(yaw)
 		end
-		object:set_yaw(yaw)
 		object:set_properties({textures={texture}})
 	end
 end
 
 local function check_item(pos)
-	local num = #minetest.get_objects_inside_radius(pos, 0.5)
+	local num = #objects_inside_radius(pos)
 	if num > 0 then return end
 	update_entity(pos)
 end
@@ -116,10 +121,7 @@ end
 -- Armor Stand registration helper
 --
 
-local stand_nodes = {}
 local function register_armor_stand(name, def)
-	stand_nodes[#stand_nodes+1] = name
-
 	minetest.register_craft({
 		output = name,
 		recipe = {
@@ -133,6 +135,7 @@ local function register_armor_stand(name, def)
 	local default_fields = {
 		drawtype = "mesh",
 		mesh = "3d_armor_stand.b3d",
+		use_texture_alpha = "clip",
 		paramtype = "light",
 		paramtype2 = "facedir",
 		walkable = false,
@@ -140,10 +143,8 @@ local function register_armor_stand(name, def)
 			type = "fixed",
 			fixed = {-0.5, -0.5, -0.5, 0.5, 1.5, 0.5}
 		},
-		groups = {},
 		on_rotate = function(pos, node, user, mode)
-			if not minetest.is_protected(pos, user:get_player_name())
-					and mode == 1 then
+			if not minetest.is_protected(pos, user:get_player_name()) and mode == 1 then
 				node.param2 = (node.param2 % 8) + 1
 				if node.param2 > 3 then
 					node.param2 = 0
@@ -223,6 +224,7 @@ local function register_armor_stand(name, def)
 			def[k] = v
 		end
 	end
+	def.groups.armor_stand = 1
 
 	def.material = nil
 
@@ -319,21 +321,27 @@ minetest.register_entity("3d_armor_stand:armor_entity", {
 	mesh = "3d_armor_entity.b3d",
 	visual_size = {x = 1, y = 1},
 	collisionbox = {0},
-	textures = {"blank.png"},
+	textures = {b},
 
 	on_activate = function(self)
 		local pos = self.object:get_pos()
 		if pos then
-			self.pos = vround(pos)
-			update_entity(pos)
+			pos = vround(pos)
+			local node = minetest.get_node(pos)
+			if node.name:split(":")[1] == "3d_armor_stand" then
+				update_entity(pos)
+				return
+			end
 		end
+
+		self.object:remove()
 	end
 })
 
 minetest.register_lbm({
 	label = "Check Armor Stand",
 	name = "3d_armor_stand:armor_stand",
-	nodenames = stand_nodes,
+	nodenames = {"group:armor_stand"},
 	run_at_every_load = true,
 	action = check_item
 })
