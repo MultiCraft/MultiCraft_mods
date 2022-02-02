@@ -4,14 +4,16 @@ local S = default.S
 -- Formspecs
 --
 
-function default.get_furnace_active_formspec(fuel_percent, item_percent)
+function default.get_furnace_active_formspec(fuel_percent, item_percent, fuel_empty)
+	local fuel = fuel_empty and "3,2.5;1,1" or "3.1,2.6;0.75,0.75"
 	return default.gui ..
 		"item_image[0,-0.1;1,1;default:furnace_active]" ..
 		"label[0.9,0.1;" .. S("Furnace") .. "]" ..
 		"item_image[3,0.5;1,1;default:cell]" ..
 		"list[context;src;3,0.5;1,1;]" ..
-		"item_image[3,2.5;1,1;default:cell]" ..
+		"image[3,2.5;1,1;formspec_cell.png]" ..
 		"list[context;fuel;3,2.5;1,1;]" ..
+		"image[" .. fuel .. ";formspec_flame_outline.png]" ..
 		"image[3,1.5;1,1;default_furnace_fire_bg.png^[lowpart:" ..
 		fuel_percent .. ":default_furnace_fire_fg.png]" ..
 		"image[4,1.5;1,1;default_arrow_bg.png^[lowpart:" ..
@@ -23,14 +25,16 @@ function default.get_furnace_active_formspec(fuel_percent, item_percent)
 		"listring[current_player;main]"
 end
 
-function default.get_furnace_inactive_formspec()
+function default.get_furnace_inactive_formspec(fuel_empty)
+	local fuel = fuel_empty and "3,2.5;1,1" or "3.1,2.6;0.75,0.75"
 	return default.gui ..
 		"item_image[0,-0.1;1,1;default:furnace]" ..
 		"label[0.9,0.1;" .. S("Furnace") .. "]" ..
 		"item_image[3,0.5;1,1;default:cell]" ..
 		"list[context;src;3,0.5;1,1;]" ..
-		"item_image[3,2.5;1,1;default:cell]" ..
+		"image[3,2.5;1,1;formspec_cell.png]" ..
 		"list[context;fuel;3,2.5;1,1;]" ..
+		"image[" .. fuel .. ";formspec_flame_outline.png]" ..
 		"image[3,1.5;1,1;default_furnace_fire_bg.png]" ..
 		"image[4,1.5;1,1;default_arrow_bg.png^[transformR270]" ..
 		"item_image[4.925,1.425;1.2,1.2;default:cell]" ..
@@ -44,41 +48,27 @@ end
 -- Node callback functions that are the same for active and inactive furnace
 --
 
-local function can_dig(pos, player)
-	if minetest.is_protected(pos, player and player:get_player_name() or "") then
-		return false
+-- Drop all items in all inventory lists
+local function after_dig_node(pos, _, oldmetadata)
+	for _, items in pairs(oldmetadata.inventory) do
+		for _, stack in ipairs(items) do
+			if not stack:is_empty() then
+				minetest.item_drop(stack, nil, pos)
+			end
+		end
 	end
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
-	for _, name in pairs({"fuel", "dst", "src"}) do
-		local stack = inv:get_stack(name, 1)
-		minetest.item_drop(stack, nil, pos)
-		inv:set_stack(name, 1, nil)
-	end
-	return true
 end
 
 local function allow_metadata_inventory_put(pos, listname, _, stack, player)
 	if minetest.is_protected(pos, player and player:get_player_name() or "") then
 		return 0
 	end
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
 	if listname == "fuel" then
-		if minetest.get_craft_result({method="fuel", width=1, items={stack}}).time ~= 0 then
-			if inv:is_empty("src") then
-				meta:set_string("infotext", S("Furnace is empty"))
-			end
-			return stack:get_count()
-		else
-			return 0
-		end
+		local is_fuel = minetest.get_craft_result({method="fuel", width=1, items={stack}}).time ~= 0
+		return is_fuel and stack:get_count() or 0
 	elseif listname == "src" then
-		if minetest.get_craft_result({method="cooking", width=1, items={stack}}).time ~= 0 then
-			return stack:get_count()
-		else
-			return 0
-		end
+		local cookable = minetest.get_craft_result({method="cooking", width=1, items={stack}}).time ~= 0
+		return cookable and stack:get_count() or 0
 	elseif listname == "dst" then
 		return 0
 	elseif listname == "split" then
@@ -141,7 +131,7 @@ local function furnace_node_timer(pos, elapsed)
 
 		-- Check if we have cookable content
 		local aftercooked
-		cooked, aftercooked = minetest.get_craft_result({method = "cooking", width = 1, items = srclist})
+		cooked, aftercooked = minetest.get_craft_result({method = "cooking", width = 1, items = srclist or {}})
 		cookable = cooked.time ~= 0
 
 		local el = math.min(elapsed, fuel_totaltime - fuel_time)
@@ -176,7 +166,7 @@ local function furnace_node_timer(pos, elapsed)
 			if cookable then
 				-- We need to get new fuel
 				local afterfuel
-				fuel, afterfuel = minetest.get_craft_result({method = "fuel", width = 1, items = fuellist})
+				fuel, afterfuel = minetest.get_craft_result({method = "fuel", width = 1, items = fuellist or {}})
 
 				if fuel.time == 0 then
 					-- No valid fuel in fuel list
@@ -214,7 +204,7 @@ local function furnace_node_timer(pos, elapsed)
 	end
 	if srclist and srclist[1]:is_empty() then
 		src_time = 0
-		end
+	end
 
 	--
 	-- Update formspec, infotext and node
@@ -240,12 +230,14 @@ local function furnace_node_timer(pos, elapsed)
 	local fuel_state = S("Empty")
 	local active = false
 	local result = false
+	local fuel_empty = inv:is_empty("fuel")
+	local src_empty = inv:is_empty("src")
 
 	if fuel_totaltime ~= 0 then
 		active = true
 		local fuel_percent = 100 - math.floor(fuel_time / fuel_totaltime * 100)
 		fuel_state = S("@1%", fuel_percent)
-		formspec = default.get_furnace_active_formspec(fuel_percent, item_percent)
+		formspec = default.get_furnace_active_formspec(fuel_percent, item_percent, fuel_empty)
 		swap_node(pos, "default:furnace_active")
 		-- make sure timer restarts automatically
 		result = true
@@ -253,28 +245,28 @@ local function furnace_node_timer(pos, elapsed)
 		if fuellist and not fuellist[1]:is_empty() then
 			fuel_state = S("@1%", 0)
 		end
-		formspec = default.get_furnace_inactive_formspec()
+		formspec = default.get_furnace_inactive_formspec(fuel_empty)
 		swap_node(pos, "default:furnace")
 		-- stop timer on the inactive furnace
 		minetest.get_node_timer(pos):stop()
 	end
 
 	local infotext
-	if active then
-		infotext = S("Furnace active")
+	if fuel_empty and src_empty then
+		infotext = S("Furnace is empty")
 	else
-		infotext = S("Furnace inactive")
+		infotext = active and S("Furnace active") or S("Furnace inactive")
+		infotext = infotext .. "\n" .. S("Item: @1; Fuel: @2", item_state, fuel_state)
 	end
-	infotext = infotext .. "\n" .. S("Item: @1; Fuel: @2", item_state, fuel_state)
 
-		--
-		-- Set meta values
-		--
-		meta:set_float("fuel_totaltime", fuel_totaltime)
-		meta:set_float("fuel_time", fuel_time)
-		meta:set_float("src_time", src_time)
-		meta:set_string("formspec", formspec)
-		meta:set_string("infotext", infotext)
+	--
+	-- Set meta values
+	--
+	meta:set_float("fuel_totaltime", fuel_totaltime)
+	meta:set_float("fuel_time", fuel_time)
+	meta:set_float("src_time", src_time)
+	meta:set_string("formspec", formspec)
+	meta:set_string("infotext", infotext)
 
 	return result
 end
@@ -295,8 +287,6 @@ minetest.register_node("default:furnace", {
 	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
 
-	can_dig = can_dig,
-
 	on_timer = furnace_node_timer,
 
 	on_construct = function(pos)
@@ -308,6 +298,8 @@ minetest.register_node("default:furnace", {
 		inv:set_size("split", 1)
 		furnace_node_timer(pos, 0)
 	end,
+
+	after_dig_node = after_dig_node,
 
 	on_metadata_inventory_move = function(pos)
 		minetest.get_node_timer(pos):start(1.0)
@@ -347,10 +339,9 @@ minetest.register_node("default:furnace_active", {
 	groups = {cracky = 2, not_in_creative_inventory = 1},
 	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
+
 	on_timer = furnace_node_timer,
-
-	can_dig = can_dig,
-
+	after_dig_node = after_dig_node,
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_move = allow_metadata_inventory_move,
 	allow_metadata_inventory_take = allow_metadata_inventory_take

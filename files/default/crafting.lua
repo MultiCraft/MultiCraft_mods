@@ -244,31 +244,35 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:cement 8",
-	recipe = {
-		{"default:gravel", "default:gravel", "default:sand"},
-		{"default:gravel", "bucket:bucket_water", "default:sand"},
-		{"default:gravel", "default:sand", "default:sand"}
-	},
-	replacements = {{"bucket:bucket_water", "bucket:bucket_empty"}}
-})
-
-minetest.register_craft({
-	output = "default:cement 8",
-	recipe = {
-		{"default:gravel", "default:gravel", "default:sand"},
-		{"default:gravel", "bucket:bucket_river_water", "default:sand"},
-		{"default:gravel", "default:sand", "default:sand"}
-	},
-	replacements = {{"bucket:bucket_river_water", "bucket:bucket_empty"}}
-})
-
-minetest.register_craft({
 	output = "default:apple_gold",
 	recipe = {
 		{"", "default:gold_ingot", ""},
 		{"default:gold_ingot", "group:apple", "default:gold_ingot"},
 		{"", "default:gold_ingot", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "default:dirt_with_grass",
+	recipe = {
+		{"", "default:grass_1", ""},
+		{"", "default:dirt", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "default:dirt_with_dry_grass",
+	recipe = {
+		{"", "default:dry_grass_1", ""},
+		{"", "default:dirt", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "default:dirt_with_snow",
+	recipe = {
+		{"", "default:snowball", ""},
+		{"", "group:soil", ""}
 	}
 })
 

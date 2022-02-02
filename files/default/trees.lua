@@ -24,6 +24,13 @@ function default.can_grow(pos)
 end
 
 
+-- 'is snow nearby' function
+
+local function is_snow_nearby(pos)
+	return minetest.find_node_near(pos, 1, {"group:snowy"})
+end
+
+
 -- Grow sapling
 
 function default.grow_sapling(pos)
@@ -45,7 +52,7 @@ function default.grow_sapling(pos)
 	elseif node.name == "default:pine_sapling" then
 		minetest.log("action", "A pine sapling grows into a tree at "..
 			minetest.pos_to_string(pos))
-		local snow = minetest.find_node_near(pos, 1, {"group:snowy"})
+		local snow = is_snow_nearby(pos)
 		if snow then
 			default.grow_new_snowy_pine_tree(pos)
 		else
