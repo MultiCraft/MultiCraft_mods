@@ -1,13 +1,5 @@
-local abs, floor, min = math.abs, math.floor, math.min
+local abs, floor, min, sign = math.abs, math.floor, math.min, math.sign
 local vector_add, vector_equals, vector_new, vector_round = vector.add, vector.equals, vector.new, vector.round
-
-function carts:get_sign(z)
-	if z == 0 then
-		return 0
-	else
-		return z / abs(z)
-	end
-end
 
 -- Compatible for MultiCraft Engine 2.0
 local aheight = 7
@@ -38,9 +30,9 @@ end
 
 function carts:velocity_to_dir(v)
 	if abs(v.x) > abs(v.z) then
-		return {x=self:get_sign(v.x), y=self:get_sign(v.y), z=0}
+		return {x=sign(v.x), y=sign(v.y), z=0}
 	else
-		return {x=0, y=self:get_sign(v.y), z=self:get_sign(v.z)}
+		return {x=0, y=sign(v.y), z=sign(v.z)}
 	end
 end
 
