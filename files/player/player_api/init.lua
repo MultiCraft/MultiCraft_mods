@@ -119,7 +119,7 @@ local waypoint_live = tonumber(minetest.settings:get("item_entity_ttl")) or 600
 
 minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
-	local pos = vector.round(player:get_pos())
+	local pos = player:get_pos()
 	local inv = player:get_inventory()
 
 	-- Drop inventory items
@@ -138,10 +138,9 @@ minetest.register_on_dieplayer(function(player)
 	end
 
 	-- Display death coordinates
-	local pos_string = minetest.pos_to_string(pos)
+	local pos_string = minetest.pos_to_string(pos, 1)
 
-	minetest.chat_send_player(name,
-		S("Your last coordinates: @1", pos_string))
+	minetest.chat_send_player(name, S("Your last coordinates: @1", pos_string))
 	minetest.log("action", "Player \"" .. name .. "\" died at " .. pos_string)
 
 	-- Add Waypoint
