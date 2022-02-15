@@ -48,6 +48,7 @@ player_api.hand = {
 	mesh = "hand.b3d",
 	tiles = {"character_1.png"},
 	inventory_image = b,
+	use_texture_alpha = "clip",
 	drop = "",
 	node_placement_prediction = "",
 	groups = {oddly_breakable_by_hand = 3, not_in_creative_inventory = 1},

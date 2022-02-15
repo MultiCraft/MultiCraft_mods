@@ -62,24 +62,17 @@ minetest.register_craft({
 -- Manually add flowers recipes
 local flowers_recipes = {
 	"blue", "magenta", "orange", "pink",
-	"red", "violet", "yellow"
+	"red", "violet", "yellow", "white"
 }
 
 for _, name in ipairs(flowers_recipes) do
 	minetest.register_craft({
-		output = "dye:" .. name .. " 4",
+		output = "dye:" .. name .. " 3",
 		recipe = {
 			{"group:flower,color_" .. name}
 		}
 	})
 end
-
-minetest.register_craft({
-	output = "dye:white",
-	recipe = {
-		{"group:flower,color_white"}
-	}
-})
 
 -- Mix recipes
 local dye_recipes = {
