@@ -1,17 +1,19 @@
 local S = farming_addons.S
 
+local random = math.random
+
 -- how often node timers for plants will tick, +/- some random value
 local function tick(pos)
-	minetest.get_node_timer(pos):start(math.random(332, 572))
+	minetest.get_node_timer(pos):start(random(332, 572))
 end
 
 function farming_addons.grow_cocoa_plant(pos)
 	local node = minetest.get_node(pos)
-	local name = node.name
-	local def = minetest.registered_nodes[name]
+	local def = minetest.registered_nodes[node.name]
+	local nplant = def.next_plant
 
 	-- disable timer for fully grown plant
-	if not def.next_plant then
+	if not nplant then
 		return
 	end
 
@@ -32,15 +34,17 @@ function farming_addons.grow_cocoa_plant(pos)
 	end
 
 	-- grow
-	minetest.swap_node(pos, {name = def.next_plant, param2 = node.param2})
+	node.name = nplant
+	minetest.swap_node(pos, node)
 
 	-- new timer needed?
-	if minetest.registered_nodes[def.next_plant].next_plant then
+	if minetest.registered_nodes[nplant].next_plant then
 		tick(pos)
 	end
 
 	return
 end
+local grow_cocoa_plant = farming_addons.grow_cocoa_plant
 
 local function place_cocoa_bean(itemstack, placer, pt)
 	-- check if pointing at a node
@@ -107,6 +111,9 @@ minetest.register_craftitem("farming_addons:cocoa_bean", {
 	groups = {farming = 1, wieldview = 2}
 })
 
+local cgroups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1,
+	attached_node2 = 1, not_in_creative_inventory = 1}
+
 -- 1
 minetest.register_node("farming_addons:cocoa_1", {
 	drawtype = "nodebox",
@@ -118,6 +125,7 @@ minetest.register_node("farming_addons:cocoa_1", {
 		"farming_addons_cocoa_front_1.png",
 		"farming_addons_cocoa_front_1.png"
 	},
+	use_texture_alpha = "clip",
 	paramtype = "light",
 	sunlight_propagates = true,
 	wield_scale = {x = 2, y = 2, z = 2},
@@ -139,20 +147,16 @@ minetest.register_node("farming_addons:cocoa_1", {
 	},
 	collision_box = {
 		type = "fixed",
-		fixed = {
-			{-0.125, -0.0625, 0.1875, 0.125, 0.5, 0.5}
-		}
+		fixed = {-0.125, -0.0625, 0.1875, 0.125, 0.5, 0.5}
 	},
 	selection_box = {
 		type = "fixed",
-		fixed = {
-			{-0.125, -0.0625, 0.1875, 0.125, 0.5, 0.5}
-		}
+		fixed = {-0.125, -0.0625, 0.1875, 0.125, 0.5, 0.5}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, attached_node2 = 1, not_in_creative_inventory = 1},
+	groups = cgroups,
 	sounds = default.node_sound_wood_defaults(),
 	next_plant = "farming_addons:cocoa_2",
-	on_timer = farming_addons.grow_cocoa_plant,
+	on_timer = grow_cocoa_plant,
 	minlight = 10
 })
 
@@ -167,6 +171,7 @@ minetest.register_node("farming_addons:cocoa_2", {
 		"farming_addons_cocoa_front_2.png",
 		"farming_addons_cocoa_front_2.png"
 	},
+	use_texture_alpha = "clip",
 	paramtype = "light",
 	sunlight_propagates = true,
 	wield_scale = {x = 1.5, y = 1.5, z = 1.5},
@@ -188,20 +193,16 @@ minetest.register_node("farming_addons:cocoa_2", {
 	},
 	collision_box = {
 		type = "fixed",
-		fixed = {
-			{-0.1875, -0.1875, 0.0625, 0.1875, 0.5, 0.5}
-		}
+		fixed = {-0.1875, -0.1875, 0.0625, 0.1875, 0.5, 0.5}
 	},
 	selection_box = {
 		type = "fixed",
-		fixed = {
-			{-0.1875, -0.1875, 0.0625, 0.1875, 0.5, 0.5}
-		}
+		fixed = {-0.1875, -0.1875, 0.0625, 0.1875, 0.5, 0.5}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, attached_node2 = 1, not_in_creative_inventory = 1},
+	groups = cgroups,
 	sounds = default.node_sound_wood_defaults(),
 	next_plant = "farming_addons:cocoa_3",
-	on_timer = farming_addons.grow_cocoa_plant,
+	on_timer = grow_cocoa_plant,
 	minlight = 10
 })
 
@@ -216,6 +217,7 @@ minetest.register_node("farming_addons:cocoa_3", {
 		"farming_addons_cocoa_front_3.png",
 		"farming_addons_cocoa_front_3.png"
 	},
+	use_texture_alpha = "clip",
 	paramtype = "light",
 	sunlight_propagates = true,
 	wield_scale = {x = 1.5, y = 1.5, z = 1.5},
@@ -239,35 +241,30 @@ minetest.register_node("farming_addons:cocoa_3", {
 	},
 	collision_box = {
 		type = "fixed",
-		fixed = {
-			{-0.25, -0.3125, -0.0625, 0.25, 0.5, 0.5}
-		}
+		fixed = {-0.25, -0.3125, -0.0625, 0.25, 0.5, 0.5}
 	},
 	selection_box = {
 		type = "fixed",
-		fixed = {
-			{-0.25, -0.3125, -0.0625, 0.25, 0.5, 0.5}
-		}
+		fixed = {-0.25, -0.3125, -0.0625, 0.25, 0.5, 0.5}
 	},
-	groups = {choppy = 3, flammable = 2, plant = 1, cocoa = 1, attached_node2 = 1, not_in_creative_inventory = 1},
-	sounds = default.node_sound_wood_defaults(),
-	on_timer = farming_addons.grow_cocoa_plant,
-	minlight = 10
+	groups = cgroups,
+	sounds = default.node_sound_wood_defaults()
 })
 
--- grow cocoa in jungletrees
+-- Grow Cocoa on Jungletrees
 local find_node_near = minetest.find_node_near
 local get_node = minetest.get_node
-local get_time = minetest.get_timeofday
+local get_timeofday = minetest.get_timeofday
 minetest.register_abm({
-	name = "farming_addons:grow_cocoa",
+	name = "Grow Cocoa on Jungletrees",
 	nodenames = "default:jungletree",
 	neighbors = {"default:jungletree"},
 	interval = 5,
 	chance = 50,
 	catch_up = false,
 	action = function(pos)
-		if get_time() > 0.25 and get_time() < 0.8 then
+		local timeofday = get_timeofday()
+		if timeofday > 0.25 and timeofday < 0.8 then
 			if find_node_near(pos, 4, "group:cocoa")
 			then return end
 
@@ -285,8 +282,8 @@ minetest.register_abm({
 			if get_node({x = apos.x, y = apos.y - 2, z = apos.z}).name ~= "air"
 			then return end
 
-			place_cocoa_bean(
-				ItemStack("farming_addons:cocoa_1"), nil, {type = "node", under = pos, above = apos})
+			place_cocoa_bean(ItemStack("farming_addons:cocoa_1"), nil,
+				{type = "node", under = pos, above = apos})
 		end
 	end
 })

@@ -165,7 +165,7 @@ minetest.register_craft({
 --
 
 minetest.register_decoration({
-	name = "default:grass",
+	name = "farming_addons:melon_fruit",
 	deco_type = "simple",
 	place_on = {"default:dirt_with_grass"},
 	sidelen = 80,
