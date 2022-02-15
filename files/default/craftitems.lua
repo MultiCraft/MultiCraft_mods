@@ -1,4 +1,15 @@
-local S = Sl
+local S = default.S
+local C = default.colors
+
+local esc = minetest.formspec_escape
+
+local function formspec_string(lpp, page, lines, string)
+	for i = ((lpp * page) - lpp) + 1, lpp * page do
+		if not lines[i] then break end
+		string = string .. lines[i] .. "\n"
+	end
+	return string
+end
 
 local lpp = 14 -- Lines per book's page
 local function book_on_use(itemstack, user)
@@ -16,8 +27,8 @@ local function book_on_use(itemstack, user)
 	local data = meta:to_table().fields
 
 	if data.owner then
-		title = data.title
-		text = data.text
+		title = data.title or ""
+		text = data.text or ""
 		owner = data.owner
 
 		for str in (text .. "\n"):gmatch("([^\n]*)[\n]") do
@@ -27,15 +38,10 @@ local function book_on_use(itemstack, user)
 		if data.page then
 			page = data.page
 			page_max = data.page_max
-
-			for i = ((lpp * page) - lpp) + 1, lpp * page do
-				if not lines[i] then break end
-				string = string .. lines[i] .. "\n"
-			end
+			string = formspec_string(lpp, page, lines, string)
 		end
 	end
 
-	local esc = minetest.formspec_escape
 	local item_name = itemstack:get_name()
 	local formspec = "size[9,8.75]" ..
 		default.gui_bg .. default.gui_bg_img ..
@@ -53,8 +59,8 @@ local function book_on_use(itemstack, user)
 	else
 		formspec = formspec ..
 			"label[0.9,0.1;" .. esc(S("Book")) .. ": " ..
-				default.colors.gold .. "\"" .. esc(title) .. "\", " ..
-				default.colors.white .. esc(S("by @1", owner)) .. "]" ..
+				C.gold .. "\"" .. esc(title) .. "\", " ..
+				C.white .. esc(S("by @1", owner)) .. "]" ..
 			"textarea[0.5,0.9;8.5,8;;" .. esc(string ~= "" and string or text) .. ";]" ..
 			"button[2.4,8;0.8,0.8;book_prev;<]" ..
 			"image_button[3,8;3,0.8;blank.png;;" ..
@@ -156,119 +162,117 @@ end)
 --
 
 minetest.register_craftitem("default:blueberries", {
-	description = "Blueberries",
+	description = S("Blueberries"),
 	inventory_image = "default_blueberries.png",
 	groups = {food = 1, food_blueberries = 1, food_berry = 1},
 	on_use = minetest.item_eat(1)
 })
 
 minetest.register_craftitem("default:book", {
-	description = "Book",
+	description = S("Book"),
 	inventory_image = "default_book.png",
 	groups = {book = 1, flammable = 3},
 	on_use = book_on_use
 })
 
 minetest.register_craftitem("default:book_written", {
-	description = "Book With Text",
+	description = S("Book with Text"),
 	inventory_image = "default_book_written.png",
-	groups = {book = 1, flammable = 3, wieldview = 1,
-		not_in_creative_inventory = 1},
+	groups = {book = 1, not_in_creative_inventory = 1, flammable = 3},
 	stack_max = 1,
 	on_use = book_on_use
 })
 
 minetest.register_craftitem("default:clay_brick", {
-	description = "Clay Brick",
+	description = S("Clay Brick"),
 	inventory_image = "default_clay_brick.png"
 })
 
 minetest.register_craftitem("default:clay_lump", {
-	description = "Clay Lump",
+	description = S("Clay Lump"),
 	inventory_image = "default_clay_lump.png"
 })
 
 minetest.register_craftitem("default:coal_lump", {
-	description = "Coal Lump",
+	description = S("Coal Lump"),
 	inventory_image = "default_coal_lump.png",
 	groups = {coal = 1, flammable = 1}
 })
 
 minetest.register_craftitem("default:charcoal_lump", {
-	description = "Charcoal Lump",
+	description = S("Charcoal Lump"),
 	inventory_image = "default_charcoal_lump.png",
 	groups = {coal = 1, flammable = 1}
 })
 
 minetest.register_craftitem("default:diamond", {
-	description = "Diamond",
+	description = S("Diamond"),
 	inventory_image = "default_diamond.png"
 })
 
 minetest.register_craftitem("default:flint", {
-	description = "Flint",
+	description = S("Flint"),
 	inventory_image = "default_flint.png"
 })
 
 minetest.register_craftitem("default:gold_ingot", {
-	description = "Gold Ingot",
+	description = S("Gold Ingot"),
 	inventory_image = "default_gold_ingot.png"
 })
 
 minetest.register_craftitem("default:paper", {
-	description = "Paper",
+	description = S("Paper"),
 	inventory_image = "default_paper.png",
 	groups = {flammable = 3}
 })
 
 minetest.register_craftitem("default:steel_ingot", {
-	description = "Steel Ingot",
+	description = S("Steel Ingot"),
 	inventory_image = "default_steel_ingot.png"
 })
 
 minetest.register_craftitem("default:stick", {
-	description = "Stick",
+	description = S("Stick"),
 	inventory_image = "default_stick.png",
 	groups = {stick = 1, flammable = 2, wieldview = 2}
 })
 
 minetest.register_craftitem("default:emerald", {
-	description = default.colors.emerald .. S("Emerald"),
+	description = C.emerald .. S("Emerald"),
 	inventory_image = "default_emerald.png"
 })
 
 minetest.register_craftitem("default:ruby", {
-	description = default.colors.ruby .. S("Ruby"),
+	description = C.ruby .. S("Ruby"),
 	inventory_image = "default_ruby.png"
 })
 
 minetest.register_craftitem("default:gunpowder", {
-	description = "Gunpowder",
+	description = S("Gunpowder"),
 	inventory_image = "default_gunpowder.png"
 })
 
 minetest.register_craftitem("default:bone", {
-	description = "Bone",
+	description = S("Bone"),
 	inventory_image = "default_bone.png",
 	groups = {wieldview = 2}
 })
 
 minetest.register_craftitem("default:glowstone_dust", {
-	description = "Glowstone Dust",
+	description = S("Glowstone Dust"),
 	inventory_image = "default_glowstone_dust.png"
 })
 
 minetest.register_craftitem("default:sugar", {
-	description = "Sugar",
+	description = S("Sugar"),
 	inventory_image = "default_sugar.png"
 })
 
 minetest.register_craftitem("default:snowball", {
-	description = "Snowball",
+	description = S("Snowball"),
 	inventory_image = "default_snowball.png",
 	stack_max = 16,
 	groups = {flammable = 3},
-	on_use = default.snow_shoot_snowball,
 	on_place = function(itemstack, placer, pointed_thing)
 		if minetest.item_place_node(ItemStack("default:snow"), placer, pointed_thing) then
 			if not minetest.is_creative_enabled(placer:get_player_name()) then
@@ -288,7 +292,7 @@ minetest.register_craft({
 	recipe = {
 		{"default:paper"},
 		{"default:paper"},
-		{"default:paper"},
+		{"default:paper"}
 	}
 })
 
@@ -343,7 +347,6 @@ minetest.register_craft({
 		{"group:wood"}
 	}
 })
-
 
 minetest.register_craft({
 	output = "default:snowball 9",

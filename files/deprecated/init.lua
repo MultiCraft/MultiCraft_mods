@@ -88,13 +88,11 @@ minetest.after(2, function()
 
 	for _, d in pairs(workbench.defs) do
 		register_alias("stairs:" .. d[1] .. "_coal",			 "stairs:" .. d[1] .. "_default_coalblock")
-		register_alias("stairs:" .. d[1] .. "_lapis_block",		 "stairs:" .. d[1] .. "_default_lapisblock")
 		register_alias("stairs:" .. d[1] .. "_mobs_cheeseblock", "stairs:" .. d[1] .. "_mobs_animals_cheeseblock")
 	end
 
 	for _, e in pairs(stairs_aliases) do
 		register_alias("stairs:" .. e[1] .. "_coal",		"stairs:" .. e[2] .. "_default_coalblock")
-		register_alias("stairs:" .. e[1] .. "_lapis_block",	"stairs:" .. e[2] .. "_default_lapisblock")
 	end
 
 	register_alias("stairs:stair_steel",	"stairs:stair_default_steelblock")
@@ -118,7 +116,6 @@ minetest.after(2, function()
 		"default:stone_with_emerald",
 		"default:stone_with_iron",
 		"default:stone_with_gold",
-		"default:stone_with_lapis",
 		"farming_addons:pumpkin_fruit",
 		"sponge:sponge"
 	}
@@ -129,3 +126,20 @@ minetest.after(2, function()
 		end
 	end
 end)
+
+--
+-- Update Grass
+--
+
+-- LBM for updating Grass and Dry Grass
+local random = math.random
+minetest.register_lbm({
+	label = "Grass/Dry Grass updater",
+	name = "deprecated:grass",
+	nodenames = {"default:grass", "default:dry_grass"},
+	run_at_every_load = true,
+	action = function(pos, node)
+		node.name = node.name .. "_" .. random(1, 5)
+		minetest.swap_node(pos, node)
+	end
+})
