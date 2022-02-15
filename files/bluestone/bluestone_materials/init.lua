@@ -31,14 +31,14 @@ minetest.register_node("bluestone_materials:bluestoneblock", {
 minetest.register_craft({
 	output = "bluestone_materials:bluestoneblock",
 	recipe = {
-		{"mesecons:wire_00000000_off", "mesecons:wire_00000000_off", "mesecons:wire_00000000_off"},
-		{"mesecons:wire_00000000_off", "mesecons:wire_00000000_off", "mesecons:wire_00000000_off"},
-		{"mesecons:wire_00000000_off", "mesecons:wire_00000000_off", "mesecons:wire_00000000_off"}
+		{"bluestone:dust", "bluestone:dust", "bluestone:dust"},
+		{"bluestone:dust", "bluestone:dust", "bluestone:dust"},
+		{"bluestone:dust", "bluestone:dust", "bluestone:dust"}
 	}
 })
 
 minetest.register_craft({
-	output = "mesecons:wire_00000000_off 9",
+	output = "bluestone:dust 9",
 	recipe = {
 		{"bluestone_materials:bluestoneblock"}
 	}

@@ -230,7 +230,7 @@ minetest.register_craft({
 	output = "mesecons_dropper:dropper",
 	recipe = {
 		{"default:cobble", "default:cobble", "default:cobble"},
-		{"default:cobble", "mesecons:wire_00000000_off", "default:cobble"},
+		{"default:cobble", "bluestone:dust", "default:cobble"},
 		{"default:cobble", "default:chest", "default:cobble"},
 	}
 })

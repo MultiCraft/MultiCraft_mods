@@ -31,7 +31,7 @@ default.register_torch("bluestone_torch:torch", {
 minetest.register_craft({
 	output = "bluestone_torch:torch 4",
 	recipe = {
-		{"mesecons:wire_00000000_off"},
+		{"bluestone:dust"},
 		{"default:stick"}
 	}
 })
