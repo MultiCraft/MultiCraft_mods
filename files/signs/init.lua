@@ -245,11 +245,10 @@ end
 local function check_text(pos)
 	local meta = minetest.get_meta(pos)
 	local text = meta:get_string("sign_text")
-	local objects = objects_inside_radius(pos)
 
 	if text and text ~= "" then
 		local count = 0
-		for _, obj in pairs(objects) do
+		for _, obj in pairs(objects_inside_radius(pos)) do
 			local ent = obj:get_luaentity()
 			if ent and ent.name == "signs:sign_text" then
 				count = count + 1
@@ -272,7 +271,7 @@ local function check_text(pos)
 			obj:set_yaw(sign_pos[p2][2])
 		end
 	else
-		for _, obj in pairs(objects) do
+		for _, obj in pairs(objects_inside_radius(pos)) do
 			local ent = obj:get_luaentity()
 			if ent and ent.name == "signs:sign_text" then
 				obj:remove()
@@ -418,6 +417,7 @@ minetest.register_node("signs:sign", {
 	},
 	inventory_image = "signs_item.png",
 	wield_image = "signs_item.png",
+	use_texture_alpha = "clip",
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",
@@ -454,6 +454,8 @@ minetest.register_node("signs:sign", {
 		return false
 	end,
 
+	mesecon = {on_mvps_move = check_text},
+
 	on_place = place,
 	on_destruct = destruct,
 	on_punch = check_text,
@@ -462,6 +464,7 @@ minetest.register_node("signs:sign", {
 
 minetest.register_node("signs:wall_sign", {
 	tiles = {"signs_wall_sign.png"},
+	use_texture_alpha = "clip",
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "wallmounted",
@@ -474,6 +477,12 @@ minetest.register_node("signs:wall_sign", {
 	groups = {oddly_breakable_by_hand = 1, choppy = 3,
 		not_in_creative_inventory = 1, attached_node = 1},
 	on_rotate = false,
+
+	mesecon = {on_mvps_move = check_text},
+	mvps_sticky = function(pos, node)
+		local dir = minetest.wallmounted_to_dir(node.param2)
+		return {vadd(pos, dir)}
+	end,
 
 	on_destruct = destruct,
 	on_punch = check_text,
@@ -504,3 +513,7 @@ minetest.register_lbm({
 	run_at_every_load = true,
 	action = check_text
 })
+
+if mesecon and mesecon.register_mvps_stopper then
+	mesecon.register_mvps_unmov("signs:sign_text")
+end
