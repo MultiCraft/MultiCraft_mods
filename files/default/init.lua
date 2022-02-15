@@ -5,15 +5,7 @@
 
 default = {}
 
-local translator = minetest.get_translator
-default.S = translator and translator("default") or intllib.make_gettext_pair()
-
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		default.S = intllib.make_gettext_pair()
-	end
-end
+default.S = minetest.get_translator_auto({"ru"})
 
 -- Definitions made by this mod that other mods can use too
 local Cesc = minetest.get_color_escape_sequence
