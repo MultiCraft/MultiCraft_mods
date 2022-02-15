@@ -6,7 +6,7 @@ function farming_addons.tick(pos)
 end
 -- how often a growth failure tick is retried (e.g. too dark)
 function farming_addons.tick_again(pos)
-	minetest.get_node_timer(pos):start(math.random(96, 256))
+	minetest.get_node_timer(pos):start(random(96, 256))
 end
 
 local function check_free(pos)
