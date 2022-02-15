@@ -53,8 +53,6 @@ local function update_vessels_shelf(pos)
 		meta:set_string("infotext", S"Potion Shelf" .. "\n(" ..
 			S("Potions: @1", n_potions) .. ", " .. S("Bottles @1:", n_empty) .. ")")
 	end
-
-	meta:set_string("version", "2")
 end
 
 minetest.register_node("vessels:shelf", {
@@ -75,6 +73,7 @@ minetest.register_node("vessels:shelf", {
 		inv:set_size("vessels", 9 * 2)
 		inv:set_size("split", 1)
 		update_vessels_shelf(pos)
+		meta:set_string("version", "2")
 	end,
 	can_dig = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()
@@ -167,6 +166,7 @@ minetest.register_lbm({
 		local meta = minetest.get_meta(pos)
 		if meta:get_string("version") ~= "2" then
 			update_vessels_shelf(pos)
+			meta:set_string("version", "2")
 		end
 	end
 })
