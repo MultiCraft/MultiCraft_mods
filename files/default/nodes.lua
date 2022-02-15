@@ -2212,10 +2212,9 @@ minetest.register_node("default:glass", {
 minetest.register_node("default:brick", {
 	description = S("Brick Block"),
 	paramtype2 = "facedir",
-	place_param2 = 0,
 	tiles = {"default_brick.png"},
 	is_ground_content = false,
-	groups = {cracky = 3, stone = 1},
+	groups = {cracky = 3, brick = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 

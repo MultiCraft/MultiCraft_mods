@@ -273,7 +273,7 @@ local function parse_preview_params(player, rot, textures, animation, speed,
 		textures = textures:gsub("_female", "")
 
 		if not hair_reset then
-			textures = textures:gsub("haircut_(%d+)", "haircut_1")
+			textures = textures:gsub("haircut_(%u+)", "haircut_1")
 		end
 	elseif gender == "female" then
 		textures = textures:gsub("_glasses.png", "_glasses_female.png")
@@ -285,7 +285,7 @@ local function parse_preview_params(player, rot, textures, animation, speed,
 			textures = textures:gsub("haircut_", "haircut_female_")
 		end
 		if not hair_reset then
-			textures = textures:gsub("haircut_female_(%d+)", "haircut_female_1")
+			textures = textures:gsub("haircut_female_(%u+)", "haircut_female_1")
 		end
 	end
 
@@ -315,8 +315,8 @@ end
 function player_api.preview_model(player, x, y, w, h, rot, textures, animation,
 		speed, gender, hair_reset)
 	local anim = not player_api.compat_mode(player, 5)
-	local model = "model[%f,%f;%f,%f;%s;%s;%s;0,%d;%s;%s" ..
-		(anim and ";%f,%f;%f" or ";0,0") .. "]"
+	local model = "model[%.2f,%.2f;%.2f,%.2f;%s;%s;%s;0,%d;%s;%s" ..
+		(anim and ";%u,%u;%u" or ";0,0") .. "]"
 
 	local model_fs = -- "style[player_preview;bgcolor=black]" ..
 		fmt(model, x, y, w, h, parse_preview_params(
@@ -432,7 +432,7 @@ if enable_sscsm then
 	-- Declared as a local variable before player_api.set_textures.
 	function update_sscsm_preview(player, name)
 		sscsm.com_send(name, "player_api:preview",
-			fmt("%s;%s;%s;0,%d;%s;%s;%f,%f;%f", parse_preview_params(player)))
+			fmt("%s;%s;%s;0,%d;%s;%s;%u,%u;%u", parse_preview_params(player)))
 	end
 
 	sscsm.register_on_sscsms_loaded(function(name)

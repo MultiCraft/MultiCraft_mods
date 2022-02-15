@@ -29,7 +29,7 @@ local fnames = {}
 for _, f in pairs({"1", "2", "3", "11", "12", "13", "14",
 		"21", "22", "23", "24", "32", "33", "34", "35"}) do
 	fnames[#fnames + 1] = "fences:fence_wood_" .. f
-end 
+end
 
 minetest.register_lbm({
 	label = "Replace Fences",

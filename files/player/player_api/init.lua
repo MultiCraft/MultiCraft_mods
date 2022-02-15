@@ -130,7 +130,7 @@ minetest.register_on_dieplayer(function(player)
 	for _, inv_name in pairs({"craft", "main"}) do
 		for i = 1, inv:get_size(inv_name) do
 			stack = inv:get_stack(inv_name, i)
-			if stack:get_count() > 0 then
+			if not stack:is_empty() then
 				item_drop(stack, nil, pos)
 			end
 		end
