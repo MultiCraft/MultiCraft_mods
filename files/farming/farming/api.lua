@@ -224,8 +224,6 @@ function farming.on_rightclick(itemstack, clicker, pointed_thing)
 end
 
 -- Register plants
-local singleplayer = minetest.is_singleplayer()
-local find_node_near = minetest.find_node_near
 function farming.register_plant(name, def)
 	local mname, pname = unpack(name:split(":"))
 
@@ -347,11 +345,8 @@ function farming.register_plant(name, def)
 			on_timer = farming.grow_plant,
 			minlight = def.minlight,
 			maxlight = def.maxlight,
-			floodable = singleplayer,
+			floodable = true,
 			on_flood = function(pos, oldnode)
-				if not singleplayer and not find_node_near(pos, 3,
-						{"default:water_source", "default:river_water_source"})
-				then return true end
 				local items = minetest.get_node_drops(oldnode.name, nil)
 				for j = 1, #items do
 					minetest.add_item(pos, ItemStack(items[j]))
