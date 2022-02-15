@@ -5,7 +5,7 @@ License of source code
 ----------------------
 Copyright (C) Zeg9
 Copyright (C) VanessaE
-Copyright (C) 2019-2020 MultiCraft Development Team
+Copyright (C) 2019-2022 MultiCraft Development Team
 
 https://gitlab.com/VanessaE/homedecor_modpack/tree/master/itemframes
 

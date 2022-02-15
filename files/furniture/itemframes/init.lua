@@ -8,11 +8,13 @@ if translator and not minetest.is_singleplayer() then
 	end
 end
 
-local function objects_inside_radius(p)
+local function obj_inside_radius(p)
 	return minetest.get_objects_inside_radius(p, 0.5)
 end
 
-minetest.register_entity("itemframes:item", {
+local ENTITY = "itemframes:item"
+
+minetest.register_entity(ENTITY, {
 	visual = "wielditem",
 	visual_size = {x = 0.33, y = 0.33},
 	collisionbox = {0},
@@ -28,15 +30,18 @@ minetest.register_entity("itemframes:item", {
 			return
 		end
 
-		local data = staticdata:split(";")
+		-- Compatible with the previous implementation
+		local texture = staticdata
+		if texture:sub(2, 2) == ";" then
+			texture = texture:sub(3)
+		end
 
-		ent:set_properties({textures = {data[2]}})
-		self.texture = data[2]
+		ent:set_properties({textures = {texture}})
+		self.texture = texture
 	end,
 
 	get_staticdata = function(self)
-		local texture = self.texture or "air"
-		return " ;" .. texture
+		return self.texture or "air"
 	end
 })
 
@@ -48,7 +53,7 @@ local postab = {
 	[5] = {{x =  0,    z = -0.41}, pi}
 }
 
-local update_item = function(pos, node)
+local function update_item(pos, node)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
 	local item_name = ItemStack(item):get_name()
@@ -60,16 +65,13 @@ local update_item = function(pos, node)
 	pos.x = pos.x + posad.x
 	pos.z = pos.z + posad.z
 
-	-- Strange to stay compatible with the previous implementation
-	local staticdata = " ;" .. item_name
-
-	local entity = minetest.add_entity(pos, "itemframes:item", staticdata)
+	local entity = minetest.add_entity(pos, ENTITY, item_name)
 	if param2 ~= 4 then
 		entity:set_yaw(postab[param2][2])
 	end
 end
 
-local drop_item = function(pos)
+local function drop_item(pos)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
 
@@ -78,9 +80,9 @@ local drop_item = function(pos)
 		meta:set_string("item", "")
 	end
 
-	for _, obj in pairs(objects_inside_radius(pos)) do
+	for _, obj in ipairs(obj_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
-		if ent and ent.name == "itemframes:item" then
+		if ent and ent.name == ENTITY then
 			obj:remove()
 		end
 	end
@@ -91,9 +93,9 @@ local function check_item(pos, node)
 	local item = meta:get_string("item")
 	if item == "" then return end
 
-	for _, obj in pairs(objects_inside_radius(pos)) do
+	for _, obj in ipairs(obj_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
-		if ent and ent.name == "itemframes:item" then
+		if ent and ent.name == ENTITY then
 			return
 		end
 	end
@@ -170,13 +172,6 @@ minetest.register_node("itemframes:frame",{
 		return itemstack
 	end,
 
-	can_dig = function(pos, player)
-		if minetest.is_protected(pos, player and player:get_player_name() or "") then
-			return false
-		end
-		return true
-	end,
-
 	on_punch = check_item,
 	after_dig_node = after_dig_node,
 	on_destruct = after_dig_node
@@ -184,8 +179,8 @@ minetest.register_node("itemframes:frame",{
 
 minetest.register_lbm({
 	label = "Check Itemframe item",
-	name = "itemframes:item",
-	nodenames = {"itemframes:frame"},
+	name = "itemframes:check_item",
+	nodenames = "itemframes:frame",
 	run_at_every_load = true,
 	action = check_item
 })
