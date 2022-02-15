@@ -120,6 +120,11 @@ local function populate_chest(pos, rand, dungeontype)
 	end
 end
 
+function dungeon_loot.place_in_dungeon(pos, facedir, noise, room)
+	minetest.add_node(pos, {name = "default:chest", param2 = facedir})
+	populate_chest(pos, PcgRandom(noise3d_integer(noise, pos)), room.type)
+	return true
+end
 
 minetest.register_on_generated(function()
 	local gennotify = minetest.get_mapgen_object("gennotify")
@@ -163,8 +168,7 @@ minetest.register_on_generated(function()
 		if minetest.get_node(chestpos).name == "air" then
 			-- make it face inwards to the room
 			local facedir = minetest.dir_to_facedir(vector.multiply(wall.facing, -1))
-			minetest.add_node(chestpos, {name = "default:chest", param2 = facedir})
-			populate_chest(chestpos, PcgRandom(noise3d_integer(noise, chestpos)), room.type)
+			dungeon_loot.place_in_dungeon(chestpos, facedir, noise, room)
 		end
 	end
 end)
