@@ -30,7 +30,7 @@ mobs:register_mob("mobs_monster:spider", {
 	},
 	run_velocity = 3,
 	view_range = 15,
-	replace_rate = 64,
+	replace_rate = 96,
 	replace_what = {
 		spider_replace
 	},

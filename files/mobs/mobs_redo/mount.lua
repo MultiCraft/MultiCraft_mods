@@ -10,7 +10,7 @@ local vadd = vector.add
 --
 
 local function node_is(pos)
-	local node = mobs:node_ok(pos)
+	local node = mobs.node_ok(pos)
 
 	if node.name == "air" then
 		return "air"
