@@ -17,7 +17,6 @@ local fmt = string.format
 local max_level = 16
 
 function toolranks.get_level(uses)
-	uses = uses or 0
 	local result = floor(log(uses) / log(2)) - 6
 
 	return (result > 0 and result < max_level and result)
@@ -25,10 +24,11 @@ function toolranks.get_level(uses)
 end
 
 function toolranks.create_description(description, uses)
-	local newdesc = fmt("%s%s\n%s%s %s\n%s%s %s",
+	uses = uses or 0
+	local newdesc = fmt("%s%s\n%s%s\n%s%s",
 		C.green, description,
-		C.gold, S"Level:", toolranks.get_level(uses),
-		C.grey, S"Uses:", uses or 0)
+		C.gold, S("Level: @1", toolranks.get_level(uses)),
+		C.grey, S("Uses: @1", uses))
 
 	return newdesc
 end
@@ -98,7 +98,8 @@ end
 -- Helper function
 minetest.after(0, function()
 	for name, def in pairs(minetest.registered_tools) do
-		if not def.groups.armor_use then
+		local group = def.groups
+		if not group.armor_use and not def.nohit then
 			minetest.override_item(name, {
 				original_description = def.description,
 				after_use = toolranks.new_afteruse

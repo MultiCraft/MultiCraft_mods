@@ -1,5 +1,5 @@
 # textdomain: toolranks
-Level:=Уровень:
-Uses:=Использований:
+Level: @1=Уровень: @1
+Uses: @1=Использований: @1
 Your tool @1 is almost broken!=Ваш инструмент "@1" почти сломан!
 Your tool @1 got a new @2 level!=Ваш инструмент "@1" получил новый @2 уровень!
