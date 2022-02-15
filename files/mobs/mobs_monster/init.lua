@@ -11,10 +11,9 @@ if translator and not minetest.is_singleplayer() then
 end
 
 mobs_monster.spawn_nodes = {
-	"default:dirt", "default:sandstone", "default:stone",
-	"default:sand", "default:redsand",
-	"default:dirt_with_snow", "default:dirt_with_grass", "default:dirt_with_dry_grass",
-	"default:cobble", "default:mossycobble"
+	"default:sandstone", "default:redsandstone",
+	"default:ice", "default:snow", "default:snowblock",
+	"group:sand", "group:soil", "group:stone"
 }
 
 local path = minetest.get_modpath("mobs_monster")
