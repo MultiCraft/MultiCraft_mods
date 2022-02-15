@@ -2306,9 +2306,3 @@ default.register_leafdecay({
 	leaves = {"default:pine_bush_needles"},
 	radius = 1
 })
-
-default.register_leafdecay({
-	trunks = {"default:blueberry_bush_stem"},
-	leaves = {"default:blueberry_bush_leaves"},
-	radius = 1
-})
