@@ -18,6 +18,8 @@ local function objects_inside_radius(p)
 	return minetest.get_objects_inside_radius(p, 0.5)
 end
 
+local ENTITY = "signs:sign_text"
+
 -- Cyrillic transliteration library
 local slugify = dofile(minetest.get_modpath("signs") .. "/slugify.lua")
 
@@ -58,7 +60,7 @@ end
 
 local function find_any(str, pair, start)
 	local ret = 0 -- 0 if not found (indices start at 1)
-	for _, needle in pairs(pair) do
+	for _, needle in ipairs(pair) do
 		local first = str:find(needle, start)
 		if first then
 			if ret == 0 or first < ret then
@@ -157,7 +159,7 @@ local function generate_sign_texture(str, color)
 	return texture
 end
 
-minetest.register_entity("signs:sign_text", {
+minetest.register_entity(ENTITY, {
 	visual = "upright_sprite",
 	visual_size = {x = 0.7, y = 0.6},
 	collisionbox = {0},
@@ -225,8 +227,7 @@ local function place(itemstack, placer, pointed_thing)
 			end
 		end
 		if result then
-			minetest.sound_play({name = "default_place_node_hard"},
-				{pos = result})
+			minetest.sound_play({name = "default_place_node_hard"}, {pos = result})
 		end
 	end
 
@@ -234,9 +235,9 @@ local function place(itemstack, placer, pointed_thing)
 end
 
 local function destruct(pos)
-	for _, obj in pairs(objects_inside_radius(pos)) do
+	for _, obj in ipairs(objects_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
-		if ent and ent.name == "signs:sign_text" then
+		if ent and ent.name == ENTITY then
 			obj:remove()
 		end
 	end
@@ -248,9 +249,9 @@ local function check_text(pos)
 
 	if text and text ~= "" then
 		local count = 0
-		for _, obj in pairs(objects_inside_radius(pos)) do
+		for _, obj in ipairs(objects_inside_radius(pos)) do
 			local ent = obj:get_luaentity()
-			if ent and ent.name == "signs:sign_text" then
+			if ent and ent.name == ENTITY then
 				count = count + 1
 				if count > 1 then
 					obj:remove()
@@ -266,14 +267,17 @@ local function check_text(pos)
 				sign_pos = wall_sign_positions
 			end
 			if p2 > 3 or p2 < 0 then return end
-			local obj = minetest.add_entity(
-				vadd(pos, sign_pos[p2][1]), "signs:sign_text")
-			obj:set_yaw(sign_pos[p2][2])
+			local sign = minetest.add_entity(
+				vadd(pos, sign_pos[p2][1]), ENTITY)
+			if not sign then
+				return
+			end
+			sign:set_yaw(sign_pos[p2][2])
 		end
 	else
-		for _, obj in pairs(objects_inside_radius(pos)) do
+		for _, obj in ipairs(objects_inside_radius(pos)) do
 			local ent = obj:get_luaentity()
-			if ent and ent.name == "signs:sign_text" then
+			if ent and ent.name == ENTITY then
 				obj:remove()
 			end
 		end
@@ -303,7 +307,7 @@ local function edit_text(pos, _, clicker)
 
 		local clist = {}
 		local csel = 1
-		for i, clr in pairs(colors_list) do
+		for i, clr in ipairs(colors_list) do
 			if ccolor == clr then
 				csel = i
 			end
@@ -370,16 +374,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	local sign
-	for _, obj in pairs(objects_inside_radius(pos)) do
+	for _, obj in ipairs(objects_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
-		if ent and ent.name == "signs:sign_text" then
+		if ent and ent.name == ENTITY then
 			sign = obj
 			break
 		end
 	end
 	if not sign then
 		sign = minetest.add_entity(
-			vadd(pos, sign_pos[p2][1]), "signs:sign_text")
+			vadd(pos, sign_pos[p2][1]), ENTITY)
 	else
 		sign:set_pos(vadd(pos, sign_pos[p2][1]))
 	end
@@ -474,8 +478,8 @@ minetest.register_node("signs:wall_sign", {
 	},
 	drop = "signs:sign",
 	walkable = false,
-	groups = {oddly_breakable_by_hand = 1, choppy = 3,
-		not_in_creative_inventory = 1, attached_node = 1},
+	groups = {oddly_breakable_by_hand = 1, choppy = 3, attached_node = 1,
+		not_in_creative_inventory = 1},
 	on_rotate = false,
 
 	mesecon = {on_mvps_move = check_text},
@@ -508,12 +512,12 @@ minetest.register_craft({
 -- LBM for restoring text
 minetest.register_lbm({
 	label = "Check for sign text",
-	name = "signs:sign_text",
+	name = "signs:check_text",
 	nodenames = {"signs:sign", "signs:wall_sign"},
 	run_at_every_load = true,
 	action = check_text
 })
 
 if mesecon and mesecon.register_mvps_stopper then
-	mesecon.register_mvps_unmov("signs:sign_text")
+	mesecon.register_mvps_unmov(ENTITY)
 end
