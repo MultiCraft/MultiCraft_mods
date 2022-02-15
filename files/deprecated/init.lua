@@ -143,3 +143,16 @@ minetest.register_lbm({
 		minetest.swap_node(pos, node)
 	end
 })
+
+--
+-- Stoppers during MVPS code update with `on_protected` support
+-- Added December 2021
+--
+
+if mesecon and mesecon.register_mvps_stopper then
+	mesecon.register_mvps_stopper("default:grill_bar")
+	mesecon.register_mvps_stopper("default:chest")
+	mesecon.register_mvps_stopper("default:chest_left")
+	mesecon.register_mvps_stopper("default:chest_right")
+	mesecon.register_mvps_stopper("default:furnace")
+end

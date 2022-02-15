@@ -52,7 +52,7 @@ local function piston_get_rules(node)
 		end
 	end
 	local rules = table_copy(mesecon.rules.all)
-	for i, rule in pairs(rules) do
+	for i, rule in ipairs(rules) do
 		if rule[dir[1]] == dir[2] then
 			table_remove(rules, i)
 		end
@@ -94,8 +94,13 @@ local function piston_on(pos, node)
 	end
 	local dir = vmultiply(minetest.facedir_to_dir(node.param2), -1)
 	local pusher_pos = vadd(pos, dir)
-	local success, stack, oldstack = mesecon.mvps_push(pusher_pos, dir, max_push)
+	local meta = minetest.get_meta(pos)
+	local success, stack, oldstack = mesecon.mvps_push(pusher_pos, dir, max_push, meta:get_string("owner"))
 	if not success then
+		if stack == "protected" then
+			meta:set_string("infotext", meta:get_string("infotext") .. "\n" ..
+				S("Blocked by a protected area on the way!"))
+		end
 		return
 	end
 	minetest.swap_node(pos, {param2 = node.param2, name = pistonspec.onname})
@@ -115,14 +120,15 @@ local function piston_off(pos, node)
 		return
 	end
 	minetest.swap_node(pos, {param2 = node.param2, name = pistonspec.offname})
-	piston_remove_pusher(pos, node, not pistonspec.sticky)
+	piston_remove_pusher(pos, node, not pistonspec.sticky) -- allow that even in protected area
 
 	if not pistonspec.sticky then
 		return
 	end
 	local dir = minetest.facedir_to_dir(node.param2)
 	local pullpos = vadd(pos, vmultiply(dir, -2))
-	local success, _, oldstack = mesecon.mvps_pull_single(pullpos, dir, max_pull)
+	local meta = minetest.get_meta(pos)
+	local success, _, oldstack = mesecon.mvps_pull_single(pullpos, dir, max_pull, meta:get_string("owner"))
 	if success then
 		mesecon.mvps_move_objects(pullpos, vmultiply(dir, -1), oldstack, -1)
 	end
@@ -165,6 +171,7 @@ local function piston_orientate(pos, placer)
 	end
 	local pitch = deg(placer:get_look_vertical())
 	local node = minetest.get_node(pos)
+	mesecon.mvps_set_owner(pos, node, placer)
 	if pitch > 55 then
 		node.param2 = orientations[node.param2][1]
 	elseif pitch < -55 then
@@ -272,6 +279,11 @@ local function piston_rotate_pusher(pos, node, player, mode)
 	return piston_rotate_on(piston_pos, piston_node, player, mode)
 end
 
+local function piston_punch(pos, node, player)
+	local player_name = player and player.get_player_name and player:get_player_name()
+	mesecon.mvps_claim(pos, node, player_name)
+end
+
 
 -- Boxes:
 
@@ -314,6 +326,7 @@ minetest.register_node("mesecons_pistons:piston_normal_off", {
 		action_on = piston_on_delayed,
 		rules = piston_get_rules
 	}},
+	on_punch = piston_punch,
 	on_rotate = piston_rotate,
 	on_blast = mesecon.on_blastnode
 })
@@ -366,8 +379,7 @@ minetest.register_node("mesecons_pistons:piston_pusher_normal", {
 	node_box = piston_pusher_box,
 	on_rotate = piston_rotate_pusher,
 	drop = "",
-	sounds = default.node_sound_wood_defaults(),
-	mesecons = {}
+	sounds = default.node_sound_wood_defaults()
 })
 
 -- Sticky ones
@@ -393,6 +405,7 @@ minetest.register_node("mesecons_pistons:piston_sticky_off", {
 		action_on = piston_on_delayed,
 		rules = piston_get_rules
 	}},
+	on_punch = piston_punch,
 	on_rotate = piston_rotate,
 	on_blast = mesecon.on_blastnode
 })
@@ -445,8 +458,7 @@ minetest.register_node("mesecons_pistons:piston_pusher_sticky", {
 	node_box = piston_pusher_box,
 	on_rotate = piston_rotate_pusher,
 	drop = "",
-	sounds = default.node_sound_wood_defaults(),
-	mesecons = {}
+	sounds = default.node_sound_wood_defaults()
 })
 
 
@@ -466,13 +478,14 @@ end
 mesecon.register_mvps_stopper("mesecons_pistons:piston_pusher_normal", piston_pusher_get_stopper)
 mesecon.register_mvps_stopper("mesecons_pistons:piston_pusher_sticky", piston_pusher_get_stopper)
 
+
 local function piston_get_stopper(node, _, stack, stackid)
 	local pistonspec = get_pistonspec(node.name, "onname")
 	local dir = vmultiply(minetest.facedir_to_dir(node.param2), -1)
 	local pusherpos  = vadd(stack[stackid].pos, dir)
 	local pushernode = minetest.get_node(pusherpos)
 	if pistonspec.pusher == pushernode.name then
-		for _, s in pairs(stack) do
+		for _, s in ipairs(stack) do
 			if vequals(s.pos, pusherpos) -- pusher is also to be pushed
 			and s.node.param2 == node.param2 then
 				return false
