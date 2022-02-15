@@ -306,3 +306,11 @@ minetest.register_craft({
 
 minetest.register_on_placenode(update_wall_global)
 minetest.register_on_dignode(update_wall_global)
+
+minetest.register_lbm({
+	label = "Upgrade Legacy Walls",
+	name = "walls:legacy_upgrade",
+	nodenames = {"group:wall_not_full"},
+	run_at_every_load = false,
+	action = update_wall_global
+})

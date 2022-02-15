@@ -1,14 +1,16 @@
-walls = {}
-
 local translator = minetest.get_translator
-walls.S = translator and translator("walls") or intllib.make_gettext_pair()
+local S = translator and translator("walls") or intllib.make_gettext_pair()
 
 if translator and not minetest.is_singleplayer() then
 	local lang = minetest.settings:get("language")
 	if lang and lang == "ru" then
-		walls.S = intllib.make_gettext_pair()
+		S = intllib.make_gettext_pair()
 	end
 end
+
+walls = {
+	S = S
+}
 
 walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wall_sounds, not_in_cinv)
 	-- inventory node, and pole-type wall start item
@@ -40,7 +42,7 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 		drop = wall_name .. "_inv",
 		after_dig_node = function(pos, _, _, digger)
 			local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
-			local node_under = string.gsub(minetest.get_node(pos_under).name, "_full$", "")
+			local node_under = (minetest.get_node(pos_under).name):gsub("_full$", "")
 			if minetest.get_item_group(node_under, "wall") == 1 and
 					digger and digger:is_player() then
 				minetest.set_node(pos_under, {name = node_under})
@@ -76,7 +78,7 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 	})
 
 	minetest.register_node(wall_name .. "_inv", {
-		description = walls.S(wall_desc),
+		description = wall_desc,
 		drawtype = "nodebox",
 		node_box = {
 			type = "fixed",
@@ -111,29 +113,51 @@ walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wa
 		end
 	})
 
-	-- crafting recipe
-	minetest.register_craft({
-		output = wall_name .. "_inv 6",
-		recipe = {
-			{"", "", ""},
-			{wall_mat, wall_mat, wall_mat},
-			{wall_mat, wall_mat, wall_mat}
-		}
-	})
-
+	if not not_in_cinv then
+		-- crafting recipe
+		minetest.register_craft({
+			output = wall_name .. "_inv 6",
+			recipe = {
+				{"", "", ""},
+				{wall_mat, wall_mat, wall_mat},
+				{wall_mat, wall_mat, wall_mat}
+			}
+		})
+	end
 end
 
-walls.register("walls:cobble", "Cobblestone Wall", {"default_cobble.png"},
+walls.register("walls:cobble", S("Cobblestone Wall"), {"default_cobble.png"},
 		"default:cobble", default.node_sound_stone_defaults(), true)
 
-walls.register("walls:mossycobble", "Mossy Cobblestone Wall", {"default_mossycobble.png"},
+walls.register("walls:mossycobble", S("Mossy Cobblestone Wall"), {"default_mossycobble.png"},
 		"default:mossycobble", default.node_sound_stone_defaults(), true)
 
-walls.register("walls:sandstone", "Sandstone Wall", {"default_sandstone_normal.png"},
+walls.register("walls:sandstone", S("Sandstone Wall"), {"default_sandstone_normal.png"},
 		"default:sandstone", default.node_sound_stone_defaults())
 
-walls.register("walls:redsandstone", "Red Sandstone Wall", {"default_redsandstone_normal.png"},
+walls.register("walls:redsandstone", S("Red Sandstone Wall"), {"default_redsandstone_normal.png"},
 		"default:redsandstone", default.node_sound_stone_defaults())
+
+-- Ice Wall
+walls.register("walls:ice", S("Ice Wall"), {"default_ice.png"},
+		"default:ice", default.node_sound_glass_defaults())
+
+minetest.override_item("walls:ice", {
+	use_texture_alpha = "blend",
+	connects_to = {"group:wall", "group:fence", "default:ice", "default:packedice"},
+	groups = {cracky = 3, wall = 1, not_in_creative_inventory = 1},
+})
+
+minetest.override_item("walls:ice_full", {
+	use_texture_alpha = "blend",
+	connects_to = {"group:wall", "group:fence", "default:ice", "default:packedice"},
+	groups = {cracky = 3, wall = 1, not_in_creative_inventory = 1},
+})
+
+minetest.override_item("walls:ice_inv", {
+	use_texture_alpha = "blend",
+	groups = {cracky = 3, wall = 1},
+})
 
 -- Legacy, but more beautiful walls
 dofile(minetest.get_modpath("walls") .. "/legacy.lua")
