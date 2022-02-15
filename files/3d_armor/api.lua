@@ -1,16 +1,4 @@
-armor = {}
-
-local translator = minetest.get_translator
-local S = translator and translator("3d_armor") or intllib.make_gettext_pair()
-
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		S = intllib.make_gettext_pair()
-	end
-end
-
-armor.S = S
+local S = minetest.get_translator_auto({"ru"})
 
 local enable_damage = minetest.settings:get_bool("enable_damage")
 local use_pova_mod = minetest.get_modpath("pova")

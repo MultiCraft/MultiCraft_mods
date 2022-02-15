@@ -1,24 +1,17 @@
+local S = minetest.get_translator_auto({"ru"})
+
 beds = {
+	S = S,
 	player = {},
 	bed_position = {},
 	pos = {},
 	spawn = {}
 }
 
-local translator = minetest.get_translator
-beds.S = translator and translator("beds") or intllib.make_gettext_pair()
-
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		beds.S = intllib.make_gettext_pair()
-	end
-end
-
 beds.formspec = "size[8,10]" ..
 	"no_prepend[]" ..
 	default.gui_bg ..
-	"button_exit[1.9,7;4.1,0.75;leave;" .. beds.S("Leave Bed") .. "]"
+	"button_exit[1.9,7;4.1,0.75;leave;" .. S("Leave Bed") .. "]"
 
 local modpath = minetest.get_modpath("beds")
 

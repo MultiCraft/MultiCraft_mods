@@ -1,20 +1,11 @@
 fire = {}
 
-local sp = minetest.is_singleplayer()
-
-local translator = minetest.get_translator
-local S = translator and translator("fire") or intllib.make_gettext_pair()
-
-if translator and not sp then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		S = intllib.make_gettext_pair()
-	end
-end
+local S = minetest.get_translator_auto({"ru"})
 
 -- 'Enable fire' setting
 local fire_enabled = minetest.settings:get_bool("enable_fire")
 if fire_enabled == nil then
+	local sp = minetest.is_singleplayer()
 	if minetest.settings:get_bool("singleplayer") then
 		sp = true
 	end

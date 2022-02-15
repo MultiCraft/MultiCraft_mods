@@ -1,23 +1,14 @@
 -- Global farming namespace
 farming = {}
-farming.path = minetest.get_modpath("farming")
 
-local translator = minetest.get_translator
-farming.S = translator and translator("farming") or intllib.make_gettext_pair()
-
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		farming.S = intllib.make_gettext_pair()
-	end
-end
-local S = farming.S
+local S = minetest.get_translator_auto({"ru"})
+farming.S = S
 
 -- Load files
-dofile(farming.path .. "/api.lua")
-dofile(farming.path .. "/nodes.lua")
-dofile(farming.path .. "/hoes.lua")
-
+local path = minetest.get_modpath("farming")
+dofile(path .. "/api.lua")
+dofile(path .. "/nodes.lua")
+dofile(path .. "/hoes.lua")
 
 -- WHEAT
 
