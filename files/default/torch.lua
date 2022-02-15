@@ -10,9 +10,8 @@ function default.register_torch(name, def)
 	def.drop = name
 	def.floodable = true
 
-	def.on_flood = function(pos, oldnode, newnode)
-		oldnode.name = name or name .. "_wall" or name .. "_celling"
-		minetest.add_item(pos, ItemStack(oldnode))
+	def.on_flood = function(pos, _, newnode)
+		minetest.add_item(pos, name)
 		-- Play flame-extinguish sound if liquid is not an 'igniter'
 		if minetest.get_item_group(newnode.name, "igniter") == 0 then
 			minetest.sound_play("default_cool_lava",

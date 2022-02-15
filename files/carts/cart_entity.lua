@@ -369,7 +369,7 @@ local function rail_on_step(self, dtime)
 			local speed_mod = tonumber(acc_meta)
 			if speed_mod and speed_mod ~= 0 then
 				-- Try to make it similar to the original carts mod
-				acc = speed_mod * 10
+				_acc = speed_mod * 10
 			end
 		end
 		if _acc ~= false then
