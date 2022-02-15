@@ -897,7 +897,6 @@ minetest.register_node("default:stone_with_bluestone", {
 	description = S("Bluestone Ore"),
 	tiles = {"default_stone.png^default_mineral_bluestone.png"},
 	groups = {cracky = 2, not_cuttable = 1},
-	drop = "mesecons:wire_00000000_off 8",
 	sounds = default.node_sound_stone_defaults()
 })
 

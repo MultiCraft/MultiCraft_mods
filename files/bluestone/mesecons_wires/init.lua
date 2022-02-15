@@ -232,6 +232,7 @@ local function register_wires()
 	end
 end
 register_wires()
+minetest.register_alias("bluestone:dust", "mesecons:wire_00000000_off")
 
 -- ##############
 -- ## Crafting ##
@@ -239,6 +240,6 @@ register_wires()
 
 minetest.register_craft({
 	type = "cooking",
-	output = "mesecons:wire_00000000_off 8",
+	output = "bluestone:dust 8",
 	recipe = "default:stone_with_bluestone"
 })

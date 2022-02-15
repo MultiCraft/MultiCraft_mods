@@ -49,7 +49,7 @@ minetest.register_craft({
 	recipe = {
 		{"default:gold_ingot", "", "default:gold_ingot"},
 		{"default:gold_ingot", "default:stick", "default:gold_ingot"},
-		{"default:gold_ingot", "mesecons:wire_00000000_off", "default:gold_ingot"}
+		{"default:gold_ingot", "bluestone:dust", "default:gold_ingot"}
 	}
 })
 

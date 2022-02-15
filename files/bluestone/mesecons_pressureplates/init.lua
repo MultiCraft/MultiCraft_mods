@@ -80,7 +80,7 @@ function mesecon.register_pressure_plate(basename, description, tile, recipe, gr
 	})
 
 	minetest.register_craft({
-		output = basename .. "_off",
+		output = basename .. "_off 2",
 		recipe = recipe
 	})
 end
@@ -89,7 +89,7 @@ mesecon.register_pressure_plate(
 	"mesecons_pressureplates:pressure_plate_wood",
 	S("Wooden Pressure Plate"),
 	{"default_wood.png"},
-	{{"default:wood", "default:wood"}},
+	{{"default:wood", "bluestone:dust", "default:wood"}},
 	{choppy = 3, oddly_breakable_by_hand = 3, attached_node = 1},
 	default.node_sound_wood_defaults())
 
@@ -97,6 +97,6 @@ mesecon.register_pressure_plate(
 	"mesecons_pressureplates:pressure_plate_stone",
 	S("Stone Pressure Plate"),
 	{"default_stone.png"},
-	{{"default:cobble", "default:cobble"}},
+	{{"default:cobble", "bluestone:dust", "default:cobble"}},
 	{cracky = 3, oddly_breakable_by_hand = 3, attached_node = 1},
 	default.node_sound_stone_defaults())
