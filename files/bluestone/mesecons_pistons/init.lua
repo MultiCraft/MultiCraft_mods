@@ -366,7 +366,8 @@ minetest.register_node("mesecons_pistons:piston_pusher_normal", {
 	node_box = piston_pusher_box,
 	on_rotate = piston_rotate_pusher,
 	drop = "",
-	sounds = default.node_sound_wood_defaults()
+	sounds = default.node_sound_wood_defaults(),
+	mesecons = {}
 })
 
 -- Sticky ones
@@ -444,7 +445,8 @@ minetest.register_node("mesecons_pistons:piston_pusher_sticky", {
 	node_box = piston_pusher_box,
 	on_rotate = piston_rotate_pusher,
 	drop = "",
-	sounds = default.node_sound_wood_defaults()
+	sounds = default.node_sound_wood_defaults(),
+	mesecons = {}
 })
 
 

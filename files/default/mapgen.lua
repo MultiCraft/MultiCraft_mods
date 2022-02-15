@@ -399,30 +399,6 @@ function default.register_ores()
 		y_max          = -35,
 	})
 
-	-- Lapis Lazuli
-
-	minetest.register_ore({
-		ore_type       = "scatter",
-		ore            = "default:stone_with_lapis",
-		wherein        = "default:stone",
-		clust_scarcity = 22 * 22 * 22,
-		clust_num_ores = 7,
-		clust_size     = 4,
-		y_min          = -50,
-		y_max          = -46,
-	})
-
-	minetest.register_ore({
-		ore_type       = "scatter",
-		ore            = "default:stone_with_lapis",
-		wherein        = "default:stone",
-		clust_scarcity = 22 * 22 * 22,
-		clust_num_ores = 5,
-		clust_size     = 4,
-		y_min          = -59,
-		y_max          = -50,
-	})
-
 	-- Glowstone
 
 	minetest.register_ore({

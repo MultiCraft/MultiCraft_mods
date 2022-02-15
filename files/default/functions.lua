@@ -194,7 +194,7 @@ end
 
 
 --
--- Sugarcane and cactus growing
+-- Papyrus and cactus growing
 --
 
 -- Wrapping the functions in ABM action is necessary to make overriding them possible
@@ -224,7 +224,7 @@ function default.grow_cactus(pos, node)
 	return true
 end
 
-function default.grow_sugarcane(pos, node)
+function default.grow_papyrus(pos, node)
 	pos.y = pos.y - 1
 	local name = minetest.get_node(pos).name
 	if name ~= "default:sugarcane" and
@@ -252,18 +252,6 @@ function default.grow_sugarcane(pos, node)
 	return true
 end
 
-function default.drop_sugarcane(pos)
-	local name = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z}).name
-	if name ~= "ignore" and name ~= "default:sugarcane" and
-			minetest.get_item_group(name, "soil") == 0 and
-			minetest.get_item_group(name, "sand") == 0 then
-		-- drop if it grows on the wrong block
-		minetest.remove_node(pos)
-		minetest.add_item(pos, "default:sugarcane")
-	end
-	return true
-end
-
 minetest.register_abm({
 	label = "Grow cactus",
 	nodenames = {"default:cactus"},
@@ -276,7 +264,7 @@ minetest.register_abm({
 })
 
 minetest.register_abm({
-	label = "Grow sugarcane",
+	label = "Grow papyrus",
 	nodenames = {"default:sugarcane"},
 	neighbors = {
 		"group:soil",
@@ -285,18 +273,7 @@ minetest.register_abm({
 	interval = 15,
 	chance = 50,
 	action = function(...)
-		default.grow_sugarcane(...)
-	end
-})
-
-minetest.register_abm({
-	label = "Drop sugarcane",
-	nodenames = {"default:sugarcane"},
-	interval = 5,
-	chance = 25,
-	catch_up = false,
-	action = function(...)
-		default.drop_sugarcane(...)
+		default.grow_papyrus(...)
 	end
 })
 
@@ -308,19 +285,6 @@ minetest.register_abm({
 function default.dig_up(pos, node, digger)
 	if digger == nil then return end
 	local np = {x = pos.x, y = pos.y + 1, z = pos.z}
-	local nn = minetest.get_node(np)
-	if nn.name == node.name then
-		minetest.node_dig(np, nn, digger)
-	end
-end
-
---
--- Dig downwards
---
-
-function default.dig_down(pos, node, digger)
-	if digger == nil then return end
-	local np = {x = pos.x, y = pos.y - 1, z = pos.z}
 	local nn = minetest.get_node(np)
 	if nn.name == node.name then
 		minetest.node_dig(np, nn, digger)
@@ -479,9 +443,8 @@ local function leafdecay_on_timer(pos, def)
 		return false
 	end
 
-	local node = minetest.get_node(pos)
-	local node_name = node.name
-	local drops = minetest.get_node_drops(node_name)
+	local nnode = minetest.get_node(pos).name
+	local drops = minetest.get_node_drops(nnode)
 	for _, item in ipairs(drops) do
 		local is_leaf
 		for _, v in pairs(def.leaves) do
@@ -503,7 +466,7 @@ local function leafdecay_on_timer(pos, def)
 	minetest.check_for_falling(pos)
 
 	-- spawn a few particles for the removed node
-	local tiles = minetest.registered_nodes[node_name].tiles
+	local tiles = minetest.registered_nodes[nnode].tiles
 	local texture = tiles[1]
 	if texture.name ~= nil then
 		texture = texture.name
@@ -561,7 +524,7 @@ minetest.register_abm({
 		"default:snow"
 	},
 	interval = 10,
-	chance = 15,
+	chance = 20,
 	catch_up = false,
 	action = function(pos)
 		-- Check for darkness: night, shadow or under a light-blocking node
@@ -698,196 +661,4 @@ function default.can_interact_with_node(player, pos)
 		return true
 	end
 	return false
-end
-
-
---
--- Cactus damage
---
-
-minetest.register_entity("default:cactus_entity", {
-	physical = false,
-	collisionbox = {0},
-	visual = "sprite",
-	visual_size = {x = 0, y = 0},
-	textures = {"blank.png"},
-	on_punch = function() return true end,
-	on_activate = function(self)
-		local ent = self.object
-		local pos = ent:get_pos()
-		if #minetest.get_objects_inside_radius(pos, 1) > 0 then
-			return
-		end
-		ent:remove()
-	end
-})
-
-minetest.register_abm({
-	label = "Cactus damage",
-	nodenames = {"default:cactus"},
-	interval = 1,
-	chance = 1,
-	catch_up = false,
-	action = function(pos)
-		local objects = minetest.get_objects_inside_radius(pos, 1)
-		if #objects < 1 then
-			return
-		end
-
-		local cactus = minetest.add_entity(pos, "default:cactus_entity")
-		if cactus then
-			local entities = {}
-			for _, obj in pairs(objects) do
-				if obj:is_player() then
-					-- Only entity can really do `punch`.
-					-- Attacking yourself (obj punched obj) is not a good idea
-					obj:punch(cactus, 1.0, {
-						full_punch_interval = 0,
-						damage_groups = {fleshy = 3}
-					}, nil)
-				else
-					local entity = obj:get_luaentity()
-					if entity and not entity.name:find("^__builtin:") then
-						entities[#entities + 1] = obj
-					end
-				end
-			end
-			for _, obj in pairs(entities) do
-				obj:punch(cactus, 1.0, {
-					full_punch_interval = 0,
-					damage_groups = {fleshy = 3}
-				}, nil)
-			end
-			cactus:remove()
-		end
-	end
-})
-
-
---
--- Snowballs
---
-
--- Shoot snowball
-local function snowball_impact(thrower, pos, dir, hit_object)
-	if thrower and hit_object then
-		local punch_damage = {
-			full_punch_interval = 1.0,
-			damage_groups = {fleshy = 1}
-		}
-		hit_object:punch(thrower, 1.0, punch_damage, dir)
-	end
-	local node_pos
-	local node = minetest.get_node(pos)
-	if node.name == "air" then
-		local pos_under = vsubtract(pos, {x = 0, y = 1, z = 0})
-		node = minetest.get_node(pos_under)
-		if node.name then
-			local def = minetest.registered_items[node.name] or {}
-			if def.buildable_to then
-				node_pos = pos_under
-			elseif def.walkable then
-				node_pos = pos
-			end
-		elseif node.name then
-			local def = minetest.registered_items[node.name]
-			if def and def.buildable_to then
-				node_pos = pos
-			end
-		end
-		if node_pos then
-			local player_name = thrower and thrower:get_player_name() or ""
-			if not minetest.is_protected(node_pos, player_name) then
-				minetest.add_node(pos, {name = "default:snow"})
-				minetest.spawn_falling_node(pos)
-			end
-		end
-	end
-end
-
-function default.snow_shoot_snowball(itemstack, thrower)
-	if not thrower or not thrower:is_player() then
-		return
-	end
-	local playerpos = thrower:get_pos()
-	if not minetest.is_valid_pos(playerpos) then
-		return
-	end
-	local obj = minetest.item_throw("default:snowball", thrower, 19, -3,
-		snowball_impact)
-	if obj then
-		obj:set_properties({
-			visual = "sprite",
-			visual_size = {x = 1, y = 1},
-			textures = {"default_snowball.png"}
-		})
-		minetest.sound_play("throwing_sound", {
-			pos = playerpos,
-			gain = 0.7,
-			max_hear_distance = 10
-		})
-		if not minetest.is_creative_enabled(thrower:get_player_name()) or
-				not minetest.is_singleplayer() then
-			itemstack:take_item()
-		end
-	end
-	return itemstack
-end
-
---
--- Liquid particles
---
-
-if minetest.settings:get_bool("enable_liquid_particles") ~= false then
-	local add_particlespawner = minetest.add_particlespawner
-	local get_node = minetest.get_node
-	local registered_nodes = minetest.registered_nodes
-
-	minetest.register_abm({
-		label = "Liquid particles",
-		nodenames = {"group:liquid"},
-		interval = 15,
-		chance = 3,
-		catch_up = false,
-		action = function(pos, node)
-			local nname = node.name
-			if get_node({x = pos.x, y = pos.y - 2, z = pos.z}).name == "air" then
-				local tiles = registered_nodes[nname].tiles
-				local texture = tiles[1]
-				if texture.name ~= nil then
-					texture = texture.name
-				end
-
-				add_particlespawner({
-					amount = 5,
-					time = 15,
-					minpos = vsubtract(pos, {x = 0.5, y = 1, z = 0.5}),
-					maxpos = vadd(pos, {x = 0.5, y = 1, z = 0.5}),
-					minvel = {x = 0, y = -1, z = 0},
-					maxvel = {x = 0, y = -1, z = 0},
-					minexptime = 2,
-					maxexptime = 4,
-					vertical = true,
-					texture = texture .. "^[resize:16x16^[mask:default_liquid_drop.png"
-				})
-			end
-
-			if (nname == "default:lava_source" or nname == "default:lava_flowing")
-			and get_node({x = pos.x, y = pos.y + 1, z = pos.z}).name == "air" then
-				add_particlespawner({
-					amount = 5,
-					time = 15,
-					minpos = vsubtract(pos, {x = 0.5, y = 0, z = 0.5}),
-					maxpos = vadd(pos, {x = 0.5, y = 0, z = 0.5}),
-					minvel = {x = 0, y = 1, z = 0},
-					maxvel = {x = 0, y = 1, z = 0},
-					minexptime = 2,
-					maxexptime = 2,
-					vertical = true,
-					texture = "default_lava.png",
-					glow = 3
-				})
-			end
-		end
-	})
 end
