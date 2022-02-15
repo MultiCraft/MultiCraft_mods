@@ -2,10 +2,9 @@ local abs, floor, min, sign = math.abs, math.floor, math.min, math.sign
 local vector_add, vector_equals, vector_new, vector_round = vector.add, vector.equals, vector.new, vector.round
 
 -- Compatible for MultiCraft Engine 2.0
-local aheight = 7
-if minetest.features and minetest.features.object_independent_selectionbox then
-	aheight = -3
-end
+local ah = minetest.features.object_independent_selectionbox and 0 or 10
+carts.default_attach = {x=0, y=-3+ah, z=-2}
+
 function carts:manage_attachment(player, obj)
 	if not player then
 		return
@@ -18,7 +17,7 @@ function carts:manage_attachment(player, obj)
 	player_api.player_attached[player_name] = status
 
 	if status then
-		player:set_attach(obj, "", {x=0, y=aheight, z=-2}, {x=0, y=0, z=0})
+		player:set_attach(obj, "", carts.default_attach, {x=0, y=0, z=0})
 		player:set_eye_offset({x=0, y=-4, z=0},{x=0, y=-4, z=0})
 	else
 		player:set_detach()
