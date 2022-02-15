@@ -153,7 +153,7 @@ function sfinv.get_page()
 	return context and context.page or sfinv.get_homepage_name()
 end
 
-minetest.register_on_formspec_input(function(formname, fields)
+local function on_formspec_input(formname, fields)
 	if formname ~= "sfinv_sscsm:fs" or not sfinv.enabled then
 		return false
 	end
@@ -192,7 +192,9 @@ minetest.register_on_formspec_input(function(formname, fields)
 			end
 		end
 	end
-end)
+end
+
+minetest.register_on_formspec_input(on_formspec_input)
 
 function sfinv.open_formspec()
 	inventory_open = true
@@ -241,6 +243,11 @@ end)
 sscsm.register_on_com_receive("sfinv_sscsm:open_formspec", sfinv.open_formspec)
 sscsm.register_on_com_receive("sfinv_sscsm:formspec_prepend", function(msg)
 	formspec_prepend = msg
+end)
+sscsm.register_on_com_receive("sfinv_sscsm:handover", function(msg)
+	if sfinv.pages[msg[1]] then sfinv.set_page(msg[1]) end
+	sfinv.open_formspec()
+	on_formspec_input("sfinv_sscsm:fs", msg[2])
 end)
 
 -- Update player previews.
