@@ -24,7 +24,7 @@ minetest.register_craft({
 	output = "mesecons_noteblock:noteblock",
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},
-		{"default:steel_ingot", "mesecons:wire_00000000_off", "default:steel_ingot"},
+		{"default:steel_ingot", "bluestone:dust", "default:steel_ingot"},
 		{"group:wood", "group:wood", "group:wood"}
 	}
 })

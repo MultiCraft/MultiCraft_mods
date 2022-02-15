@@ -127,7 +127,7 @@ minetest.register_craft({
 	output = "bluestone_observer:observer_off",
 	recipe = {
 		{"default:cobble", "default:cobble", "default:cobble"},
-		{"mesecons:wire_00000000_off", "default:quartz_crystal", "mesecons:wire_00000000_off"},
+		{"bluestone:dust", "default:quartz_crystal", "bluestone:dust"},
 		{"default:cobble", "default:cobble", "default:cobble"}
 	}
 })

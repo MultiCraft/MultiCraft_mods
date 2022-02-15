@@ -176,7 +176,7 @@ local on_state = {
 end
 
 minetest.register_craft({
-	output = "mesecons_delayer:delayer_off_1",
+	output = "mesecons_delayer:delayer_off_1 2",
 	recipe = {
 		{"mesecons_torch:mesecon_torch_on", "", "mesecons_torch:mesecon_torch_on"},
 		{"default:cobble","default:cobble", "default:cobble"}
