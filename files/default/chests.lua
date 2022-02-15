@@ -1,11 +1,13 @@
 local S = default.S
-local VER = "2"
+local VER = "3"
+
+local vadd = vector.add
 
 local neighbor = {
-	[0] = {{x =  1, z =  0}, {x = -1, z =  0}},
-	[1] = {{x =  0, z = -1}, {x =  0, z =  1}},
-	[2] = {{x = -1, z =  0}, {x =  1, z =  0}},
-	[3] = {{x =  0, z =  1}, {x =  0, z = -1}}
+	[0] = {{x =  1, y = 0, z =  0}, {x = -1, y = 0, z =  0}},
+	[1] = {{x =  0, y = 0, z = -1}, {x =  0, y = 0, z =  1}},
+	[2] = {{x = -1, y = 0, z =  0}, {x =  1, y = 0, z =  0}},
+	[3] = {{x =  0, y = 0, z =  1}, {x =  0, y = 0, z = -1}}
 }
 
 -- Chests formspecs
@@ -73,8 +75,8 @@ local function on_construct(pos)
 	local param2 = minetest.get_node(pos).param2
 	local meta = minetest.get_meta(pos)
 	local nparam2 = neighbor[param2]
-	local pos1 = {x = pos.x + nparam2[1].x, y = pos.y, z = pos.z + nparam2[1].z}
-	local pos2 = {x = pos.x + nparam2[2].x, y = pos.y, z = pos.z + nparam2[2].z}
+	local pos1 = vadd(pos, nparam2[1])
+	local pos2 = vadd(pos, nparam2[2])
 
 	if minetest.get_node(pos1).name == "default:chest" then
 		minetest.set_node(pos, {name = "default:chest_left", param2 = param2})
@@ -118,7 +120,7 @@ local function on_destruct(pos, large)
 		local stack
 		for i = 1, inv:get_size("main") do
 			stack = inv:get_stack("main", i)
-			if stack:get_count() > 0 then
+			if not stack:is_empty() then
 				minetest.item_drop(stack, nil, pos)
 			end
 		end
@@ -129,8 +131,7 @@ local function on_destruct(pos, large)
 		local param2 = minetest.get_node(pos).param2
 		local nparam2 = neighbor[param2]
 		if not nparam2 then return end
-		local nghbr_p = nparam2[right and 2 or 1]
-		local pos2 = {x = pos.x + nghbr_p.x, y = pos.y, z = pos.z + nghbr_p.z}
+		local pos2 = vadd(pos, nparam2[right and 2 or 1])
 		local name = minetest.get_node(pos2).name
 
 		if (right and name == "default:chest_left") or name == "default:chest_right" then
@@ -242,7 +243,8 @@ minetest.register_lbm({
 
 		elseif nname == "default:chest_left" then
 			local nparam2 = neighbor[node.param2]
-			local pos_r = {x = pos.x + nparam2[1].x, y = pos.y, z = pos.z + nparam2[1].z}
+			if not nparam2 then return end
+			local pos_r = vadd(pos, nparam2[1])
 			local chest_l = pos_r.x .. "," .. pos_r.y .. "," .. pos_r.z
 
 			local formspec_l = large_chest_formspec ..
@@ -253,7 +255,8 @@ minetest.register_lbm({
 
 		elseif nname == "default:chest_right" then
 			local nparam2 = neighbor[node.param2]
-			local pos_l = {x = pos.x + nparam2[2].x, y = pos.y, z = pos.z + nparam2[2].z}
+			if not nparam2 then return end
+			local pos_l = vadd(pos, nparam2[2])
 			local chest_r = pos_l.x .. "," .. pos_l.y .. "," .. pos_l.z
 
 			local formspec_r = large_chest_formspec ..
