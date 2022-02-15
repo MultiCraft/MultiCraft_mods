@@ -511,7 +511,7 @@ end
 minetest.register_entity("carts:cart", cart_entity)
 
 minetest.register_node("carts:cart", {
-	description = S("Cart (Sneak+Click to pick up)"),
+	description = S("Cart") .. S("(Sneak+Click to pick up)"),
 	drawtype = "mesh",
 	mesh = "carts_cart.b3d",
 	tiles = {"carts_cart.png", "carts_cart_wheels.png"},
