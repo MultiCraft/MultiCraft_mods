@@ -85,15 +85,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:pole",
-	recipe = {
-		{"", "", "default:stick"},
-		{"", "default:stick", "farming:string"},
-		{"default:stick", "", "farming:string"}
-	}
-})
-
-minetest.register_craft({
 	output = "default:coalblock",
 	recipe = {
 		{"default:coal_lump", "default:coal_lump", "default:coal_lump"},

@@ -287,6 +287,8 @@ minetest.register_node("default:furnace", {
 	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
 
+	after_dig_node = after_dig_node,
+
 	on_timer = furnace_node_timer,
 
 	on_construct = function(pos)
@@ -298,8 +300,6 @@ minetest.register_node("default:furnace", {
 		inv:set_size("split", 1)
 		furnace_node_timer(pos, 0)
 	end,
-
-	after_dig_node = after_dig_node,
 
 	on_metadata_inventory_move = function(pos)
 		minetest.get_node_timer(pos):start(1.0)
@@ -341,7 +341,9 @@ minetest.register_node("default:furnace_active", {
 	sounds = default.node_sound_stone_defaults(),
 
 	on_timer = furnace_node_timer,
+
 	after_dig_node = after_dig_node,
+
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_move = allow_metadata_inventory_move,
 	allow_metadata_inventory_take = allow_metadata_inventory_take

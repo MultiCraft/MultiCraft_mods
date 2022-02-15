@@ -80,6 +80,7 @@ default.register_torch("default:torch", {
 	}},
 	inventory_image = "default_torch.png",
 	wield_image = "default_torch.png",
+	wield_image2 = "[combine:32x32:7,0=default_torch.png",
 	use_texture_alpha = "clip",
 	light_source = 12,
 	groups = {choppy = 2, dig_immediate = 3, flammable = 1, attached_node = 1, torch = 1},

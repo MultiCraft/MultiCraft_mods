@@ -125,19 +125,3 @@ minetest.register_craft({
 		{"default:bone"}
 	}
 })
-
-minetest.register_craft({
-	output = "dye:blue 9",
-	recipe = {
-		{"default:lapisblock"}
-	}
-})
-
-minetest.register_craft({
-	output = "default:lapisblock",
-	recipe = {
-		{"dye:blue", "dye:blue", "dye:blue"},
-		{"dye:blue", "dye:blue", "dye:blue"},
-		{"dye:blue", "dye:blue", "dye:blue"}
-	}
-})
