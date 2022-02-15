@@ -72,7 +72,7 @@ mobs:register_mob("mobs_npc:npc_man", {
 
 		-- right clicking with gold lump drops random item from mobs.npc_drops
 		if item:get_name() == "default:gold_lump" then
-			if not mobs.is_creative(name) then
+			if not minetest.is_creative_enabled(name) then
 				item:take_item()
 				clicker:set_wielded_item(item)
 			end
@@ -167,7 +167,7 @@ mobs:register_mob("mobs_npc:npc_woman", {
 
 		-- right clicking with gold lump drops random item from mobs.npc_drops
 		if item:get_name() == "default:gold_lump" then
-			if not mobs.is_creative(name) then
+			if not minetest.is_creative_enabled(name) then
 				item:take_item()
 				clicker:set_wielded_item(item)
 			end
