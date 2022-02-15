@@ -1,12 +1,4 @@
-local translator = minetest.get_translator
-local S = translator and translator("3d_armor_stand") or intllib.make_gettext_pair()
-
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		S = intllib.make_gettext_pair()
-	end
-end
+local S = minetest.get_translator_auto({"ru"})
 
 local pi, vround = math.pi, vector.round
 local tconcat = table.concat

@@ -2,15 +2,7 @@ pep = {}
 
 local sp = minetest.is_singleplayer()
 
-local translator = minetest.get_translator
-local S = translator and translator("pep") or intllib.make_gettext_pair()
-
-if translator and not sp then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		S = intllib.make_gettext_pair()
-	end
-end
+local S = minetest.get_translator_auto({"ru"})
 
 --
 -- Apply Potion

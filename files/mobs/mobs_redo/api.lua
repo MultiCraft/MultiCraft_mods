@@ -4,17 +4,8 @@ mobs = {
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
-local translator = minetest.get_translator
-mobs.S = translator and translator("mobs") or intllib.make_gettext_pair()
-
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		mobs.S = intllib.make_gettext_pair()
-	end
-end
-
-local S = mobs.S
+local S = minetest.get_translator_auto({"ru"})
+mobs.S = S
 
 -- localize common functions
 local abs = math.abs

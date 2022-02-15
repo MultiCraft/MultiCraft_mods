@@ -1,14 +1,6 @@
-farming_addons = {}
-
-local translator = minetest.get_translator
-farming_addons.S = translator and translator("farming_addons") or intllib.make_gettext_pair()
-
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		farming_addons.S = intllib.make_gettext_pair()
-	end
-end
+farming_addons = {
+	S = minetest.get_translator_auto({"ru"})
+}
 
 local path = minetest.get_modpath("farming_addons")
 local farming = {

@@ -1,16 +1,7 @@
-local translator = minetest.get_translator
-local S = translator and translator("walls") or intllib.make_gettext_pair()
+walls = {}
 
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		S = intllib.make_gettext_pair()
-	end
-end
-
-walls = {
-	S = S
-}
+local S = minetest.get_translator_auto({"ru"})
+walls.S = S
 
 walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wall_sounds, not_in_cinv)
 	-- inventory node, and pole-type wall start item

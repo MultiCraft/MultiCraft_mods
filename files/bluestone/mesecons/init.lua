@@ -44,16 +44,7 @@ mesecon = {} -- contains all functions and all global variables
 mesecon.queue = {} -- contains the ActionQueue
 mesecon.queue.funcs = {} -- contains all ActionQueue functions
 
-
-local translator = minetest.get_translator
-mesecon.S = translator and translator("mesecons") or intllib.make_gettext_pair()
-
-if translator and not minetest.is_singleplayer() then
-	local lang = minetest.settings:get("language")
-	if lang and lang == "ru" then
-		mesecon.S = intllib.make_gettext_pair()
-	end
-end
+mesecon.S = minetest.get_translator_auto({"ru"})
 
 local modpath = minetest.get_modpath("mesecons")
 
