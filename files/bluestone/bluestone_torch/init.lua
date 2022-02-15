@@ -28,6 +28,34 @@ default.register_torch("bluestone_torch:torch", {
 	on_blast = mesecon.on_blastnode
 })
 
+-- Fix `on_flood` behavior
+local torch_on_flood = minetest.registered_nodes["bluestone_torch:torch"].on_flood
+minetest.override_item("bluestone_torch:torch", {
+	on_flood = function(...)
+		torch_on_flood(...)
+		mesecon.on_dignode(...)
+		return false
+	end
+})
+
+local torch_wall_on_flood = minetest.registered_nodes["bluestone_torch:torch_wall"].on_flood
+minetest.override_item("bluestone_torch:torch_wall", {
+	on_flood = function(...)
+		torch_wall_on_flood(...)
+		mesecon.on_dignode(...)
+		return false
+	end
+})
+
+local torch_ceiling_on_flood = minetest.registered_nodes["bluestone_torch:torch_ceiling"].on_flood
+minetest.override_item("bluestone_torch:torch_ceiling", {
+	on_flood = function(...)
+		torch_ceiling_on_flood(...)
+		mesecon.on_dignode(...)
+		return false
+	end
+})
+
 minetest.register_craft({
 	output = "bluestone_torch:torch 4",
 	recipe = {
