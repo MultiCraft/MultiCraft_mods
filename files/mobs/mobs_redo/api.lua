@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20210905",
+	version = "20210920",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -721,11 +721,10 @@ function mob_class:update_tag()
 	end]]
 
 	-- set changes
-	self.infotext = text
 	self.object:set_properties({
 		nametag = self.nametag,
 		nametag_color = col,
-		infotext = self.infotext
+		infotext = text
 	})
 end
 
@@ -923,8 +922,8 @@ local node_ok = function(pos, fallback)
 end
 
 -- global version of above function
-function mobs:node_ok(pos, node, name)
-	return node_ok(pos, node, name)
+function mobs.node_ok(...)
+	return node_ok(...)
 end
 
 -- Returns true is node can deal damage to self
@@ -2456,7 +2455,6 @@ function mob_class:do_states(dtime)
 		or (self.attack_type == "dogshoot" and self:dogswitch(dtime) == 1)
 		or (self.attack_type == "dogshoot" and dist > self.reach and
 				self:dogswitch() == 0) then
-
 			p.y = p.y - .5
 			s.y = s.y + .5
 
@@ -2475,12 +2473,12 @@ function mob_class:do_states(dtime)
 				-- play shoot attack sound
 				self:mob_sound(self.sounds.shoot_attack)
 
-				local p = self.object:get_pos()
+				local _p = self.object:get_pos()
 
-				p.y = p.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
+				_p.y = _p.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
 
 				if minetest.registered_entities[self.arrow] then
-					local obj = minetest.add_entity(p, self.arrow)
+					local obj = minetest.add_entity(_p, self.arrow)
 					local ent = obj:get_luaentity()
 					local amount = (vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) ^ 0.5
 
@@ -2500,6 +2498,7 @@ function mob_class:do_states(dtime)
 					vec.y = vec.y * (v / amount)
 					vec.z = vec.z * (v / amount)
 
+					if not minetest.is_valid_pos(vec) then return end
 					obj:set_velocity(vec)
 				end
 			end
@@ -2620,7 +2619,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 	local punch_interval = 1.4
 
 	-- calculate mob damage
-	local damage = 0
+	damage = 0
 	local armor = self.object:get_armor_groups() or {}
 	local tmp
 
@@ -3385,17 +3384,150 @@ function mobs:spawn_abm_check(pos, node, name)
 	-- return true to stop spawning mob
 end
 
+function mobs.spawn_action(def, pos, node, active_object_count, active_object_count_wider)
+	local name = def.name
+
+	if def.map_load then
+		-- use instead of abm's chance setting when using lbm
+		if random(max(1, def.chance)) > 1 then
+			return
+		end
+
+		-- use instead of abm's neighbor setting when using lbm
+		if not minetest.find_node_near(pos, 1, def.neighbors) then
+		--	print("--- lbm def.neighbors not found")
+			return
+		end
+	end
+
+	-- are we over active mob limit
+	if active_limit > 0 and active_mobs >= active_limit then
+	--	print("--- active mob limit reached", active_mobs, active_limit)
+		return
+	end
+
+	-- additional custom checks for spawning mob
+	if mobs:spawn_abm_check(pos, node, name) == true then
+		return
+	end
+
+	-- do not spawn if too many entities in area
+	if active_object_count_wider
+	and active_object_count_wider >= max_per_block then
+	--	print("--- too many entities in area", active_object_count_wider)
+		return
+	end
+
+	-- get total number of this mob in area
+	local num_mob, is_pla = count_mobs(pos, name)
+
+	if not is_pla then
+	--	print("--- no players within active area, will not spawn " .. name)
+		return
+	end
+
+	if num_mob >= def.aoc then
+	--	print("--- too many " .. name .. " in area", num_mob .. "/" .. def.aoc)
+		return
+	end
+
+	-- check if mob can spawn inside protected areas
+	if (spawn_protected == false
+	or (spawn_monster_protected == false
+	and minetest.registered_entities[name].type == "monster"))
+	and minetest.is_protected(pos, "") then
+	--	print("--- inside protected area", name)
+		return
+	end
+
+	-- if toggle set to nil then ignore day/night check
+	local day_toggle = def.day_toggle
+	if day_toggle ~= nil then
+		local tod = (minetest.get_timeofday() or 0) * 24000
+
+		if tod > 4500 and tod < 19500 then
+			-- daylight, but mob wants night
+			if not day_toggle then
+			-- print("--- mob needs night", name)
+				return
+			end
+		else
+			-- night time but mob wants day
+			if day_toggle then
+			-- print("--- mob needs day", name)
+				return
+			end
+		end
+	end
+
+	-- spawn above node
+	pos.y = pos.y + 1
+
+	-- are we spawning within height limits?
+	if pos.y > def.max_height
+			or pos.y < def.min_height then
+	--	print("--- height limits not met", name, pos.y)
+		return
+	end
+
+	-- are light levels ok?
+	if def.min_light ~= 0 or def.max_light ~= 15 then
+		local light = minetest.get_node_light(pos)
+		if not light
+				or light > def.max_light
+				or light < def.min_light then
+		--	print("--- light limits not met", name, light)
+			return
+		end
+	end
+
+	-- do we have enough height clearance to spawn mob?
+	local ent = minetest.registered_entities[name]
+	local height = max(0, ent.collisionbox[5] - ent.collisionbox[2])
+
+	for n = 0, floor(height) do
+		local pos2 = {x = pos.x, y = pos.y + n, z = pos.z}
+
+		if minetest.registered_nodes[node_ok(pos2).name].walkable then
+		--	print("--- inside block", name, node_ok(pos2).name)
+			return
+		end
+	end
+
+	if pos then
+		-- adjust for mob collision box
+		pos.y = pos.y + (ent.collisionbox[2] * -1) - 0.4
+
+		local mob = minetest.add_entity(pos, name)
+
+	--	print("[mobs] Spawned " .. name .. " at "
+	--	.. minetest.pos_to_string(pos) .. " on "
+	--	.. node.name .. " near " .. def.neighbors[1])
+
+		if def.on_spawn then
+			def.on_spawn(mob:get_luaentity(), pos)
+		end
+	else
+	--	print("--- not enough space to spawn", name)
+	end
+end
 
 function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval,
 		chance, aoc, min_height, max_height, day_toggle, on_spawn, map_load)
 	-- Do mobs spawn at all?
-	if not mobs_spawn or not mobs.spawning_mobs[name] then
+	if not mobs_spawn then
+		return
+	end
+
+	-- is mob actually registered?
+	if not mobs.spawning_mobs[name]
+			or not minetest.registered_entities[name] then
+	--	print("--- mob doesn't exist", name)
 		return
 	end
 
 	-- chance/spawn number override in minetest.conf for registered mob
 	local numbers = settings:get(name)
-
 	if numbers then
 		numbers = numbers:split(",")
 		chance = tonumber(numbers[1]) or chance
@@ -3412,140 +3544,19 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 				name, chance, aoc))
 	end
 
-	mobs.spawning_mobs[name].aoc = aoc
-
-	local spawn_action = function(pos, node, active_object_count,
-			active_object_count_wider)
-
-		-- use instead of abm's chance setting when using lbm
-		if map_load and random(max(1, chance)) > 1 then
-			return
-		end
-
-		-- use instead of abm's neighbor setting when using lbm
-		if map_load and not minetest.find_node_near(pos, 1, neighbors) then
---			print("--- lbm neighbors not found")
-			return
-		end
-
-		-- is mob actually registered?
-		if not mobs.spawning_mobs[name]
-				or not minetest.registered_entities[name] then
-		--	print("--- mob doesn't exist", name)
-			return
-		end
-
-		-- are we over active mob limit
-		if active_limit > 0 and active_mobs >= active_limit then
-		--	print("--- active mob limit reached", active_mobs, active_limit)
-			return
-		end
-
-		-- additional custom checks for spawning mob
-		if mobs:spawn_abm_check(pos, node, name) == true then
-			return
-		end
-
-		-- do not spawn if too many entities in area
-		if active_object_count_wider
-		and active_object_count_wider >= max_per_block then
-		--	print("--- too many entities in area", active_object_count_wider)
-			return
-		end
-
-		-- get total number of this mob in area
-		local num_mob, is_pla = count_mobs(pos, name)
-
-		if not is_pla then
-		--	print("--- no players within active area, will not spawn " .. name)
-			return
-		end
-
-		if num_mob >= aoc then
-		--	print("--- too many " .. name .. " in area", num_mob .. "/" .. aoc)
-			return
-		end
-
-		-- check if mob can spawn inside protected areas
-		if (spawn_protected == false
-		or (spawn_monster_protected == false
-		and minetest.registered_entities[name].type == "monster"))
-		and minetest.is_protected(pos, "") then
-		--	print("--- inside protected area", name)
-			return
-		end
-
-		-- if toggle set to nil then ignore day/night check
-		if day_toggle ~= nil then
-			local tod = (minetest.get_timeofday() or 0) * 24000
-
-			if tod > 4500 and tod < 19500 then
-				-- daylight, but mob wants night
-				if not day_toggle then
-				-- print("--- mob needs night", name)
-					return
-				end
-			else
-				-- night time but mob wants day
-				if day_toggle then
-				-- print("--- mob needs day", name)
-					return
-				end
-			end
-		end
-
-		-- spawn above node
-		pos.y = pos.y + 1
-
-		-- are we spawning within height limits?
-		if pos.y > max_height
-				or pos.y < min_height then
-		--	print("--- height limits not met", name, pos.y)
-			return
-		end
-
-		-- are light levels ok?
-		if min_light ~= 0 or max_light ~= 15 then
-			local light = minetest.get_node_light(pos)
-			if not light
-					or light > max_light
-					or light < min_light then
-			--	print("--- light limits not met", name, light)
-				return
-			end
-		end
-
-		-- do we have enough height clearance to spawn mob?
-		local ent = minetest.registered_entities[name]
-		local height = max(0, ent.collisionbox[5] - ent.collisionbox[2])
-
-		for n = 0, floor(height) do
-			local pos2 = {x = pos.x, y = pos.y + n, z = pos.z}
-
-			if minetest.registered_nodes[node_ok(pos2).name].walkable then
-			--	print("--- inside block", name, node_ok(pos2).name)
-				return
-			end
-		end
-
-		if pos then
-			-- adjust for mob collision box
-			pos.y = pos.y + (ent.collisionbox[2] * -1) - 0.4
-
-			local mob = minetest.add_entity(pos, name)
-
-		--	print("[mobs] Spawned " .. name .. " at "
-		--	.. minetest.pos_to_string(pos) .. " on "
-		--	.. node.name .. " near " .. neighbors[1])
-
-			if on_spawn then
-				on_spawn(mob:get_luaentity(), pos)
-			end
-		else
-		--	print("--- not enough space to spawn", name)
-		end
-	end
-
+	local def = {
+		name = name,
+		neighbors = neighbors,
+		min_light = min_light,
+		max_light = max_light,
+		chance = chance,
+		min_height = min_height,
+		max_height = max_height,
+		day_toggle = day_toggle,
+		on_spawn = on_spawn,
+		map_load = map_load,
+		aoc = aoc
+	}
 
 	-- are we registering an abm or lbm?
 	if map_load == true then
@@ -3554,7 +3565,9 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			label = name .. " spawning",
 			nodenames = nodes,
 			run_at_every_load = false,
-			action = spawn_action
+			action = function(...)
+				mobs.spawn_action(def, ...)
+			end
 		})
 	else
 		minetest.register_abm({
@@ -3566,7 +3579,9 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			catch_up = false,
 			min_y = min_height,
 			max_y = max_height,
-			action = spawn_action
+			action = function(...)
+				mobs.spawn_action(def, ...)
+			end
 		})
 	end
 end
@@ -3632,7 +3647,6 @@ function mobs:register_arrow(name, def)
 
 			-- does arrow have a tail (fireball)
 			if def.tail and def.tail == 1 and def.tail_texture then
-
 				minetest.add_particle({
 					pos = pos,
 					velocity = {x = 0, y = 0, z = 0},
@@ -3789,13 +3803,16 @@ local function spawn_mob(pos, mob, data, placer, drop)
 	end
 end
 
+-- global version of above function
+function mobs.spawn_mob(...)
+	return spawn_mob(...)
+end
+
 
 -- Spawn egg throwing
 local function throw_spawn_egg(itemstack, user, pointed_thing)
 	local playerpos = user:get_pos()
-	if not minetest.is_valid_pos(playerpos) then
-		return
-	end
+	if not minetest.is_valid_pos(playerpos) then return end
 
 	local mob = itemstack:get_name():gsub("_set$", "")
 	local egg_impact = function(thrower, pos, dir, hit_object)
@@ -3822,6 +3839,12 @@ local function throw_spawn_egg(itemstack, user, pointed_thing)
 	end
 	return itemstack
 end
+
+-- global version of above function
+function mobs.throw_spawn_egg(...)
+	return throw_spawn_egg(...)
+end
+
 
 -- Register spawn eggs
 
@@ -3937,7 +3960,7 @@ end
 -- capture critter (thanks to blert2112 for idea)
 function mobs:capture_mob(self, clicker, chance_hand, chance_net,
 		chance_lasso, force_take, replacewith)
-	if self.child
+	if not self --self.child
 	or not clicker:is_player()
 	or not clicker:get_inventory() then
 		return false
@@ -4207,8 +4230,7 @@ function mobs:alias_mob(old_name, new_name)
 
 	-- entity
 	minetest.register_entity(":" .. old_name, {
-		physical = false,
-		static_save = false,
+		physical = false, static_save = false,
 
 		on_activate = function(self, staticdata)
 			if minetest.registered_entities[new_name] then
