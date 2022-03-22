@@ -70,8 +70,8 @@ local charmap = {
 }
 
 local function slugify(str)
-	for k in pairs(charmap) do
-		str = str:gsub(tostring(k), charmap[k])
+	for k, c in pairs(charmap) do
+		str = str:gsub(k, c)
 	end
 
 	return str
