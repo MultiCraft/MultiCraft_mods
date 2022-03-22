@@ -1,182 +1,192 @@
--- Player animation blending
--- Note: This is currently broken due to a bug in Irrlicht, leave at 0
-local animation_blend = 0
+local fmt = string.format
+local tconcat, tcopy = table.concat, table.copy
+local floor = math.floor
+local vequals, vnew = vector.equals, vector.new
+local esc = minetest.formspec_escape
 local enable_sscsm = minetest.global_exists("sscsm")
-local fmt, esc = string.format, minetest.formspec_escape
 
 player_api.registered_models = {}
 
 -- Local for speed
 local models = player_api.registered_models
 
+local function collisionbox_equals(collisionbox, other_collisionbox)
+	if collisionbox == other_collisionbox then
+		return true
+	end
+	for index = 1, 6 do
+		if collisionbox[index] ~= other_collisionbox[index] then
+			return false
+		end
+	end
+	return true
+end
+
 function player_api.register_model(name, def)
 	models[name] = def
+	def.visual_size = def.visual_size or {x = 1, y = 1}
+	def.collisionbox = def.collisionbox or {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3}
+	def.stepheight = def.stepheight or 0.6
+	def.eye_height = def.eye_height or 1.47
+
+	-- Sort animations into property classes:
+	-- Animations with same properties have the same _equals value
+	for animation_name, animation in pairs(def.animations) do
+		animation.eye_height = animation.eye_height or def.eye_height
+		animation.collisionbox = animation.collisionbox or def.collisionbox
+		animation.override_local = animation.override_local or false
+
+		for _, other_animation in pairs(def.animations) do
+			if other_animation._equals then
+				if collisionbox_equals(animation.collisionbox, other_animation.collisionbox)
+						and animation.eye_height == other_animation.eye_height then
+					animation._equals = other_animation._equals
+					break
+				end
+			end
+		end
+		animation._equals = animation._equals or animation_name
+	end
 end
 
 player_api.default_skin = "character_1.png"
 player_api.default_hair = "player_haircut_1.png"
 player_api.default_model = "character.b3d"
 
-local default_skin, default_hair, default_model =
-		player_api.default_skin, player_api.default_hair, player_api.default_model
+local default_model = player_api.default_model
 
 -- Player stats and animations
-local player_model = {}
-local player_textures = {}
-local player_anim = {}
-local player_sneak = {}
-
-player_api.player_skin = {}
-player_api.player_hair = {}
-player_api.player_armor = {}
-player_api.player_cape = {}
-player_api.player_cosmetic = {}
-local player_wielditem = {}
-local player_cube = {}
-
-local b = "blank.png"
-
-local player_skin, player_hair, player_armor =
-		player_api.player_skin, player_api.player_hair, player_api.player_armor
-local player_cape, player_cosmetic =
-		player_api.player_cape, player_api.player_cosmetic
-
-player_api.wielded_item = {}
+-- model, textures, animation
+local players = {}
 player_api.player_attached = {}
 
+local function get_player_data(player)
+	return players[player:get_player_name()] or {}
+end
+
 function player_api.get_animation(player)
-	local name = player:get_player_name()
-	return {
-		model = player_model[name],
-		textures = player_textures[name],
-		animation = player_anim[name]
-	}
+	return get_player_data(player)
 end
 
 -- Called when a player's appearance needs to be updated
 function player_api.set_model(player, model_name)
-	local name = player:get_player_name()
-	local model = models[model_name]
-	if player_model[name] == model_name then
+	local player_data = get_player_data(player)
+	if player_data.model == model_name then
 		return
 	end
+
+	local model = models[model_name]
+	local textures = player_data.textures or model.textures
+	player_data.model = model_name
+	player_data.textures = textures
+
 	player:set_properties({
 		mesh = model_name,
-		textures = player_textures[name] or model.textures,
+		textures = textures,
 		visual = "mesh",
-		visual_size = model.visual_size or {x = 1, y = 1},
-		collisionbox = model.collisionbox or {-0.3, 0.0, -0.3, 0.3, 1.75, 0.3},
-		stepheight = model.stepheight or 0.6,
-		eye_height = model.eye_height or 1.47
+		visual_size = model.visual_size,
+		stepheight = model.stepheight
 	})
-	local animations = model.animations
-	player:set_local_animation(
-		animations.stand,
-		animations.walk,
-		animations.mine,
-		animations.walk_mine,
-		model.animation_speed or 30
-	)
+
+	-- sets local_animation, collisionbox & eye_height
 	player_api.set_animation(player, "stand")
-	player_model[name] = model_name
+end
+
+function player_api.get_textures(player)
+	local player_data = get_player_data(player)
+	local model = models[player_data.model] or models[default_model]
+	return player_data.textures or model.textures
 end
 
 local update_sscsm_preview
-function player_api.set_textures(player, skin, hair, armor,
-		wielditem, cube, cape, cosmetic)
-	local name = player:get_player_name()
+function player_api.set_textures(player, ...)
+	local player_data = get_player_data(player)
+	local textures = tcopy(player_api.get_textures(player))
+	local new_textures = {...}
 
-	local oldskin      = player_skin[name]      or default_skin
-	local oldhair      = player_hair[name]      or default_hair
-	local oldarmor     = player_armor[name]     or b
-	local oldwielditem = player_wielditem[name] or b
-	local oldcube      = player_cube[name]      or b
-	local oldcape      = player_cape[name]      or b
-	local oldcosmetic  = player_cosmetic[name]  or b
-
-	skin      = skin      or oldskin
-	hair      = hair      or oldhair
-	armor     = armor     or oldarmor
-	wielditem = wielditem or oldwielditem
-	cube      = cube      or oldcube
-	cape      = cape      or oldcape
-	cosmetic  = cosmetic  or oldcosmetic
-
-	if oldskin ~= skin then
-		player_skin[name] = skin
-	end
-	if oldhair ~= hair then
-		player_hair[name] = hair
-	end
-	if oldarmor ~= armor then
-		player_armor[name] = armor
-	end
-	if oldwielditem ~= wielditem then
-		player_wielditem[name] = wielditem
-	end
-	if oldcube ~= cube then
-		player_cube[name] = cube
-	end
-	if oldcape ~= cape then
-		player_cape[name] = cape
-	end
-	if oldcosmetic ~= cosmetic then
-		player_cosmetic[name] = cosmetic
-	end
-
-	local texture = {skin, hair, armor, wielditem, cube, cape, cosmetic}
-
-	local skip = false
-	if player_textures[name] then
-		skip = true
-		for i = 1, #texture do
-			if texture[i] ~= player_textures[name][i] then
-				skip = false
-				break
-			end
+	local skip = true
+	for i = 1, #textures do
+		if not new_textures[i] then
+			new_textures[i] = textures[i]
+		elseif new_textures[i] ~= textures[i] then
+			skip = false
 		end
 	end
 
 	if not skip then
-		player_textures[name] = texture
-		player:set_properties({textures = texture})
+		player_data.textures = new_textures
+		player:set_properties({textures = new_textures})
 
+		local name = player:get_player_name()
 		if enable_sscsm and sscsm.has_sscsms_enabled(name) then
 			update_sscsm_preview(player, name)
 		end
 	end
 end
 
-function player_api.set_animation(player, anim_name, speed)
-	local name = player:get_player_name()
-	if player_anim[name] == anim_name then
-		return
+function player_api.set_texture(player, index, texture)
+	local player_data = get_player_data(player)
+	local textures = tcopy(player_api.get_textures(player))
+
+	if textures[index] ~= texture then
+		textures[index] = texture
+		player_data.textures = textures
+		player:set_properties({textures = textures})
+
+		local name = player:get_player_name()
+		if enable_sscsm and sscsm.has_sscsms_enabled(name) then
+			update_sscsm_preview(player, name)
+		end
 	end
-	local model = player_model[name] and models[player_model[name]]
+end
+
+function player_api.set_animation(player, anim_name, speed, mode)
+	local player_data = get_player_data(player)
+	local model = models[player_data.model]
 	if not (model and model.animations[anim_name]) then
 		return
 	end
-	player_anim[name] = anim_name
-	local anim_speed = speed or model.animation_speed
-	player:set_animation(model.animations[anim_name], anim_speed, animation_blend, true)
-end
-
-function player_api.set_sneak(player, sneak, speed)
-	local name = player:get_player_name()
-	local model = player_model[name] and models[player_model[name]]
-	local anim = model.animations
-	local anim_speed = speed or model.animation_speed
-	local invis_exists = minetest.global_exists("invisibility")
-
-	if sneak then
-		-- Set snaaking local animation
+	speed = speed or model.animation_speed
+	if player_data.animation == anim_name and player_data.animation_speed == speed then
+		return
+	end
+	local previous_anim = model.animations[player_data.animation] or {}
+	local anim = model.animations[anim_name]
+	player_data.animation = anim_name
+	player_data.animation_speed = speed
+	-- If necessary change the local animation (only seen by the client of *that* player)
+	-- `override_local` <=> suspend local animations while this one is active
+	if anim.override_local then
+		if mode then
+			local a = model.animations -- (not specific to the animation being set)
+			player:set_local_animation(
+				a[mode .. "_stand"], a[mode .. "_walk"], a[mode .. "_mine"], a[mode .. "_walk_mine"],
+				speed
+			)
+		else
+			player:set_local_animation(anim, anim, anim, anim, speed)
+		end
+	else
+		local a = model.animations -- (not specific to the animation being set)
 		player:set_local_animation(
-			anim["sneak_stand"],
-			anim["sneak_walk"],
-			anim["sneak_mine"],
-			anim["sneak_walk_mine"],
-			anim_speed)
+			a.stand, a.walk, a.mine, a.walk_mine,
+			speed
+		)
+	end
 
+	-- Set the animation seen by everyone else
+	player:set_animation(anim, speed, 0)
+	-- Update related properties if they changed
+	if anim._equals ~= previous_anim._equals then
+		player:set_properties({
+			collisionbox = anim.collisionbox,
+		--	eye_height = anim.eye_height
+		})
+	end
+
+	local invis_exists = minetest.global_exists("invisibility")
+	local name = player:get_player_name()
+	if mode and mode == "sneak" then
 		-- Hide nametag
 		if not (invis_exists and invisibility[name]) then
 			local nametag = player:get_nametag_attributes()
@@ -184,14 +194,6 @@ function player_api.set_sneak(player, sneak, speed)
 			player:set_nametag_attributes(nametag)
 		end
 	else
-		-- Back normal local animation
-		player:set_local_animation(
-			anim["stand"],
-			anim["walk"],
-			anim["mine"],
-			anim["walk_mine"],
-			anim_speed)
-
 		-- Show nametag
 		if not (invis_exists and invisibility[name]) then
 			local nametag = player:get_nametag_attributes()
@@ -201,13 +203,31 @@ function player_api.set_sneak(player, sneak, speed)
 	end
 end
 
+minetest.register_on_joinplayer(function(player)
+	local name = player:get_player_name()
+	players[name] = {}
+	player_api.player_attached[name] = false
+end)
+
+minetest.register_on_leaveplayer(function(player)
+	local name = player:get_player_name()
+	players[name] = nil
+	player_api.player_attached[name] = nil
+end)
+
+-- Force reset the attached table
+minetest.register_on_dieplayer(function(player)
+	local name = player:get_player_name()
+	player_api.player_attached[name] = nil
+end)
+
 function player_api.preview(player, skin, head)
-	local c = b
+	local c
 	if player then
-		local name = player:get_player_name()
-		local texture = player_textures[name]
+		local texture = tcopy(player_api.get_textures(player))
+		local player_data = get_player_data(player)
 		if not texture then
-			local model = models[player_model[name]] or models[default_model]
+			local model = models[player_data.model] or models[default_model]
 			texture = model.textures
 		end
 		c = "(" .. texture[1] .. "^" .. texture[2] .. "^" .. texture[3] .. ")"
@@ -241,51 +261,42 @@ function player_api.preview(player, skin, head)
 	return esc(preview)
 end
 
-local function parse_preview_params(player, rot, textures, animation, speed,
-		gender, hair_reset)
-	local mesh = default_model
-
+local function parse_preview_params(player, rot, textures, animation, speed, gender)
+	local mesh
 	if player then
-		local props = player:get_properties()
-		mesh = props.mesh
+		local player_data = get_player_data(player)
+		mesh = player_data.model or default_model
 
 		-- model texture from player or variable
-		if props and not textures then
+		if not textures then
 			local t = {}
 
-			for _, v in ipairs(props.textures) do
-				t[#t + 1] = esc(v):gsub(",", "!")
+			local get_textures = player_api.get_textures(player)
+			for i, v in ipairs(get_textures) do
+				t[i] = esc(v):gsub(",", "!")
 			end
 
-			textures = table.concat(t, ",")
+			textures = tconcat(t, ",")
 			textures = textures:gsub("!", ",")
 		end
 	end
 
-	-- nil check
-	textures = textures or (default_skin .. "," .. default_hair ..
-		"," .. b .. "," .. b .. "," .. b .. "," .. b .. "," .. b)
+	-- nil checks
+	mesh = mesh or default_model
+	textures = textures or tconcat(models[default_model].textures, ",")
 
 	-- swap gender for preview
 	if gender == "male" then
 		textures = textures:gsub("character_female_", "character_")
-		textures = textures:gsub("haircut_female_", "haircut_")
 		textures = textures:gsub("_female", "")
-
-		if not hair_reset then
-			textures = textures:gsub("haircut_(%u+)", "haircut_1")
-		end
 	elseif gender == "female" then
-		textures = textures:gsub("_glasses.png", "_glasses_female.png")
+		textures = textures:gsub("_accessory.png", "_accessory_female.png")
 
 		if not textures:find("character_female_") then
 			textures = textures:gsub("character_", "character_female_")
 		end
 		if not textures:find("haircut_female_") then
 			textures = textures:gsub("haircut_", "haircut_female_")
-		end
-		if not hair_reset then
-			textures = textures:gsub("haircut_female_(%u+)", "haircut_female_1")
 		end
 	end
 
@@ -298,14 +309,16 @@ local function parse_preview_params(player, rot, textures, animation, speed,
 	rot.mouse = rot.mouse or "false"
 
 	-- model animation
-	local dmodel = models[default_model]
-	local anim = dmodel.animations["relax"]
-	anim.speed = dmodel.animation_speed
-	if player and animation then
-		local name = player:get_player_name()
-		local model = player_model[name] and models[player_model[name]]
-		anim = model.animations[animation]
+	local anim
+	if player then
+		local player_data = get_player_data(player)
+		local model = models[player_data.model] or models[default_model]
+		anim = model.animations[animation or "relax"]
 		anim.speed = speed or model.animation_speed
+	else
+		local model = models[default_model]
+		anim = model.animations[animation or "relax"]
+		anim.speed = model.animation_speed
 	end
 
 	return "player_preview", mesh, textures, rot.start, rot.cont, rot.mouse,
@@ -313,14 +326,14 @@ local function parse_preview_params(player, rot, textures, animation, speed,
 end
 
 function player_api.preview_model(player, x, y, w, h, rot, textures, animation,
-		speed, gender, hair_reset)
+		speed, gender)
 	local anim = not player_api.compat_mode(player, 5)
 	local model = "model[%.2f,%.2f;%.2f,%.2f;%s;%s;%s;0,%d;%s;%s" ..
 		(anim and ";%u,%u;%u" or ";0,0") .. "]"
 
 	local model_fs = -- "style[player_preview;bgcolor=black]" ..
 		fmt(model, x, y, w, h, parse_preview_params(
-			player, rot, textures, animation, speed, gender, hair_reset))
+			player, rot, textures, animation, speed, gender))
 
 	return model_fs
 end
@@ -335,89 +348,108 @@ end
 
 -- Localize for better performance
 local player_set_animation = player_api.set_animation
-local player_set_sneak = player_api.set_sneak
 local player_attached = player_api.player_attached
 
-minetest.register_on_leaveplayer(function(player)
-	local name = player:get_player_name()
-	player_model[name] = nil
-	player_anim[name] = nil
-	player_textures[name] = nil
+local function check_node(ppos, num, liquid)
+	local pos = {x = ppos.x, y = ppos.y, z = ppos.z}
+	if liquid then
+		pos.y = floor(pos.y)
+	end
+	local nodes, result = {}, {}
 
-	player_skin[name] = nil
-	player_hair[name] = nil
-	player_armor[name] = nil
-	player_wielditem[name] = nil
-	player_cube[name] = nil
-	player_cape[name] = nil
-	player_cosmetic[name] = nil
-	player_api.wielded_item[name] = nil
+	for i = 0, num - 1 do
+		local node = minetest.get_node_or_nil({x = pos.x, y = pos.y - i, z = pos.z})
+		if node then
+			nodes[i + 1] = node.name
+		end
+	end
 
-	player_attached[name] = nil
-	player_sneak[name] = nil
-end)
+	for _, nname in ipairs(nodes) do
+		local def = minetest.registered_nodes[nname]
+		if not def then return false end
+
+		if liquid then
+			if def.liquidtype ~= "none" then
+				result[#result + 1] = true
+			end
+		else
+			if def.drawtype == "airlike" then
+				result[#result + 1] = true
+			end
+		end
+	end
+
+	return #result == num
+end
+
+local function animate_player(player, name)
+	local player_data = get_player_data(player)
+	local model = models[player_data.model] or models[default_model]
+	if model and not player_attached[name] and not player:get_attach() then
+		if player:get_hp() == 0 then
+			player_set_animation(player, "lay")
+			return
+		end
+
+		local controls = player:get_player_control()
+		local animation_speed_mod = model.animation_speed or 30
+		local pos = player:get_pos()
+
+		local move = controls.up or controls.down or controls.left or controls.right
+		local c_moving = move and "walk" or "stand"
+		local c_sneaking = controls.sneak and "sneak"
+		local c_mouseclick = (controls.LMB or controls.RMB) and "mine" or nil
+		local c_flying = player_data.flying
+		local c_swimming = player_data.swimming
+
+		local old_pos = player_data.old_pos or vnew()
+		if not vequals(old_pos, pos) then
+			if minetest.get_player_privs(name).fly == true then
+				c_flying = check_node(pos, 3) and "fly"
+			end
+
+			if not c_flying then
+				c_swimming = check_node(pos, 2, true) and "swim"
+			end
+
+			player_data.old_pos = pos
+			player_data.flying = c_flying
+			player_data.swimming = c_swimming
+		end
+
+		local c_special
+		-- Override sneaking animation while flying and swimming
+		if c_flying then
+			if minetest.get_player_privs(name).fly == true then
+				c_special = c_flying
+			end
+		elseif c_swimming then
+			c_special = c_swimming
+		elseif c_sneaking then
+			if not c_flying and not c_swimming then
+				c_special = c_sneaking
+				-- Determine if the player is sneaking, and reduce animation speed if so
+				animation_speed_mod = animation_speed_mod / 2
+			end
+		end
+
+		-- Apply animation
+		local anim = {}
+		anim[#anim + 1] = c_special
+		anim[#anim + 1] = c_moving
+		anim[#anim + 1] = c_mouseclick
+
+		local mode = c_special or c_sneaking
+		player_set_animation(player, tconcat(anim, "_"), animation_speed_mod, mode)
+	end
+end
 
 -- Check each player and apply animations
 minetest.register_playerstep(function(_, playernames)
-	for _, name in pairs(playernames) do
+	for _, name in ipairs(playernames) do
 		local player = minetest.get_player_by_name(name)
 		if player and player:is_player() then
-			local model_name = player_model[name]
-			local model = model_name and models[model_name]
-			if model and not player_attached[name] then
-				local animation_speed_mod = model.animation_speed or 30
-
-				-- Apply animations based on what the player is doing
-				if player:get_hp() == 0 then
-					player_set_animation(player, "lay")
-					return
-				end
-
-				local controls = player:get_player_control()
-				local c_sneak = controls.sneak
-				local c_mouse = controls.LMB or controls.RMB
-
-				-- Determine if the player is sneaking, and reduce animation speed if so
-				if c_sneak then
-					animation_speed_mod = animation_speed_mod / 2
-				end
-
-				-- Determine if the player is sneaking
-				if player_sneak[name] ~= c_sneak then
-					player_anim[name] = nil
-					player_sneak[name] = c_sneak
-					player_set_sneak(player, c_sneak, animation_speed_mod)
-				end
-
-				-- Determine if the player is walking
-				if controls.up or controls.down or controls.left or controls.right then
-					if not c_sneak then
-						if c_mouse then
-							player_set_animation(player, "walk_mine", animation_speed_mod)
-						else
-							player_set_animation(player, "walk", animation_speed_mod)
-						end
-					else
-						if c_mouse then
-							player_set_animation(player, "sneak_walk_mine", animation_speed_mod)
-						else
-							player_set_animation(player, "sneak_walk", animation_speed_mod)
-						end
-					end
-				elseif c_mouse then
-					if not c_sneak then
-						player_set_animation(player, "mine", animation_speed_mod)
-					else
-						player_set_animation(player, "sneak_mine", animation_speed_mod)
-					end
-				elseif c_sneak then
-					player_set_animation(player, "sneak_stand", animation_speed_mod)
-				else
-					player_set_animation(player, "stand", animation_speed_mod)
-				end
-			end
-
-			-- Update wielditem
+			animate_player(player, name)
 			player_api.update_wielded_item(player, name)
 		end
 	end
