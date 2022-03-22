@@ -26,7 +26,7 @@ end)
 -- Register dungeon loot
 if minetest.global_exists("dungeon_loot") then
 	dungeon_loot.register({
-		{name = "farming_addons:cocoa_3", chance = 0.5, count = {2, 4}},
+		{name = "farming_addons:cocoa_bean", chance = 0.5, count = {2, 4}},
 		{name = "farming_addons:seed_melon", chance = 0.5, count = {1, 2}},
 		{name = "farming_addons:seed_pumpkin", chance = 0.5, count = {1, 2}}
 	})

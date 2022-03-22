@@ -66,13 +66,12 @@ minetest.override_item("farming_addons:melon_8", {
 })
 
 minetest.register_node("farming_addons:melon_9", {
-	visual = "mesh",
 	mesh = "farming_addons_extra_face.b3d",
 	tiles = {"farming_addons_melon_9.png", "farming_addons_watermelon_stem.png"},
 	drawtype = "mesh",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
-	use_texture_alpha = "blend",
+	use_texture_alpha = "clip",
 	walkable = false,
 	paramtype = "light",
 	groups = {snappy = 3, flammable = 4, plant = 1, attached_node = 1,

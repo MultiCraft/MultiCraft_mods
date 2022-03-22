@@ -2,6 +2,8 @@
 -- TODO Ignore group:flower
 farming.registered_plants = {}
 
+local random = math.random
+
 function farming.hoe_on_use(itemstack, user, pt, uses)
 	if not pt or pt.type ~= "node" or pt.above.y ~= pt.under.y + 1 then
 		-- Only nodes pointed on the top can be hoed
@@ -97,11 +99,11 @@ end
 
 -- how often node timers for plants will tick, +/- some random value
 local function tick(pos)
-	minetest.get_node_timer(pos):start(math.random(166, 286))
+	minetest.get_node_timer(pos):start(random(166, 286))
 end
 -- how often a growth failure tick is retried (e.g. too dark)
 local function tick_again(pos)
-	minetest.get_node_timer(pos):start(math.random(40, 80))
+	minetest.get_node_timer(pos):start(random(40, 80))
 end
 
 -- Seed placement
@@ -144,7 +146,7 @@ function farming.place_seed(itemstack, placer, pt, plantname)
 	return itemstack
 end
 
-farming.grow_plant = function(pos)
+function farming.grow_plant(pos)
 	local node = minetest.get_node(pos)
 	local name = node.name
 	local def = minetest.registered_nodes[name]
@@ -253,7 +255,7 @@ function farming.register_plant(name, def)
 	farming.registered_plants[pname] = def
 
 	-- Register seed
-	local lbm_nodes = {mname .. ":seed_" .. pname}
+--	local lbm_nodes = {mname .. ":seed_" .. pname}
 	local seed_groups = {seed = 1, snappy = 3, attached_node = 1, flammable = 2}
 	for _, groupname in pairs(def.fertility) do
 		seed_groups[groupname] = 1
@@ -321,7 +323,7 @@ function farming.register_plant(name, def)
 
 		if i < def.steps then
 			next_plant = mname .. ":" .. pname .. "_" .. (i + 1)
-			lbm_nodes[#lbm_nodes + 1] = mname .. ":" .. pname .. "_" .. i
+		--	lbm_nodes[#lbm_nodes + 1] = mname .. ":" .. pname .. "_" .. i
 		end
 
 		minetest.register_node(":" .. mname .. ":" .. pname .. "_" .. i, {
@@ -357,11 +359,11 @@ function farming.register_plant(name, def)
 	end
 
 	-- replacement LBM for pre-nodetimer plants
-	minetest.register_lbm({
+	--[[minetest.register_lbm({
 		name = ":" .. mname .. ":start_nodetimer_" .. pname,
 		nodenames = lbm_nodes,
 		action = tick_again
-	})
+	})]]
 
 	-- Return
 	return {
