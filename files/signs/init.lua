@@ -1,12 +1,12 @@
 local S = minetest.get_translator_auto({"ru"})
 
-local floor, pi = math.floor, math.pi
+local pi = math.pi
 local upper = string.upper
 local tconcat = table.concat
 local vadd = vector.add
 local b = "blank.png"
 local esc = minetest.formspec_escape
-local function objects_inside_radius(p)
+local function obj_inside_radius(p)
 	return minetest.get_objects_inside_radius(p, 0.5)
 end
 
@@ -23,11 +23,14 @@ local sign_positions = {
 }
 
 local wall_sign_positions = {
-	[0] = {{x =  0.43, y = -0.005, z =  0},    pi * 0.5},
-	[1] = {{x = -0.43, y = -0.005, z =  0},    pi * 1.5},
-	[2] = {{x =  0,    y = -0.005, z =  0.43}, pi},
-	[3] = {{x =  0,    y = -0.005, z = -0.43}, 0}
+	[0] = {{x =  0.43, y = 0, z =  0},    pi * 0.5},
+	[1] = {{x = -0.43, y = 0, z =  0},    pi * 1.5},
+	[2] = {{x =  0,    y = 0, z =  0.43}, pi},
+	[3] = {{x =  0,    y = 0, z = -0.43}, 0}
 }
+
+local font = {width = 16, height = 20}
+local lenght, rows = 20, 5
 
 local colors_list = {
 	"Black", "Silver", "Gray", "White",
@@ -37,17 +40,22 @@ local colors_list = {
 }
 
 local function generate_sign_line_texture(str, row)
-	local leftover = floor((20 - #str) * 16 / 2)
-	local texture = ""
-	for i = 1, 20 do
-		local char = str:byte(i)
-		if char and (char >= 32 and char <= 126) then
-			texture = texture .. ":" .. (i - 1) * 16 + leftover .. ","
-					.. row * 20 .. "=signs_" .. char .. ".png"
+	local leftover = (lenght - #str) * font.width / 2
+	row = (row - 0.85) * 0.85
+	local texture = {}
+
+	for i = 1, lenght do
+		local byte = str:byte(i)
+		if not byte or byte < 32 or byte > 126 then
+			byte = 32 -- space
 		end
+
+		texture[#texture + 1] = (":%u,%u=signs_%u.png"):format(
+			font.width * (i - 1) + leftover,
+			font.height * row + (font.height / rows), byte)
 	end
 
-	return texture
+	return tconcat(texture)
 end
 
 local function find_any(str, pair, start)
@@ -73,30 +81,28 @@ local wrap_chars = {
 }
 
 local function generate_sign_texture(str, color)
-	local row = 0
-	local texture = "[combine:" .. 16 * 20 .. "x100"
 	local result = {}
 
 	-- Transliterate text
 	str = slugify(str)
 
 	while #str > 0 do
-		if row > 4 then
+		if #result >= (rows) then
 			break
 		end
 		local wrap_i = 0
 		local keep_i = 0 -- The last character that was kept
 		while wrap_i < #str do
 			wrap_i = find_any(str, wrap_chars, wrap_i + 1)
-			if wrap_i > 20 then
+			if wrap_i > lenght then
 				if keep_i > 1 then
 					wrap_i = keep_i
 				else
-					wrap_i = 20
+					wrap_i = lenght
 				end
 				break
 			elseif wrap_i == 0 then
-				if #str <= 20 then
+				if #str <= lenght then
 					wrap_i = #str
 				elseif keep_i > 0 then
 					wrap_i = keep_i
@@ -114,8 +120,8 @@ local function generate_sign_texture(str, color)
 				keep_i = wrap_i - 1
 			end
 		end
-		if wrap_i > 20 then
-			wrap_i = 20
+		if wrap_i > lenght then
+			wrap_i = lenght
 		end
 		local start_remove = 0
 		if disposable_chars[str:sub(1, 1)] then
@@ -126,36 +132,44 @@ local function generate_sign_texture(str, color)
 			end_remove = 1
 		end
 		local line_string = str:sub(1 + start_remove, wrap_i - end_remove)
-		str = str:sub(wrap_i + 1)
 		if line_string ~= "" then
-			result[row] = line_string
+			result[#result + 1] = line_string
 		end
-		row = row + 1
+		str = str:sub(wrap_i + 1)
 	end
 
 	local empty = 0
-	if row == 1 then
+	if #result == 1 then
 		empty = 2
-	elseif row < 4 then
+	elseif #result == (rows - 1) then
+		empty = 0.5
+	elseif #result < (rows - 1) then
 		empty = 1
 	end
 
-	for r, s in pairs(result) do
-		texture = texture .. generate_sign_line_texture(s, r + empty)
+	-- Generate texture modifier
+	local texture = {
+		("[combine:%ux%u"):format(font.width * lenght, font.height * rows)
+	}
+
+	for r, s in ipairs(result) do
+		texture[#texture + 1] = generate_sign_line_texture(s, r + empty)
 	end
 
 	if color and color ~= "" then
-		texture = texture .. "^[colorize:" .. color
+		texture[#texture + 1] = "^[colorize:" .. color
 	end
 
-	return texture
+	return tconcat(texture)
 end
 
 minetest.register_entity(ENTITY, {
 	visual = "upright_sprite",
-	visual_size = {x = 0.7, y = 0.6},
+	visual_size = {x = 0.7, y = 0.7},
+	textures = {b, b},
 	collisionbox = {0},
 	physical = false,
+
 	on_activate = function(self)
 		local ent = self.object
 		local pos = ent:get_pos()
@@ -227,7 +241,7 @@ local function place(itemstack, placer, pointed_thing)
 end
 
 local function destruct(pos)
-	for _, obj in ipairs(objects_inside_radius(pos)) do
+	for _, obj in ipairs(obj_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == ENTITY then
 			obj:remove()
@@ -241,7 +255,7 @@ local function check_text(pos)
 
 	if text and text ~= "" then
 		local count = 0
-		for _, obj in ipairs(objects_inside_radius(pos)) do
+		for _, obj in ipairs(obj_inside_radius(pos)) do
 			local ent = obj:get_luaentity()
 			if ent and ent.name == ENTITY then
 				count = count + 1
@@ -259,15 +273,14 @@ local function check_text(pos)
 				sign_pos = wall_sign_positions
 			end
 			if p2 > 3 or p2 < 0 then return end
-			local sign = minetest.add_entity(
-				vadd(pos, sign_pos[p2][1]), ENTITY)
+			local sign = minetest.add_entity(vadd(pos, sign_pos[p2][1]), ENTITY)
 			if not sign then
 				return
 			end
 			sign:set_yaw(sign_pos[p2][2])
 		end
 	else
-		for _, obj in ipairs(objects_inside_radius(pos)) do
+		for _, obj in ipairs(obj_inside_radius(pos)) do
 			local ent = obj:get_luaentity()
 			if ent and ent.name == ENTITY then
 				obj:remove()
@@ -275,10 +288,10 @@ local function check_text(pos)
 		end
 	end
 
-	-- Remove old on_construct fs
-	local fs = meta:get_string("formspec")
-	if fs and fs ~= "" then
-		meta:set_string("formspec", "")
+	-- Remove old node meta
+	local old_meta = {"formspec", "sign_texture2", "sign_texture3"}
+	for _, field in ipairs(old_meta) do
+		meta:set_string(field, "")
 	end
 end
 
@@ -366,7 +379,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	local sign
-	for _, obj in ipairs(objects_inside_radius(pos)) do
+	for _, obj in ipairs(obj_inside_radius(pos)) do
 		local ent = obj:get_luaentity()
 		if ent and ent.name == ENTITY then
 			sign = obj
@@ -374,8 +387,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 	end
 	if not sign then
-		sign = minetest.add_entity(
-			vadd(pos, sign_pos[p2][1]), ENTITY)
+		sign = minetest.add_entity(vadd(pos, sign_pos[p2][1]), ENTITY)
 	else
 		sign:set_pos(vadd(pos, sign_pos[p2][1]))
 	end
