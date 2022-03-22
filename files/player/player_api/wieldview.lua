@@ -3,8 +3,11 @@
 -- Completely redone for MultiCraft_game
 --
 
+local wielded_item = {}
 local wield_tiles = {}
 local wield_cubes = {}
+
+local set_textures = player_api.set_textures
 
 local function prepare()
 	for name, def in pairs(minetest.registered_items) do
@@ -73,8 +76,8 @@ else -- legacy MultiCraft Engine
 	end)
 end
 
-local set_textures = player_api.set_textures
-local wielded_item = player_api.wielded_item
+local sfinv_exists = minetest.global_exists("sfinv")
+local sscsm_enabled = minetest.global_exists("sscsm")
 function player_api.update_wielded_item(player, name)
 	local item = player:get_wielded_item():get_name()
 	local b = "blank.png"
@@ -83,5 +86,13 @@ function player_api.update_wielded_item(player, name)
 		local wield_cube = wield_cubes[item] or b
 		set_textures(player, nil, nil, nil, wield_tile, wield_cube)
 		wielded_item[name] = item
+
+		if sfinv_exists and (not sscsm_enabled or not sscsm.has_sscsms_enabled(name)) then
+			sfinv.set_player_inventory_formspec(player)
+		end
 	end
 end
+
+minetest.register_on_leaveplayer(function(player)
+	wielded_item[player:get_player_name()] = nil
+end)

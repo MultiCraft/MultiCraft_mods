@@ -129,11 +129,12 @@ end
 armor.update_player_visuals = function(self, player)
 	if player and player:is_player() then
 		local player_name = player:get_player_name()
-		local oldarmor = player_api.player_armor[player_name]
+		local player_texture = player_api.get_textures(player)
+		local oldarmor = player_texture[3] or "blank.png"
 		local newarmor = self.textures[player_name].armor
 
 		if oldarmor ~= newarmor then
-			player_api.set_textures(player, nil, nil, newarmor)
+			player_api.set_texture(player, 3, newarmor)
 		end
 	end
 end
