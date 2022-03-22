@@ -1624,7 +1624,7 @@ minetest.register_node("default:water_source", {
 			}
 		}
 	},
-	alpha = 160,
+	use_texture_alpha = "blend",
 	paramtype = "light",
 	walkable = false,
 	pointable = false,
@@ -1668,7 +1668,7 @@ minetest.register_node("default:water_flowing", {
 			}
 		}
 	},
-	alpha = 160,
+	use_texture_alpha = "blend",
 	paramtype = "light",
 	paramtype2 = "flowingliquid",
 	walkable = false,
@@ -1714,7 +1714,7 @@ minetest.register_node("default:river_water_source", {
 			}
 		}
 	},
-	alpha = 160,
+	use_texture_alpha = "blend",
 	paramtype = "light",
 	walkable = false,
 	pointable = false,
@@ -1759,7 +1759,7 @@ minetest.register_node("default:river_water_flowing", {
 			}
 		}
 	},
-	alpha = 160,
+	use_texture_alpha = "blend",
 	paramtype = "light",
 	paramtype2 = "flowingliquid",
 	walkable = false,
