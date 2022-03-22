@@ -55,3 +55,9 @@ farming.register_hoe("farming:hoe_ruby", {
 	material = "default:ruby",
 	groups = {hoe = 1}
 })
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "farming:hoe_wood",
+	burntime = 5
+})
