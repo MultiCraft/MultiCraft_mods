@@ -9,6 +9,8 @@ dofile(minetest.get_modpath("flowers") .. "/mapgen.lua")
 local min, random = math.min, math.random
 local vadd, vsubtract = vector.add, vector.subtract
 
+local flowerpot_exists = minetest.global_exists("flowerpot")
+
 --
 -- Flowers
 --
@@ -45,6 +47,10 @@ local function add_simple_flower(name, desc, box, f_groups, inv, drop)
 			fixed = box
 		}
 	})
+
+	if flowerpot_exists then
+		flowerpot.register_node("flowers:" .. name)
+	end
 end
 
 -- add public function to use by other mods
@@ -341,6 +347,11 @@ minetest.register_node("flowers:mushroom_brown", {
 		fixed = {-0.23, -0.5, -0.23, 0.23, 0.13, 0.23}
 	}
 })
+
+if flowerpot_exists then
+	flowerpot.register_node("flowers:mushroom_red")
+	flowerpot.register_node("flowers:mushroom_brown")
+end
 
 
 -- Mushroom spread and death
