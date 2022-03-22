@@ -205,8 +205,10 @@ minetest.register_craft({
 local function register_pots()
 	local register_pot = flowerpot.register_node
 	for name, def in pairs(minetest.registered_nodes) do
+		local mod_name = name:split(":")[1]
 		local group = def.groups
-		if (group.flora or group.sapling) and
+		if mod_name ~= "flowers" and
+				(group.flora or group.sapling) and
 				not group.not_in_creative_inventory then
 			register_pot(name)
 		end
