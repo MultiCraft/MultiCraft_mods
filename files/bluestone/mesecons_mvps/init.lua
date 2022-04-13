@@ -5,7 +5,6 @@ mesecon.mvps_stoppers = {}
 mesecon.on_mvps_move = {}
 mesecon.mvps_unmov = {}
 
-local table_remove = table.remove
 local vadd, vequals, vmultiply, vnew, vsubtract =
 	vector.add, vector.equals, vector.multiply, vector.new, vector.subtract
 
@@ -51,38 +50,38 @@ local function on_mvps_move(moved_nodes)
 	end
 end
 
-function mesecon.mvps_process_stack(stack)
-	-- update mesecons for placed nodes ( has to be done after all nodes have been added )
-	for _, n in ipairs(stack) do
-		mesecon.on_placenode(n.pos, minetest.get_node(n.pos))
-	end
-end
-
 function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 	-- determine the number of nodes to be pushed
 	local nodes = {}
-	local frontiers = {pos}
+	local pos_set = {}
+	local frontiers = mesecon.fifo_queue.new()
+	frontiers:add(vnew(pos))
 
-	while #frontiers > 0 do
-		local np = frontiers[1]
-		local nn = minetest.get_node(np)
-		local def = minetest.registered_nodes[nn.name]
+	for np in frontiers:iter() do
+		local np_hash = minetest.hash_node_position(np)
+		local nn = not pos_set[np_hash] and minetest.get_node(np)
+		local def = nn and minetest.registered_nodes[nn.name]
 
 		-- tests if the node can be pushed into, e.g. air, water, grass
-		if not def or not def.buildable_to then
-			nodes[#nodes+1] = {node = nn, pos = np}
+		local node_replaceable = (def and def.buildable_to) or false
+
+		if nn and not node_replaceable then
+			pos_set[np_hash] = true
+			nodes[#nodes + 1] = {node = nn, pos = np}
 			if #nodes > maximum then return nil end
 
-			-- add connected nodes to frontiers, connected is a vector list
-			-- the vectors must be absolute positions
-			local connected = {}
+			-- add connected nodes to frontiers
 			if def and def.mvps_sticky then
-				connected = def.mvps_sticky(np, nn)
+				local connected = def.mvps_sticky(np, nn)
+				for _, cp in ipairs(connected) do
+					frontiers:add(cp)
+				end
 			end
-			connected[#connected+1] = vadd(np, dir)
+
+			frontiers:add(vector.add(np, dir))
 
 			-- If adjacent node is sticky block and connects add that
-			-- position to the connected table
+			-- position
 			for _, r in ipairs(mesecon.rules.alldirs) do
 				local adjpos = vadd(np, r)
 				local adjnode = minetest.get_node(adjpos)
@@ -93,36 +92,16 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 					-- connects to this position?
 					for _, link in ipairs(sticksto) do
 						if vequals(link, np) then
-							connected[#connected+1] = adjpos
+							frontiers:add(adjpos)
 						end
 					end
 				end
 			end
 
 			if all_pull_sticky then
-				connected[#connected+1] = vsubtract(np, dir)
-			end
-
-			-- Make sure there are no duplicates in frontiers / nodes before
-			-- adding nodes in "connected" to frontiers
-			for _, cp in ipairs(connected) do
-				local duplicate = false
-				for _, rp in ipairs(nodes) do
-					if vequals(cp, rp.pos) then
-						duplicate = true
-					end
-				end
-				for _, fp in ipairs(frontiers) do
-					if vequals(cp, fp) then
-						duplicate = true
-					end
-				end
-				if not duplicate then
-					frontiers[#frontiers+1] = cp
-				end
+				frontiers:add(vsubtract(np, dir))
 			end
 		end
-		table_remove(frontiers, 1)
 	end
 
 	return nodes
@@ -214,7 +193,7 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 	if not nodes then return end
 
 	local protection_check_set = {}
-	if vector.equals(stackdir, movedir) then -- pushing
+	if vequals(stackdir, movedir) then -- pushing
 		add_pos(protection_check_set, pos)
 	end
 	-- determine if one of the nodes blocks the push / pull
@@ -223,7 +202,7 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 			return
 		end
 		add_pos(protection_check_set, n.pos)
-		add_pos(protection_check_set, vector.add(n.pos, movedir))
+		add_pos(protection_check_set, vadd(n.pos, movedir))
 	end
 	if are_protected(protection_check_set, player_name) then
 		return false, "protected"
