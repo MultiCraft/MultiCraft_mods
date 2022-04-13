@@ -1,4 +1,4 @@
-if not minetest.settings:get_bool("enable_weather") then
+if minetest.settings:get_bool("enable_weather") == false then
 	return
 end
 
@@ -85,9 +85,9 @@ end
 
 local function weather_change(disable)
 	if weather.type == "none" and not disable then
-		for id in pairs(weather.registered) do
+		for w in pairs(weather.registered) do
 			if random(3) == 1 then
-				weather.set(id, {
+				weather.set(w, {
 					x = random(0, 8),
 					y = 0,
 					z = random(0, 8)
@@ -163,7 +163,7 @@ minetest.register_globalstep(function()
 	local current_downfall = weather.registered[weather.type]
 	if current_downfall == nil then return end
 
-	for _, player in pairs(minetest.get_connected_players()) do
+	for _, player in ipairs(minetest.get_connected_players()) do
 		process_player(player, current_downfall)
 	end
 end)
