@@ -226,7 +226,3 @@ minetest.register_craft({
 	recipe = "group:fencegate_wood",
 	burntime = 10
 })
-
-minetest.register_alias("fences:fencegate_open", "doors:gate_wood_open")
-minetest.register_alias("fences:fencegate", "doors:gate_wood")
-minetest.register_alias("doors:gate_wood_closed", "doors:gate_wood")

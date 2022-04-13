@@ -25,22 +25,6 @@ for _, d in pairs(default) do
 	register_alias(d[1], d[2])
 end
 
-local fnames = {}
-for _, f in pairs({"1", "2", "3", "11", "12", "13", "14",
-		"21", "22", "23", "24", "32", "33", "34", "35"}) do
-	fnames[#fnames + 1] = "fences:fence_wood_" .. f
-end
-
-minetest.register_lbm({
-	label = "Replace Fences",
-	name = "deprecated:fences",
-	nodenames = fnames,
-	run_at_every_load = true,
-	action = function(pos)
-		minetest.set_node(pos, {name = "default:fence_wood"})
-	end
-})
-
 --== workbench ==--
 minetest.after(2, function()
 	--
@@ -156,3 +140,7 @@ if mesecon and mesecon.register_mvps_stopper then
 	mesecon.register_mvps_stopper("default:chest_right")
 	mesecon.register_mvps_stopper("default:furnace")
 end
+
+register_alias("fences:fencegate_open", "doors:gate_wood_open")
+register_alias("fences:fencegate", "doors:gate_wood")
+register_alias("doors:gate_wood_closed", "doors:gate_wood")
