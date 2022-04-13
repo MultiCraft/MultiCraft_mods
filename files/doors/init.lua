@@ -33,7 +33,7 @@ function doors.get(pos)
 			end,
 			state = function(self)
 				local state = minetest.get_meta(self.pos):get_int("state")
-				return state %2 == 1
+				return state % 2 == 1
 			end
 		}
 	elseif doors.registered_trapdoors[node_name] then
@@ -116,9 +116,15 @@ local transform = {
 }
 
 function doors.door_toggle(pos, node, clicker)
-	local meta = minetest.get_meta(pos)
 	node = node or minetest.get_node(pos)
 	local def = minetest.registered_nodes[node.name]
+
+	local pn = clicker and clicker:get_player_name() or ""
+	if clicker and def.protected and minetest.is_protected(pos, pn) then
+		return false
+	end
+
+	local meta = minetest.get_meta(pos)
 	local name = def.door.name
 
 	local state = meta:get_string("state")
@@ -133,12 +139,6 @@ function doors.door_toggle(pos, node, clicker)
 		state = tonumber(state)
 	end
 
-	local pn = clicker and clicker:get_player_name() or ""
-	if clicker and minetest.is_protected(pos, pn) and
-			not default.can_interact_with_node(clicker, pos) then
-		return false
-	end
-
 	-- until Lua-5.2 we have no bitwise operators :(
 	if state % 2 == 1 then
 		state = state - 1
@@ -148,10 +148,12 @@ function doors.door_toggle(pos, node, clicker)
 
 	local dir = node.param2
 
+	local toggled = transform[state + 1][dir + 1]
+
 	-- It's possible param2 is messed up, so, validate before using
 	-- the input data. This indicates something may have rotated
 	-- the door, even though that is not supported.
-	if not transform[state + 1] or not transform[state + 1][dir + 1] then
+	if not transform[state + 1] or not toggled then
 		return false
 	end
 
@@ -164,14 +166,17 @@ function doors.door_toggle(pos, node, clicker)
 	end
 
 	minetest.swap_node(pos, {
-		name = name .. transform[state + 1][dir+1].v,
-		param2 = transform[state + 1][dir + 1].param2
+		name = name .. toggled.v,
+		param2 = toggled.param2
 	})
 	meta:set_int("state", state)
 
+	-- remove owner meta
+	meta:set_string("owner", "")
+	meta:set_string("infotext", "")
+
 	return true
 end
-
 
 local function on_place_node(place_to, newnode,
 	placer, oldnode, itemstack, pointed_thing)
@@ -207,12 +212,11 @@ function doors.register(name, def)
 		groups = table_copy(def.groups),
 
 		on_place = function(itemstack, placer, pointed_thing)
-			local pos
-
-			if not pointed_thing.type == "node" then
+			if pointed_thing.type ~= "node" then
 				return itemstack
 			end
 
+			local doorname = itemstack:get_name()
 			local node = minetest.get_node(pointed_thing.under)
 			local pdef = minetest.registered_nodes[node.name]
 			if pdef and pdef.on_rightclick and
@@ -222,6 +226,7 @@ function doors.register(name, def)
 						node, placer, itemstack, pointed_thing)
 			end
 
+			local pos
 			if pdef and pdef.buildable_to then
 				pos = pointed_thing.under
 			else
@@ -264,18 +269,13 @@ function doors.register(name, def)
 			local state = 0
 			if minetest.get_item_group(minetest.get_node(aside).name, "door") == 1 then
 				state = state + 2
-				minetest.set_node(pos, {name = name .. "_b", param2 = dir})
+				minetest.set_node(pos, {name = doorname .. "_b", param2 = dir})
 			else
-				minetest.set_node(pos, {name = name .. "_a", param2 = dir})
+				minetest.set_node(pos, {name = doorname .. "_a", param2 = dir})
 			end
 
 			local meta = minetest.get_meta(pos)
 			meta:set_int("state", state)
-
-			if def.protected then
-				meta:set_string("owner", pn)
-				meta:set_string("infotext", S(def.description) .. "\n" .. S("Owned by @1", S(pn)))
-			end
 
 			if not minetest.is_creative_enabled(pn) then
 				itemstack:take_item()
@@ -320,8 +320,11 @@ function doors.register(name, def)
 		def.sound_close = "doors_door_close"
 	end
 
+	if not def.tiles then
+		def.tiles = {{name = def.texture, backface_culling = true}}
+	end
+
 	def.groups.not_in_creative_inventory = 1
-	def.groups.door = 1
 	def.drop = name
 	def.door = {
 		name = name,
@@ -375,7 +378,7 @@ function doors.register(name, def)
 	local box = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, 1.5, -3/8}}
 	def.selection_box = box
 	def.collision_box = box
-	def.use_texture_alpha = "clip"
+	def.use_texture_alpha = def.use_texture_alpha or "clip"
 
 	def.mesh = "door_a.obj"
 	minetest.register_node(":" .. name .. "_a", def)
@@ -391,14 +394,12 @@ end
 
 function doors.trapdoor_toggle(pos, node, clicker)
 	node = node or minetest.get_node(pos)
+	local def = minetest.registered_nodes[node.name]
 
 	local pn = clicker and clicker:get_player_name() or ""
-	if clicker and minetest.is_protected(pos, pn) and
-			not default.can_interact_with_node(clicker, pos) then
+	if clicker and def.protected and minetest.is_protected(pos, pn) then
 		return false
 	end
-
-	local def = minetest.registered_nodes[node.name]
 
 	if node.name:sub(-5) == "_open" then
 		minetest.sound_play(def.sound_close,
@@ -411,6 +412,13 @@ function doors.trapdoor_toggle(pos, node, clicker)
 		minetest.swap_node(pos, {name = node.name .. "_open",
 			param1 = node.param1, param2 = node.param2})
 	end
+
+	-- remove owner meta
+	local meta = minetest.get_meta(pos)
+	meta:set_string("owner", "")
+	meta:set_string("infotext", "")
+
+	return true
 end
 
 function doors.register_trapdoor(name, def)
@@ -422,6 +430,8 @@ function doors.register_trapdoor(name, def)
 	local name_opened = name .. "_open"
 
 	def.description = S(def.description)
+
+	def.wield_image = def.wield_image or def.tile_front
 
 	def.on_rightclick = function(pos, node, clicker, itemstack)
 		doors.trapdoor_toggle(pos, node, clicker)
@@ -444,22 +454,14 @@ function doors.register_trapdoor(name, def)
 	}}
 
 	-- Common trapdoor configuration
-	def.drawtype = "nodebox"
+	def.drawtype = def.drawtype or "nodebox"
 	def.paramtype = "light"
 	def.paramtype2 = "facedir"
 	def.is_ground_content = false
-	def.use_texture_alpha = "clip"
+	def.use_texture_alpha = def.use_texture_alpha or "clip"
+	def.groups.trapdoor = 1
 
 	if def.protected then
-		def.after_place_node = function(pos, placer)
-			local pn = placer:get_player_name()
-			local meta = minetest.get_meta(pos)
-			meta:set_string("owner", pn)
-			meta:set_string("infotext", def.description .. "\n" .. S("Owned by @1", S(pn)))
-
-			return minetest.is_creative_enabled(pn)
-		end
-
 		def.on_blast = function() end
 		def.node_dig_prediction = ""
 	else
@@ -494,12 +496,7 @@ function doors.register_trapdoor(name, def)
 			{ 5/16, -0.5, -0.5,  0.5,  -3/8,  0.5},  -- right
 			{-1/8,  -0.5,  1/8, 1/8,   -3/8,  5/16}, -- middle top
 			{-1/8,  -0.5, -5/16, 1/8,  -3/8, -1/8}   -- middle bottom
-
 		}
-	}
-	def_closed.selection_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -3/8, 0.5}
 	}
 	def.tile_bottom = def.tile_bottom or def.tile_front
 	def_closed.tiles = {
@@ -510,9 +507,6 @@ function doors.register_trapdoor(name, def)
 		def.tile_side,
 		def.tile_side
 	}
-
-	def_closed.groups.door = 1
-
 	def_opened.node_box = def.node_box_open or {
 		type = "fixed",
 		fixed = {
@@ -523,12 +517,7 @@ function doors.register_trapdoor(name, def)
 			{ 5/16, -0.5,  3/8,  0.5,   0.5,  0.5}, -- right
 			{-1/8,   1/8,  3/8,  1/8,   5/16, 0.5}, -- middle top
 			{-1/8,  -5/16, 3/8,  1/8,  -1/8,  0.5}  -- middle bottom
-
 		}
-	}
-	def_opened.selection_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, 3/8, 0.5, 0.5, 0.5}
 	}
 	def_opened.tiles = {
 		def.tile_side,
@@ -537,6 +526,15 @@ function doors.register_trapdoor(name, def)
 		def.tile_side .. "^[transform1",
 		def.tile_front .. "^[transform46",
 		def.tile_bottom .. "^[transform6"
+	}
+
+	def_opened.selection_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, 3/8, 0.5, 0.5, 0.5}
+	}
+	def_closed.selection_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -3/8, 0.5}
 	}
 
 	def_opened.drop = name_closed
@@ -567,28 +565,8 @@ end
 
 ---- Fence Gate ----
 
-function doors.fencegate_toggle(pos, node, clicker)
-	node = node or minetest.get_node(pos)
-
-	local pn = clicker and clicker:get_player_name() or ""
-	if clicker and minetest.is_protected(pos, pn) and
-			not default.can_interact_with_node(clicker, pos) then
-		return false
-	end
-
-	local def = minetest.registered_nodes[node.name]
-
-	if node.name:sub(-5) == "_open" then
-		minetest.sound_play(def.sound_close,
-			{pos = pos, gain = 0.3, max_hear_distance = 10})
-		minetest.swap_node(pos, {name = node.name:sub(1,
-			node.name:len() - 5), param1 = node.param1, param2 = node.param2})
-	else
-		minetest.sound_play(def.sound_open,
-			{pos = pos, gain = 0.3, max_hear_distance = 10})
-		minetest.swap_node(pos, {name = node.name .. "_open",
-			param1 = node.param1, param2 = node.param2})
-	end
+function doors.fencegate_toggle(...)
+	return doors.trapdoor_toggle(...)
 end
 
 function doors.register_fencegate(name, def)
@@ -623,24 +601,13 @@ function doors.register_fencegate(name, def)
 
 	-- Common fencegate configuration
 	def.drawtype = "nodebox"
-	def.tiles = {}
 	def.paramtype = "light"
 	def.paramtype2 = "facedir"
 	def.sunlight_propagates = true
 	def.is_ground_content = false
 	def.connect_sides = {"left", "right"}
-	def.groups = def.groups
 	def.sounds = def.sounds
 	def.groups.fence = 1
-
-	if type(def.texture) == "string" then
-		def.tiles[1] = {name = def.texture, backface_culling = true}
-	elseif def.texture.backface_culling == nil then
-		def.tiles[1] = table_copy(def.texture)
-		def.tiles[1].backface_culling = true
-	else
-		def.tiles[1] = def.texture
-	end
 
 	if not def.sound_open then
 		def.sound_open = "doors_fencegate_open"
@@ -668,15 +635,11 @@ function doors.register_fencegate(name, def)
 	}
 	def_closed.selection_box = {
 		type = "fixed",
-		fixed = {
-			{-1/2, -3/16, -1/16, 1/2, 1/2, 1/16}
-		}
+		fixed = {-1/2, -3/16, -1/16, 1/2, 1/2, 1/16}
 	}
 	def_closed.collision_box = {
 		type = "fixed",
-		fixed = {
-			{-1/2, -3/16, -1/16, 1/2, 1, 1/16}
-		}
+		fixed = {-1/2, -3/16, -1/16, 1/2, 1, 1/16}
 	}
 
 	def_opened.node_box = {
