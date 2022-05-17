@@ -29,8 +29,8 @@ local function book_on_use(itemstack, user)
 	local data = meta:to_table().fields
 
 	if data.owner then
-		title = data.title or ""
-		text = data.text or ""
+		title = data.title_b64 and minetest.decode_base64(data.title_b64) or data.title or ""
+		text = data.text_b64 and minetest.decode_base64(data.text_b64) or data.text or ""
 		owner = data.owner
 
 		for str in (text .. "\n"):gmatch("([^\n]*)[\n]") do
@@ -77,6 +77,48 @@ end
 local max_text_size = 10000
 local max_title_size = 50
 local short_title_size = 30
+
+local single_character_escapes = {[34] = true, [92] = true, [47] = true, [8] = true, [12] = true, [10] = true, [13] = true, [9] = true}
+local function get_itemstack_meta_len(text)
+	local size = 0
+	for i = 1, #text do
+		local char = text:byte(i)
+		if single_character_escapes[char] then
+			size = size + 2
+		elseif char >= 32 and char <= 126 then
+			-- ASCII printable characters are added as-is (so long as they
+			-- don't need to be escaped)
+			size = size + 1
+		else
+			-- Minetest's ItemStack metadata encodes every other byte (not
+			-- character) as \u00<hex>
+			-- This isn't valid JSON
+			size = size + 6
+		end
+	end
+	return size
+end
+
+-- Like text:sub(1, max_size) but won't split a multi-byte character (which
+-- causes the text to be shown as <invalid UTF-8 string> or something)
+local function safely_trim_to_length(text, max_size)
+	if #text > max_size then
+		return utf8.remove(text:sub(1, max_size + 1))
+	end
+	return text
+end
+
+local function set_optionally_b64_field(data, field_name, text)
+	-- 4 is added to the base64 length for "_b64"
+	if get_itemstack_meta_len(text) > math.ceil(#text / 0.75) + 4 then
+		data[field_name] = nil
+		data[field_name .. "_b64"] = minetest.encode_base64(text)
+	else
+		data[field_name] = text
+		data[field_name .. "_b64"] = nil
+	end
+end
+
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "default:book" then return end
 	local inv = player:get_inventory()
@@ -102,18 +144,27 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 
 		if not data then data = {} end
-		data.title = fields.title:sub(1, max_title_size)
 		data.owner = player:get_player_name()
-		local short_title = data.title
+
+		-- Title
+		local title = safely_trim_to_length(fields.title, max_title_size)
+		set_optionally_b64_field(data, "title", title)
+
+		-- Description
+		local short_title = title
 		-- Don't bother triming the title if the trailing dots would make it longer
 		if #short_title > short_title_size + 3 then
-			short_title = short_title:sub(1, short_title_size) .. "..."
+			short_title = safely_trim_to_length(short_title, short_title_size) .. "..."
 		end
 		data.description = S("\"@1\" by @2", short_title, data.owner)
-		data.text = fields.text:sub(1, max_text_size)
-		data.text = data.text:gsub("\r\n", "\n"):gsub("\r", "\n")
+
+		-- Text
+		local text = safely_trim_to_length(fields.text, max_text_size)
+		text = text:gsub("\r\n", "\n"):gsub("\r", "\n")
+		set_optionally_b64_field(data, "text", text)
+
 		data.page = 1
-		data.page_max = math.ceil((#data.text:gsub("[^\n]", "") + 1) / lpp)
+		data.page_max = math.ceil((#text:gsub("[^\n]", "") + 1) / lpp)
 
 		if new_stack then
 			new_stack:get_meta():from_table({fields = data})
