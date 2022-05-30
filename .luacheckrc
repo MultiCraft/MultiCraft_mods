@@ -12,19 +12,18 @@ globals = {
 	"minetest",
 	"areas",
 	"experience",
+	"invisibility",
 	"mobs",
 	"screwdriver",
 	"workbench",
 	"brewing",
 }
-	
+
 read_globals = {
 	"DIR_DELIM",
 	"PLATFORM",
-	"intllib",
 	"hud",
 	"hunger",
-	"Sl",
 	"dump",
 	"vector",
 	"utf8",

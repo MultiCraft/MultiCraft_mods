@@ -21,10 +21,6 @@ playereffects.effect_types = {}
 --[[ table containing all the active effects ]]
 playereffects.effects = {}
 
---[[ table containing all the inactive effects.
-Effects become inactive if a player leaves an become active again if they join again. ]]
-playereffects.inactive_effects = {}
-
 -- Variable for counting the effect_id
 playereffects.last_effect_id = 0
 
@@ -34,12 +30,6 @@ playereffects.last_effect_id = 0
 
 -- Whether to use the HUD to expose the active effects to players (true or false)
 playereffects.use_hud = true
-
--- Whether to use autosave (true or false)
-local use_autosave = false
-
--- The time interval between autosaves, in seconds (only used when use_autosave is true)
-local autosave_time = 10
 
 -- Translations
 S = minetest.get_translator_auto({"ru"})
@@ -57,25 +47,6 @@ end)
 
 local function round(number)
 	return math.floor(number + 0.5)
-end
-
---[=[ Load inactive_effects and last_effect_id from playereffects, if this file exists ]=]
-do
-	local filepath = minetest.get_worldpath() .. "/playereffects"
-	local file = io.open(filepath, "r")
-	if file then
-		minetest.log("action", "[playereffects] playereffects loading...")
-		local string = file:read()
-		io.close(file)
-		if string then
-			local savetable = minetest.deserialize(string)
-			playereffects.inactive_effects = savetable.inactive_effects
-		--	minetest.debug("[playereffects] playereffects successfully read.")
-		--	minetest.debug("[playereffects] inactive_effects = " .. dump(playereffects.inactive_effects))
-		--	playereffects.last_effect_id = savetable.last_effect_id
-		--	minetest.debug("[playereffects] last_effect_id = " .. dump(playereffects.last_effect_id))
-		end
-	end
 end
 
 function playereffects.next_effect_id()
@@ -103,7 +74,7 @@ end
 function playereffects.apply_effect_type(effect_type_id, duration, player, repeat_interval_time_left)
 	local playername = player and player:get_player_name()
 
-	if not playername or type(player) == "userdata" and not player:is_player() then
+	if not playername or not minetest.is_player(player) then
 		minetest.log("error", "[playereffects] Attempted to apply effect type " .. effect_type_id .. " to a non-player!")
 		return false
 	end
@@ -266,7 +237,7 @@ function playereffects.get_player_effects(playername)
 	if minetest.get_player_by_name(playername) then
 		for _, v in pairs(playereffects.effects) do
 			if v.playername == playername then
-				effects[#effects+1] = v
+				effects[#effects + 1] = v
 			end
 		end
 	end
@@ -285,65 +256,6 @@ function playereffects.has_effect_type(playername, effect_type_id)
 	return false
 end
 
---[=[ Saving all data to file ]=]
-function playereffects.save_to_file()
-	local savetable = {}
-	local inactive_effects = {}
-	for playername, effecttable in pairs(playereffects.inactive_effects) do
-		if inactive_effects[playername] == nil then
-			inactive_effects[playername] = {}
-		end
-		local pinacteff = inactive_effects[playername]
-
-		for i = 1, #effecttable do
-			pinacteff[#pinacteff+1] = effecttable[i]
-		end
-	end
-
-	for _, effect in pairs(playereffects.effects) do
-		local new_duration, new_repeat_duration
-		if playereffects.effect_types[effect.effect_type_id].repeat_interval then
-			new_duration = effect.time_left
-			new_repeat_duration = effect.repeat_interval_time_left - (time - effect.repeat_interval_start_time)
-		else
-			new_duration = effect.time_left - (time - effect.start_time)
-		end
-		if new_duration > 0 then
-			local new_effect = {
-				effect_id = effect.effect_id,
-				effect_type_id = effect.effect_type_id,
-				time_left = new_duration,
-				repeat_interval_time_left = new_repeat_duration,
-				start_time = effect.start_time,
-				repeat_interval_start_time = effect.repeat_interval_start_time,
-				playername = effect.playername,
-				metadata = effect.metadata
-			}
-			local player_inactive_effects_effect = inactive_effects[effect.playername]
-			player_inactive_effects_effect[#player_inactive_effects_effect+1] = new_effect
-		end
-	end
-
-	for playername, _ in pairs(inactive_effects) do
-		if #inactive_effects[playername] < 1 then
-			inactive_effects[playername] = nil
-		end
-	end
-
-	savetable.inactive_effects = inactive_effects
---	savetable.last_effect_id = playereffects.last_effect_id
-
-	local savestring = minetest.serialize(savetable)
-	local filepath = minetest.get_worldpath() .. "/playereffects"
-	local result = minetest.safe_file_write(filepath, savestring)
-
-	if result then
-		minetest.log("action", "[playereffects] Wrote playereffects data into " .. filepath .. ".")
-	else
-		minetest.log("error", "[playereffects] Failed to write playereffects data into " .. filepath .. ".")
-	end
-end
-
 --[=[ Callbacks ]=]
 --[[ Cancel all effects on player death ]]
 minetest.register_on_dieplayer(function(player)
@@ -355,37 +267,50 @@ minetest.register_on_dieplayer(function(player)
 	end
 end)
 
-minetest.register_on_leaveplayer(function(player)
-	local playername = player:get_player_name()
-	local effects = playereffects.get_player_effects(playername)
+local function save_meta(player)
+	local player_name = player:get_player_name()
+	local effects = playereffects.get_player_effects(player_name)
 
-	playereffects.hud_clear(player)
-
-	local inactive_effects = playereffects.inactive_effects[playername]
-	for e = 1, #effects do
-		local new_duration = effects[e].time_left - (time - effects[e].start_time)
+	local valid_effects = {}
+	for _, effect in ipairs(effects) do
+		-- I think time_left is actually the total duration and not the
+		-- remaining time.
+		local new_duration = effect.time_left - (time - effect.start_time)
 		if new_duration > 0 then
-			local new_effect = effects[e]
-			new_effect.time_left = new_duration
-			inactive_effects[#inactive_effects+1] = new_effect
-			playereffects.cancel_effect(effects[e].effect_id)
+			effect.time_left = new_duration
+			valid_effects[#valid_effects + 1] = effect
 		end
 	end
+
+	player:get_meta():set_string("playereffects", minetest.serialize(valid_effects))
+end
+
+minetest.register_on_leaveplayer(function(player)
+	save_meta(player)
+	playereffects.hud_clear(player)
 end)
 
 minetest.register_on_shutdown(function()
-	minetest.log("action", "[playereffects] Server shuts down. Rescuing data into playereffects")
-	playereffects.save_to_file()
+	local players = minetest.get_connected_players()
+
+	for i = 1, #players do
+		save_meta(players[i])
+	end
 end)
 
 minetest.register_on_joinplayer(function(player)
 	local playername = player:get_player_name()
 
 	-- load all the effects again (if any)
+	local meta = player:get_meta()
 	playereffects.hudinfos[playername] = {}
-	local inactive_effects = playereffects.inactive_effects[playername]
+	local inactive_effects = minetest.deserialize(meta:get_string("playereffects"))
 	if inactive_effects ~= nil then
-		minetest.after(2, function()
+		minetest.after(1, function()
+			-- Make sure the player hasn't left
+			player = minetest.get_player_by_name(playername)
+			if not player then return end
+
 			for i = 1, #inactive_effects do
 				local effect = inactive_effects[i]
 				-- Don't apply unknown effects
@@ -395,25 +320,10 @@ minetest.register_on_joinplayer(function(player)
 			end
 		end)
 	end
-	playereffects.inactive_effects[playername] = {}
 end)
 
--- Autosave into file
-if use_autosave then
-	minetest.register_globalstep(function(dtime)
-		playereffects.autosave_timer = playereffects.autosave_timer or 0
-		playereffects.autosave_timer = playereffects.autosave_timer + dtime
-
-		if playereffects.autosave_timer >= autosave_time then
-			playereffects.autosave_timer = 0
-			minetest.log("action", "[playereffects] Autosaving mod data to playereffects...")
-			playereffects.save_to_file()
-		end
-	end)
-end
-
 minetest.register_playerstep(function(_, playernames)
-	for _, name in pairs(playernames) do
+	for _, name in ipairs(playernames) do
 		local player = minetest.get_player_by_name(name)
 		if player and player:is_player() then
 			playereffects.hud_update(player)
@@ -503,3 +413,6 @@ function playereffects.hud_effect(effect_type_id, player, pos)
 
 	return text_id, icon_id
 end
+
+-- Remove the old playereffects file
+os.remove(minetest.get_worldpath() .. "/playereffects")
