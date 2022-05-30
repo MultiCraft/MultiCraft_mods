@@ -227,6 +227,8 @@ armor.set_player_armor = function(self, player)
 	self:update_player_visuals(player)
 
 	if enable_damage then
+		-- Preserve the "immortal" group
+		armor_groups.immortal = player:get_armor_groups().immortal
 		player:set_armor_groups(armor_groups)
 
 		if use_pova_mod then
