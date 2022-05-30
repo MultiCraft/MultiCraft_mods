@@ -72,3 +72,34 @@ sscsm.register_on_sscsms_loaded(function(name)
 	sscsm.com_send(name, "sfinv_sscsm:formspec_prepend",
 		default.gui_bg .. default.listcolors)
 end)
+
+-- Disable the SSCSM inventory and reset the page if creative is
+-- granted/revoked
+local function on_priv_change(name, _, priv)
+	if priv ~= "creative" then return true end
+
+	-- Disable the SSCSM inventory
+	if sscsm_inv_players[name] then
+		sscsm_inv_players[name] = nil
+		sscsm.com_send(name, "sfinv_sscsm:disable")
+	end
+
+	-- Reset the inventory to the homepage
+	minetest.after(0, function()
+		local player = minetest.get_player_by_name(name)
+		if not player then return end
+		old_set_page(player, sfinv.get_homepage_name(player))
+	end)
+
+	-- Return true so other callbacks get executed
+	-- For some reason you have to return true, this is probably an engine bug
+	-- since it isn't documented at all.
+	return true
+end
+
+minetest.register_on_priv_grant(on_priv_change)
+minetest.register_on_priv_revoke(on_priv_change)
+
+sscsm.register_on_com_receive("sfinv_sscsm:close_formspec", function(name)
+	minetest.close_formspec(name, "")
+end)

@@ -251,6 +251,17 @@ sscsm.register_on_com_receive("sfinv_sscsm:handover", function(msg)
 	on_formspec_input("sfinv_sscsm:fs", msg[2])
 end)
 
+-- Disable the SSCSM inventory formspec on request from the server
+sscsm.register_on_com_receive("sfinv_sscsm:disable", function()
+	inventory_formspec = nil
+	blockers = math.huge
+	if inventory_open then
+		-- CSMs can't close formspecs, ask the server to close it
+		sscsm.com_send("sfinv_sscsm:close_formspec")
+		inventory_open = false
+	end
+end)
+
 -- Update player previews.
 sscsm.register_on_com_receive("player_api:preview", function()
 	if blockers == 0 then
