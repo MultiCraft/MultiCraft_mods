@@ -1,6 +1,9 @@
 # textdomain: carts
 Cart=Lore
 (Sneak+Click to pick up)=(Schleichen u. Klicken zum Aufheben)
+Owned by @1=Eigentum von @1
 Rail=Schiene
 Powered Rail=Antriebsschiene
 Brake Rail=Bremsschiene
+Detector Rail=Sensorschiene
+You have to come closer to sit down!=Sie müssen näher kommen, um sich zu setzen!

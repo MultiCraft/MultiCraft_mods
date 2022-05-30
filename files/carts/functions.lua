@@ -1,9 +1,7 @@
 local abs, floor, min, sign = math.abs, math.floor, math.min, math.sign
 local vector_add, vector_equals, vector_new, vector_round = vector.add, vector.equals, vector.new, vector.round
 
--- Compatible for MultiCraft Engine 2.0
-local ah = minetest.features.object_independent_selectionbox and 0 or 10
-carts.default_attach = {x=0, y=-3+ah, z=-2}
+carts.default_attach = {x=0, y=-3, z=-2}
 
 function carts:manage_attachment(player, obj)
 	if not player then
