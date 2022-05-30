@@ -1,8 +1,8 @@
 local S = carts.S
 
 local abs, floor, min, pi = math.abs, math.floor, math.min, math.pi
-local vector_add, vector_equals, vector_length, vector_multiply, vector_round =
-	vector.add, vector.equals, vector.length, vector.multiply, vector.round
+local vector_add, vector_equals, vector_length, vector_multiply, vector_new, vector_round =
+	vector.add, vector.equals, vector.length, vector.multiply, vector.new, vector.round
 local table_copy = table.copy
 local sp = minetest.is_singleplayer()
 
@@ -275,11 +275,11 @@ local function rail_on_step(self, dtime)
 		return
 	end
 
-	local cart_dir = carts:velocity_to_dir(vel)
-	local same_dir = vector_equals(cart_dir, self.old_dir)
+	local dir = carts:velocity_to_dir(vel)
+	local dir_changed = not vector_equals(dir, self.old_dir)
 	local update = {}
 
-	if self.old_pos and not self.punched and same_dir then
+	if self.old_pos and not self.punched and not dir_changed then
 		local flo_old = vector_round(self.old_pos)
 		if vector_equals(pos_r, flo_old) then
 			-- Do not check one node multiple times
@@ -290,7 +290,7 @@ local function rail_on_step(self, dtime)
 	local distance = 1
 
 	local stop_wiggle = false
-	if self.old_pos and same_dir then
+	if self.old_pos and not dir_changed then
 		-- Detection for "skipping" nodes (perhaps use average dtime?)
 		-- It's sophisticated enough to take the acceleration in account
 		distance = dtime * (vector_length(vel) + 0.5 * dtime * vector_length(acc))
@@ -304,7 +304,7 @@ local function rail_on_step(self, dtime)
 			-- No rail found: set to the expected position
 			pos = new_pos
 			update.pos = true
-			cart_dir = new_dir
+			dir = new_dir
 		end
 	elseif self.old_pos and self.old_dir.y ~= 1 and not self.punched then
 		-- Stop wiggle
@@ -314,19 +314,24 @@ local function rail_on_step(self, dtime)
 	-- dir:			New moving direction of the cart
 	-- switch_keys:	Currently pressed L(1) or R(2) key,
 	--				used to ignore the key on the next rail node
-	local dir, switch_keys = carts:get_rail_direction(
-		pos, cart_dir, ctrl, self.old_switch, self.railtype
-	)
-	local dir_changed = not vector_equals(dir, self.old_dir)
+	 local switch_keys
+	 dir, switch_keys = carts:get_rail_direction(
+		pos, dir, ctrl, self.old_switch, self.railtype
+	 )
+	dir_changed = not vector_equals(dir, self.old_dir)
 
 	local _acc = 0
 	if stop_wiggle or vector_equals(dir, {x=0, y=0, z=0}) then
+		dir = vector_new(self.old_dir)
 		vel = {x=0, y=0, z=0}
 		if not carts:is_rail(pos_r, self.railtype)
 				and self.old_pos then
 			pos = self.old_pos
 		elseif not stop_wiggle then
+			-- End of rail: Smooth out.
 			pos = pos_r
+			dir_changed = false
+			dir.y = 0
 		else
 			pos.y = floor(pos.y + 0.5)
 		end
@@ -403,12 +408,7 @@ local function rail_on_step(self, dtime)
 
 	self.old_pos = vector_round(pos)
 	local old_y_dir = self.old_dir.y
-	if not vector_equals(dir, {x=0, y=0, z=0}) and not stop_wiggle then
-		self.old_dir = dir
-	else
-		-- Cart stopped, set the animation to 0
-		self.old_dir.y = 0
-	end
+	self.old_dir = vector_new(dir)
 	self.old_switch = switch_keys
 
 	carts:on_rail_step(self, self.old_pos, distance)
@@ -511,7 +511,7 @@ end
 minetest.register_entity("carts:cart", cart_entity)
 
 minetest.register_node("carts:cart", {
-	description = S("Cart") .. S("(Sneak+Click to pick up)"),
+	description = S("Cart") .. "\n" .. S("(Sneak+Click to pick up)"),
 	drawtype = "mesh",
 	mesh = "carts_cart.b3d",
 	tiles = {"carts_cart.png", "carts_cart_wheels.png"},

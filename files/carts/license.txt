@@ -5,7 +5,7 @@ The MIT License (MIT)
 Copyright (C) 2012-2016 PilzAdam
 Copyright (C) 2014-2016 SmallJoker
 Copyright (C) 2012-2016 Various Minetest developers and contributors
-Copyright (C) 2019-2020 MultiCraft Development Team
+Copyright (C) 2019-2022 MultiCraft Development Team
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
