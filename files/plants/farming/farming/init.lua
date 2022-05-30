@@ -1,7 +1,7 @@
 -- Global farming namespace
 farming = {}
 
-local S = minetest.get_translator_auto({"ru"})
+local S = minetest.get_translator_auto(true)
 farming.S = S
 
 -- Load files

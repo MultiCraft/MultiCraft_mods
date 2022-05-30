@@ -1,6 +1,6 @@
 carts = {}
 carts.modpath = minetest.get_modpath("carts")
-carts.S = minetest.get_translator_auto({"ru"})
+carts.S = minetest.get_translator_auto(true)
 
 -- Maximal speed of the cart in m/s
 carts.speed_max = 12

@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto({"ru"})
+local S = minetest.get_translator_auto(true)
 
 local enable_damage = minetest.settings:get_bool("enable_damage")
 local use_pova_mod = minetest.get_modpath("pova")

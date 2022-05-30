@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto({"ru"})
+local S = minetest.get_translator_auto(true)
 
 for hour = 0, 12 do
 	local img = hour ~= 0 and "watch_" .. hour or "blank"
