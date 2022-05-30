@@ -1,6 +1,9 @@
 # textdomain: carts
 Cart=Vagoneta
 (Sneak+Click to pick up)=(Agacharse+Clic para recoger)
+Owned by @1=Propiedad de @1
 Rail=Raíl
 Powered Rail=Raíl energizado
 Brake Rail=Raíl de frenado
+Detector Rail=Raíl detector
+You have to come closer to sit down!=Hay que acercarse para sentarse.
