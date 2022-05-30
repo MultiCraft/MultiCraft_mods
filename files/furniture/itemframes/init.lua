@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto({"ru"})
+local S = minetest.get_translator_auto(true)
 
 local function obj_inside_radius(p)
 	return minetest.get_objects_inside_radius(p, 0.5)

@@ -1,5 +1,5 @@
 mobs_monster = {
-	S = minetest.get_translator_auto({"ru"})
+	S = minetest.get_translator_auto(true)
 }
 
 mobs_monster.spawn_nodes = {
