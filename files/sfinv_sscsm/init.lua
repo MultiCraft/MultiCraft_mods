@@ -1,3 +1,10 @@
+sfinv_sscsm = {}
+
+local sscsm_inv_players = {}
+function sfinv_sscsm.has_sscsm_inv(name)
+	return sscsm_inv_players[name] ~= nil
+end
+
 if not minetest.global_exists("sscsm") then
 	return
 end
@@ -7,6 +14,14 @@ sscsm.register({
 	name = "sfinv_sscsm",
 	file = minetest.get_modpath("sfinv_sscsm") .. DIR_DELIM .. "api.lua",
 })
+
+sscsm.register_on_com_receive("sfinv_sscsm:takeover", function(name)
+	sscsm_inv_players[name] = true
+end)
+
+minetest.register_on_leaveplayer(function(player)
+	sscsm_inv_players[player:get_player_name()] = nil
+end)
 
 -- If an SSCSM handler returns false, it will get sent to the server here.
 sscsm.register_on_com_receive("sfinv_sscsm:fields", function(name, fields)
@@ -32,7 +47,7 @@ end)
 -- Add sfinv.open_formspec().
 function sfinv.open_formspec(player, context)
 	local name = player:get_player_name()
-	if sscsm.has_sscsms_enabled(name) then
+	if sscsm_inv_players[name] then
 		sscsm.com_send(name, "sfinv_sscsm:open_formspec")
 		return
 	end
@@ -44,7 +59,7 @@ end
 local old_set_page = sfinv.set_page
 function sfinv.set_page(player, pagename, temp)
 	local name = player:get_player_name()
-	if sscsm.has_sscsms_enabled(name) then
+	if sscsm_inv_players[name] then
 		sscsm.com_send(name, "sfinv_sscsm:set_page", {pagename, temp})
 		if temp then return end
 	end

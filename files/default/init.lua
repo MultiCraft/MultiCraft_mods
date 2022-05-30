@@ -23,15 +23,18 @@ minetest.register_craftitem("default:cell", {
 })
 
 default.gui_bg = "bgcolor[#08080880;true]"
-default.listcolors = "listcolors[#9990;#FFF7;#FFF0;#160816;#D4D2FF]"
-default.gui_bg_img = "background[0,0;0,0;formspec_background_color.png^" ..
-	"formspec_backround.png;true]"
+default.listcolors = "listcolors[#0000;#fff7;#0000;#656276;#fff]"
+default.gui_bg_img = "background[-0.2,-0.26;16.71,17.36;formspec_inventory_backround.png]"
+function default.gui_close_btn(pos)
+	pos = pos or "8.35,-0.1"
+	return "image_button_exit[" .. pos .. ";0.75,0.75;close.png;exit;;true;false;close_pressed.png]"
+end
 default.gui = "size[9,8.75]" ..
 	default.gui_bg ..
 	default.listcolors ..
-	"background[0,0;0,0;formspec_background_color.png^" ..
-		"formspec_backround.png^formspec_inventory.png;true]" ..
-	"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
+	default.gui_bg_img ..
+	"background[0,0;0,0;formspec_inventory.png;true]" ..
+	default.gui_close_btn() ..
 	"list[current_player;main;0.01,4.51;9,3;9]" ..
 	"list[current_player;main;0.01,7.75;9,1;]"
 

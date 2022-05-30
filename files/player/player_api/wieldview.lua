@@ -77,7 +77,7 @@ else -- legacy MultiCraft Engine
 end
 
 local sfinv_exists = minetest.global_exists("sfinv")
-local sscsm_enabled = minetest.global_exists("sscsm")
+local sfinv_sscsm_exists = minetest.global_exists("sfinv_sscsm")
 function player_api.update_wielded_item(player, name)
 	local item = player:get_wielded_item():get_name()
 	local b = "blank.png"
@@ -87,7 +87,7 @@ function player_api.update_wielded_item(player, name)
 		set_textures(player, nil, nil, nil, wield_tile, wield_cube)
 		wielded_item[name] = item
 
-		if sfinv_exists and (not sscsm_enabled or not sscsm.has_sscsms_enabled(name)) then
+		if sfinv_exists and (not sfinv_sscsm_exists or not sfinv_sscsm.has_sscsm_inv(name)) then
 			sfinv.set_player_inventory_formspec(player)
 		end
 	end

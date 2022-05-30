@@ -39,7 +39,7 @@ local large_chest_formspec = "size[9,11.6]" ..
 	"background[0,1;0,0;formspec_background_color.png;true]" ..
 	"background[-0.2,-0.35;9.42,12.46;formspec_chest_large.png]" ..
 	"background[-0.19,2.68;9.4,9.43;formspec_inventory.png]" ..
-	"image_button_exit[8.4,-0.2;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
+	default.gui_close_btn("8.35,-0.2") ..
 	"item_image[0,-0.2;1,1;default:chest]" ..
 	"label[0.9,0;" .. S("Large Chest") .. "]" ..
 	"image[7.95,6;1.1,1.1;^[colorize:#D6D5E6]]" ..

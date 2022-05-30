@@ -11,6 +11,8 @@ local function formspec_string(lpp, page, lines, string)
 	return string
 end
 
+local function gold(s) return minetest.colorize("#ff0", s) end
+
 local lpp = 14 -- Lines per book's page
 local function book_on_use(itemstack, user)
 	local player_name = user:get_player_name()
@@ -45,7 +47,7 @@ local function book_on_use(itemstack, user)
 	local item_name = itemstack:get_name()
 	local formspec = "size[9,8.75]" ..
 		default.gui_bg .. default.gui_bg_img ..
-		"image_button_exit[8.4,-0.1;0.75,0.75;close.png;exit;;true;false;close_pressed.png]" ..
+		default.gui_close_btn() ..
 		"item_image[0,-0.1;1,1;" .. item_name .. "]"
 
 	if owner == player_name then
@@ -59,13 +61,13 @@ local function book_on_use(itemstack, user)
 	else
 		formspec = formspec ..
 			"label[0.9,0.1;" .. esc(S("Book")) .. ": " ..
-				C.gold .. "\"" .. esc(title) .. "\", " ..
-				C.white .. esc(S("by @1", owner)) .. "]" ..
+				"\"" .. esc(gold(title)) .. "\", " ..
+				esc(S("by @1", owner)) .. "]" ..
 			"textarea[0.5,0.9;8.5,8;;" .. esc(string ~= "" and string or text) .. ";]" ..
-			"button[2.4,8;0.8,0.8;book_prev;<]" ..
-			"image_button[3,8;3,0.8;blank.png;;" ..
-				S("Page: @1 of @2", page, page_max) .. ";false;false;]" ..
-				"button[5.8,8;0.8,0.8;book_next;>]"
+			"image_button[0.1,8.2;0.75,0.75;formspec_prev.png;book_prev;;true;false;formspec_prev_pressed.png]" ..
+			"image_button[3,8.2;3,0.75;blank.png;;" ..
+				S("Page: @1 of @2", gold(page), gold(page_max)) .. ";false;false;]" ..
+			"image_button[8.1,8.2;0.75,0.75;formspec_next.png;book_next;;true;false;formspec_next_pressed.png]"
 	end
 
 	minetest.show_formspec(player_name, "default:book", formspec)

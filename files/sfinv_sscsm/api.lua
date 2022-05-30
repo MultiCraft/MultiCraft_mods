@@ -221,6 +221,7 @@ function sfinv.defer_takeover()
 		blockers = blockers - 1
 		assert(blockers >= 0)
 		if blockers == 0 then
+			sscsm.com_send("sfinv_sscsm:takeover")
 			sfinv.set_player_inventory_formspec()
 		end
 	end

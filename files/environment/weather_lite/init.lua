@@ -246,7 +246,7 @@ minetest.register_chatcommand("weather", {
 			for w in pairs(weather.registered) do
 				types = types .. ", " .. w
 			end
-			minetest.chat_send_player(name, S("Avalible weather types: @1.", types))
+			minetest.chat_send_player(name, S("Available weather types: @1.", types))
 		end
 	end
 })
