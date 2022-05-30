@@ -17,7 +17,7 @@ MultiCraft_game is licensed under LGPLv3 (or higher). Resources games licensed u
 
 You can help with development. But you should always publish your source code after making any changes.
 
-Before any use of the MultiCraft_game source code or any part of it, you should familiarize yourself with [LGPL-3.0](doc/LGPL-3.0.md) and [License.md](doc/Licence.md)
+Before any use of the MultiCraft_game source code or any part of it, you should familiarize yourself with [LGPL-3.0](doc/LGPL-3.0.md), [MIT](doc/MIT.md), [Credits](doc/Credits.md) and [License.md](doc/Licence.md).
 
 Any code you add to this repository is automatically licensed as GNU LGPLv3 (or higher) and belongs to MultiCraft Project and/or the project owner without exception.
 Adding code under a different license is only possible by agreement with the project owner and making appropriate notes.
