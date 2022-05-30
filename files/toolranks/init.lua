@@ -47,7 +47,7 @@ function toolranks.new_afteruse(itemstack, user, _, digparams)
 	-- Warn player when tool is almost broken
 	if itemstack:get_wear() > 63500 then
 		minetest.chat_send_player(name,
-			C.gold .. S("Your tool \"@1\" is almost broken!",
+			C.gold .. S("Your tool @1 is almost broken!",
 			(C.ruby .. itemdesc .. C.gold)))
 
 		minetest.sound_play("default_tool_breaks", {to_player = name})

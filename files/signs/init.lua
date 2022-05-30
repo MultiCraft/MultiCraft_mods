@@ -302,8 +302,7 @@ local function edit_text(pos, _, clicker)
 	local text = esc(meta:get_string("sign_text"))
 
 	local edit_fs = "size[5,3.4]" ..
-		"background[0,0;0,0;formspec_background_color.png^" ..
-		"formspec_backround.png;true]"
+		"background[0,0;0,0;formspec_background_color.png^formspec_backround.png;true]"
 	if not minetest.is_protected(pos, player_name) then
 		local ccolor = meta:get_string("sign_color")
 		if ccolor then
