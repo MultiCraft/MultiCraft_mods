@@ -1,6 +1,6 @@
 walls = {}
 
-local S = minetest.get_translator_auto({"ru"})
+local S = minetest.get_translator_auto(true)
 walls.S = S
 
 walls.register = function(wall_name, wall_desc, wall_texture_table, wall_mat, wall_sounds, not_in_cinv)

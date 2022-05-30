@@ -4,7 +4,7 @@ mobs = {
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
-local S = minetest.get_translator_auto({"ru"})
+local S = minetest.get_translator_auto(true)
 mobs.S = S
 
 -- localize common functions

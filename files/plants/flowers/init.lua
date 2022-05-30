@@ -1,7 +1,7 @@
 -- Namespace for functions
 flowers = {}
 
-local S = minetest.get_translator_auto({"ru"})
+local S = minetest.get_translator_auto(true)
 
 -- Map Generation
 dofile(minetest.get_modpath("flowers") .. "/mapgen.lua")

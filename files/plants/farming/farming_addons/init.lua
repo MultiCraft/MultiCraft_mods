@@ -1,5 +1,5 @@
 farming_addons = {
-	S = minetest.get_translator_auto({"ru"})
+	S = minetest.get_translator_auto(true)
 }
 
 local path = minetest.get_modpath("farming_addons")

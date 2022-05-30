@@ -1,5 +1,5 @@
 mobs_npc = {
-	S = minetest.get_translator_auto({"ru"})
+	S = minetest.get_translator_auto(true)
 }
 
 -- replace npc using the old player model

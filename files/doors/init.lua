@@ -4,7 +4,7 @@ doors = {
 	registered_fencegates = {}
 }
 
-local S = minetest.get_translator_auto({"ru"})
+local S = minetest.get_translator_auto(true)
 
 local table_copy = table.copy
 local vnew = vector.new
