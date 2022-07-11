@@ -6,7 +6,7 @@ for hour = 0, 12 do
 		description = S"Watch",
 		inventory_image = "watch_watch.png^" .. img .. ".png",
 		wield_image = "watch_watch.png^" .. img .. ".png",
-		groups = {watch = hour, not_in_creative_inventory = (hour == 0 and 0) or 1}
+		groups = {watch = hour, wieldview = 1, not_in_creative_inventory = (hour == 0 and 0) or 1}
 	})
 end
 
