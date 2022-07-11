@@ -64,17 +64,9 @@ local function prepare()
 	end
 end
 
-if minetest.register_on_mods_loaded then
-	minetest.register_on_mods_loaded(function()
-		minetest.after(1, function()
-			prepare()
-		end)
-	end)
-else -- legacy MultiCraft Engine
-	minetest.after(1, function()
-		prepare()
-	end)
-end
+minetest.register_on_mods_loaded(function()
+	 minetest.after(1, prepare)
+ end)
 
 local sfinv_exists = minetest.global_exists("sfinv")
 local sfinv_sscsm_exists = minetest.global_exists("sfinv_sscsm")
