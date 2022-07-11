@@ -1,6 +1,6 @@
 mobs = {
 	mod = "redo",
-	version = "20210920",
+	version = "20220514",
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
 
@@ -31,17 +31,12 @@ local vsubtract = vector.subtract
 local upper = string.upper
 local settings = minetest.settings
 
--- creative check
-local creative = settings:get_bool("creative_mode")
-function mobs.is_creative(name)
-	return creative or minetest.check_player_privs(name, {creative = true})
-end
-
 -- Load settings
 local damage_enabled = settings:get_bool("enable_damage")
 local mobs_spawn = settings:get_bool("mobs_spawn") ~= false
 local peaceful_only = false
 local disable_blood = true
+local mobs_drop_items = settings:get_bool("mobs_drop_items") ~= false
 local mobs_griefing = true
 local spawn_protected = settings:get_bool("mobs_spawn_protected") ~= false
 local spawn_monster_protected = false
@@ -227,8 +222,8 @@ local check_for = function(look_for, look_inside)
 				return true
 			end
 
-			if str:find("group:") then
-				local group = str:split(":")[2]
+			if str and str:find("group:") then
+				local group = str:split(":")[2] or ""
 
 				if minetest.get_item_group(look_for, group) ~= 0 then
 					return true
@@ -592,7 +587,7 @@ function mobs:yaw_to_pos(self, target, rot)
 end
 
 
--- if stay near set then check periodically for nodes and turn towards them
+-- if stay near set then periodically check for nodes and turn towards them
 function mob_class:do_stay_near()
 	if not self.stay_near then return false end
 
@@ -723,13 +718,13 @@ end
 -- drop items
 function mob_class:item_drop()
 	-- no drops if disabled by setting or mob is child
-	if self.child then return end
+	if not mobs_drop_items or self.child then return end
 
 	local pos = self.object:get_pos()
 
 	-- check for drops function
 	self.drops = type(self.drops) == "function"
-		and self.drops(pos) or self.drops
+		and self.drops(self, pos) or self.drops
 
 	-- check for nil or no drops
 	if not self.drops or #self.drops == 0 then
@@ -750,7 +745,7 @@ function mob_class:item_drop()
 			item = drop.name
 
 			-- cook items on a hot death
-			if self.cause_of_death.hot then
+			if item and self.cause_of_death.hot then
 				local output = minetest.get_craft_result({
 					method = "cooking", width = 1, items = {item}})
 
@@ -759,9 +754,10 @@ function mob_class:item_drop()
 				end
 			end
 
-			-- only drop rare items (drops.min=0) if killed by player
-			if death_by_player or self.drops[n].min ~= 0 then
-				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+			-- only drop rare items (drops.chance = 0) if killed by player
+			if (item or drop.tool) and (death_by_player or drop.chance ~= 0) then
+				local stack = drop.tool or ItemStack(item .. " " .. num)
+				obj = minetest.add_item(pos, stack)
 			end
 
 			if obj and obj:get_luaentity() then
@@ -918,18 +914,18 @@ function mobs.node_ok(...)
 end
 
 -- Returns true is node can deal damage to self
-local is_node_dangerous = function(self, nodename)
-	if self.water_damage > 0
+function mobs:is_node_dangerous(mob_object, nodename)
+	if mob_object.water_damage > 0
 	and minetest.get_item_group(nodename, "water") ~= 0 then
 		return true
 	end
 
-	if self.lava_damage > 0
+	if mob_object.lava_damage > 0
 	and minetest.get_item_group(nodename, "lava") ~= 0 then
 		return true
 	end
 
-	if self.fire_damage > 0
+	if mob_object.fire_damage > 0
 	and minetest.get_item_group(nodename, "fire") ~= 0 then
 		return true
 	end
@@ -939,6 +935,10 @@ local is_node_dangerous = function(self, nodename)
 	end
 
 	return false
+end
+
+local function is_node_dangerous(mob_object, nodename)
+	return mobs:is_node_dangerous(mob_object, nodename)
 end
 
 
@@ -1781,7 +1781,7 @@ function mob_class:general_attack()
 					or not self.attack_players
 					or (self.owner and self.type ~= "monster")
 					or is_invisible(self, objs[n]:get_player_name())
-					or mobs.is_creative(objs[n]:get_player_name())
+					or minetest.is_creative_enabled(objs[n]:get_player_name())
 					or (self.specific_attack
 							and not check_for("player", self.specific_attack)) then
 				objs[n] = nil
@@ -1856,7 +1856,7 @@ function mob_class:do_runaway_from()
 			pname = objs[n]:get_player_name()
 
 			if is_invisible(self, pname)
-					or mobs.is_creative(pname)
+					or minetest.is_creative_enabled(pname)
 					or self.owner == pname then
 				name = ""
 			else
@@ -1935,7 +1935,7 @@ function mob_class:follow_flop()
 
 		for n = 1, #players do
 			local player = players[n]
-			if not is_invisible(self, player:get_player_name())
+			if player and not is_invisible(self, player:get_player_name())
 			and vdistance(player:get_pos(), s) < self.view_range then
 				self.following = player
 				break
@@ -2156,11 +2156,21 @@ function mob_class:do_states(dtime)
 		else
 			self:set_velocity(self.walk_velocity)
 
+			-- figure out which animation to use while in motion
 			if self:flight_check()
 					and self.animation
 					and self.animation.fly_start
 					and self.animation.fly_end then
-				self:set_animation("fly")
+				local on_ground = minetest.registered_nodes[self.standing_on].walkable
+				local in_water = minetest.registered_nodes[self.standing_in].groups.water
+
+				if on_ground and in_water then
+					self:set_animation("fly")
+				elseif on_ground then
+					self:set_animation("walk")
+				else
+					self:set_animation("fly")
+				end
 			else
 				self:set_animation("walk")
 			end
@@ -2861,7 +2871,6 @@ function mob_class:mob_activate(staticdata, def, dtime)
 
 	-- remove mob if not tamed and mob total reached
 	if active_limit > 0 and active_mobs >= active_limit and not self.tamed then
-
 		remove_mob(self)
 --print("-- mob limit reached, removing " .. self.name)
 		return
@@ -2992,7 +3001,7 @@ function mob_class:mob_activate(staticdata, def, dtime)
 	-- set anything changed above
 	self.object:set_properties(self)
 	self:set_yaw((random(0, 360) - 180) / 180 * pi, 6)
-	
+
 	-- To set the tag after setting the owner
 	minetest.after(0, function()
 		self:update_tag()
@@ -3065,9 +3074,9 @@ function mob_class:on_step(dtime)
 	-- early warning check, if no yaw then no entity, skip rest of function
 	if not yaw then return end
 
-	-- get node at foot level every quarter second
 	self.node_timer = (self.node_timer or 0) + dtime
 
+	-- get nodes above and below foot level every 1/4 second
 	if self.node_timer > 0.25 then
 		self.node_timer = 0
 		local y_level = self.collisionbox[2]
@@ -3506,13 +3515,13 @@ end
 function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval,
 		chance, aoc, min_height, max_height, day_toggle, on_spawn, map_load)
 	-- Do mobs spawn at all?
-	if not mobs_spawn then
+	if not mobs_spawn or not mobs.spawning_mobs[name] then
+	--	print("--- spawning not registered for " .. name)
 		return
 	end
 
 	-- is mob actually registered?
-	if not mobs.spawning_mobs[name]
-			or not minetest.registered_entities[name] then
+	if not minetest.registered_entities[name] then
 	--	print("--- mob doesn't exist", name)
 		return
 	end
@@ -3824,7 +3833,7 @@ local function throw_spawn_egg(itemstack, user, pointed_thing)
 			gain = 0.7,
 			max_hear_distance = 10
 		})
-		if not mobs.is_creative(user) or not singleplayer then
+		if not minetest.is_creative_enabled(user) or not singleplayer then
 			itemstack:take_item()
 		end
 	end
@@ -3846,7 +3855,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 	local grp = {spawn_egg = 1}
 
 	-- do NOT add this egg to creative inventory (e.g. dungeon master)
-	if creative and no_creative then
+	if no_creative then
 		grp.not_in_creative_inventory = 1
 	end
 
@@ -3906,7 +3915,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 			if spawn_mob(pos, _mob, itemstack:get_metadata(), placer) then
 				-- if not in creative then take item and minimal protection
 				-- against creating a large number of mobs on the server
-				if not mobs.is_creative(placer) or not singleplayer then
+				if not minetest.is_creative_enabled(placer) or not singleplayer then
 					itemstack:take_item()
 				end
 			end
@@ -4069,7 +4078,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 	if self.follow
 	and self:follow_holding(clicker) then
 		-- if not in creative then take item
-		if not mobs.is_creative(name) then
+		if not minetest.is_creative_enabled(name) then
 			local item = clicker:get_wielded_item()
 			item:take_item()
 			clicker:set_wielded_item(item)
@@ -4149,14 +4158,20 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 		local tag = self.nametag or ""
 		local esc = minetest.formspec_escape
 
-		minetest.show_formspec(name, "mobs_nametag",
-				"size[5,3]" ..
-				"background[0,0;0,0;formspec_background_color.png^formspec_backround.png;true]" ..
-				"field[1.35,1.25;2.9,1;name;" ..
-				esc(S("Enter name:")) ..
-				";" .. esc(tag) .. "]" ..
-				"button_exit[1.06,1.65;2.9,1;mob_rename;" ..
-				esc(S("Rename")) .. "]")
+		local fs = "size[5,3.4]" .. (default and default.gui_bg or "")
+		if clicker and player_api.compat_mode(clicker) then
+			fs = fs ..
+				"background[0,0;0,0;formspec_background_color.png^formspec_backround.png;true]"
+		end
+
+		fs = fs ..
+			"field[1.35,1.25;2.9,1;name;" ..
+			esc(S("Enter name:")) .. ";" ..
+			esc(tag) .. "]" ..
+			"button_exit[1.06,1.8;2.9,1;mob_rename;" ..
+			esc(S("Rename")) .. "]"
+
+		minetest.show_formspec(name, "mobs_nametag", fs)
 
 		return true
 	end
@@ -4200,7 +4215,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			mob_obj[name]:update_tag()
 
 			-- if not in creative then take item
-			if not mobs.is_creative(name) then
+			if not minetest.is_creative_enabled(name) then
 				mob_sta[name]:take_item()
 				player:set_wielded_item(mob_sta[name])
 			end
