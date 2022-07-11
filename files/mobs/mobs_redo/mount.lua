@@ -3,7 +3,6 @@
 local abs, cos, floor, sin, sign, pi =
 		math.abs, math.cos, math.floor, math.sin, math.sign, math.pi
 local vadd = vector.add
-------------------------------------------------------------------------------
 
 --
 -- Helper functions
@@ -36,6 +35,8 @@ local function get_v(v)
 end
 
 local function force_detach(player)
+	if not player then return end
+
 	local attached_to = player:get_attach()
 
 	if not attached_to then
@@ -57,8 +58,6 @@ local function force_detach(player)
 
 end
 
--------------------------------------------------------------------------------
-
 minetest.register_on_leaveplayer(function(player)
 	force_detach(player)
 end)
@@ -74,8 +73,6 @@ minetest.register_on_dieplayer(function(player)
 	force_detach(player)
 	return true
 end)
-
--------------------------------------------------------------------------------
 
 -- Just for correct detaching
 local function find_free_pos(pos)
@@ -93,9 +90,11 @@ local function find_free_pos(pos)
 	for _, c in pairs(check) do
 		local npos = vadd(pos, c)
 		local node = minetest.get_node_or_nil(npos)
+
 		if node and node.name then
 			local def = minetest.registered_nodes[node.name]
-			if def and not def.walkable and def.liquidtype == "none" then
+			if def and not def.walkable and
+					def.liquidtype == "none" then
 				return npos
 			end
 		end
@@ -103,8 +102,6 @@ local function find_free_pos(pos)
 
 	return pos
 end
-
--------------------------------------------------------------------------------
 
 function mobs.attach(entity, player)
 	entity.player_rotation = entity.player_rotation or {x = 0, y = 0, z = 0}
@@ -179,7 +176,7 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 
 		-- move forwards
 		if ctrl.up then
-			entity.v = entity.v + entity.accel / 10
+			entity.v = entity.v + entity.accel * dtime
 
 		-- move backwards
 		elseif ctrl.down then
@@ -187,7 +184,7 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 				return
 			end
 
-			entity.v = entity.v - entity.accel / 10
+			entity.v = entity.v - entity.accel * dtime
 		end
 
 		-- mob rotation
@@ -214,7 +211,7 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 				if velo.y > entity.accel then velo.y = entity.accel end
 
 			elseif velo.y > 0 then
-				velo.y = velo.y - 0.1
+				velo.y = velo.y - dtime
 				if velo.y < 0 then velo.y = 0 end
 			end
 
@@ -224,7 +221,7 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 				if velo.y < -entity.accel then velo.y = -entity.accel end
 
 			elseif velo.y < 0 then
-				velo.y = velo.y + 0.1
+				velo.y = velo.y + dtime
 				if velo.y > 0 then velo.y = 0 end
 			end
 		else
@@ -265,21 +262,17 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 	end
 
 	-- enforce speed limit forward and reverse
-	local max_spd = entity.max_speed_reverse
-
-	if sign(entity.v) >= 0 then
-		max_spd = entity.max_speed_forward
-	end
-
-	if abs(entity.v) > max_spd then
-		entity.v = entity.v - sign(entity.v)
+	if entity.v > entity.max_speed_forward then
+		entity.v = entity.max_speed_forward
+	elseif entity.v < -entity.max_speed_reverse then
+		entity.v = -entity.max_speed_reverse
 	end
 
 	-- Set position, velocity and acceleration
 	local p = entity.object:get_pos()
 	if not p then return end
 
-	local new_acce = {x = 0, y = -9.81, z = 0}
+	local new_acce = {x = 0, y = entity.fall_speed, z = 0}
 
 	p.y = p.y - 0.5
 
@@ -354,7 +347,9 @@ function mobs.fly(entity, _, speed, shoots, arrow, moving_anim, stand_anim)
 	local ctrl = entity.driver:get_player_control()
 	local velo = entity.object:get_velocity()
 	local dir = entity.driver:get_look_dir()
-	local yaw = entity.driver:get_look_horizontal() + 1.57 -- offset fix between old and new commands
+	local yaw = entity.driver:get_look_horizontal() + 1.57
+
+	if not ctrl or not velo then return end
 
 	if ctrl.up then
 		entity.object:set_velocity({
