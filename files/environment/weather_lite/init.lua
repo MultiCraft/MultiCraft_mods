@@ -2,7 +2,7 @@ if minetest.settings:get_bool("enable_weather") == false then
 	return
 end
 
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("weather_lite")
 
 local vadd, vmultiply, vround = vector.add, vector.multiply, vector.round
 local random = math.random
@@ -10,7 +10,8 @@ local snow_covers = minetest.settings:get_bool("weather_snow_covers") ~= false
 
 local weather = {
 	type = "none",
-	wind = {x = 0, y = 0, z = 0}
+	wind = {x = 0, y = 0, z = 0},
+	duration = 0
 }
 
 
@@ -26,6 +27,7 @@ do
 	if type(saved_weather) == "table" then
 		weather = saved_weather
 	end
+	weather.duration = weather.duration or random(30, 150)
 end
 
 minetest.register_on_shutdown(function()
@@ -70,8 +72,27 @@ weather.register("snow", {
 -- Change of weather
 --
 
-function weather.set(weather_type, wind)
+local function weather_change()
+	if weather.type == "none" then
+		for w in pairs(weather.registered) do
+			if random(3) == 1 then
+				local duration = random(60, 300)
+				weather.set(w, {
+					x = random(0, 8),
+					y = 0,
+					z = random(0, 8)
+				}, duration)
+				return
+			end
+		end
+	end
+	minetest.after(random(1800, 3600), weather_change)
+end
+minetest.after(random(600, 1800), weather_change)
+
+function weather.set(weather_type, wind, duration)
 	weather.type = weather_type
+	weather.duration = duration or 0
 	if wind then
 		weather.wind = wind
 	end
@@ -82,27 +103,6 @@ function weather.set(weather_type, wind)
 		})
 	end
 end
-
-local function weather_change(disable)
-	if weather.type == "none" and not disable then
-		for w in pairs(weather.registered) do
-			if random(3) == 1 then
-				weather.set(w, {
-					x = random(0, 8),
-					y = 0,
-					z = random(0, 8)
-				})
-
-				break
-			end
-		end
-		minetest.after(random(60, 300), function() weather_change(true) end)
-	else
-		weather.set("none")
-		minetest.after(random(1800, 3600), weather_change)
-	end
-end
-minetest.after(random(600, 1800), weather_change)
 
 
 --
@@ -159,9 +159,27 @@ local function process_player(player, current_downfall)
 	})
 end
 
-minetest.register_globalstep(function()
+local ltimer, wtimer = 0, 0
+minetest.register_globalstep(function(dtime)
 	local current_downfall = weather.registered[weather.type]
-	if current_downfall == nil then return end
+	if current_downfall == nil then
+		ltimer, wtimer = 0, 0
+		return
+	end
+
+	ltimer = ltimer + dtime
+	if ltimer > 15 then
+		if random(4) == 1 then
+			lightning.strike()
+		end
+		ltimer = 0
+	end
+
+	wtimer = wtimer + dtime
+	if wtimer > weather.duration then
+		weather.set("none")
+		wtimer = 0
+	end
 
 	for _, player in ipairs(minetest.get_connected_players()) do
 		process_player(player, current_downfall)
@@ -234,7 +252,8 @@ minetest.register_chatcommand("weather", {
 	privs = {weather = true},
 	func = function(name, param)
 		if param and (weather.registered[param] or param == "none") then
-			weather.set(param)
+			local duration = param ~= "none" and random(60, 300)
+			weather.set(param, nil, duration)
 			if param == "none" then
 				minetest.chat_send_player(name, S("Set clear weather."))
 			else
