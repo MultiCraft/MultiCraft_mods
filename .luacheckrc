@@ -22,6 +22,7 @@ globals = {
 read_globals = {
 	"DIR_DELIM",
 	"PLATFORM",
+	"climate_api",
 	"hud",
 	"hunger",
 	"dump",
