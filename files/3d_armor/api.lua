@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("3d_armor")
 
 local enable_damage = minetest.settings:get_bool("enable_damage")
 local use_pova_mod = minetest.get_modpath("pova")
@@ -35,13 +35,15 @@ armor = {
 	registered_callbacks = {
 		on_damage = {},
 		on_destroy = {}
-	}
+	},
+	hud = {}
 }
 
 armor.config = {
 	level_multiplier = 1,
 	heal_multiplier = 1,
-	set_multiplier = 1.05
+	set_multiplier = 1.05,
+	max_level = 80 -- full emerald armor
 }
 
 -- Armor Registration
@@ -139,21 +141,6 @@ armor.update_player_visuals = function(self, player)
 	end
 end
 
-if enable_damage then
-	hud.register("armor", {
-		hud_elem_type = "statbar",
-		position      = {x = 0.5,  y = 1},
-		alignment     = {x = -1,   y = -1},
-		offset        = {x = -247, y = -120},
-		size          = {x = 24,   y = 24},
-		text          = "3d_armor_statbar_fg.png",
-		background    = "3d_armor_statbar_bg.png",
-		number        = 0,
-		max           = 20,
-		autohide_bg   = true
-	})
-end
-
 local floor = math.floor
 armor.set_player_armor = function(self, player)
 	local name = player:get_player_name()
@@ -242,11 +229,6 @@ armor.set_player_armor = function(self, player)
 		else
 			player:set_physics_override(physics)
 		end
-
-		-- Update HUD
-		local max_level = 80 -- full emerald armor
-		local armor_lvl = floor(20 * (armor_level/max_level)) or 0
-		hud.change_item(player, "armor", {number = armor_lvl})
 	end
 end
 
