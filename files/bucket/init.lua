@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("bucket")
 
 local singleplayer = minetest.is_singleplayer()
 if minetest.settings:get_bool("singleplayer") then
@@ -41,12 +41,13 @@ end
 --					Needed to avoid creating holes in sloping rivers.
 -- This function can be called from any mod (that depends on bucket).
 function bucket.register_liquid(source, flowing, itemname, inventory_image, name,
-		groups, force_renew)
+		groups, force_renew, custom_empty_bucket)
 	bucket.liquids[source] = {
 		source = source,
 		flowing = flowing,
 		itemname = itemname,
-		force_renew = force_renew
+		force_renew = force_renew,
+		custom_empty_bucket = custom_empty_bucket
 	}
 	bucket.liquids[flowing] = bucket.liquids[source]
 
@@ -129,7 +130,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 						or not minetest.is_creative_enabled(pn) then
 				minetest.get_meta(lpos):set_string("infotext",
 					S("Liquid placed by @1", pn))
-					return ItemStack("bucket:bucket_empty")
+					return ItemStack(custom_empty_bucket or "bucket:bucket_empty")
 				else
 					return itemstack
 				end
@@ -160,9 +161,8 @@ minetest.register_craftitem("bucket:bucket_empty", {
 		local liquiddef = bucket.liquids[node.name]
 		local item_count = user:get_wielded_item():get_count()
 
-		if liquiddef ~= nil
-		and liquiddef.itemname ~= nil
-		and node.name == liquiddef.source then
+		if liquiddef ~= nil and liquiddef.custom_empty_bucket == nil and
+				liquiddef.itemname ~= nil and node.name == liquiddef.source then
 			if check_protection(under, user:get_player_name(),
 					"take " .. node.name) then
 				return
