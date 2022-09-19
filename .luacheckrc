@@ -56,3 +56,4 @@ files["files/bluestone/mesecons/actionqueue.lua"].unused = false
 files["files/3d_armor/api.lua"].unused = false
 files["files/carts/*.lua"].unused = false
 files["files/player/playereffects/init.lua"].unused = false
+files["MODS/achievements/awards/src/api_triggers.lua"].unused = false
