@@ -51,11 +51,9 @@ local theme_inv = [[
 	list[current_player;main;0.01,7.74;9,1;]
 ]]
 
-local formspec_prepend = ""
 function sfinv.make_formspec(context, content, show_inv, size)
 	local tmp = {
 		size or "size[9,8.75]",
-		formspec_prepend,
 		sfinv.get_nav_fs(context, context.nav_titles, context.nav_idx),
 		show_inv and theme_inv or "",
 		content
@@ -242,9 +240,6 @@ sscsm.register_on_com_receive("sfinv_sscsm:set_page", function(msg)
 	end
 end)
 sscsm.register_on_com_receive("sfinv_sscsm:open_formspec", sfinv.open_formspec)
-sscsm.register_on_com_receive("sfinv_sscsm:formspec_prepend", function(msg)
-	formspec_prepend = msg
-end)
 sscsm.register_on_com_receive("sfinv_sscsm:handover", function(msg)
 	if sfinv.pages[msg[1]] then sfinv.set_page(msg[1]) end
 	sfinv.open_formspec()
