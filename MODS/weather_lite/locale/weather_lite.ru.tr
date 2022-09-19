@@ -1,4 +1,5 @@
 # textdomain: weather_lite
+<weather>=<погода>
 Setting the weather type=Установка типа погоды
 Set weather type: @1.=Установлен тип погоды: @1.
 Available weather types: @1.=Доступные типы погоды: @1.

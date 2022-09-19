@@ -1,7 +1,8 @@
 # textdomain: weather_lite
+<weather>=<Wetter>
 Setting the weather type=Einstellung des Wettertyps
 Set weather type: @1.=Wettertyp einstellen: @1.
-Available weather types: @1.=Wählbare Wettertypen: @1.
+Available weather types: @1.=Verfügbare Wettertypen: @1.
 Set clear weather.=Klares Wetter einstellen.
 Rain=Regen
 Snow=Schnee

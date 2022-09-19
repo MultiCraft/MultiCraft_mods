@@ -1,10 +1,15 @@
-if minetest.settings:get_bool("enable_weather") == false then
+if minetest.settings:get_bool("enable_weather") == false or
+		not minetest.global_exists("sscsm") then
+	return
+end
+
+if (PLATFORM == "Android" or PLATFORM == "iOS") and
+		(tonumber(minetest.settings:get("viewing_range")) or 0) <= 50 then
 	return
 end
 
 local S = minetest.get_translator("weather_lite")
 
-local vadd, vmultiply, vround = vector.add, vector.multiply, vector.round
 local random = math.random
 local snow_covers = minetest.settings:get_bool("weather_snow_covers") ~= false
 
@@ -96,68 +101,17 @@ function weather.set(weather_type, wind, duration)
 	if wind then
 		weather.wind = wind
 	end
-	if minetest.global_exists("sscsm") then
-		sscsm.com_send_all("weather_lite:set", {
-			type = weather_type,
-			wind = wind
-		})
-	end
+
+	sscsm.com_send_all("weather_lite:set", {
+		type = weather_type,
+		wind = wind
+	})
 end
 
 
 --
 -- Processing players
 --
-
-local is_valid_pos = minetest.is_valid_pos
-if not is_valid_pos then
-	is_valid_pos = function() return true end
-end
-
--- This is a separate function to prevent "return" from breaking.
-local function process_player(player, current_downfall)
-	local player_name = player:get_player_name()
-	if not player:is_player() or (sscsm and sscsm.has_sscsms_enabled(player_name)) then
-		return
-	end
-
-	local ppos = vround(player:get_pos())
-	ppos.y = ppos.y + 1.5
-	-- Higher than clouds
-	local cloud_height = player:get_clouds().height
-	cloud_height = cloud_height ~= 0 and cloud_height or 120
-	if not is_valid_pos(ppos) or ppos.y > cloud_height or ppos.y < -8 then return end
-	-- Inside liquid
-	local head_inside = minetest.get_node_or_nil(ppos)
-	local def_inside = head_inside and minetest.registered_nodes[head_inside.name]
-	if def_inside and def_inside.drawtype == "liquid" then return end
-	-- Too dark, probably not under the sky
-	local light = minetest.get_node_light(ppos, 0.5)
-	if light and light < 12 then return end
-
-	local wind_pos = vmultiply(weather.wind, -1)
-	local minp = vadd(vadd(ppos, {x = -8, y = current_downfall.height, z = -8}), wind_pos)
-	local maxp = vadd(vadd(ppos, {x =  8, y = current_downfall.height, z =  8}), wind_pos)
-	local vel = {x = weather.wind.x, y = -current_downfall.falling_speed, z = weather.wind.z}
-	local vert = current_downfall.vertical or false
-
-	minetest.add_particlespawner({
-		amount = current_downfall.amount,
-		time = 0.1,
-		minpos = minp,
-		maxpos = maxp,
-		minvel = vel,
-		maxvel = vel,
-		minsize = current_downfall.size,
-		maxsize = current_downfall.size,
-		collisiondetection = true,
-		collision_removal = true,
-		vertical = vert,
-		texture = current_downfall.texture,
-		glow = 1,
-		playername = player_name
-	})
-end
 
 local ltimer, wtimer = 0, 0
 minetest.register_globalstep(function(dtime)
@@ -179,10 +133,6 @@ minetest.register_globalstep(function(dtime)
 	if wtimer > weather.duration then
 		weather.set("none")
 		wtimer = 0
-	end
-
-	for _, player in ipairs(minetest.get_connected_players()) do
-		process_player(player, current_downfall)
 	end
 end)
 
@@ -247,7 +197,7 @@ minetest.register_privilege("weather", {
 })
 
 minetest.register_chatcommand("weather", {
-	params = "<weather>",
+	params = S("<weather>"),
 	description = S("Setting the weather type"),
 	privs = {weather = true},
 	func = function(name, param)
@@ -269,10 +219,6 @@ minetest.register_chatcommand("weather", {
 		end
 	end
 })
-
-if not minetest.global_exists("sscsm") then
-	return
-end
 
 sscsm.register({
 	name = "weather_lite",
