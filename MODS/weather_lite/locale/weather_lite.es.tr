@@ -1,4 +1,5 @@
 # textdomain: weather_lite
+<weather>=<tiempo>
 Setting the weather type=Ajuste del tipo de tiempo
 Set weather type: @1.=Establece el tipo de clima: @1.
 Available weather types: @1.=Tipos de clima disponibles: @1.
