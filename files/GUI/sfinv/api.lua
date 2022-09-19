@@ -46,8 +46,6 @@ local theme_inv = [[
 function sfinv.make_formspec(_, _, content, show_inv, size)
 	local tmp = {
 		size or "size[9,8.75]",
-		default.gui_bg,
-		default.listcolors,
 	--	sfinv.get_nav_fs(player, context, context.nav_titles, context.nav_idx),
 		show_inv and theme_inv or "",
 		content

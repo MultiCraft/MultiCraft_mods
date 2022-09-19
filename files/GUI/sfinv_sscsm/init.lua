@@ -5,6 +5,7 @@ function sfinv_sscsm.has_sscsm_inv(name)
 	return sscsm_inv_players[name] ~= nil
 end
 
+-- Disable if SSCSM doesn't exist
 if not minetest.global_exists("sscsm") then
 	return
 end
@@ -66,12 +67,6 @@ function sfinv.set_page(player, pagename, temp)
 
 	return old_set_page(player, pagename, temp)
 end
-
--- Send default.gui_bg and default.listcolors.
-sscsm.register_on_sscsms_loaded(function(name)
-	sscsm.com_send(name, "sfinv_sscsm:formspec_prepend",
-		default.gui_bg .. default.listcolors)
-end)
 
 -- Disable the SSCSM inventory and reset the page if creative is
 -- granted/revoked
