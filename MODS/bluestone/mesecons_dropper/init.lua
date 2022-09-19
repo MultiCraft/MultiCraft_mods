@@ -14,7 +14,6 @@ local deg, random = math.deg, math.random
 local tcopy, tinsert = table.copy, table.insert
 local vsubtract = vector.subtract
 
-local screwdriver_exists = minetest.global_exists("screwdriver")
 local hopper_exists = minetest.global_exists("hopper")
 
 local cells = ""
@@ -62,7 +61,7 @@ local dropperdef = {
 	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
 	groups = {cracky = 3, dropper = 1},
-	on_rotate = screwdriver_exists and screwdriver.rotate_simple,
+	on_rotate = mesecon.on_rotate_horiz,
 	after_dig_node = function(pos, _, oldmetadata)
 		if not oldmetadata.inventory.main then return end
 		for _, stack in ipairs(oldmetadata.inventory.main) do
