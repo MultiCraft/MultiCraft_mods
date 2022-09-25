@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("3d_armor_stand")
 
 local pi, vround = math.pi, vector.round
 local tconcat = table.concat
