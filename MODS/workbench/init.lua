@@ -1,5 +1,8 @@
 workbench = {}
 
+local S = minetest.get_translator("workbench")
+workbench.S = S
+
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
 workbench.nodes = {}
@@ -50,7 +53,7 @@ workbench.defs = {
 local repairable_tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
 
 -- Tools allowed to be repaired
-function workbench:repairable(stack)
+local function repairable(stack)
 	for _, t in pairs(repairable_tools) do
 		if stack:find(t) then
 			return true
@@ -97,23 +100,23 @@ local workbench_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_crafting.png]
 
 	item_image[0,-0.1;1,1;workbench:workbench]
-	label[0.9,0.1;]] .. Sl("Workbench") .. [[]
+	label[0.9,0.1;]] .. S("Workbench") .. [[]
 
 	image_button[0.2,0.8;1.5,1.5;blank.png;creating;;true;false;formspec_item_pressed.png]
 	item_image[0.25,0.85;1.5,1.5;stairs:stair_default_wood]
 	item_image[0.25,0.95;1.4,1.4;workbench:saw]
-	tooltip[creating;]] .. Sl("Сutting") .. [[;#000;#FFF]
+	tooltip[creating;]] .. S("Сutting") .. [[;#000;#FFF]
 
 	image_button[0.2,2.15;1.5,1.5;blank.png;anvil;;true;false;formspec_item_pressed.png]
 	image[0.25,2.2;1.5,1.5;workbench_anvil.png]
-	tooltip[anvil;]] .. Sl("Anvil") .. [[;#000;#FFF]
+	tooltip[anvil;]] .. S("Anvil") .. [[;#000;#FFF]
 
 	list[current_player;craft;2,0.5;3,3;]
 	list[current_player;craftpreview;7,1.505;1,1;]
 
 	image_button[6.95,3.09;1.1,1.1;blank.png;craftguide;;true;false;formspec_item_pressed.png]
 	image[7,3.14;1,1;craftguide_book.png]
-	tooltip[craftguide;]] .. Sl("Crafting Guide") .. [[;#000;#FFF]
+	tooltip[craftguide;]] .. S("Crafting Guide") .. [[;#000;#FFF]
 ]]
 
 -- Creating formspec
@@ -121,7 +124,7 @@ local creating_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_creating.png]
 
 	item_image[0,-0.1;1,1;workbench:workbench]
-	label[0.1,0.7;]] .. Sl("< Back") .. [[]
+	label[0.1,0.7;]] .. S("< Back") .. [[]
 	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;formspec_item_pressed.png]
 
 	item_image[0.1,1.15;1.75,1.75;workbench:saw]
@@ -134,7 +137,7 @@ local repair_fs = [[
 	background[-0.2,-0.26;9.41,9.49;formspec_workbench_anvil.png]
 
 	item_image[0,-0.1;1,1;workbench:workbench]
-	label[0.1,0.7;]] .. Sl("< Back") .. [[]
+	label[0.1,0.7;]] .. S("< Back") .. [[]
 	image_button[-0.1,-0.2;1.2,1.2;blank.png;back;;true;false;formspec_item_pressed.png]
 
 	image[0.1,1.15;1.75,1.75;workbench_anvil.png]
@@ -150,7 +153,7 @@ local formspecs = {
 	repair_fs
 }
 
-function workbench:set_formspec(meta, id)
+local function set_formspec(meta, id)
 	meta:set_string("formspec",
 		default.gui ..
 		"list[context;split;8,3.14;1,1;]" ..
@@ -167,9 +170,9 @@ function workbench.construct(pos)
 	inv:set_size("split", 1)
 	inv:set_size("forms", 4*3)
 
-	meta:set_string("infotext", Sl("Workbench"))
+	meta:set_string("infotext", S("Workbench"))
 	meta:set_string("version", "5")
-	workbench:set_formspec(meta, 1)
+	set_formspec(meta, 1)
 end
 
 function workbench.fields(pos, _, fields, sender)
@@ -206,7 +209,7 @@ function workbench.fields(pos, _, fields, sender)
 		return
 	end
 
-	workbench:set_formspec(meta, id)
+	set_formspec(meta, id)
 end
 
 function workbench.timer(pos)
@@ -235,7 +238,7 @@ function workbench.put(pos, listname, _, stack, player)
 	end
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
-		workbench:repairable(stackname)) or
+		repairable(stackname)) or
 		(listname == "craft" and valid_block[stackname]) or
 		(listname == "hammer" and stackname == "workbench:hammer") then
 		return stack:get_count()
@@ -314,7 +317,7 @@ minetest.register_lbm({
 	nodenames = "workbench:workbench",
 	action = function(pos)
 		if minetest.get_meta(pos):get_string("version") ~= "5" then
-			construct(pos)
+			workbench.construct(pos)
 		end
 	end
 })
@@ -323,7 +326,7 @@ for i = 1, #workbench.defs do
 	local d = workbench.defs[i]
 	for node in pairs(workbench.nodes) do
 		local def = minetest.registered_nodes[node]
-		local groups, tiles, mesh, collision_box = {}, {}, {}, {}
+		local groups, mesh, collision_box = {}, {}, {}
 		local drawtype = "nodebox"
 
 		if not d[3] then
@@ -347,6 +350,7 @@ for i = 1, #workbench.defs do
 			end
 		end
 
+		local tiles
 		if def.tiles then
 			if #def.tiles > 1 and (def.drawtype:sub(1,5) ~= "glass") then
 				tiles = def.tiles
@@ -364,7 +368,7 @@ for i = 1, #workbench.defs do
 		end
 
 		minetest.register_node(":stairs:"..d[1].."_"..node:gsub(":", "_"), {
-			description = def.description.." " ..Sl(d[1]:gsub("^%l", string.upper)),
+			description = def.description.." " ..S(d[1]:gsub("^%l", string.upper)),
 			drawtype = drawtype,
 			tiles = tiles,
 			mesh = mesh,
