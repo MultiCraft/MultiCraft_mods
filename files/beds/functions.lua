@@ -70,7 +70,7 @@ local function lay_down(player, pos, bed_pos, state, skip)
 			player:set_pos(p)
 		end
 
-		-- physics, eye_offset, etc
+		-- physics, etc
 	--	local physics_override = beds.player[name].physics_override
 		beds.player[name] = nil
 	--[[player:set_physics_override({
@@ -78,7 +78,6 @@ local function lay_down(player, pos, bed_pos, state, skip)
 			jump = physics_override.jump,
 			gravity = physics_override.gravity
 		})]]
-		player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 		player:set_look_horizontal(math.random(1, 180) / 100)
 		player_api.player_attached[name] = false
 		hud_flags.wielditem = true
@@ -99,7 +98,7 @@ local function lay_down(player, pos, bed_pos, state, skip)
 		end
 
 		-- Check if player is moving
-		if vector.length(player:get_player_velocity()) > 0 then
+		if vector.length(player:get_velocity()) > 0.1 then
 			minetest.chat_send_player(name, S("You have to stop moving before going to bed!"))
 			return false
 		end
@@ -114,8 +113,7 @@ local function lay_down(player, pos, bed_pos, state, skip)
 	--	beds.player[name] = {physics_override = player:get_physics_override()}
 		beds.player[name] = true
 
-		-- physics, eye_offset, etc
-		player:set_eye_offset({x = 0, y = -13, z = 0}, {x = 0, y = 0, z = 0})
+		-- physics, etc
 		local yaw, param2 = get_look_yaw(bed_pos)
 		player:set_look_horizontal(yaw)
 		local dir = minetest.facedir_to_dir(param2)
