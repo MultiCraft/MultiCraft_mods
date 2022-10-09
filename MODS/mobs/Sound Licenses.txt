@@ -1,0 +1,14 @@
+Blender Foundation (CC BY 3.0)
+	`mobs_sheep.ogg`
+
+cmusounddesign (https://freesound.org/people/cmusounddesign/) (CC BY 3.0)
+	`mobs_kitten_angry.ogg`
+
+YleArkisto(https://freesound.org/people/YleArkisto/) (CC BY 3.0)
+	`mobs_bear_attack.ogg`
+	`mobs_bear_hurt.ogg`
+	`mobs_bear_death.ogg`
+
+If you believe that we are using work significantly similar to yours in our mods, please contact our legal department for clarification of licensing information.
+
+Credits for significantly modified CC0, WTFPL and other licenses implying "No Rights Reserved" may not be specified under applicable law.
