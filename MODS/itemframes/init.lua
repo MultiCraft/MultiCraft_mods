@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("itemframes")
 
 local function obj_inside_radius(p)
 	return minetest.get_objects_inside_radius(p, 0.5)
