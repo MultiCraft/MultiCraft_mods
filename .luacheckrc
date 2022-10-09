@@ -47,9 +47,9 @@ read_globals = {
 
 exclude_files = {
 	"files/deprecated/init.lua",
-	"files/mobs/mobs_redo/api.lua",
 	"files/workbench/init.lua",
-	"files/signs/slugify.lua"
+	"files/signs/slugify.lua",
+	"MODS/mobs/mobs_redo/api.lua",
 }
 
 files["files/bluestone/mesecons/actionqueue.lua"].unused = false

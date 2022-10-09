@@ -1,0 +1,30 @@
+# textdomain: mobs
+Not tamed!=Не приручен!
+@1 is owner!=@1 является владельцем!
+Missed!=Потерян!
+Already protected!=Уже защищён!
+"@1" at full health: @2=Моб "@1" имеет полное здоровье: @2
+"@1" has been tamed!=Моб "@1" был приручен!
+Enter name:=Введите имя:
+Rename=Переименовать
+Health: @1 / @2=Здоровье: @1 / @2
+Owner:=Владелец:
+Active Mob Limit Reached!=Достигнут Лимит Активных Мобов!
+Owned by @1=Владелец: @1
+Player=Игрок
+
+@1 (Tamed)=@1 (Прирученн.)
+Name Tag=Именная Метка
+Leather=Кожа
+Raw Meat=Сырое Мясо
+Cooked Meat=Приготовленное Мясо
+Raw Pork=Сырая Свинина
+Cooked Pork=Приготовленная Свинина
+Raw Rabbit=Сырая Крольчатина
+Cooked Rabbit=Приготовленный Кролик
+Rabbit Hide=Кролик
+Raw Fish=Сырая Рыба
+Cooked Fish=Приготовленная Рыба
+
+Steel Shears=Стальные Ножницы
+Cobweb=Паутина
