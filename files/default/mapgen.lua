@@ -7,7 +7,7 @@
 minetest.register_alias("mapgen_stone", "default:stone")
 minetest.register_alias("mapgen_water_source", "default:water_source")
 minetest.register_alias("mapgen_river_water_source", "default:river_water_source")
-minetest.register_alias("mapgen_bedrock", "default:bedrock")
+minetest.register_alias("mapgen_bedrock", "default:bedrock") -- v7p
 
 -- Additional aliases needed for mapgen v6
 
@@ -23,7 +23,6 @@ minetest.register_alias("mapgen_dirt_with_snow", "default:dirt_with_snow")
 minetest.register_alias("mapgen_snowblock", "default:snowblock")
 minetest.register_alias("mapgen_snow", "default:snow")
 minetest.register_alias("mapgen_ice", "default:ice")
-minetest.register_alias("mapgen_sandstone", "default:sandstone") -- 0.4 compatibility
 
 minetest.register_alias("mapgen_tree", "default:tree")
 minetest.register_alias("mapgen_leaves", "default:leaves")
@@ -39,20 +38,16 @@ minetest.register_alias("mapgen_pine_needles", "default:pine_needles")
 minetest.register_alias("mapgen_cobble", "default:cobble")
 minetest.register_alias("mapgen_stair_cobble", "stairs:stair_default_cobble")
 minetest.register_alias("mapgen_mossycobble", "default:mossycobble")
-minetest.register_alias("mapgen_sandstonebrick", "default:sandstone") -- 0.4 compatibility
-minetest.register_alias("mapgen_stair_sandstonebrick", "stairs:stair_default_sandstone")
-
+minetest.register_alias("mapgen_stair_desert_stone", "stairs:stair_default_sandstone")
 
 local modpath = minetest.get_modpath("default")
 
 --
--- Register bedrock for Mgv6
+-- Register bedrock for mapgen v6 and Valleys
+-- This first to avoid other ores cutting through bedrock
 --
 
-function default.register_bedrock()
-	-- Bedrock
-	-- This first to avoid other ores cutting through bedrock
-
+function default.register_bedrock_v6()
 	minetest.register_ore({
 		ore_type       = "scatter",
 		ore            = "default:bedrock",
@@ -61,8 +56,22 @@ function default.register_bedrock()
 		clust_scarcity = 1 * 1 * 1,
 		clust_num_ores = 5,
 		clust_size     = 2,
-		y_min          = -66,
 		y_max          = -64,
+		y_min          = -66,
+	})
+end
+
+function default.register_bedrock_valleys()
+	minetest.register_ore({
+		ore_type       = "scatter",
+		ore            = "default:bedrock",
+		wherein        = {"default:stone", "default:sand",
+			"default:water_source", "default:lava_source", "air"},
+		clust_scarcity = 1 * 1 * 1,
+		clust_num_ores = 5,
+		clust_size     = 2,
+		y_max          = -30900,
+		y_min          = -31000,
 	})
 end
 
@@ -74,6 +83,12 @@ end
 
 
 function default.register_ores()
+
+	-- Stratum ores.
+	-- These obviously first.
+
+	-- Redsandstone
+
 	minetest.register_ore({
 		ore_type        = "stratum",
 		ore             = "default:redsandstone",
@@ -113,7 +128,7 @@ function default.register_ores()
 	})
 
 	-- Blob ore.
-	-- These before scatteroresto avoid other ores in blobs.
+	-- These before scatter ores to avoid other ores in blobs.
 
 	-- Clay
 
@@ -360,8 +375,8 @@ function default.register_ores()
 		clust_scarcity = 22 * 22 * 22,
 		clust_num_ores = 5,
 		clust_size     = 3,
-		y_min          = -59,
 		y_max          = -48,
+		y_min          = -59,
 	})
 
 	minetest.register_ore({
@@ -384,8 +399,8 @@ function default.register_ores()
 		clust_scarcity = 22 * 22 * 22,
 		clust_num_ores = 1,
 		clust_size     = 2,
-		y_min          = -59,
 		y_max          = -30,
+		y_min          = -59,
 	})
 
 	minetest.register_ore({
@@ -1542,7 +1557,12 @@ minetest.clear_registered_decorations()
 local mg_name = minetest.get_mapgen_setting("mg_name")
 
 if mg_name == "v6" then
-	default.register_bedrock()
+	default.register_bedrock_v6()
+elseif mg_name == "valleys" then
+	default.register_bedrock_valleys()
+end
+
+if mg_name == "v6" then
 	default.register_ores()
 	default.register_mgv6_decorations()
 else
