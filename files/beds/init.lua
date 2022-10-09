@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("beds")
 
 beds = {
 	S = S,
@@ -10,7 +10,7 @@ beds = {
 
 beds.formspec = "size[8,10]" ..
 	"no_prepend[]" ..
-	default.gui_bg ..
+	"bgcolor[#08080880;true]" ..
 	"button_exit[1.9,7;4.1,0.75;leave;" .. S("Leave Bed") .. "]"
 
 local modpath = minetest.get_modpath("beds")

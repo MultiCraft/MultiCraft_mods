@@ -45,6 +45,3 @@ minetest.register_craft({
 	recipe = "group:bed",
 	burntime = 12
 })
-
-minetest.register_alias("beds:bed_bottom", "beds:bed")
-minetest.register_alias("beds:bed_top", "air")
