@@ -96,7 +96,7 @@ function awards.unlock(name, award)
 	local title = awdef.title or award
 	local desc = awdef.description or ""
 	local background = awdef.hud_background or awdef.background or "awards_bg_default.png"
-	local icon = (awdef.icon or "awards_unknown.png") .. "^[resize:32x32"
+	local icon = (awdef.icon or "awards_unknown.png") .. "^awards_template.png"
 	local sound = awdef.sound
 	if sound == nil then
 		-- Explicit check for nil because sound could be `false` to disable it
@@ -127,14 +127,17 @@ function awards.unlock(name, award)
 		end
 	else
 		local player = minetest.get_player_by_name(name)
+		local top = 10
 		local one = player:hud_add({
 			hud_elem_type = "image",
 			name = "award_bg",
-			scale = {x = 4, y = 2},
+			scale = {x = 2, y = 2},
 			text = background,
 			position = {x = 0.5, y = 0.05},
-			offset = {x = 0, y = 138},
-			alignment = {x = 0, y = -1}
+			offset = {x = 0, y = top},
+
+			-- Horizontally centred, top-aligned vertically
+			alignment = {x = 0, y = 1}
 		})
 		local hud_announce
 		if awdef.secret then
@@ -149,8 +152,11 @@ function awards.unlock(name, award)
 			scale = {x = 100, y = 20},
 			text = hud_announce,
 			position = {x = 0.5, y = 0.05},
-			offset = {x = 0, y = 45},
-			alignment = {x = 0, y = -1}
+			offset = {x = 0, y = top + 23},
+
+			-- Both horizontally and vertically centred (so that the label is
+			-- correctly positioned regardless of font size)
+			alignment = {x = 0, y = 0}
 		})
 		local three = player:hud_add({
 			hud_elem_type = "text",
@@ -159,19 +165,19 @@ function awards.unlock(name, award)
 			scale = {x = 100, y = 20},
 			text = title,
 			position = {x = 0.5, y = 0.05},
-			offset = {x = 0, y = 100},
-			alignment = {x = 0, y = -1}
+			offset = {x = 0, y = top + 84},
+			alignment = {x = 0, y = 0}
 		})
 		local four = player:hud_add({
 			hud_elem_type = "image",
 			name = "award_icon",
-			scale = {x = 2, y = 2}, -- adjusted for 32x32 from x/y = 4
+			scale = {x = 1, y = 1}, -- adjusted for 64x64 from x/y = 4
 			text = icon,
 			position = {x = 0.5, y = 0.05},
-			offset = {x = -200.5, y = 126},
-			alignment = {x = 0, y = -1}
+			offset = {x = -200.5, y = top + 84},
+			alignment = {x = 0, y = 0}
 		})
-		minetest.after(4, function()
+		minetest.after(5, function()
 			local player2 = minetest.get_player_by_name(name)
 			if player2 then
 				player2:hud_remove(one)
