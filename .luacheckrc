@@ -40,7 +40,7 @@ read_globals = {
 	"workbench",
 	-- Silence errors about custom table and string methodss.
 	table = { fields = { "copy", "indexof", "insert_all" } },
-	string = { fields = { "split" } },
+	string = { fields = { "split", "buffer" } },
 	-- Silence warnings about accessing undefined fields of global 'math'
 	math = { fields = { "sign" } }
 }
