@@ -1,11 +1,10 @@
 # textdomain: 3d_armor_stand
 Armor Stand=Стойка для Брони
-Apple Wood Armor Stand=Стойка для Брони из Дерева Яблони
-Acacia Wood Armor Stand=Стойка для Брони из Дерева Акации
-Birch Wood Armor Stand=Стойка для Брони из Дерева Берёзы
-Jungle Wood Armor Stand=Стойка для Брони из Джунгли-дерева
-Pine Wood Armor Stand=Стойка для Брони из Дерева Дерева Сосны
-Cherry Blossom Wood Armor Stand=Стойка для Брони из Дерева Сакуры
-Ice Armor Stand=Стойка для Брони изо Льда
+Apple Wood=Дерево Яблони
+Acacia Wood=Дерево Акации
+Birch Wood=Дерево Берёзы
+Jungle Wood=Джунгли-дерево
+Pine Wood=Дерево Сосны
+Cherry Blossom Wood=Дерево Сакуры
+Ice=Ледяная
 Owned by @1=Владелец: @1
-Player=Игрок
