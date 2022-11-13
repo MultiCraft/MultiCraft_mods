@@ -1,8 +1,10 @@
 local S = minetest.get_translator("itemframes")
 
-local function obj_inside_radius(p)
-	return minetest.get_objects_inside_radius(p, 0.5)
-end
+local pi = math.pi
+local vadd, vmultiply = vector.add, vector.multiply
+local wallmounted_to_dir = minetest.wallmounted_to_dir
+local dir_to_yaw = minetest.dir_to_yaw
+local singleplayer = minetest.is_singleplayer()
 
 local ENTITY = "itemframes:item"
 
@@ -37,13 +39,13 @@ minetest.register_entity(ENTITY, {
 	end
 })
 
-local pi = math.pi
-local postab = {
-	[2] = {{x =  0.41, z =  0}, pi * 1.5},
-	[3] = {{x = -0.41, z =  0}, pi * 0.5},
-	[4] = {{x =  0,    z =  0.41}, 0},
-	[5] = {{x =  0,    z = -0.41}, pi}
-}
+local function update_rotation(entity, dir, rotation)
+	entity:set_rotation({
+		x = dir.y * pi / 2,
+		y = dir_to_yaw(dir),
+		z = rotation * pi / 4,
+	})
+end
 
 local function update_item(pos, node)
 	local meta = minetest.get_meta(pos)
@@ -52,15 +54,32 @@ local function update_item(pos, node)
 	if item_name == "" then return end
 
 	local param2 = node.param2 or 0
-	if param2 < 2 or param2 > 5 then return end
-	local posad = postab[param2][1]
-	pos.x = pos.x + posad.x
-	pos.z = pos.z + posad.z
+	if param2 < 0 or param2 > 5 then return end
+	local dir = wallmounted_to_dir(param2)
+	pos = vadd(pos, vmultiply(dir, 0.41))
 
 	local entity = minetest.add_entity(pos, ENTITY, item_name)
-	if param2 ~= 4 then
-		entity:set_yaw(postab[param2][2])
+	local rotation = meta:get_int("rotation")
+	if param2 ~= 4 or rotation > 0 then
+		update_rotation(entity, dir, rotation)
 	end
+end
+
+local function find_entity(pos, remove)
+	local objects = minetest.get_objects_inside_radius(pos, 0.5)
+	local entity
+	for _, obj in ipairs(objects) do
+		local ent = obj:get_luaentity()
+		if ent and ent.name == ENTITY then
+			-- remove entity duplicateы
+			if remove or entity then
+				obj:remove()
+			else
+				entity = obj
+			end
+		end
+	end
+	return entity
 end
 
 local function drop_item(pos)
@@ -70,14 +89,10 @@ local function drop_item(pos)
 	if item ~= "" then
 		minetest.add_item(pos, item)
 		meta:set_string("item", "")
+		meta:set_string("rotation", "")
 	end
 
-	for _, obj in ipairs(obj_inside_radius(pos)) do
-		local ent = obj:get_luaentity()
-		if ent and ent.name == ENTITY then
-			obj:remove()
-		end
-	end
+	find_entity(pos, true)
 end
 
 local function check_item(pos, node)
@@ -85,14 +100,9 @@ local function check_item(pos, node)
 	local item = meta:get_string("item")
 	if item == "" then return end
 
-	for _, obj in ipairs(obj_inside_radius(pos)) do
-		local ent = obj:get_luaentity()
-		if ent and ent.name == ENTITY then
-			return
-		end
+	if not find_entity(pos) then
+		update_item(pos, node)
 	end
-
-	update_item(pos, node)
 end
 
 local function after_dig_node(pos)
@@ -114,29 +124,48 @@ minetest.register_node("itemframes:frame",{
 	wield_image = "itemframe.png",
 	paramtype = "light",
 	paramtype2 = "wallmounted",
-	node_placement_prediction = "",
 	sunlight_propagates = true,
 	groups = {choppy = 2, dig_immediate = 2, attached_node = 1},
 	sounds = default.node_sound_wood_defaults(),
-	on_rotate = false,
 
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.type == "node" then
-			local pt_above = pointed_thing.above
-			local undery = pointed_thing.under.y
-			local abovey = pt_above.y
-			if undery == abovey then -- allowed wall-mounted only
-				itemstack = minetest.item_place(itemstack, placer, pointed_thing)
-				minetest.sound_play({name = "default_place_node_hard"}, {pos = pt_above})
+	on_rotate = function(pos, node, _, mode, new_param2)
+		if mode == screwdriver.ROTATE_FACE then
+			-- Rotate the item clockwise when left-clicking
+			local meta = minetest.get_meta(pos)
+			local new_rotation = (meta:get_int("rotation") + 1) % 8
+			if new_rotation == 0 then
+				meta:set_string("rotation", "")
+			else
+				meta:set_int("rotation", new_rotation)
 			end
+
+			local entity = find_entity(pos)
+			if entity then
+				local param2 = node.param2 or 0
+				if param2 < 0 or param2 > 5 then return end
+				local dir = wallmounted_to_dir(param2)
+				update_rotation(entity, dir, new_rotation)
+			else
+				update_item(pos, node)
+			end
+
+			return false
 		end
-		return itemstack
+
+		-- Otherwise just remove and replace the entity
+		find_entity(pos, true)
+		node.param2 = new_param2
+		update_item(pos, node)
 	end,
 
 	after_place_node = function(pos, placer)
 		local meta = minetest.get_meta(pos)
 		local pn = placer and placer:get_player_name() or ""
-		meta:set_string("infotext", S("Item frame") .. "\n" .. S("Owned by @1", S(pn)))
+		local infotext = S("Item frame")
+		if not singleplayer then
+			infotext = infotext .. "\n" .. S("Owned by @1", pn)
+		end
+		meta:set_string("infotext", infotext)
 	end,
 
 	on_rightclick = function(pos, node, clicker, itemstack)
