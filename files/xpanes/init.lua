@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("xpanes")
 
 local function is_pane(pos)
 	return minetest.get_item_group(minetest.get_node(pos).name, "pane") > 0
@@ -146,8 +146,9 @@ function xpanes.register_pane(name, def)
 	})
 
 	if def.recipe then
+		local count = def.recipe_items or 16
 		minetest.register_craft({
-			output = "xpanes:" .. name .. "_flat " .. def.recipe_items,
+			output = "xpanes:" .. name .. "_flat " .. count,
 			recipe = def.recipe
 		})
 	end
@@ -163,7 +164,6 @@ xpanes.register_pane("pane", {
 		{"default:glass", "default:glass", "default:glass"},
 		{"default:glass", "default:glass", "default:glass"}
 	},
-	recipe_items = "16"
 })
 
 xpanes.register_pane("bar", {
