@@ -1,12 +1,17 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("watch")
 
 for hour = 0, 12 do
-	local img = hour ~= 0 and "watch_" .. hour or "blank"
+	local group = {watch = hour, wieldview = 1, no_change_anim = 1}
+	if hour ~= 0 then
+		group.not_in_creative_inventory = 1
+	end
+	local img = "watch_watch.png^" .. (hour ~= 0 and "watch_" .. hour or "blank") .. ".png"
+
 	minetest.register_tool("watch:" .. hour, {
-		description = S"Watch",
-		inventory_image = "watch_watch.png^" .. img .. ".png",
-		wield_image = "watch_watch.png^" .. img .. ".png",
-		groups = {watch = hour, wieldview = 1, not_in_creative_inventory = (hour == 0 and 0) or 1}
+		description = S("Watch"),
+		inventory_image = img,
+		wield_image = img,
+		groups = group
 	})
 end
 
@@ -26,14 +31,18 @@ local get_player_by_name = minetest.get_player_by_name
 
 minetest.register_playerstep(function(_, playernames)
 	local now = floor((get_timeofday() * 24) % 12)
-	for _, name in pairs(playernames) do
+	for _, name in ipairs(playernames) do
 		local player = get_player_by_name(name)
-		if not player or not player:is_player() then return end
-		local inv = player:get_inventory()
-		for i, stack in pairs(inv:get_list("main")) do
-			local tools = registered_tools[stack:get_name()]
-			if tools and tools.groups.watch and tools.groups.watch ~= now then
-				inv:set_stack("main", i, "watch:" .. now)
+
+		if player then
+			local inv = player:get_inventory()
+			for i, stack in ipairs(inv:get_list("main")) do
+				if i <= 9 then
+					local tools = registered_tools[stack:get_name()]
+					if tools and tools.groups.watch and tools.groups.watch ~= now then
+						inv:set_stack("main", i, "watch:" .. now)
+					end
+				end
 			end
 		end
 	end
