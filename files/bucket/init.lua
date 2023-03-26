@@ -1,10 +1,5 @@
 local S = minetest.get_translator("bucket")
 
-local singleplayer = minetest.is_singleplayer()
-if minetest.settings:get_bool("singleplayer") then
-	singleplayer = true
-end
-
 minetest.register_craft({
 	output = "bucket:bucket_empty",
 	recipe = {
@@ -15,19 +10,6 @@ minetest.register_craft({
 
 bucket = {}
 bucket.liquids = {}
-
-local function check_protection(pos, name, text)
-	if minetest.is_protected(pos, name) then
-		minetest.log("action", (name ~= "" and name or "A mod")
-			.. " tried to " .. text
-			.. " at protected position "
-			.. minetest.pos_to_string(pos)
-			.. " with a bucket")
-		minetest.record_protection_violation(pos, name)
-		return true
-	end
-	return false
-end
 
 -- Register a new liquid
 --		source = name of the source node
@@ -99,8 +81,7 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 
 				local pn = user and user:get_player_name() or ""
 
-				local place_restriction = not singleplayer and
-						not minetest.check_player_privs(pn, {bucket = true})
+				local place_restriction = not minetest.check_player_privs(pn, {bucket = true})
 
 				if place_restriction then
 					local height = under.y
@@ -120,16 +101,14 @@ function bucket.register_liquid(source, flowing, itemname, inventory_image, name
 					end
 				end
 
-				if check_protection(lpos, pn, "place " .. source) then
+				if minetest.is_protected(lpos, pn) then
 					return itemstack
 				end
 
 				minetest.set_node(lpos, {name = source})
 
-				if place_restriction
-						or not minetest.is_creative_enabled(pn) then
-				minetest.get_meta(lpos):set_string("infotext",
-					S("Liquid placed by @1", pn))
+				if place_restriction or not minetest.is_creative_enabled(pn) then
+					minetest.get_meta(lpos):set_string("infotext", S("Liquid placed by @1", pn))
 					return ItemStack(custom_empty_bucket or "bucket:bucket_empty")
 				else
 					return itemstack
@@ -163,8 +142,8 @@ minetest.register_craftitem("bucket:bucket_empty", {
 
 		if liquiddef ~= nil and liquiddef.custom_empty_bucket == nil and
 				liquiddef.itemname ~= nil and node.name == liquiddef.source then
-			if check_protection(under, user:get_player_name(),
-					"take " .. node.name) then
+			local pn = user and user:get_player_name() or ""
+			if minetest.is_protected(under, pn) then
 				return
 			end
 
@@ -281,7 +260,7 @@ minetest.register_craft({
 
 minetest.register_privilege("bucket", {
 	description = "Can use the bucket at any height",
-	give_to_singleplayer = false
+	give_to_singleplayer = true
 })
 
 -- Register buckets as dungeon loot
