@@ -1,6 +1,6 @@
 dye = {}
 
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("dye")
 
 -- Make dye names and descriptions available globally
 dye.dyes = {

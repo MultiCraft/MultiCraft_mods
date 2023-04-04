@@ -32,7 +32,7 @@ playereffects.last_effect_id = 0
 playereffects.use_hud = true
 
 -- Translations
-S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("playereffects")
 
 -- Let's give ~~programming~~ lessons of common sense
 -- to the creator of this mod.

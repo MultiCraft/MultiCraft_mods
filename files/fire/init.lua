@@ -1,6 +1,6 @@
 fire = {}
 
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("fire")
 
 -- 'Enable fire' setting
 local fire_enabled = minetest.settings:get_bool("enable_fire")

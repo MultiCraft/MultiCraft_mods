@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("signs")
 
 local pi = math.pi
 local upper = string.upper

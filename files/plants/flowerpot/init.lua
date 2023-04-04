@@ -12,7 +12,7 @@
 
 flowerpot = {}
 
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("flowerpot")
 
 local tcopy = table.copy
 local b = "blank.png"

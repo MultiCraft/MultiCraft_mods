@@ -5,7 +5,7 @@
 
 default = {}
 
-default.S = minetest.get_translator_auto(true)
+default.S = minetest.get_translator("default")
 
 -- Definitions made by this mod that other mods can use too
 local Cesc = minetest.get_color_escape_sequence

@@ -1,7 +1,7 @@
 sethome = {}
 
 -- Intllib
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("sethome")
 
 sethome.set = function(name, pos)
 	local player = minetest.get_player_by_name(name)

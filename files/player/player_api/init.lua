@@ -1,6 +1,6 @@
 player_api = {}
 
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("player_api")
 
 local path = minetest.get_modpath("player_api")
 dofile(path .. "/api.lua")

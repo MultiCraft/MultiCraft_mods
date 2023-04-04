@@ -1,4 +1,4 @@
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("boats")
 
 local sp = minetest.is_singleplayer()
 

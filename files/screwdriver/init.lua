@@ -1,6 +1,6 @@
 screwdriver = {}
 
-local S = minetest.get_translator_auto(true)
+local S = minetest.get_translator("screwdriver")
 
 screwdriver.ROTATE_FACE = 1
 screwdriver.ROTATE_AXIS = 2
