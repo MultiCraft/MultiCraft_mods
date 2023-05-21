@@ -2,9 +2,7 @@ player_api = {}
 
 local S = minetest.get_translator("player_api")
 
-local path = minetest.get_modpath("player_api")
-dofile(path .. "/api.lua")
-dofile(path .. "/wieldview.lua")
+dofile(minetest.get_modpath("player_api") .. "/api.lua")
 
 local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 
@@ -156,7 +154,7 @@ minetest.register_on_dieplayer(function(player)
 	local hud = player:hud_add({
 		hud_elem_type = "waypoint",
 		name = S("Your point of death:"),
-		text = S("m left"),
+		text = " " .. S("m"),
 		number = "0xd80a1b",
 		world_pos = pos
 	})

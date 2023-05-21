@@ -3,7 +3,6 @@ local tconcat, tcopy = table.concat, table.copy
 local floor = math.floor
 local vequals, vnew = vector.equals, vector.new
 local esc = minetest.formspec_escape
-local enable_sscsm = minetest.global_exists("sscsm")
 
 player_api.registered_models = {}
 
@@ -98,7 +97,6 @@ function player_api.get_textures(player)
 	return player_data.textures or model.textures
 end
 
-local update_sscsm_preview
 function player_api.set_textures(player, ...)
 	local player_data = get_player_data(player)
 	local textures = tcopy(player_api.get_textures(player))
@@ -118,8 +116,8 @@ function player_api.set_textures(player, ...)
 		player:set_properties({textures = new_textures})
 
 		local name = player:get_player_name()
-		if enable_sscsm and sscsm.has_sscsms_enabled(name) then
-			update_sscsm_preview(player, name)
+		if sscsm.has_sscsms_enabled(name) then
+			player_api.update_sscsm_preview(player, name)
 		end
 	end
 end
@@ -134,8 +132,8 @@ function player_api.set_texture(player, index, texture)
 		player:set_properties({textures = textures})
 
 		local name = player:get_player_name()
-		if enable_sscsm and sscsm.has_sscsms_enabled(name) then
-			update_sscsm_preview(player, name)
+		if sscsm.has_sscsms_enabled(name) then
+			player_api.update_sscsm_preview(player, name)
 		end
 	end
 end
@@ -180,7 +178,7 @@ function player_api.set_animation(player, anim_name, speed, mode)
 	if anim._equals ~= previous_anim._equals then
 		player:set_properties({
 			collisionbox = anim.collisionbox,
-		--	eye_height = anim.eye_height
+			eye_height = anim.eye_height
 		})
 	end
 
@@ -221,47 +219,11 @@ minetest.register_on_dieplayer(function(player)
 	player_api.player_attached[name] = nil
 end)
 
-function player_api.preview(player, skin, head)
-	local c
-	if player then
-		local texture = tcopy(player_api.get_textures(player))
-		local player_data = get_player_data(player)
-		if not texture then
-			local model = models[player_data.model] or models[default_model]
-			texture = model.textures
-		end
-		c = "(" .. texture[1] .. "^" .. texture[2] .. "^" .. texture[3] .. ")"
-	elseif skin then
-		c = skin
-	end
+player_api.wield_tile = {}
+player_api.wield_cube = {}
 
-	-- Escape characters for combine
-	c = c:gsub("%^%[", "\\%^\\%["):gsub(":", "\\:")
-
-	local preview
-	if head then
-		preview = "[combine:16x16:-16,-16=" .. c											-- Head
-	else
-		preview = "((" ..
-			"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png)^" ..					-- Left Leg
-			"([combine:32x64:0,0=" .. c .. "^[mask:player_api_leg.png^[transformFX)^" ..	-- Right Leg
-
-			"([combine:32x64:-8,-16=" .. c .. "^[mask:player_api_head.png)^" ..				-- Head
-
-			"([combine:32x64:-32,-24=" .. c .. "^[mask:player_api_chest.png)^" ..			-- Chest
-
-			"([combine:32x64:-72,-16=" .. c .. "^[mask:player_api_head.png)^" ..			-- Helmet
-
-			"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png)^" ..				-- Left Arm
-			"([combine:32x64:-88,-24=" .. c .. "^[mask:player_api_arm.png^[transformFX)" ..	-- Right Arm
-
-			")^[resize:128x256)^[mask:player_api_transform.png"								-- Full texture
-	end
-
-	return esc(preview)
-end
-
-local function parse_preview_params(player, rot, textures, animation, speed, gender)
+local b = "blank.png"
+function player_api.parse_preview_params(player, rot, textures, animation, speed, gender, hide_wielditem)
 	local mesh
 	if player then
 		local player_data = get_player_data(player)
@@ -270,14 +232,19 @@ local function parse_preview_params(player, rot, textures, animation, speed, gen
 		-- model texture from player or variable
 		if not textures then
 			local t = {}
-
-			local get_textures = player_api.get_textures(player)
-			for i, v in ipairs(get_textures) do
-				t[i] = esc(v):gsub(",", "!")
+			for i, v in ipairs(player_api.get_textures(player)) do
+				if hide_wielditem and (i == 4 or i == 5) then
+					t[i] = b
+				elseif i == 4 then
+					t[i] = esc(player_api.wield_tile[player:get_player_name()] or b)
+				elseif i == 5 then
+					t[i] = esc(player_api.wield_cube[player:get_player_name()] or b)
+				else
+					t[i] = esc(v)
+				end
 			end
 
 			textures = tconcat(t, ",")
-			textures = textures:gsub("!", ",")
 		end
 	end
 
@@ -325,30 +292,21 @@ local function parse_preview_params(player, rot, textures, animation, speed, gen
 		anim.x, anim.y, anim.speed
 end
 
-function player_api.preview_model(player, x, y, w, h, rot, textures, animation,
-		speed, gender)
-	local anim = not player_api.compat_mode(player, 5)
-	local model = "model[%.2f,%.2f;%.2f,%.2f;%s;%s;%s;0,%d;%s;%s" ..
-		(anim and ";%u,%u;%u" or ";0,0") .. "]"
-
-	local model_fs = -- "style[player_preview;bgcolor=black]" ..
-		fmt(model, x, y, w, h, parse_preview_params(
-			player, rot, textures, animation, speed, gender))
-
-	return model_fs
-end
-
-function player_api.compat_mode(player, mt_ver)
-	local player_name = player:get_player_name()
-	local info = minetest.get_player_information(player_name)
-	return (not info or not info.formspec_version) or
-		(info.major == 5 and info.minor < (mt_ver or 3)) or
-		info.formspec_version < 3
-end
-
 -- Localize for better performance
 local player_set_animation = player_api.set_animation
 local player_attached = player_api.player_attached
+local parse_preview_params = player_api.parse_preview_params
+
+function player_api.preview_model(player, x, y, w, h, rot, textures, animation,
+		speed, gender, hide_wielditem)
+	local model = "model[%.2f,%.2f;%.2f,%.2f;%s;%s;%s;0,%d;%s;%s;%u,%u;%u" .. "]"
+
+	local model_fs = -- "style[player_preview;bgcolor=black]" ..
+		fmt(model, x, y, w, h, parse_preview_params(
+			player, rot, textures, animation, speed, gender, hide_wielditem))
+
+	return model_fs
+end
 
 local function check_node(ppos, num, liquid)
 	local pos = {x = ppos.x, y = ppos.y, z = ppos.z}
@@ -433,6 +391,11 @@ local function animate_player(player, name)
 			end
 		end
 
+		local item = player:get_wielded_item():get_name()
+		if not item or item == "" then
+			c_special = not c_special and "hand" or c_special
+		end
+
 		-- Apply animation
 		local anim = {}
 		anim[#anim + 1] = c_special
@@ -450,24 +413,24 @@ minetest.register_playerstep(function(_, playernames)
 		local player = minetest.get_player_by_name(name)
 		if player and player:is_player() then
 			animate_player(player, name)
-			player_api.update_wielded_item(player, name)
 		end
 	end
 end, true) -- Force this callback to run every step for smoother animations
 
-if enable_sscsm then
-	sscsm.register({
-		name = "player_api",
-		file = minetest.get_modpath("player_api") .. "/sscsm.lua"
+sscsm.register({
+	name = "player_api",
+	file = minetest.get_modpath("player_api") .. "/sscsm.lua"
+})
+
+function player_api.update_sscsm_preview(player, name)
+	local _, mesh, _, rot_start, rot_cont, rot_mouse,
+		anim_x, anim_y, anim_speed = parse_preview_params(player, nil, "", nil, nil, nil, true)
+	sscsm.com_send(name, "player_api:preview", {
+		mesh, player_api.get_textures(player),
+		rot_start, rot_cont, rot_mouse, anim_x, anim_y, anim_speed
 	})
-
-	-- Declared as a local variable before player_api.set_textures.
-	function update_sscsm_preview(player, name)
-		sscsm.com_send(name, "player_api:preview",
-			fmt("%s;%s;%s;0,%d;%s;%s;%u,%u;%u", parse_preview_params(player)))
-	end
-
-	sscsm.register_on_sscsms_loaded(function(name)
-		update_sscsm_preview(minetest.get_player_by_name(name), name)
-	end)
 end
+
+sscsm.register_on_sscsms_loaded(function(name)
+	player_api.update_sscsm_preview(minetest.get_player_by_name(name), name)
+end)
