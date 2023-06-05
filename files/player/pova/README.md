@@ -1,5 +1,5 @@
-MultiCraft Game mod: player_api
-===============================
+MultiCraft Game mod: pova
+=========================
 See license.txt for license information.
 
 Pova gives mod makers a set of easy to use functions that safely apply overrides for player speed, jump height and gravity effects.

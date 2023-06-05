@@ -5,29 +5,15 @@ pova = {}
 local pova_list = {}
 local min, max = math.min, math.max
 
--- time each override loop runs, 0 to disable
-local pova_loop = minetest.settings:get_bool("pova_loop") or 1.0
-
--- if enabled activate main loop that totals override list on timer
-if pova_loop > 0 then
-	local timer = 0
-
-	minetest.register_globalstep(function(dtime)
-		timer = timer + dtime
-
-		if timer < pova_loop then
-			return
+-- main loop that totals override list on timer
+minetest.register_playerstep(function(_, playernames)
+	for _, name in ipairs(playernames) do
+		local player = minetest.get_player_by_name(name)
+		if player and player:is_player() then
+			pova.do_override(player, name)
 		end
-
-		timer = 0
-
-		-- loop through players and apply overrides
-		for _, player in ipairs(minetest.get_connected_players()) do
-			pova.do_override(player)
-		end
-	end)
-end
-
+	end
+end)
 
 -- global functions
 function pova.add_override(name, item, def)
@@ -42,9 +28,8 @@ function pova.add_override(name, item, def)
 	def.priority = tonumber(def.priority) or 50
 
 	-- if same item is assigned with lower priority then change ignored
-	if pova_list[name][item]
-	and pova_list[name][item].priority
-	and pova_list[name][item].priority > def.priority then
+	local pova_item = pova_list[name][item]
+	if pova_item and pova_item.priority and pova_item.priority > def.priority then
 		return
 	end
 
@@ -66,8 +51,8 @@ function pova.del_override(name, item)
 	pova_list[name][item] = nil
 end
 
-function pova.do_override(player)
-	local name = player:get_player_name()
+function pova.do_override(player, name)
+	name = name or player:get_player_name()
 
 	-- somehow player list is missing
 	if not pova_list[name] then
@@ -131,14 +116,16 @@ end
 
 -- set player table on join
 minetest.register_on_joinplayer(function(player)
-	pova_list[player:get_player_name()] = {}
-	pova.do_override(player)
+	local name = player:get_player_name()
+	pova_list[name] = {}
+	pova.do_override(player, name)
 end)
 
 -- reset player table on respawn
 minetest.register_on_respawnplayer(function(player)
-	pova_list[player:get_player_name()] = {}
-	pova.do_override(player)
+	local name = player:get_player_name()
+	pova_list[name] = {}
+	pova.do_override(player, name)
 end)
 
 -- blank player table on leave
