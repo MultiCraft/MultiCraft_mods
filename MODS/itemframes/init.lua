@@ -6,6 +6,7 @@ local wallmounted_to_dir = minetest.wallmounted_to_dir
 local dir_to_yaw = minetest.dir_to_yaw
 local singleplayer = minetest.is_singleplayer()
 
+local NODE = "itemframes:frame"
 local ENTITY = "itemframes:item"
 
 minetest.register_entity(ENTITY, {
@@ -19,7 +20,7 @@ minetest.register_entity(ENTITY, {
 
 		-- remove entity with missing frames
 		local node = minetest.get_node_or_nil(ent:get_pos())
-		if not node or node.name ~= "itemframes:frame" then
+		if not node or node.name ~= NODE then
 			ent:remove()
 			return
 		end
@@ -112,7 +113,7 @@ local function after_dig_node(pos)
 	drop_item(pos)
 end
 
-minetest.register_node("itemframes:frame",{
+minetest.register_node(NODE,{
 	description = S("Item frame"),
 	drawtype = "nodebox",
 	node_box = {
@@ -201,14 +202,14 @@ minetest.register_node("itemframes:frame",{
 minetest.register_lbm({
 	label = "Check Itemframe item",
 	name = "itemframes:check_item",
-	nodenames = "itemframes:frame",
+	nodenames = NODE,
 	run_at_every_load = true,
 	action = check_item
 })
 
 -- Craft
 minetest.register_craft({
-	output = "itemframes:frame",
+	output = NODE,
 	recipe = {
 		{"default:stick", "default:stick", "default:stick"},
 		{"default:stick", "default:paper", "default:stick"},
@@ -218,11 +219,12 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "itemframes:frame",
+	recipe = NODE,
 	burntime = 10
 })
 
 -- MVPS Stopper
 if mesecon and mesecon.register_mvps_stopper then
-	mesecon.register_mvps_stopper("itemframes:frame")
+	mesecon.register_mvps_stopper(NODE)
+	mesecon.register_mvps_unmov(ENTITY)
 end
