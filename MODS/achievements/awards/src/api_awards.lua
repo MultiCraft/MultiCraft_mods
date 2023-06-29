@@ -1,6 +1,6 @@
 -- Copyright (c) 2013-18 rubenwardy. MIT.
 
-local S = awards.gettext
+local S = awards.translator
 
 function awards.register_award(name, def)
 	def.name = name
@@ -67,7 +67,7 @@ function awards.unlock(name, award)
 	-- Unlock Award
 	minetest.log("action", name.." has unlocked award "..award)
 	data.unlocked[award] = award
-	awards.save()
+	awards.save_for_player(name)
 
 	-- Give Prizes
 	if awdef and awdef.prizes then
@@ -116,12 +116,12 @@ function awards.unlock(name, award)
 	if awards.show_mode == "chat" then
 		local chat_announce
 		if awdef.secret then
-			chat_announce = S("Secret Award Unlocked: %s")
+			chat_announce = S("Secret Award Unlocked: @1", title)
 		else
-			chat_announce = S("Award Unlocked: %s")
+			chat_announce = S("Award Unlocked: @1", title)
 		end
 		-- use the chat console to send it
-		minetest.chat_send_player(name, chat_announce:format(title))
+		minetest.chat_send_player(name, chat_announce)
 		if desc ~= "" then
 			minetest.chat_send_player(name, desc)
 		end
@@ -136,7 +136,7 @@ function awards.unlock(name, award)
 			position = {x = 0.5, y = 0.05},
 			offset = {x = 0, y = top},
 
-			-- Horizontally centred, top-aligned vertically
+			-- Horizontally centered, top-aligned vertically
 			alignment = {x = 0, y = 1}
 		})
 		local hud_announce
@@ -154,7 +154,7 @@ function awards.unlock(name, award)
 			position = {x = 0.5, y = 0.05},
 			offset = {x = 0, y = top + 23},
 
-			-- Both horizontally and vertically centred (so that the label is
+			-- Both horizontally and vertically centered (so that the label is
 			-- correctly positioned regardless of font size)
 			alignment = {x = 0, y = 0}
 		})

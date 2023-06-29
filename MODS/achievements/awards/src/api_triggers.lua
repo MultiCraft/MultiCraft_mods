@@ -1,6 +1,6 @@
 -- Copyright (c) 2013-18 rubenwardy. MIT.
 
-local S = awards.gettext
+local S = awards.translator
 local min = math.min
 
 awards.on = {}
@@ -35,7 +35,7 @@ function awards.register_trigger(tname, tdef)
 	if tdef.type == "counted" then
 		local old_reg = tdef.on_register
 
-		function tdef:on_register(def)
+		function tdef:on_register(def) -- luacheck: ignore
 			local tmp = {
 				award  = def.name,
 				target = def.trigger.target,
@@ -87,7 +87,7 @@ function awards.register_trigger(tname, tdef)
 
 		-- On award register
 		local old_reg = tdef.on_register
-		function tdef:on_register(def)
+		function tdef:on_register(def) -- luacheck: ignore
 			-- Register trigger
 			local tmp = {
 				award  = def.name,

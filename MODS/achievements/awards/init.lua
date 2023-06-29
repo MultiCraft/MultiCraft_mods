@@ -9,7 +9,7 @@ awards = {
 }
 
 -- Internationalization support.
-awards.gettext = minetest.get_translator("awards")
+awards.translator = minetest.get_translator("awards")
 
 -- Load files
 local path = minetest.get_modpath("awards")
@@ -20,5 +20,4 @@ dofile(path .. "/src/api_triggers.lua")
 dofile(path .. "/src/chat_commands.lua")
 dofile(path .. "/src/triggers.lua")
 
-awards.load()
 minetest.register_on_shutdown(awards.save)

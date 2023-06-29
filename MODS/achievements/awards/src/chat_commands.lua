@@ -1,6 +1,6 @@
 -- Copyright (c) 2013-18 rubenwardy. MIT.
 
-local S = awards.gettext
+local S = awards.translator
 
 minetest.register_chatcommand("awards", {
 	params = "[clear|disable|enable]",
@@ -16,19 +16,6 @@ minetest.register_chatcommand("awards", {
 		elseif param == "enable" then
 			awards.enable(name)
 			minetest.chat_send_player(name, S("You have enabled awards."))
-		end
-	end
-})
-
-minetest.register_chatcommand("awd", {
-	params = S("<award ID>"),
-	description = S("Show details of an award"),
-	func = function(name, param)
-		local def = awards.registered_awards[param]
-		if def then
-			minetest.chat_send_player(name, S("%s: %s"):format(def.title, def.description))
-		else
-			minetest.chat_send_player(name, S("Award not found."))
 		end
 	end
 })
