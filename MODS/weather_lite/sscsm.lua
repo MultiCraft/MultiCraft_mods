@@ -1,3 +1,8 @@
+if (PLATFORM == "Android" or PLATFORM == "iOS") and
+		not minetest.settings:get_bool("smooth_lighting") then
+	return
+end
+
 local vadd, vmultiply, vround = vector.add, vector.multiply, vector.round
 
 local weather = {
@@ -18,10 +23,10 @@ sscsm.register_on_com_receive("weather_lite:set", function(msg)
 end)
 
 --
--- Processing players
+-- Processing particles
 --
 
-sscsm.every(0.09, function()
+local function spawn_particles()
 	local current_downfall = weather.registered[weather.type]
 	if current_downfall == nil then return end
 
@@ -54,6 +59,8 @@ sscsm.every(0.09, function()
 		maxpos = maxp,
 		minvel = vel,
 		maxvel = vel,
+		minexptime = 3,
+		maxexptime = 3,
 		minsize = current_downfall.size,
 		maxsize = current_downfall.size,
 		collisiondetection = true,
@@ -62,4 +69,7 @@ sscsm.every(0.09, function()
 		texture = current_downfall.texture,
 		glow = 1
 	})
-end)
+end
+
+minetest.after(0, spawn_particles)
+sscsm.every(0.09, spawn_particles)
