@@ -42,6 +42,8 @@ end
 -- groups:	groups
 -- sounds:	sound table
 
+local interval = mesecon.setting("pplate_interval", 0.1)
+
 function mesecon.register_pressure_plate(basename, description, tile, recipe, groups, sounds)
 	if not groups then
 		groups = {}
@@ -61,7 +63,7 @@ function mesecon.register_pressure_plate(basename, description, tile, recipe, gr
 		on_timer = pp_on_timer,
 
 		on_construct = function(pos)
-			minetest.get_node_timer(pos):start(mesecon.setting("pplate_interval", 0.1))
+			minetest.get_node_timer(pos):start(interval)
 		end
 	}, {
 		mesecons = {receptor = {
@@ -100,3 +102,9 @@ mesecon.register_pressure_plate(
 	{{"default:cobble", "bluestone:dust", "default:cobble"}},
 	{cracky = 3, oddly_breakable_by_hand = 3, attached_node = 1},
 	default.node_sound_stone_defaults())
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "mesecons_pressureplates:pressure_plate_wood_off",
+	burntime = 1
+})

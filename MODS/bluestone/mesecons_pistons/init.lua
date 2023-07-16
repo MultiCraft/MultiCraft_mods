@@ -103,8 +103,10 @@ local function piston_on(pos, node)
 		end
 		return
 	end
-	minetest.swap_node(pos, {param2 = node.param2, name = pistonspec.onname})
-	minetest.set_node(pusher_pos, {param2 = node.param2, name = pistonspec.pusher})
+	node.name = pistonspec.onname
+	minetest.swap_node(pos, node)
+	node.name = pistonspec.pusher
+	minetest.set_node(pusher_pos, node)
 	minetest.sound_play("piston_extend", {
 		pos = pos,
 		max_hear_distance = 20,
@@ -118,8 +120,9 @@ local function piston_off(pos, node)
 	if not pistonspec then
 		return
 	end
-	minetest.swap_node(pos, {param2 = node.param2, name = pistonspec.offname})
 	piston_remove_pusher(pos, node, not pistonspec.sticky) -- allow that even in protected area
+	node.name = pistonspec.offname
+	minetest.swap_node(pos, node)
 
 	if not pistonspec.sticky then
 		return

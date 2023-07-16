@@ -139,3 +139,9 @@ minetest.register_craft({
 	output = "bluestone_button:button_wood_off 2",
 	recipe = {{"group:wood"}}
 })
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "bluestone_button:button_wood_off",
+	burntime = 1
+})

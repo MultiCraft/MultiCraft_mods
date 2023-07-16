@@ -10,33 +10,33 @@ are so many weird tables below.
 
 local S = mesecon.S
 
+local VER = "3"
+
 local deg, random = math.deg, math.random
 local tcopy, tinsert = table.copy, table.insert
 local vsubtract = vector.subtract
 
 local hopper_exists = minetest.global_exists("hopper")
 
-local cells = ""
-for x = 1, 3 do
-for y = 1, 3 do
-	cells = cells ..
-		"item_image[" .. x + 2 .. "," .. y - 0.5 .. ";1,1;default:cell]"
-end
+local function get_dropoper_formspec(pos)
+	local spos = pos.x .. "," .. pos.y .. "," .. pos.z
+	local buf = string.buffer:new()
+	buf:put(default.gui)
+	buf:put("item_image[0,-0.1;1,1;mesecons_dropper:dropper]")
+	buf:putf("label[0.9,0.1;%s]", S("Dropper"))
+	buf:put("style_type[list;bgimg=formspec_cell.png^formspec_split.png;bgimg_hovered=formspec_cell_hovered.png^formspec_split.png]")
+	buf:putf("list[nodemeta:%s;split;8,3.2;1,1;]", spos)
+	buf:put(default.list_style)
+	buf:putf("list[nodemeta:%s;main;3,0.5;3,3;]", spos)
+	buf:putf("listring[nodemeta:%s;main]", spos)
+	buf:put("listring[current_player;main]")
+
+	return buf:tostring()
 end
 
 -- For after_place_node
-local function setup_dropper(pos)
-	-- Set formspec and inventory
-	local form = default.gui ..
-	"item_image[0,-0.1;1,1;mesecons_dropper:dropper]" ..
-	"label[0.9,0.1;" .. S("Dropper") .. "]" ..
-	cells ..
-	"list[current_name;main;3,0.5;3,3;]" ..
-	"list[context;split;8,3.14;1,1;]" ..
-	"listring[current_name;main]" ..
-	"listring[current_player;main]"
-	local meta = minetest.get_meta(pos)
-	meta:set_string("formspec", form)
+local function setup_dropper(meta)
+	meta:set_string("version", VER)
 	local inv = meta:get_inventory()
 	inv:set_size("main", 3 * 3)
 	inv:set_size("split", 1)
@@ -48,12 +48,15 @@ local function dropper_orientate(pos, placer)
 
 	-- Pitch in degrees
 	local pitch = deg(placer:get_look_vertical())
-
+	local node = minetest.get_node(pos)
 	if pitch > 55 then
-		minetest.swap_node(pos, {name = "mesecons_dropper:dropper_up"})
+		node.name = "mesecons_dropper:dropper_up"
 	elseif pitch < -55 then
-		minetest.swap_node(pos, {name = "mesecons_dropper:dropper_down"})
+		node.name = "mesecons_dropper:dropper_down"
+	else
+		return
 	end
+	minetest.swap_node(pos, node)
 end
 
 -- Shared core definition table
@@ -69,6 +72,18 @@ local dropperdef = {
 				minetest.item_drop(stack, nil, pos)
 			end
 		end
+	end,
+
+	on_rightclick = function(pos, node, clicker, itemstack)
+		if not clicker then return itemstack end
+
+		local name = clicker:get_player_name()
+
+		if not minetest.get_meta(pos) or minetest.is_protected(pos, name) then
+			return itemstack
+		end
+
+		minetest.show_formspec(name, node.name, get_dropoper_formspec(pos))
 	end,
 
 	allow_metadata_inventory_move = function(pos, _, _, to_list, _, count, player)
@@ -136,7 +151,7 @@ local dropperdef = {
 			if not hopper then
 				-- Do not drop into solid nodes
 				local dropnodedef = minetest.registered_nodes[dropnode_name]
-				if dropnodedef.walkable then
+				if not dropnodedef or dropnodedef.walkable then
 					return
 				end
 			end
@@ -184,10 +199,7 @@ local tside = "default_furnace_side.png"
 local horizontal_def = tcopy(dropperdef)
 horizontal_def.description = S("Dropper")
 horizontal_def.after_place_node = function(pos, placer)
-	local name = placer and placer:get_player_name() or ""
-	minetest.get_meta(pos):set_string("owner", name)
-
-	setup_dropper(pos, placer)
+	setup_dropper(minetest.get_meta(pos))
 	dropper_orientate(pos, placer)
 end
 horizontal_def.tiles = {
@@ -201,11 +213,8 @@ minetest.register_node("mesecons_dropper:dropper", horizontal_def)
 
 -- Down dropper
 local down_def = tcopy(dropperdef)
-down_def.after_place_node = function(pos, placer)
-	local name = placer and placer:get_player_name() or ""
-	minetest.get_meta(pos):set_string("owner", name)
-
-	setup_dropper(pos, placer)
+down_def.after_place_node = function(pos)
+	setup_dropper(minetest.get_meta(pos))
 end
 down_def.tiles = {
 	ttop, ttop .. "^mesecons_dropper_front_vertical.png",
@@ -243,3 +252,17 @@ if hopper_exists then
 		{"side", "mesecons_dropper:dropper_up", "main"}
 	})
 end
+
+-- LBM for updating Dropper
+minetest.register_lbm({
+	label = "Dropper updater",
+	name = "mesecons_dropper:updater_v" .. VER,
+	nodenames = "group:dropper",
+	action = function(pos)
+		local meta = minetest.get_meta(pos)
+		if meta:get_string("version") == VER then return end
+		setup_dropper(meta)
+		meta:set_string("formspec", "")
+		meta:set_string("owner", "")
+	end
+})

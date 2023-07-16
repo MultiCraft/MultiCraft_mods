@@ -56,26 +56,23 @@ local vadd, vequals = vector.add, vector.equals
 
 -- General
 function mesecon.get_effector(nodename)
-	if  minetest.registered_nodes[nodename]
-	and minetest.registered_nodes[nodename].mesecons
-	and minetest.registered_nodes[nodename].mesecons.effector then
-		return minetest.registered_nodes[nodename].mesecons.effector
+	local def = minetest.registered_nodes[nodename]
+	if def and def.mesecons and def.mesecons.effector then
+		return def.mesecons.effector
 	end
 end
 
 function mesecon.get_receptor(nodename)
-	if  minetest.registered_nodes[nodename]
-	and minetest.registered_nodes[nodename].mesecons
-	and minetest.registered_nodes[nodename].mesecons.receptor then
-		return minetest.registered_nodes[nodename].mesecons.receptor
+	local def = minetest.registered_nodes[nodename]
+	if def and def.mesecons and def.mesecons.receptor then
+		return def.mesecons.receptor
 	end
 end
 
 function mesecon.get_conductor(nodename)
-	if  minetest.registered_nodes[nodename]
-	and minetest.registered_nodes[nodename].mesecons
-	and minetest.registered_nodes[nodename].mesecons.conductor then
-		return minetest.registered_nodes[nodename].mesecons.conductor
+	local def = minetest.registered_nodes[nodename]
+	if def and def.mesecons and def.mesecons.conductor then
+		return def.mesecons.conductor
 	end
 end
 
@@ -188,7 +185,7 @@ end
 -- #######################
 
 -- Delay
-local delaytime = mesecon.setting("delaytime", minetest.settings:get("dedicated_server_step") * 2)
+local delaytime = mesecon.setting("delaytime", 0.1)
 if not minetest.is_singleplayer() then
 	delaytime = delaytime * 3
 end
@@ -553,9 +550,12 @@ function mesecon.turnoff(pos, link)
 	end
 
 	for _, sig in ipairs(signals) do
-		mesecon.changesignal(sig.pos, sig.node, sig.link, mesecon.state.off, sig.depth)
-		if mesecon.is_effector_on(sig.node.name) and not mesecon.is_powered(sig.pos) then
-			mesecon.deactivate(sig.pos, sig.node, sig.link, sig.depth)
+		-- If sig.depth is 1, it has not yet been checked that the power source is actually off.
+		if sig.depth > 1 or not mesecon.is_powered(sig.pos, sig.link) then
+			mesecon.changesignal(sig.pos, sig.node, sig.link, mesecon.state.off, sig.depth)
+			if mesecon.is_effector_on(sig.node.name) and not mesecon.is_powered(sig.pos) then
+				mesecon.deactivate(sig.pos, sig.node, sig.link, sig.depth)
+			end
 		end
 	end
 

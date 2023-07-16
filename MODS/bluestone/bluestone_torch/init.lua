@@ -10,7 +10,8 @@ default.register_torch("bluestone_torch:torch", {
 	wield_image = "bluestone_torch.png",
 	wield_image2 = "[combine:32x32:7,0=bluestone_torch.png",
 	use_texture_alpha = "clip",
-	light_source = 10,
+	light_source = 9,
+	damage_per_second = 1,
 	groups = {choppy = 2, dig_immediate = 3, flammable = 1, attached_node = 1, torch = 1},
 	sounds = default.node_sound_wood_defaults(),
 
@@ -62,4 +63,10 @@ minetest.register_craft({
 		{"bluestone:dust"},
 		{"default:stick"}
 	}
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "bluestone_torch:torch",
+	burntime = 3
 })

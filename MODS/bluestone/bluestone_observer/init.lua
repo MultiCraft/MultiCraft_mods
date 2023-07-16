@@ -39,8 +39,7 @@ end
 -- and update the observer state if needed.
 local function observer_scan(pos, initialize)
 	local node = minetest.get_node(pos)
-	local nodeparam2 = node.param2
-	local dir = minetest.facedir_to_dir(nodeparam2)
+	local dir = minetest.facedir_to_dir(node.param2)
 	local front = minetest.get_node(vsubtract(pos, dir))
 	local frontname = front.name
 	local frontparam2 = front.param2
@@ -51,7 +50,8 @@ local function observer_scan(pos, initialize)
 	local meta_needs_updating = false
 	if not initialize and oldnode ~= "" then
 		if not (frontname == oldnode and tostring(frontparam2) == oldparam2) then
-			minetest.set_node(pos, {name = "bluestone_observer:observer_on", param2 = nodeparam2})
+			node.name = "bluestone_observer:observer_on"
+			minetest.swap_node(pos, node)
 			mesecon.receptor_on(pos, get_rules_flat(node))
 			meta_needs_updating = true
 		end
@@ -118,8 +118,9 @@ mesecon.register_node("bluestone_observer:observer", {
 	on_timer = function(pos)
 		local node = minetest.get_node(pos)
 		node.name = "bluestone_observer:observer_off"
-		minetest.set_node(pos, node)
+		minetest.swap_node(pos, node)
 		mesecon.receptor_off(pos, get_rules_flat(node))
+		return true
 	end
 })
 

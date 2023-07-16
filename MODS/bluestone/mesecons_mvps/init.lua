@@ -8,6 +8,8 @@ mesecon.mvps_unmov = {}
 local vadd, vequals, vmultiply, vnew, vsubtract =
 	vector.add, vector.equals, vector.multiply, vector.new, vector.subtract
 
+local singleplayer = minetest.is_singleplayer()
+
 --- Objects (entities) that cannot be moved
 function mesecon.register_mvps_unmov(objectname)
 	mesecon.mvps_unmov[objectname] = true
@@ -50,6 +52,18 @@ local function on_mvps_move(moved_nodes)
 	end
 end
 
+-- tests if the node can be pushed into, e.g. air, water, grass
+local function node_replaceable(name, nodedef)
+	-- everything that can be an mvps stopper (unknown nodes and nodes in the
+	-- mvps_stoppers table) must not be replacable
+	-- Note: ignore (a stopper) is buildable_to, but we do not want to push into it
+	if not nodedef or mesecon.mvps_stoppers[name] then
+		return false
+	end
+
+	return nodedef.buildable_to or false
+end
+
 function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 	-- determine the number of nodes to be pushed
 	local nodes = {}
@@ -61,11 +75,7 @@ function mesecon.mvps_get_stack(pos, dir, maximum, all_pull_sticky)
 		local np_hash = minetest.hash_node_position(np)
 		local nn = not pos_set[np_hash] and minetest.get_node(np)
 		local def = nn and minetest.registered_nodes[nn.name]
-
-		-- tests if the node can be pushed into, e.g. air, water, grass
-		local node_replaceable = (def and def.buildable_to) or false
-
-		if nn and not node_replaceable then
+		if nn and not node_replaceable(nn.name, def) then
 			pos_set[np_hash] = true
 			nodes[#nodes + 1] = {node = nn, pos = np}
 			if #nodes > maximum then return nil end
@@ -117,7 +127,10 @@ function mesecon.mvps_set_owner(pos, node, placer)
 	end
 	local def = minetest.registered_nodes[node.name]
 	local infotext = def.description or ""
-	meta:set_string("infotext", infotext .. "\n" .. S("Owned by @1", S(owner)))
+	if not singleplayer then
+		infotext = infotext .. "\n" .. S("Owned by @1", owner)
+	end
+	meta:set_string("infotext", infotext)
 end
 
 function mesecon.mvps_claim(pos, node, player_name)
@@ -132,7 +145,10 @@ function mesecon.mvps_claim(pos, node, player_name)
 	minetest.chat_send_player(player_name, S("Owner changed!"))
 	local def = minetest.registered_nodes[node.name]
 	local infotext = def.description or ""
-	meta:set_string("infotext", infotext .. "\n" .. S("Owned by @1", S(player_name)))
+	if not singleplayer then
+		infotext = infotext .. "\n" .. S("Owned by @1", player_name)
+	end
+	meta:set_string("infotext", infotext)
 	return true
 end
 
@@ -218,6 +234,8 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 		minetest.remove_node(n.pos)
 	end
 
+	local oldstack = mesecon.tablecopy(nodes)
+
 	-- update mesecons for removed nodes ( has to be done after all nodes have been removed )
 	for _, n in ipairs(nodes) do
 		mesecon.on_dignode(n.pos, n.node)
@@ -227,6 +245,12 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 	for _, n in ipairs(nodes) do
 		local np = vadd(n.pos, movedir)
 
+		-- Turn off conductors in transit
+		local conductor = mesecon.get_conductor(n.node.name)
+		if conductor and conductor.state ~= mesecon.state.off then
+			n.node.name = conductor.offstate or conductor.states[1]
+		end
+
 		minetest.set_node(np, n.node)
 		minetest.get_meta(np):from_table(n.meta)
 		if n.node_timer then
@@ -235,7 +259,6 @@ function mesecon.mvps_push_or_pull(pos, stackdir, movedir, maximum, all_pull_sti
 	end
 
 	local moved_nodes = {}
-	local oldstack = mesecon.tablecopy(nodes)
 	for i in ipairs(nodes) do
 		moved_nodes[i] = {}
 		moved_nodes[i].oldpos = nodes[i].pos

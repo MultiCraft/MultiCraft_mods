@@ -1,35 +1,25 @@
 local S = mesecon.S
 
 -- Function that get the input/output rules of the delayer
-local delayer_get_output_rules = function(node)
-	local rules = {{x = 0, y = 0, z = 1}}
-	for _ = 0, node.param2 do
-		rules = mesecon.rotate_rules_left(rules)
-	end
-	return rules
-end
+local delayer_get_output_rules = mesecon.horiz_rules_getter({{x = 1, y = 0, z = 0}})
 
-local delayer_get_input_rules = function(node)
-	local rules = {{x = 0, y = 0, z = -1}}
-	for _ = 0, node.param2 do
-		rules = mesecon.rotate_rules_left(rules)
-	end
-	return rules
-end
+local delayer_get_input_rules = mesecon.horiz_rules_getter({{x = -1, y = 0, z = 0}})
 
 -- Functions that are called after the delay time
 
 local delayer_activate = function(pos, node)
 	local def = minetest.registered_nodes[node.name]
 	local time = def.delayer_time
-	minetest.swap_node(pos, {name = def.delayer_onstate, param2 = node.param2})
+	node.name = def.delayer_onstate
+	minetest.swap_node(pos, node)
 	mesecon.queue:add_action(pos, "receptor_on", {delayer_get_output_rules(node)}, time, nil)
 end
 
 local delayer_deactivate = function(pos, node)
 	local def = minetest.registered_nodes[node.name]
 	local time = def.delayer_time
-	minetest.swap_node(pos, {name = def.delayer_offstate, param2 = node.param2})
+	node.name = def.delayer_offstate
+	minetest.swap_node(pos, node)
 	mesecon.queue:add_action(pos, "receptor_off", {delayer_get_output_rules(node)}, time, nil)
 end
 
@@ -110,10 +100,8 @@ local off_state = {
 			return
 		end
 
-		minetest.swap_node(pos, {
-			name = "mesecons_delayer:delayer_off_" .. tostring(i % 4 + 1),
-			param2 = node.param2
-		})
+		node.name = "mesecons_delayer:delayer_off_" .. tostring(i % 4 + 1)
+		minetest.swap_node(pos, node)
 	end,
 	delayer_onstate = "mesecons_delayer:delayer_on_" .. tostring(i),
 	mesecons = {
@@ -150,10 +138,8 @@ local on_state = {
 			return
 		end
 
-		minetest.swap_node(pos, {
-			name = "mesecons_delayer:delayer_on_" .. tostring(i % 4 + 1),
-			param2 = node.param2
-		})
+		node.name = "mesecons_delayer:delayer_on_" .. tostring(i % 4 + 1)
+		minetest.swap_node(pos, node)
 	end,
 	delayer_offstate = "mesecons_delayer:delayer_off_" .. tostring(i),
 	mesecons = {

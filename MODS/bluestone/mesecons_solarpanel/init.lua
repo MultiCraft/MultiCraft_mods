@@ -1,5 +1,7 @@
 local S = mesecon.S
 
+local interval = mesecon.setting("spanel_interval", 1)
+
 -- Solar Panel
 mesecon.register_node("mesecons_solarpanel:solar_panel", {
 	drawtype = "nodebox",
@@ -36,7 +38,7 @@ mesecon.register_node("mesecons_solarpanel:solar_panel", {
 	end,
 
 	on_construct = function(pos)
-		minetest.get_node_timer(pos):start(mesecon.setting("spanel_interval", 1))
+		minetest.get_node_timer(pos):start(interval)
 	end
 }, {
 	description = S("Solar Panel"),
