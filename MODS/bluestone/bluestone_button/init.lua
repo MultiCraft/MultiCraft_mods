@@ -7,7 +7,7 @@ local S = mesecon.S
 local function button_turnoff(pos)
 	local node = minetest.get_node(pos)
 	local rules = mesecon.rules.buttonlike_get(node)
-	minetest.sound_play("mesecons_button_pop", {pos = pos})
+	minetest.sound_play("mesecons_button_pop", {pos = pos}, true)
 	mesecon.flipstate(pos, node)
 	mesecon.receptor_off(pos, rules)
 end
@@ -36,7 +36,7 @@ local function on_place(itemstack, placer, pointed_thing)
 end
 
 local function press(pos, node)
-	minetest.sound_play("mesecons_button_push", {pos = pos})
+	minetest.sound_play("mesecons_button_push", {pos = pos}, true)
 	mesecon.flipstate(pos, node)
 	mesecon.receptor_on(pos, mesecon.rules.buttonlike_get(node))
 	minetest.get_node_timer(pos):start(1)

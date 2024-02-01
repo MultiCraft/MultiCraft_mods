@@ -76,7 +76,7 @@ local function piston_remove_pusher(pos, node, check_falling)
 		pos = pos,
 		max_hear_distance = 20,
 		gain = 0.3
-	})
+	}, true)
 
 	if check_falling then
 		minetest.check_for_falling(pusherpos)
@@ -98,8 +98,9 @@ local function piston_on(pos, node)
 	local success, stack, oldstack = mesecon.mvps_push(pusher_pos, dir, max_push, meta:get_string("owner"))
 	if not success then
 		if stack == "protected" then
-			meta:set_string("infotext", meta:get_string("infotext") .. "\n" ..
-				S("Blocked by a protected area on the way!"))
+			local infotext = meta:get_string("infotext")
+			local msg = "\n" .. S("Blocked by a protected area on the way!")
+			meta:set_string("infotext", infotext .. msg)
 		end
 		return
 	end
@@ -111,7 +112,7 @@ local function piston_on(pos, node)
 		pos = pos,
 		max_hear_distance = 20,
 		gain = 0.3
-	})
+	}, true)
 	mesecon.mvps_move_objects(pusher_pos, dir, oldstack)
 end
 
@@ -349,7 +350,7 @@ minetest.register_node("mesecons_pistons:piston_normal_on", {
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	drop = "mesecons_pistons:piston_normal_off",
-	after_dig_node = piston_after_dig,
+	after_destruct = piston_after_dig,
 	node_box = piston_on_box,
 	selection_box = piston_on_box,
 	sounds = default.node_sound_wood_defaults(),
@@ -428,7 +429,7 @@ minetest.register_node("mesecons_pistons:piston_sticky_on", {
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	drop = "mesecons_pistons:piston_sticky_off",
-	after_dig_node = piston_after_dig,
+	after_destruct = piston_after_dig,
 	node_box = piston_on_box,
 	selection_box = piston_on_box,
 	sounds = default.node_sound_wood_defaults(),

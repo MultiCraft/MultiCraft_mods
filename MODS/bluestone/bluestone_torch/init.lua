@@ -8,7 +8,6 @@ default.register_torch("bluestone_torch:torch", {
 	}},
 	inventory_image = "bluestone_torch.png",
 	wield_image = "bluestone_torch.png",
-	wield_image2 = "[combine:32x32:7,0=bluestone_torch.png",
 	use_texture_alpha = "clip",
 	light_source = 9,
 	damage_per_second = 1,
