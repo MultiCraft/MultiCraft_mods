@@ -31,11 +31,11 @@ function nextgen_bows.register_bow(name, def)
 
 	-- charged bow
 	minetest.register_tool(def.name_charged, {
-		description = def.description,
+		description = def.description_charged or def.description,
 		inventory_image = def.inventory_image_charged or "nextgen_bows_bow_wood_charged.png",
 		on_use = nextgen_bows.shoot,
 		groups = {bow = 1, flammable = 1, wieldview = 1, not_in_creative_inventory = 1},
-		range = 0 -- player can"t interact with charged bow
+		range = 0 -- player can't interact with charged bow
 	})
 
 	-- recipes
@@ -77,6 +77,7 @@ function nextgen_bows.load(itemstack, user, pointed_thing)
 	local inv = user:get_inventory()
 	local inv_list = inv:get_list("main")
 	local bow_name = itemstack:get_name()
+
 	local bow_def = nextgen_bows.registered_bows[bow_name .. "_charged"]
 	local itemstack_arrows = {}
 
@@ -99,44 +100,46 @@ function nextgen_bows.load(itemstack, user, pointed_thing)
 	local itemstack_arrow = itemstack_arrows[1]
 
 	if itemstack_arrow and bow_def then
-		local _tool_capabilities = nextgen_bows.registered_arrows[itemstack_arrow:get_name()].tool_capabilities
+		local arrow_name = itemstack_arrow:get_name()
+		local bow_name_charged = nextgen_bows.registered_arrows[arrow_name].charded_bow or "nextgen_bows:bow_wood_charged"
+		local _tool_capabilities = nextgen_bows.registered_arrows[arrow_name].tool_capabilities
 
-		minetest.after(0, function(v_user, v_bow_name, v_time_load)
+		minetest.after(0, function(v_user, v_bow_name, v_bow_name_charged, v_time_load)
 			local wielded_item = v_user:get_wielded_item()
 			local wielded_item_name = wielded_item:get_name()
 
 			if wielded_item_name == v_bow_name then
 				local meta = wielded_item:get_meta()
 
-				meta:set_string("arrow", itemstack_arrow:get_name())
+				meta:set_string("arrow", arrow_name)
 				meta:set_string("time_load", tostring(v_time_load))
-				wielded_item:set_name(v_bow_name .. "_charged")
+				wielded_item:set_name(v_bow_name_charged)
 				v_user:set_wielded_item(wielded_item)
 
 				if not minetest.is_creative_enabled(user:get_player_name()) then
-					inv:remove_item("main", itemstack_arrow:get_name())
+					inv:remove_item("main", arrow_name)
 				end
 			end
-		end, user, bow_name, time_load)
+		end, user, bow_name, bow_name_charged, time_load)
 
 		-- sound plays when charge time reaches full punch interval time
 		-- @TODO: find a way to prevent this from playing when not fully charged
-		minetest.after(_tool_capabilities.full_punch_interval, function(v_user, v_bow_name)
+		minetest.after(_tool_capabilities.full_punch_interval, function(v_user, v_bow_name_charged)
 			local wielded_item = v_user:get_wielded_item()
 			local wielded_item_name = wielded_item:get_name()
 
-			if wielded_item_name == v_bow_name .. "_charged" then
+			if wielded_item_name == v_bow_name_charged then
 				minetest.sound_play("nextgen_bows_bow_loaded", {
 					to_player = user:get_player_name(),
 					gain = 0.6
-				})
+				}, true)
 			end
-		end, user, bow_name)
+		end, user, bow_name_charged)
 
 		minetest.sound_play("nextgen_bows_bow_load", {
 			to_player = user:get_player_name(),
 			gain = 0.6
-		})
+		}, true)
 
 		return itemstack
 	end
@@ -149,15 +152,20 @@ function nextgen_bows.shoot(itemstack, user)
 	local time_load = tonumber(meta:get_string("time_load")) or 0
 	local tflp = max((time_shoot - time_load) / 1000000, 0)
 
-	if not nextgen_bows.registered_arrows[meta_arrow] then
+	local arrow_meta = nextgen_bows.registered_arrows[meta_arrow]
+
+	if not arrow_meta then
 		return itemstack
 	end
 
 	local bow_name_charged = itemstack:get_name()
-	local bow_name = nextgen_bows.registered_bows[bow_name_charged].name
-	local uses = nextgen_bows.registered_bows[bow_name_charged].uses
-	local crit_chance = nextgen_bows.registered_bows[bow_name_charged].crit_chance
-	local _tool_capabilities = nextgen_bows.registered_arrows[meta_arrow].tool_capabilities
+	local bow_def = nextgen_bows.registered_bows[bow_name_charged]
+
+	local bow_name = bow_def.uncharged or bow_def.name
+	local uses = bow_def.uses
+	local crit_chance = bow_def.crit_chance
+	local _tool_capabilities = arrow_meta.tool_capabilities
+	local entity_node = arrow_meta.entity_node
 
 	local staticdata = {
 		arrow = meta_arrow,
@@ -184,11 +192,16 @@ function nextgen_bows.shoot(itemstack, user)
 
 	local pos = user:get_pos()
 	local dir = user:get_look_dir()
-	local obj = minetest.add_entity({x = pos.x, y = pos.y + 1.5, z = pos.z}, "nextgen_bows:arrow_entity", minetest.serialize(staticdata))
+	local arrow_pos = {x = pos.x, y = pos.y + 1.5, z = pos.z}
+	local obj = minetest.add_entity(arrow_pos, "nextgen_bows:arrow_entity", minetest.serialize(staticdata))
 
 	if not obj then
 		return itemstack
 	end
+
+	obj:set_properties({
+		textures = {entity_node}
+	})
 
 	local strength_multiplier = tflp
 
@@ -210,7 +223,7 @@ function nextgen_bows.shoot(itemstack, user)
 		gain = 0.3,
 		pos = user:get_pos(),
 		max_hear_distance = 10
-	})
+	}, true)
 
 	return itemstack
 end
@@ -273,30 +286,5 @@ minetest.register_on_leaveplayer(function(player)
 end)
 
 local path = minetest.get_modpath("nextgen_bows")
-
 dofile(path .. "/arrow.lua")
 dofile(path .. "/items.lua")
-
-if minetest.is_singleplayer() and (PLATFORM == "Android" or PLATFORM == "iOS") and
-		minetest.settings:get_bool("touchtarget") then
-	local update_hud = dofile(path .. "/crosshair.lua")
-	local function poll()
-		-- Since this is singleplayer there should only be one player
-		local player = minetest.get_connected_players()[1]
-		if player then
-			update_hud(player)
-		end
-		minetest.after(0.125, poll)
-	end
-
-	minetest.after(0.125, poll)
-elseif minetest.global_exists("sscsm") then
-	sscsm.register({
-		name = "nextgen_bows",
-		file = path .. "/crosshair.lua",
-		is_enabled_for = function(name)
-			local info = minetest.get_player_information(name)
-			return info.platform == "Android" or info.platform == "iOS"
-		end
-	})
-end

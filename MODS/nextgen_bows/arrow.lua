@@ -28,7 +28,7 @@ minetest.register_entity("nextgen_bows:arrow_entity", {
 		selectionbox = {0, 0, 0, 0, 0, 0},
 		physical = false,
 		textures = {"air"},
-		hp_max = 0.5
+		hp_max = 1
 	},
 
 	on_activate = function(self, staticdata)
@@ -58,10 +58,6 @@ minetest.register_entity("nextgen_bows:arrow_entity", {
 		self._tflp = _staticdata._tflp
 		self._tool_capabilities = _staticdata._tool_capabilities
 		self._is_critical_hit = _staticdata.is_critical_hit
-
-		self.object:set_properties({
-			textures = {"nextgen_bows:arrow_node"}
-		})
 	end,
 
 	on_death = function(self)
@@ -151,12 +147,12 @@ minetest.register_entity("nextgen_bows:arrow_entity", {
 					minetest.sound_play("nextgen_bows_arrow_successful_hit", {
 						to_player = self.user:get_player_name(),
 						gain = 0.3
-					})
+					}, true)
 				else
 					minetest.sound_play("nextgen_bows_arrow_hit", {
 						to_player = self.user:get_player_name(),
 						gain = 0.6
-					})
+					}, true)
 				end
 
 				self.object:set_velocity({x = 0, y = 0, z = 0})
@@ -195,7 +191,7 @@ minetest.register_entity("nextgen_bows:arrow_entity", {
 
 				pointed_ref:add_velocity({
 					x = dir.x * knockback * -1,
-					y = 7,
+					y = 1,
 					z = dir.z * knockback * -1
 				})
 
@@ -208,7 +204,7 @@ minetest.register_entity("nextgen_bows:arrow_entity", {
 					},
 					{
 						x = dir.x * -1,
-						y = 7,
+						y = 1,
 						z = dir.z * -1
 					}
 				)
@@ -288,7 +284,7 @@ minetest.register_entity("nextgen_bows:arrow_entity", {
 						pos = pointed_thing.under,
 						gain = 0.6,
 						max_hear_distance = 16
-					})
+					}, true)
 
 					return
 				end
