@@ -1,5 +1,5 @@
-MultiCraft_game | Credits & Licenses
-====================================
+MultiCraft Mods Collection | Credits & Licenses
+===============================================
 
 This document contains a (partial) list of credits for Open Source work we may have used in writing our game.
 
